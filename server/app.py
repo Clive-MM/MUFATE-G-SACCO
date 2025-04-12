@@ -1,5 +1,5 @@
 from flask import Flask
-from models.models import db, IsActive, FeedbackStatus  # Make sure to import here
+from models.models import db, IsActive, FeedbackStatus  
 
 app = Flask(__name__)
 
