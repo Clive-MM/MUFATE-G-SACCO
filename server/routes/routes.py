@@ -25,7 +25,7 @@ def user_registration():
     email = data.get('email')
     password = data.get('password')
 
-    # Check if an admin already exists
+    # Stop if any user already exists
     existing_admin = User.query.first()
     if existing_admin:
         return jsonify({'message': 'Admin already exists. Registration is closed.'}), 403
@@ -42,12 +42,45 @@ def user_registration():
     if not any(char in '!@#$%^&*()_+-=[]{}|;:,.<>?/~`' for char in password):
         return jsonify({'message': 'Password must contain at least one special character!'}), 400
 
+    # Ensure email is unique
     if User.query.filter_by(email=email).first():
         return jsonify({'message': 'Email already exists!'}), 400
 
+    # Hash the password and save user
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     new_user = User(email=email, password=hashed_password, role='admin')
     db.session.add(new_user)
     db.session.commit()
 
     return jsonify({'message': '✅ First admin user created successfully!'}), 201
+
+#Login route
+@routes.route('/login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    #Look up user by email
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'message': 'Invalid email or password!'}), 401
+
+    # Verify password
+    if not bcrypt.check_password_hash(user.password, password):
+        return jsonify({'message': 'Invalid email or password!'}), 401
+
+    # Ensure user is admin
+    if user.role.lower() != 'admin':
+        return jsonify({'message': 'Access denied!'}), 403
+
+    #Create JWT token with user ID
+    access_token = create_access_token(identity={'user_id': user.id, 'role': user.role})
+    return jsonify({
+        'access_token': access_token,
+        'message': '✅ Login successful',
+        'user': {
+            'email': user.email,
+            'role': user.role
+        }
+    }), 200
