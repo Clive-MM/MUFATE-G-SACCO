@@ -10,6 +10,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'GYwNuK5IA72w8sH_fVxYcOWtY0RJ9wBrP5B93RvBEG06NC5ETopjLjRSNQJnr2LUXTWfBBKZU-F6Q3K3kKNu8w'
+app.config['JWT_IDENTITY_CLAIM'] = 'identity'
+
 
 # ✅ Initialize DB
 db.init_app(app)
@@ -55,4 +57,6 @@ def index():
 
 # ✅ Run server
 if __name__ == "__main__":
+    app.config["PROPAGATE_EXCEPTIONS"] = True
+    app.config["DEBUG"] = True
     app.run(debug=True)
