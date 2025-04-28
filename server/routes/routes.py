@@ -238,7 +238,7 @@ def upload_resource():
         return jsonify({'message': '❌ Failed to upload resource.', 'error': str(e)}), 500
 
 
-#Viewing resources
+# Viewing resources with download links
 @routes.route('/resources', methods=['GET'])
 def list_resources():
     try:
@@ -249,14 +249,15 @@ def list_resources():
             resource_list.append({
                 'ResourceID': res.ResourceID,
                 'Title': res.Title,
-                'FilePath': res.FilePath,
-                'UploadedAt': res.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
+                'UploadedAt': res.UploadedAt.strftime('%Y-%m-%d %H:%M:%S'),
+                'DownloadLink': f"http://127.0.0.1:5000/resources/download/{res.ResourceID}"
             })
 
         return jsonify({'resources': resource_list}), 200
 
     except Exception as e:
         return jsonify({'message': '❌ Failed to fetch resources.', 'error': str(e)}), 500
+
 
 #   Downloading resources
 @routes.route('/resources/download/<int:resource_id>', methods=['GET'])
