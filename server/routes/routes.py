@@ -86,6 +86,7 @@ def create_career():
         traceback.print_exc()
         return jsonify({'message': '❌ An error occurred.', 'error': str(e)}), 500
     
+# ✅Admin updating a career post    
 @routes.route('/careers/update/<int:career_id>', methods=['PUT'])
 @jwt_required()
 def update_career(career_id):
@@ -256,3 +257,25 @@ def list_resources():
 
     except Exception as e:
         return jsonify({'message': '❌ Failed to fetch resources.', 'error': str(e)}), 500
+
+#   Downloading resources
+@routes.route('/resources/download/<int:resource_id>', methods=['GET'])
+def download_resource(resource_id):
+    try:
+        # Find the resource in the database
+        resource = Resource.query.get(resource_id)
+        if not resource:
+            return jsonify({'message': '❌ Resource not found.'}), 404
+
+        # Get the file URL (it was uploaded to Cloudinary)
+        file_url = resource.FilePath
+
+        return jsonify({
+            'message': '✅ File ready for download!',
+            'file_url': file_url
+        }), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ An error occurred.', 'error': str(e)}), 500
