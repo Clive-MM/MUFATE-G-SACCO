@@ -1,5 +1,8 @@
 from flask import Flask
 from models.models import db, IsActive, FeedbackStatus  
+from cloudinary_config import cloudinary
+
+
 
 app = Flask(__name__)
 

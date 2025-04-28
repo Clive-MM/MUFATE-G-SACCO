@@ -2,7 +2,8 @@ from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-from models.models import db, User, Career, CoreValue
+from models.models import db, User, Career, CoreValue,Resource
+import cloudinary.uploader
 
 routes = Blueprint('routes', __name__)
 bcrypt = Bcrypt()
@@ -179,3 +180,79 @@ def create_core_value():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create core value', 'error': str(e)}), 500
+    
+#upload image urls
+@routes.route('/upload_image', methods=['POST'])
+@jwt_required()
+def upload_image():
+    try:
+        file = request.files['image']  
+        upload_result = cloudinary.uploader.upload(file)
+        image_url = upload_result['secure_url']
+
+        return jsonify({
+            'message': '✅ Image uploaded successfully!',
+            'image_url': image_url
+        }), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to upload image.', 'error': str(e)}), 500
+    
+#upload a resource.
+@routes.route('/resources/upload', methods=['POST'])
+@jwt_required()
+def upload_resource():
+    try:
+        current_user = get_jwt_identity()
+        if current_user['role'].lower() != 'admin':
+            return jsonify({'message': '❌ Access denied! Only admins can upload resources.'}), 403
+
+        title = request.form.get('Title')
+        file = request.files.get('file')
+        is_active_id = request.form.get('IsActiveID')
+
+        if not title or not file or not is_active_id:
+            return jsonify({'message': '❌ Title, file, and IsActiveID are required!'}), 400
+
+        # Upload file to Cloudinary (as raw file type, because it's a PDF or document)
+        upload_result = cloudinary.uploader.upload(file, resource_type='raw')
+        file_url = upload_result['secure_url']
+
+        # Save to database
+        new_resource = Resource(
+            Title=title,
+            FilePath=file_url,
+            IsActiveID=is_active_id
+        )
+        db.session.add(new_resource)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Resource uploaded successfully!', 'file_url': file_url}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to upload resource.', 'error': str(e)}), 500
+
+
+#Viewing resources
+@routes.route('/resources', methods=['GET'])
+def list_resources():
+    try:
+        resources = Resource.query.filter_by(IsActiveID=1).order_by(Resource.UploadedAt.desc()).all()
+        resource_list = []
+
+        for res in resources:
+            resource_list.append({
+                'ResourceID': res.ResourceID,
+                'Title': res.Title,
+                'FilePath': res.FilePath,
+                'UploadedAt': res.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'resources': resource_list}), 200
+
+    except Exception as e:
+        return jsonify({'message': '❌ Failed to fetch resources.', 'error': str(e)}), 500
