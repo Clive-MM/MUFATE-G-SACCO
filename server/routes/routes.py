@@ -84,6 +84,63 @@ def create_career():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ An error occurred.', 'error': str(e)}), 500
+    
+@routes.route('/careers/update/<int:career_id>', methods=['PUT'])
+@jwt_required()
+def update_career(career_id):
+    try:
+        # Authenticate and authorize
+        current_user = get_jwt_identity()
+        current_user_id = current_user['user_id']
+        role = current_user['role']
+
+        if role != 'admin':
+            return jsonify({'message': '❌ Unauthorized access!'}), 403
+
+        # Find the career post by ID
+        career = Career.query.get(career_id)
+        if not career:
+            return jsonify({'message': '❌ Career post not found!'}), 404
+
+        # Get updated fields from request
+        data = request.get_json()
+        job_title = data.get('JobTitle')
+        job_description = data.get('JobDescription')
+        requirements = data.get('Requirements')
+        job_type = data.get('JobType')
+        deadline_str = data.get('Deadline')
+        application_instructions = data.get('ApplicationInstructions')
+        is_active_id = data.get('IsActiveID')
+
+        # Update fields only if they are provided
+        if job_title:
+            career.JobTitle = job_title
+        if job_description:
+            career.JobDescription = job_description
+        if requirements:
+            career.Requirements = requirements
+        if job_type:
+            career.JobType = job_type
+        if deadline_str:
+            try:
+                career.Deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
+            except ValueError:
+                return jsonify({'message': '❌ Deadline must be in YYYY-MM-DD format.'}), 400
+        if application_instructions:
+            career.ApplicationInstructions = application_instructions
+        if is_active_id:
+            career.IsActiveID = is_active_id
+
+        # Save updates
+        db.session.commit()
+
+        return jsonify({'message': '✅ Career post updated successfully!'}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ An error occurred while updating career.', 'error': str(e)}), 500
+
 
 # ✅ Admin-only Core Value creation route
 @routes.route('/corevalues/create', methods=['POST'])
@@ -94,7 +151,7 @@ def create_core_value():
         current_user_id = current_user['user_id']
         role = current_user['role']
 
-        if role != 'Admin':
+        if role != 'admin':
             return jsonify({'message': '❌ Access denied. Only admins can create core values!'}), 403
 
         data = request.get_json()
