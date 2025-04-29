@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-from models.models import db, User, Career, CoreValue,Resource
+from models.models import db, User, Career, CoreValue,Resource,FAQ, Feedback, MobileBankingInfo, OperationTimeline
 import cloudinary.uploader
 
 routes = Blueprint('routes', __name__)
@@ -280,3 +280,242 @@ def download_resource(resource_id):
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ An error occurred.', 'error': str(e)}), 500
+
+
+# ✅ Admin-only route to create FAQ
+@routes.route('/faqs/create', methods=['POST'])
+@jwt_required()
+def create_faq():
+    try:
+        current_user = get_jwt_identity()
+        current_user_id = current_user['user_id']
+        role = current_user['role']
+
+        if role.lower() != 'admin':
+            return jsonify({'message': '❌ Access denied. Only admins can add FAQs!'}), 403
+
+        data = request.get_json()
+        question = data.get('Question')
+        answer = data.get('Answer')
+        is_active_id = data.get('IsActiveID')
+
+        if not all([question, answer, is_active_id]):
+            return jsonify({'message': '❌ Missing required fields: Question, Answer, IsActiveID'}), 400
+
+        new_faq = FAQ(
+            Question=question,
+            Answer=answer,
+            IsActiveID=is_active_id
+        )
+        db.session.add(new_faq)
+        db.session.commit()
+
+        return jsonify({'message': '✅ FAQ created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create FAQ', 'error': str(e)}), 500
+    
+# ✅ Public route to view FAQs
+@routes.route('/faqs', methods=['GET'])
+def list_faqs():
+    try:
+        # Fetch FAQs where IsActiveID = 1 (Active)
+        faqs = FAQ.query.filter_by(IsActiveID=1).order_by(FAQ.CreatedDate.desc()).all()
+
+        faq_list = []
+        for faq in faqs:
+            faq_list.append({
+                'FAQID': faq.FAQID,
+                'Question': faq.Question,
+                'Answer': faq.Answer,
+                'CreatedDate': faq.CreatedDate.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'faqs': faq_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch FAQs.', 'error': str(e)}), 500
+
+# ✅ Public route to submit feedback
+@routes.route('/feedback', methods=['POST'])
+def submit_feedback():
+    try:
+        data = request.get_json()
+
+        email = data.get('Email')
+        subject = data.get('Subject')
+        message = data.get('Message')
+
+        # 🔎 Validate basic fields
+        if not email or not subject or not message:
+            return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
+
+        # 🆗 Insert feedback into the database
+        new_feedback = Feedback(
+            Email=email,
+            Subject=subject,
+            Message=message,
+            StatusID=1  # 1 for 'Unread' status (default when someone submits feedback)
+        )
+
+        db.session.add(new_feedback)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Thank you for your feedback!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to submit feedback.', 'error': str(e)}), 500
+    
+#Route for viewing the feedbacks for the admin only   
+@routes.route('/admin/feedbacks', methods=['GET'])
+@jwt_required()
+def get_all_feedbacks():
+    current_user = get_jwt_identity()
+    if current_user['role'].lower() != 'admin':
+        return jsonify({'message': '❌ Access denied. Admins only!'}), 403
+
+    feedbacks = Feedback.query.order_by(Feedback.SubmittedAt.desc()).all()
+    results = []
+
+    for fb in feedbacks:
+        results.append({
+            'FeedbackID': fb.FeedbackID,
+            'Email': fb.Email,
+            'Subject': fb.Subject,
+            'Message': fb.Message,
+            'Status': fb.status.StatusName if fb.status else 'Unknown',
+            'SubmittedAt': fb.SubmittedAt.strftime('%Y-%m-%d %H:%M:%S')
+        })
+
+    return jsonify({'feedbacks': results}), 200
+
+
+#Admin creating a route for creating mobile banking details 
+@routes.route('/mobile-banking/create', methods=['POST'])
+@jwt_required()
+def create_mobile_banking_info():
+    try:
+        current_user = get_jwt_identity()
+        user = User.query.get(current_user['user_id'])
+
+        if not user or user.role.lower() != 'admin':
+            return jsonify({'message': '❌ Only admins can add mobile banking info!'}), 403
+
+        data = request.get_json()
+
+        ussd_code = data.get('USSDCode')
+        paybill_number = data.get('PaybillNumber')
+        description = data.get('Description')
+        is_active_id = data.get('IsActiveID')
+
+        # Validation
+        if not ussd_code or not is_active_id:
+            return jsonify({
+                'message': '❌ USSDCode and IsActiveID are required!'
+            }), 400
+
+        new_entry = MobileBankingInfo(
+            USSDCode=ussd_code,
+            PaybillNumber=paybill_number,
+            Description=description,
+            IsActiveID=is_active_id
+        )
+
+        db.session.add(new_entry)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Mobile Banking Info created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create mobile banking info.', 'error': str(e)}), 500
+
+
+#Route for viewing mobile banking information
+@routes.route('/mobile-banking', methods=['GET'])
+def view_mobile_banking_info():
+    try:
+        # Only fetch active entries (IsActiveID = 1)
+        entries = MobileBankingInfo.query.filter_by(IsActiveID=1).order_by(MobileBankingInfo.CreatedAt.desc()).all()
+
+        results = []
+        for entry in entries:
+            results.append({
+                'MobileBankingID': entry.MobileBankingID,
+                'USSDCode': entry.USSDCode,
+                'PaybillNumber': entry.PaybillNumber,
+                'Description': entry.Description,
+                'CreatedAt': entry.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'mobile_banking_info': results}), 200
+
+    except Exception as e:
+        return jsonify({'message': '❌ Failed to fetch mobile banking info.', 'error': str(e)}), 500
+
+#route for creating the operational hours 
+@routes.route('/operation-hours/create', methods=['POST'])
+@jwt_required()
+def create_operation_hours():
+    try:
+        current_user = get_jwt_identity()
+        if current_user['role'].lower() != 'admin':
+            return jsonify({'message': '❌ Only admins can create operation timelines!'}), 403
+
+        data = request.get_json()
+        day_of_week = data.get('DayOfWeek')
+        opening_time_str = data.get('OpeningTime')
+        closing_time_str = data.get('ClosingTime')
+
+        if not all([day_of_week, opening_time_str, closing_time_str]):
+            return jsonify({'message': '❌ All fields (DayOfWeek, OpeningTime, ClosingTime) are required!'}), 400
+
+        # Parse time strings to time objects
+        try:
+            opening_time = datetime.strptime(opening_time_str, "%H:%M").time()
+            closing_time = datetime.strptime(closing_time_str, "%H:%M").time()
+        except ValueError:
+            return jsonify({'message': '❌ Time must be in HH:MM format.'}), 400
+
+        new_timeline = OperationTimeline(
+            DayOfWeek=day_of_week,
+            OpeningTime=opening_time,
+            ClosingTime=closing_time
+        )
+
+        db.session.add(new_timeline)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Operation hours created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create operation hours', 'error': str(e)}), 500
+
+
+#View operational Hours
+@routes.route('/operation-hours', methods=['GET'])
+def get_operation_hours():
+    try:
+        timelines = OperationTimeline.query.order_by(OperationTimeline.CreatedAt.asc()).all()
+
+        hours_list = []
+        for timeline in timelines:
+            hours_list.append({
+                'DayOfWeek': timeline.DayOfWeek,
+                'OpeningTime': timeline.OpeningTime.strftime('%H:%M'),
+                'ClosingTime': timeline.ClosingTime.strftime('%H:%M')
+            })
+
+        return jsonify({'operation_hours': hours_list}), 200
+
+    except Exception as e:
+        return jsonify({'message': '❌ Failed to fetch operation hours.', 'error': str(e)}), 500
