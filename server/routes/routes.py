@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-from models.models import db, User, Career, CoreValue,Resource,FAQ, Feedback, MobileBankingInfo, OperationTimeline
+from models.models import db, User, Career, CoreValue,Resource,FAQ, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post
 import cloudinary.uploader
 
 routes = Blueprint('routes', __name__)
@@ -350,11 +350,11 @@ def submit_feedback():
         subject = data.get('Subject')
         message = data.get('Message')
 
-        # 🔎 Validate basic fields
+        #  Validate basic fields
         if not email or not subject or not message:
             return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
 
-        # 🆗 Insert feedback into the database
+        # Insert feedback into the database
         new_feedback = Feedback(
             Email=email,
             Subject=subject,
@@ -519,3 +519,142 @@ def get_operation_hours():
 
     except Exception as e:
         return jsonify({'message': '❌ Failed to fetch operation hours.', 'error': str(e)}), 500
+
+
+#Creating partners linking with the sacco
+@routes.route('/partnerships/create', methods=['POST'])
+@jwt_required()
+def create_partnership():
+    try:
+        current_user = get_jwt_identity()
+        role = current_user['role']
+
+        # ✅ Ensure only admins can create partnerships
+        if role.lower() != 'admin':
+            return jsonify({'message': '❌ Access denied. Only admins can create partnerships.'}), 403
+
+        data = request.get_json()
+        if not data:
+            return jsonify({'message': '❌ Request body must be valid JSON.'}), 400
+
+        partner_name = data.get('PartnerName')
+        description = data.get('Description')
+        logo_url = data.get('LogoImageURL')
+        is_active_id = data.get('IsActiveID')
+
+        # ✅ Check required fields
+        missing_fields = []
+        if not partner_name:
+            missing_fields.append('PartnerName')
+        if not logo_url:
+            missing_fields.append('LogoImageURL')
+        if not is_active_id:
+            missing_fields.append('IsActiveID')
+
+        if missing_fields:
+            return jsonify({'message': f"❌ Missing required fields: {', '.join(missing_fields)}"}), 400
+
+        # ✅ Create and save the partnership
+        new_partner = Partnership(
+            PartnerName=partner_name,
+            Description=description,
+            LogoImageURL=logo_url,
+            IsActiveID=is_active_id
+        )
+
+        db.session.add(new_partner)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Partnership created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create partnership', 'error': str(e)}), 500
+
+
+#Route for fetching active partners
+@routes.route('/partnerships', methods=['GET'])
+def get_partnerships():
+    try:
+        # Fetch partnerships that are marked as active (IsActiveID = 1)
+        partnerships = Partnership.query.filter_by(IsActiveID=1).order_by(Partnership.CreatedAt.desc()).all()
+
+        partner_list = []
+        for partner in partnerships:
+            partner_list.append({
+                'PartnerID': partner.PartnerID,
+                'PartnerName': partner.PartnerName,
+                'Description': partner.Description,
+                'LogoImageURL': partner.LogoImageURL,
+                'CreatedAt': partner.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'partnerships': partner_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch partnerships.', 'error': str(e)}), 500
+
+
+#Route creating a post
+@routes.route('/posts/create', methods=['POST'])
+@jwt_required()
+def create_post():
+    try:
+        # Authenticate user
+        current_user = get_jwt_identity()
+        role = current_user['role']
+
+        if role.lower() != 'admin':
+            return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
+
+        # Extract form data
+        title = request.json.get('Title')
+        content = request.json.get('Content')
+        cover_image_url = request.json.get('CoverImage')
+
+        # Validate input
+        if not title or not content or not cover_image_url:
+            return jsonify({'message': '❌ Title, Content, and CoverImage URL are required!'}), 400
+
+        # Create and save new post
+        new_post = Post(
+            Title=title,
+            Content=content,
+            CoverImage=cover_image_url
+        )
+
+        db.session.add(new_post)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Post created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create post.', 'error': str(e)}), 500
+
+#viewing posts 
+@routes.route('/posts', methods=['GET'])
+def get_all_posts():
+    try:
+        posts = Post.query.order_by(Post.DatePosted.desc()).all()
+        post_list = []
+
+        for post in posts:
+            post_list.append({
+                'PostID': post.PostID,
+                'Title': post.Title,
+                'Content': post.Content,
+                'CoverImage': post.CoverImage,
+                'DatePosted': post.DatePosted.strftime("%Y-%m-%d %H:%M:%S")
+            })
+
+        return jsonify({'posts': post_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch posts.', 'error': str(e)}), 500
