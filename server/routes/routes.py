@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-from models.models import db, User, Career, CoreValue,Resource,FAQ, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post
+from models.models import db, User, Career, CoreValue,Resource,FAQ, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership
 import cloudinary.uploader
 
 routes = Blueprint('routes', __name__)
@@ -658,3 +658,642 @@ def get_all_posts():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch posts.', 'error': str(e)}), 500
+
+#Route for viewing a post details
+@routes.route('/posts/<int:post_id>', methods=['GET'])
+def get_single_post(post_id):
+    try:
+        post = Post.query.get(post_id)
+        if not post:
+            return jsonify({'message': '❌ Post not found.'}), 404
+
+        post_data = {
+            'PostID': post.PostID,
+            'Title': post.Title,
+            'Content': post.Content,
+            'CoverImage': post.CoverImage,
+            'DatePosted': post.DatePosted.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+        return jsonify({'post': post_data}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to retrieve post.', 'error': str(e)}), 500
+
+
+#Route for creating the products offered by a sacco
+@routes.route('/products/create', methods=['POST'])
+@jwt_required()
+def create_product():
+    try:
+        # Authenticate user
+        current_user = get_jwt_identity()
+        role = current_user['role']
+
+        if role.lower() != 'admin':
+            return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
+
+        # Extract JSON data
+        data = request.get_json()
+        product_name = data.get('ProductName')
+        description = data.get('Description')
+        image_url = data.get('ImageURL')
+
+        # Validate required fields
+        if not product_name or not description or not image_url:
+            return jsonify({'message': '❌ ProductName, Description, and ImageURL are required!'}), 400
+
+        # Create new product entry
+        new_product = Product(
+            ProductName=product_name,
+            Description=description,
+            ImageURL=image_url
+        )
+
+        db.session.add(new_product)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Product created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create product.', 'error': str(e)}), 500
+
+#View products 
+@routes.route('/products', methods=['GET'])
+def view_products():
+    try:
+        # Fetch all products ordered by newest first
+        products = Product.query.order_by(Product.CreatedAt.desc()).all()
+
+        # Prepare list to return
+        product_list = []
+        for product in products:
+            product_list.append({
+                'ProductID': product.ProductID,
+                'ProductName': product.ProductName,
+                'Description': product.Description,
+                'ImageURL': product.ImageURL,
+                'CreatedAt': product.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'products': product_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch products.', 'error': str(e)}), 500
+
+
+#Viewing a particular product
+@routes.route('/products/<int:product_id>', methods=['GET'])
+def view_product(product_id):
+    try:
+        product = Product.query.get(product_id)
+        if not product:
+            return jsonify({'message': '❌ Product not found!'}), 404
+
+        product_data = {
+            'ProductID': product.ProductID,
+            'ProductName': product.ProductName,
+            'Description': product.Description,
+            'ImageURL': product.ImageURL,
+            'CreatedAt': product.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+        return jsonify({'product': product_data}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch product.', 'error': str(e)}), 500
+
+
+#Route for creating a sacco branch 
+@routes.route('/branches/create', methods=['POST'])
+@jwt_required()
+def create_branch():
+    try:
+        current_user = get_jwt_identity()
+        role = current_user['role']
+
+        if role.lower() != 'admin':
+            return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
+
+        data = request.get_json()
+
+        branch_name = data.get('BranchName')
+        location = data.get('Location')
+        contact_number = data.get('ContactNumber')
+        google_map_url = data.get('GoogleMapURL')
+
+        # Validate required fields
+        if not branch_name or not location:
+            return jsonify({'message': '❌ BranchName and Location are required!'}), 400
+
+        new_branch = SaccoBranch(
+            BranchName=branch_name,
+            Location=location,
+            ContactNumber=contact_number,
+            GoogleMapURL=google_map_url
+        )
+
+        db.session.add(new_branch)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Branch created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create branch.', 'error': str(e)}), 500
+
+#Viewing all the branches 
+@routes.route('/branches', methods=['GET'])
+def view_all_branches():
+    try:
+        branches = SaccoBranch.query.order_by(SaccoBranch.CreatedAt.desc()).all()
+        branch_list = []
+
+        for branch in branches:
+            branch_list.append({
+                "BranchID": branch.BranchID,
+                "BranchName": branch.BranchName,
+                "Location": branch.Location,
+                "ContactNumber": branch.ContactNumber,
+                "GoogleMapURL": branch.GoogleMapURL,
+                "CreatedAt": branch.CreatedAt.strftime("%Y-%m-%d %H:%M:%S")
+            })
+
+        return jsonify({"branches": branch_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch branches.', 'error': str(e)}), 500
+
+
+#Creating a sacco profile
+@routes.route('/sacco-profile/create', methods=['POST'])
+@jwt_required()
+def create_sacco_profile():
+    try:
+        current_user = get_jwt_identity()
+        role = current_user['role']
+
+        if role != 'admin':
+            return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
+
+        data = request.get_json()
+
+        required_fields = ['SaccoName', 'LogoURL', 'Slogan', 'PhysicalAddress', 'ContactNumber', 
+                           'FacebookURL', 'TwitterURL', 'InstagramURL', 'LinkedInURL', 
+                           'SaccoHistory', 'MissionStatement', 'VisionStatement']
+        
+        # Check for missing required fields
+        missing_fields = [field for field in required_fields if not data.get(field)]
+        if missing_fields:
+            return jsonify({'message': '❌ Missing required fields.', 'missing_fields': missing_fields}), 400
+
+        profile = SaccoProfile(
+            SaccoName=data['SaccoName'],
+            LogoURL=data['LogoURL'],
+            Slogan=data['Slogan'],
+            PhysicalAddress=data['PhysicalAddress'],
+            ContactNumber=data['ContactNumber'],
+            FacebookURL=data['FacebookURL'],
+            TwitterURL=data['TwitterURL'],
+            InstagramURL=data['InstagramURL'],
+            LinkedInURL=data['LinkedInURL'],
+            SaccoHistory=data['SaccoHistory'],
+            MissionStatement=data['MissionStatement'],
+            VisionStatement=data['VisionStatement']
+        )
+
+        db.session.add(profile)
+        db.session.commit()
+
+        return jsonify({'message': '✅ SACCO profile created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create SACCO profile.', 'error': str(e)}), 500
+
+#Viewing Sacco_Profile
+@routes.route('/sacco-profile', methods=['GET'])
+def view_sacco_profile():
+    try:
+        # Get the most recent SACCO profile (or the first one if only one exists)
+        sacco_profile = SaccoProfile.query.order_by(SaccoProfile.SaccoID.desc()).first()
+
+        if not sacco_profile:
+            return jsonify({'message': '❌ No SACCO profile found.'}), 404
+
+        profile_data = {
+            "SaccoName": sacco_profile.SaccoName,
+            "LogoURL": sacco_profile.LogoURL,
+            "Slogan": sacco_profile.Slogan,
+            "PhysicalAddress": sacco_profile.PhysicalAddress,
+            "ContactNumber": sacco_profile.ContactNumber,
+            "FacebookURL": sacco_profile.FacebookURL,
+            "TwitterURL": sacco_profile.TwitterURL,
+            "InstagramURL": sacco_profile.InstagramURL,
+            "LinkedInURL": sacco_profile.LinkedInURL,
+            "SaccoHistory": sacco_profile.SaccoHistory,
+            "MissionStatement": sacco_profile.MissionStatement,
+            "VisionStatement": sacco_profile.VisionStatement,
+           
+        }
+
+        return jsonify(profile_data), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch SACCO profile.', 'error': str(e)}), 500
+
+
+#Create a service
+@routes.route('/services/create', methods=['POST'])
+@jwt_required()
+def create_service():
+    try:
+        current_user = get_jwt_identity()
+        role = current_user['role']
+
+        if role.lower() != 'admin':
+            return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
+
+        # Accept either form-data or JSON
+        service_name = request.form.get('ServiceName') or request.json.get('ServiceName')
+        description = request.form.get('Description') or request.json.get('Description')
+        image_file = request.files.get('ImageFile')  # if uploaded
+        image_url = request.form.get('ImageURL') or request.json.get('ImageURL')  # if directly linked
+
+        if not service_name or not description:
+            return jsonify({'message': '❌ ServiceName and Description are required!'}), 400
+
+        if not image_file and not image_url:
+            return jsonify({'message': '❌ Either ImageFile or ImageURL must be provided!'}), 400
+
+        # Upload file to cloudinary if it's sent
+        if image_file:
+            upload_result = cloudinary.uploader.upload(image_file)
+            final_image_url = upload_result['secure_url']
+        else:
+            final_image_url = image_url
+
+        new_service = Service(
+            ServiceName=service_name,
+            Description=description,
+            ImageURL=final_image_url
+        )
+
+        db.session.add(new_service)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Service created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create service.', 'error': str(e)}), 500
+    
+#Route for viewing the services offered by the sacco
+@routes.route('/services', methods=['GET'])
+def view_services():
+    try:
+        services = Service.query.order_by(Service.CreatedAt.desc()).all()
+        
+        service_list = []
+        for svc in services:
+            service_list.append({
+                'ServiceID': svc.ServiceID,
+                'ServiceName': svc.ServiceName,
+                'ImageURL': svc.ImageURL,
+                'Description': svc.Description,
+                'CreatedAt': svc.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'services': service_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch services.', 'error': str(e)}), 500
+
+
+#Creating sacco clients 
+@routes.route('/clients/create', methods=['POST'])
+@jwt_required()
+def create_client():
+    try:
+        current_user = get_jwt_identity()
+        if current_user['role'].lower() != 'admin':
+            return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
+
+        data = request.get_json()
+
+        client_name = data.get('ClientName')
+        client_statistic = data.get('ClientStatistic')
+        logo_url = data.get('LogoURL')
+        is_active_id = data.get('IsActiveID')
+
+        # Validate required fields
+        if not all([client_name, logo_url, is_active_id]):
+            missing_fields = []
+            if not client_name:
+                missing_fields.append("ClientName")
+            if not logo_url:
+                missing_fields.append("LogoURL")
+            if not is_active_id:
+                missing_fields.append("IsActiveID")
+            return jsonify({'message': '❌ Missing required fields.', 'missing_fields': missing_fields}), 400
+
+        new_client = SaccoClient(
+            ClientName=client_name,
+            ClientStatistic=client_statistic,
+            LogoURL=logo_url,
+            IsActiveID=is_active_id
+        )
+
+        db.session.add(new_client)
+        db.session.commit()
+
+        return jsonify({'message': '✅ SACCO client created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create SACCO client.', 'error': str(e)}), 500
+
+#Route for viewing the SACCO Clients
+@routes.route('/clients', methods=['GET'])
+def get_clients():
+    try:
+        # Get only active clients (IsActiveID = 1)
+        clients = SaccoClient.query.filter_by(IsActiveID=1).order_by(SaccoClient.CreatedAt.desc()).all()
+
+        client_list = []
+        for client in clients:
+            client_list.append({
+                'ClientID': client.ClientID,
+                'ClientName': client.ClientName,
+                'ClientStatistic': client.ClientStatistic,
+                'LogoURL': client.LogoURL,
+                'CreatedAt': client.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'clients': client_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch SACCO clients.', 'error': str(e)}), 500
+
+#Route for creating a sacco statistics 
+@routes.route('/statistics/create', methods=['POST'])
+@jwt_required()
+def create_statistics():
+    try:
+        current_user = get_jwt_identity()
+        if current_user['role'].lower() != 'admin':
+            return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
+
+        data = request.get_json()
+
+        active_members = data.get('ActiveMembers')
+        mobile_banking_users = data.get('MobileBankingUsers')
+        branch_count = data.get('BranchCount')
+        years_of_service = data.get('YearsOfService')
+
+        if active_members is None:
+            return jsonify({'message': '❌ ActiveMembers is required.'}), 400
+
+        new_stats = SaccoStatistics(
+            ActiveMembers=active_members,
+            MobileBankingUsers=mobile_banking_users,
+            BranchCount=branch_count,
+            YearsOfService=years_of_service
+        )
+
+        db.session.add(new_stats)
+        db.session.commit()
+
+        return jsonify({'message': '✅ SACCO statistics created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to create SACCO statistics.', 'error': str(e)}), 500
+
+
+#Route for viewing the Statistics
+@routes.route('/statistics', methods=['GET'])
+def get_latest_statistics():
+    try:
+        # Get the most recently created statistics entry
+        latest_stats = SaccoStatistics.query.order_by(SaccoStatistics.LastUpdated.desc()).first()
+
+        if not latest_stats:
+            return jsonify({'message': 'ℹ️ No statistics found.'}), 404
+
+        stats_data = {
+            'ActiveMembers': latest_stats.ActiveMembers,
+            'MobileBankingUsers': latest_stats.MobileBankingUsers,
+            'BranchCount': latest_stats.BranchCount,
+            'YearsOfService': latest_stats.YearsOfService,
+            'LastUpdated': latest_stats.LastUpdated.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+        return jsonify({'statistics': stats_data}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch statistics.', 'error': str(e)}), 500
+
+#Creating Homepage slides
+@routes.route('/slider/create', methods=['POST'])
+@jwt_required()
+def create_homepage_slider():
+    try:
+        # ✅ Authenticate admin
+        current_user = get_jwt_identity()
+        if current_user['role'].lower() != 'admin':
+            return jsonify({'message': '❌ Unauthorized. Admins only!'}), 403
+
+        # ✅ Get data from request
+        data = request.get_json()
+        title = data.get('Title')
+        description = data.get('Description')
+        image_path = data.get('ImagePath')  # Cloudinary URL
+        is_active_id = data.get('IsActiveID')
+
+        # ✅ Validate required fields
+        if not title or not image_path or not is_active_id:
+            return jsonify({
+                'message': '❌ Title, ImagePath, and IsActiveID are required!'
+            }), 400
+
+        # ✅ Create and save slider
+        new_slider = HomepageSlider(
+            Title=title,
+            Description=description,
+            ImagePath=image_path,
+            IsActiveID=is_active_id
+        )
+        db.session.add(new_slider)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Slider image created successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'message': '❌ Failed to create homepage slider.',
+            'error': str(e)
+        }), 500
+
+
+#Viewing homepage sliders
+@routes.route('/slider/view', methods=['GET'])
+def view_homepage_sliders():
+    try:
+        # Fetch only active sliders (IsActiveID = 1)
+        sliders = HomepageSlider.query.filter_by(IsActiveID=1).order_by(HomepageSlider.Timestamp.desc()).all()
+
+        slider_list = []
+        for slide in sliders:
+            slider_list.append({
+                'Title': slide.Title,
+                'Description': slide.Description,
+                'ImagePath': slide.ImagePath,
+                'Timestamp': slide.Timestamp.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'sliders': slider_list}), 200
+
+    except Exception as e:
+        return jsonify({'message': '❌ Failed to fetch sliders.', 'error': str(e)}), 500
+    
+#Customer Registration
+@routes.route('/membership/register', methods=['POST'])
+def register_member():
+    try:
+        # Get form data and files
+        full_name = request.form.get('FullName')
+        id_type = request.form.get('IDType')
+        id_number = request.form.get('IDNumber')
+        dob_str = request.form.get('DOB')
+        marital_status = request.form.get('MaritalStatus')
+        gender = request.form.get('Gender')
+        address = request.form.get('Address')
+        telephone = request.form.get('Telephone')
+        alt_phone = request.form.get('AlternatePhone')
+        kra_pin = request.form.get('KRAPin')
+        county = request.form.get('County')
+        sub_county = request.form.get('SubCounty')
+        email = request.form.get('Email')
+        contact_person = request.form.get('ContactPerson')
+        contact_phone = request.form.get('ContactPersonPhone')
+        nominee_name = request.form.get('NomineeName')
+        nominee_id = request.form.get('NomineeID')
+        nominee_contact = request.form.get('NomineeContact')
+        nominee_relation = request.form.get('NomineeRelation')
+
+        # Required uploads
+        id_back_file = request.files.get('IDBackURL')
+        id_front_file = request.files.get('IDFrontURL')
+        signature_file = request.files.get('SignatureURL')
+        passport_file = request.files.get('PASSPORTURL')
+
+        if not all([id_back_file, id_front_file, signature_file, passport_file]):
+            return jsonify({'message': '❌ All ID, signature, and passport files are required.'}), 400
+
+        # Parse date of birth
+        try:
+            dob = datetime.strptime(dob_str, '%Y-%m-%d').date()
+        except Exception:
+            return jsonify({'message': '❌ DOB must be in YYYY-MM-DD format'}), 400
+
+        # Upload files to Cloudinary
+        id_back_url = cloudinary.uploader.upload(id_back_file)['secure_url']
+        id_front_url = cloudinary.uploader.upload(id_front_file)['secure_url']
+        signature_url = cloudinary.uploader.upload(signature_file)['secure_url']
+        passport_url = cloudinary.uploader.upload(passport_file)['secure_url']
+
+        # Save to database
+        new_member = Membership(
+            FullName=full_name,
+            IDType=id_type,
+            IDNumber=id_number,
+            DOB=dob,
+            MaritalStatus=marital_status,
+            Gender=gender,
+            Address=address,
+            Telephone=telephone,
+            AlternatePhone=alt_phone,
+            KRAPin=kra_pin,
+            County=county,
+            SubCounty=sub_county,
+            Email=email,
+            ContactPerson=contact_person,
+            ContactPersonPhone=contact_phone,
+            NomineeName=nominee_name,
+            NomineeID=nominee_id,
+            NomineeContact=nominee_contact,
+            NomineeRelation=nominee_relation,
+            IDBackURL=id_back_url,
+            IDFrontURL=id_front_url,
+            SignatureURL=signature_url,
+            PASSPORTURL=passport_url
+        )
+
+        db.session.add(new_member)
+        db.session.commit()
+
+        return jsonify({'message': '✅ Member registered successfully!'}), 201
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Registration failed.', 'error': str(e)}), 500
+
+#Viewing the list of registered members
+@routes.route('/admin/members', methods=['GET'])
+@jwt_required()
+def view_registered_members():
+    try:
+        current_user = get_jwt_identity()
+        if current_user['role'].lower() != 'admin':
+            return jsonify({'message': '❌ Access denied. Admins only!'}), 403
+
+        members = Membership.query.order_by(Membership.RegisteredAt.desc()).all()
+        member_list = []
+
+        for member in members:
+            member_list.append({
+                'MemberID': member.MemberID,
+                'FullName': member.FullName,
+                'IDType': member.IDType,
+                'IDNumber': member.IDNumber,
+                'DOB': member.DOB.strftime('%Y-%m-%d'),
+                'Telephone': member.Telephone,
+                'Email': member.Email,
+                'County': member.County,
+                'SubCounty': member.SubCounty,
+                'RegisteredAt': member.RegisteredAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'members': member_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch members.', 'error': str(e)}), 500

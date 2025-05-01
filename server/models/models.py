@@ -224,3 +224,5 @@ class SaccoClient(db.Model):
     IsActiveID = db.Column(db.Integer, db.ForeignKey('IsActive.ID'))
     is_active = db.relationship('IsActive', backref='clients')
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
+
+
