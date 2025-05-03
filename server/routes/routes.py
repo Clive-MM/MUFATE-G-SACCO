@@ -144,6 +144,36 @@ def update_career(career_id):
         return jsonify({'message': '❌ An error occurred while updating career.', 'error': str(e)}), 500
 
 
+#Route for viewing career posts
+# ✅ Public route to view all active career posts
+@routes.route('/careers', methods=['GET'])
+def view_careers():
+    try:
+        careers = Career.query.filter_by(IsActiveID=1).all()  # Only show active posts
+        if not careers:
+            return jsonify({'message': 'ℹ️ No active career posts found.'}), 404
+
+        career_list = []
+        for career in careers:
+            career_data = {
+                'CareerID': career.CareerID,
+                'JobTitle': career.JobTitle,
+                'JobDescription': career.JobDescription,
+                'Requirements': career.Requirements,
+                'JobType': career.JobType,
+                'Deadline': career.Deadline.strftime("%Y-%m-%d") if career.Deadline else None,
+                'ApplicationInstructions': career.ApplicationInstructions
+            }
+            career_list.append(career_data)
+
+        return jsonify({'careers': career_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ An error occurred while fetching career posts.', 'error': str(e)}), 500
+
+
 # ✅ Admin-only Core Value creation route
 @routes.route('/corevalues/create', methods=['POST'])
 @jwt_required()
@@ -181,6 +211,33 @@ def create_core_value():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create core value', 'error': str(e)}), 500
+    
+
+#Route for viewing the core_values 
+# ✅ Public route to view all active core values
+@routes.route('/corevalues', methods=['GET'])
+def view_core_values():
+    try:
+        core_values = CoreValue.query.filter_by(IsActiveID=1).all()  # Only show active core values
+        if not core_values:
+            return jsonify({'message': 'ℹ️ No active core values found.'}), 404
+
+        values_list = []
+        for value in core_values:
+            value_data = {
+                'CoreValueID': value.CoreValueID,
+                'CoreValueName': value.CoreValueName,
+                'Description': value.Description
+            }
+            values_list.append(value_data)
+
+        return jsonify({'core_values': values_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ An error occurred while fetching core values.', 'error': str(e)}), 500
+
     
 #upload image urls
 @routes.route('/upload_image', methods=['POST'])
