@@ -1,11 +1,14 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50">
-      <h1 className="text-3xl font-bold text-green-700">
-        Welcome to MUFATE G SACCO Website
-      </h1>
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
