@@ -1,10 +1,15 @@
 from flask import Flask
 from models.models import db, IsActive, FeedbackStatus  
 from cloudinary_config import cloudinary
+from flask_cors import CORS
+
 
 
 
 app = Flask(__name__)
+
+CORS(app)
+
 
 # ✅ Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = (
