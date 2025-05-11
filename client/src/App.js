@@ -1,18 +1,23 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
+import { Box } from '@mui/material';
+import Home from './pages/Home'; // example route
 
 function App() {
   return (
-    <div className="App">
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(to bottom right, #f8f6f2, #e8fbe1)',
+      }}
+    >
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          {/* Add more routes as you build them */}
+          {/* Add other routes here */}
         </Routes>
       </BrowserRouter>
-    </div>
+    </Box>
   );
 }
 

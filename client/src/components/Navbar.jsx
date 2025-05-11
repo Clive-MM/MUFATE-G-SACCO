@@ -1,48 +1,107 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { AppBar, Toolbar, Box, Button, Link, Stack } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Button,
+  Link,
+  Stack,
+  Paper
+} from '@mui/material';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 const Navbar = () => {
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#f8f6f2', boxShadow: 'none', color: 'black' }}>
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        {/* Logo */}
-        <Box sx={{ flex: 1 }}>
-          <img
-            src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
-            alt="Sacco Logo"
-            style={{ height: '145px', objectFit: 'contain' }}
-          />
-        </Box>
+    <AppBar
+      position="static"
+      component={Paper}
+      elevation={3}
+      sx={{
+        backgroundColor: '#f8f6f2',
+        borderBottom: '3px solid #64dd17',
+        color: '#222',
+      }}
+    >
+      <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
 
-        {/* Center Nav Links */}
-        <Stack direction="row" spacing={2} sx={{ flex: 2, justifyContent: 'center' }}>
-          <Link component={RouterLink} to="/" underline="none" color="inherit">Home</Link>
-          <Link component={RouterLink} to="/about" underline="none" color="inherit">About Us</Link>
-          <Link component={RouterLink} to="/products" underline="none" color="inherit">Products</Link>
-          <Link component={RouterLink} to="/services" underline="none" color="inherit">Services</Link>
-          <Link component={RouterLink} to="/resources" underline="none" color="inherit">Resources</Link>
-          <Link component={RouterLink} to="/careers" underline="none" color="inherit">Careers</Link>
-          <Link component={RouterLink} to="/membership" underline="none" color="inherit">Membership</Link>
-          <Link component={RouterLink} to="/faqs" underline="none" color="inherit">FAQs</Link>
-          <Link component={RouterLink} to="/news" underline="none" color="inherit">News</Link>
+       
+        <Box sx={{ flex: 1 }}>
+  <Link
+    component={RouterLink}
+    to="/"
+    sx={{ display: 'inline-block', borderRadius: '10px', overflow: 'hidden' }}
+  >
+    <img
+      src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
+      alt="Sacco Logo"
+      style={{ height: '115px', objectFit: 'contain' }}
+    />
+  </Link>
+</Box>
+
+
+        
+        <Stack
+          direction="row"
+          spacing={3}
+          sx={{
+            flex: 3,
+            justifyContent: 'center',
+            fontSize: '16px',
+            fontWeight: 500,
+          }}
+        >
+          {[
+            { to: '/', label: 'Home' },
+            { to: '/about', label: 'About Us' },
+            { to: '/products', label: 'Products' },
+            { to: '/services', label: 'Services' },
+            { to: '/resources', label: 'Resources' },
+            { to: '/careers', label: 'Careers' },
+            { to: '/membership', label: 'Membership' },
+            { to: '/faqs', label: 'FAQs' },
+            { to: '/news', label: 'News' },
+          ].map((item) => (
+            <Link
+              key={item.to}
+              component={RouterLink}
+              to={item.to}
+              underline="none"
+              color="inherit"
+              sx={{
+                transition: 'color 0.3s',
+                '&:hover': {
+                  color: '#64dd17',
+                },
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
         </Stack>
 
-        {/* Contact Button */}
+       
         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
           <Button
             component={RouterLink}
             to="/contact"
             variant="contained"
+            startIcon={<PhoneIcon />}
             sx={{
-              backgroundColor: '#ccc',
-              color: 'black',
+              backgroundColor: '#64dd17',
+              color: '#fff',
+              fontWeight: 'bold',
+              px: 3,
+              py: 1.2,
+              borderRadius: '8px',
               '&:hover': {
-                backgroundColor: '#bbb',
+                backgroundColor: '#76ff03',
+                boxShadow: '0 0 10px #76ff03',
               }
             }}
           >
-            Contact us
+            Contact Us
           </Button>
         </Box>
       </Toolbar>

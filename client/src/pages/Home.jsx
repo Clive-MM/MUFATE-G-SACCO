@@ -1,17 +1,13 @@
 import React from 'react';
-import Navbar from '../components/Navbar'; 
-
-
+import Navbar from '../components/Navbar'; // Adjust path if needed
 
 const Home = () => {
-    return (
-        <div>
-            <Navbar />
-            <div style={{ padding: '2rem' }}>
-
-            </div>
-        </div>
-    );
+  return (
+    <>
+      <Navbar />
+      {/* Add homepage content here */}
+    </>
+  );
 };
 
 export default Home;
