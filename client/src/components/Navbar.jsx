@@ -64,7 +64,7 @@ const Navbar = ({ toggleTheme, mode }) => {
                     </Link>
                 </Box>
 
-                {/* Navigation or Drawer Toggle */}
+            
                 {isMobile ? (
                     <IconButton onClick={() => setDrawerOpen(true)}>
                         <MenuIcon sx={{ color: 'primary.main' }} />
@@ -92,7 +92,7 @@ const Navbar = ({ toggleTheme, mode }) => {
                     </Stack>
                 )}
 
-                {/* Theme Switch + Contact Button */}
+              
                 <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 2 }}>
                     <Tooltip title="Toggle light/dark mode" arrow>
                         <Switch
@@ -148,7 +148,7 @@ const Navbar = ({ toggleTheme, mode }) => {
                 </Box>
             </Toolbar>
 
-            {/* Drawer for Mobile Navigation */}
+           
             <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
                 <List sx={{ width: 250 }}>
                     {navLinks.map((item) => (
