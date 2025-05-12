@@ -3,6 +3,8 @@ import HomepageSlider from '../components/HomepageSlider';
 import AboutSection from '../components/AboutSection';
 import SaccoStatsSection from '../components/SaccoStatsSection';
 import SaccoIdentitySection from '../components/SaccoIdentitySection';
+import OurProductsSection from '../components/ProductSection';
+
 
 const Home = () => {
   return (
@@ -11,6 +13,7 @@ const Home = () => {
        <AboutSection />
        <SaccoStatsSection />
        <SaccoIdentitySection/>
+       <OurProductsSection />
      
     </>
   );

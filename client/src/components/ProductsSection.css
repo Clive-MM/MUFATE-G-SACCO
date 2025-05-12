@@ -1,0 +1,123 @@
+.products-section-wrapper {
+  position: relative;
+  overflow: hidden;
+  background-color: white;
+}
+
+/* BLOCK HEADER SPLIT STYLE */
+.section-header-split {
+  position: relative;
+  height: 60px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.split-title-text {
+  background-color: white;
+  padding: 0.5rem 1.5rem;
+  z-index: 2;
+  color: #002d5a;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+
+.section-header-split::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 180px;
+  height: 100%;
+  width: calc(100% - 180px);
+  background-color: #215732;
+  z-index: 1;
+}
+
+.our-products-section {
+  background-color: #215732;
+  padding: 3rem 1.5rem 2.5rem;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+.section-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.products-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .products-grid {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.product-card {
+  background-color: #f7f7f7;
+  padding: 0.75rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.product-card[data-active='true'] {
+  border: 2px solid #f2a922;
+  box-shadow: 0 0 15px rgba(242, 169, 34, 0.5);
+}
+
+.product-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #f2a922;
+  color: white;
+  border-radius: 50%;
+  margin: 0 auto 1rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.learn-more-btn {
+  background-color: #64dd17;
+  color: white;
+  font-weight: bold;
+  border-radius: 30px;
+  padding: 8px 20px;
+  box-shadow: 0 0 10px #64dd17;
+  transition: all 0.3s ease;
+}
+
+.learn-more-btn:hover {
+  background-color: #76ff03;
+  box-shadow: 0 0 20px #76ff03;
+  transform: scale(1.05);
+}
+
+/* NEW FLAT DIVIDER */
+.flat-divider-bottom {
+  height: 20px;
+  width: 100%;
+  background-color: #f2a922;
+}
