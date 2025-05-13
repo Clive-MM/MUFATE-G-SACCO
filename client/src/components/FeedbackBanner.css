@@ -1,0 +1,118 @@
+
+.feedback-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1rem;
+  position: relative;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+
+.feedback-section::before,
+.feedback-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 350px;
+  height: 100%;
+  background: linear-gradient(to bottom, #215732, #194d2a);
+  z-index: 1;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15); 
+}
+
+
+.feedback-section::before {
+  left: 0;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.feedback-section::after {
+  right: 0;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+}
+
+
+
+.feedback-wrapper {
+  background-color: #f2a922;
+  padding: 2.5rem 2rem;
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+  z-index: 2;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.feedback-wrapper:hover {
+  box-shadow: 0 0 15px #f2a922, 0 0 25px #f2a922aa;
+  border: 2px solid #fff3c4;
+}
+
+
+.feedback-title {
+  font-size: bold;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 1.2rem;
+  letter-spacing: 1.2px;
+  text-shadow: 
+    1px 1px 2px rgba(0, 0, 0, 0.1),    
+    0 0 8px rgba(255, 255, 255, 0.3);  
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.feedback-title:hover {
+  color: #215732;
+  text-shadow: 
+    1px 1px 3px rgba(0, 0, 0, 0.2), 
+    0 0 10px #64dd17;
+  transform: scale(1.02);
+}
+
+
+
+.feedback-text {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: #1a1a1a; /* darker text for better contrast */
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  text-align: center;
+
+  text-shadow: 
+    0.5px 0.5px 0.5px rgba(0, 0, 0, 0.08),
+    0 0 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+
+.feedback-button {
+  background-color: #ffffff !important;
+  color: #0be00b !important;                  
+  font-weight: 700;
+  font-size: BOLD;
+  padding: 0.65rem 1.8rem;
+  border-radius: 30px;
+  border: 2px solid #215732;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.feedback-button:hover {
+  background-color: #64dd17;       
+  color: white;                     
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}

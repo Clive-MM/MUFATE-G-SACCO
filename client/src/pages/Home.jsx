@@ -5,6 +5,7 @@ import SaccoStatsSection from '../components/SaccoStatsSection';
 import SaccoIdentitySection from '../components/SaccoIdentitySection';
 import OurProductsSection from '../components/ProductSection';
 import TestimonialsSection from '../components/TestimonialsSection';
+import FeedbackBanner from '../components/FeedbackBanner';
 
 
 const Home = () => {
@@ -16,6 +17,7 @@ const Home = () => {
        <SaccoIdentitySection/>
        <OurProductsSection />
        <TestimonialsSection/>
+       <FeedbackBanner/>
      
     </>
   );
