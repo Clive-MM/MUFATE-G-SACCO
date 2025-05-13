@@ -7,13 +7,62 @@
 
 /* ==== Section Title ==== */
 .testimonial-title {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   text-transform: uppercase;
   color: #002d5a;
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   margin-bottom: 2.5rem;
+  position: relative;
+  animation: fadeInGlow 1.2s ease forwards;
+  transition: all 0.3s ease;
+  cursor: default;
 }
+
+.testimonial-title:hover {
+  color: #1e7f18;
+  text-shadow: 0 0 8px #64dd17, 0 0 16px #64dd17;
+  transform: scale(1.03);
+}
+
+/* Add an underline accent below the heading */
+.testimonial-title {
+  background-color: #ffffff;
+  display: inline-block;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  color: #002d5a;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
+  transition: all 0.3s ease-in-out;
+  animation: fadeInGlow 1.2s ease forwards;
+}
+
+.testimonial-title:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(100, 221, 23, 0.25);
+  color: #1e7f18;
+  text-shadow: 0 0 6px #64dd17;
+}
+
+/* Optional animation */
+@keyframes fadeInGlow {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+    text-shadow: none;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    text-shadow: 0 0 5px #64dd17;
+  }
+}
+
 
 /* ==== Grid Layout ==== */
 .testimonials-grid {
@@ -51,7 +100,7 @@
 
 /* ==== Quote Text ==== */
 .testimonial-quote {
-  font-size: 1rem;
+  font-size: 2rem;
   color: #333;
   font-style: italic;
   line-height: 1.6;
@@ -64,4 +113,10 @@
   color: #1e7f18;
   font-weight: bold;
   font-size: 1.05rem;
+}
+.testimonial-quote-box {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  padding: 1.2rem;
+  border-radius: 12px;
 }
