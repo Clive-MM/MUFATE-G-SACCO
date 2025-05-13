@@ -38,12 +38,13 @@ const SaccoIdentitySection = () => {
   const identityCards = [
     {
       title: 'Our Mission',
-      icon: <FlagIcon sx={{ mr: 1, color: '#64dd17' }} />,
+      icon: FlagIcon,
       content: mission,
+      hoverColor: '#f9a825', // Amber
     },
     {
       title: 'Our Values',
-      icon: <StarIcon sx={{ mr: 1, color: '#64dd17' }} />,
+      icon: StarIcon,
       content: (
         <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
           {coreValues.map((v, i) => (
@@ -55,11 +56,13 @@ const SaccoIdentitySection = () => {
           ))}
         </Box>
       ),
+      hoverColor: '#1565c0', // Blue
     },
     {
       title: 'Our Vision',
-      icon: <VisibilityIcon sx={{ mr: 1, color: '#64dd17' }} />,
+      icon: VisibilityIcon,
       content: vision,
+      hoverColor: '#2e7d32', // Green
     },
   ];
 
@@ -75,7 +78,6 @@ const SaccoIdentitySection = () => {
         backgroundPosition: '0 0,10px 10px',
       }}
     >
-      {/* Animated Heading */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -97,7 +99,6 @@ const SaccoIdentitySection = () => {
         </Typography>
       </motion.div>
 
-      {/* Loader */}
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <CircularProgress sx={{ color: '#003c3c' }} />
@@ -110,73 +111,93 @@ const SaccoIdentitySection = () => {
             gap: 3,
           }}
         >
-          {identityCards.map((card, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-            >
-              <Card
-                elevation={4}
-                sx={{
-                  backgroundColor: '#003c3c',
-                  borderRadius: 3,
-                  py: 4,
-                  px: 3,
-                  height: '100%',
-                  color: '#fff',
-                  textAlign: 'center',
-                  transition: 'all 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'translateY(-6px)',
-                    boxShadow: '0 12px 28px rgba(0,0,0,0.2)',
-                  },
-                }}
-              >
-                <CardContent>
-                  {/* Title + Icon */}
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      mb: 2,
-                    }}
-                  >
-                    {card.icon}
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 'bold',
-                        color: '#64dd17',
-                        textTransform: 'uppercase',
-                        fontSize: '1.1rem',
-                      }}
-                    >
-                      {card.title}
-                    </Typography>
-                  </Box>
+          {identityCards.map((card, index) => {
+            const IconComponent = card.icon;
 
-                  {/* Content */}
-                  {typeof card.content === 'string' ? (
-                    <Typography
-                      variant="body2"
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+              >
+                <Card
+                  elevation={4}
+                  sx={{
+                    backgroundColor: '#003c3c',
+                    borderRadius: 3,
+                    py: 4,
+                    px: 3,
+                    height: '100%',
+                    color: '#fff',
+                    textAlign: 'center',
+                    transition: 'all 0.4s ease',
+                    '&:hover': {
+                      backgroundColor: card.hoverColor,
+                      transform: 'translateY(-6px)',
+                      boxShadow: '0 12px 28px rgba(0,0,0,0.2)',
+                      '& .icon': {
+                        color: '#ffffff',
+                      },
+                      '& .titleText': {
+                        color: '#ffffff',
+                      },
+                    },
+                  }}
+                >
+                  <CardContent>
+                    {/* Icon and Title */}
+                    <Box
                       sx={{
-                        lineHeight: 1.8,
-                        color: '#f0f0f0',
-                        fontSize: '0.95rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mb: 2,
                       }}
                     >
-                      {card.content}
-                    </Typography>
-                  ) : (
-                    card.content
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                      <IconComponent
+                        className="icon"
+                        sx={{
+                          mr: 1,
+                          color: '#64dd17',
+                          transition: 'color 0.4s ease',
+                        }}
+                      />
+                      <Typography
+                        variant="h6"
+                        className="titleText"
+                        sx={{
+                          fontWeight: 'bold',
+                          color: '#64dd17',
+                          textTransform: 'uppercase',
+                          fontSize: '1.1rem',
+                          transition: 'color 0.4s ease',
+                        }}
+                      >
+                        {card.title}
+                      </Typography>
+                    </Box>
+
+                    {/* Content */}
+                    {typeof card.content === 'string' ? (
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          lineHeight: 1.8,
+                          color: '#f0f0f0',
+                          fontSize: '0.95rem',
+                        }}
+                      >
+                        {card.content}
+                      </Typography>
+                    ) : (
+                      card.content
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </Box>
       )}
     </Box>

@@ -4,7 +4,6 @@
   background-color: white;
 }
 
-/* BLOCK HEADER SPLIT STYLE */
 .section-header-split {
   position: relative;
   height: 60px;
@@ -22,6 +21,16 @@
   text-transform: uppercase;
   font-size: 1rem;
   letter-spacing: 1px;
+  text-shadow: 0 0 5px #64dd17, 0 0 10px #64dd17;
+  animation: fadeInGlow 1.5s ease forwards;
+  transition: all 0.3s ease-in-out;
+  cursor: default;
+}
+
+.split-title-text:hover {
+  color: #76ff03;
+  text-shadow: 0 0 8px #76ff03, 0 0 16px #76ff03, 0 0 24px #76ff03;
+  transform: scale(1.03);
 }
 
 .section-header-split::after {
@@ -65,8 +74,8 @@
 
 .product-card {
   background-color: #f7f7f7;
-  padding: 0.75rem;
-  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
   transition: all 0.3s ease;
   width: 100%;
   max-width: 330px;
@@ -75,6 +84,7 @@
   justify-content: space-between;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  text-align: center;
 }
 
 .product-card:hover {
@@ -82,14 +92,16 @@
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
+/* Glow border on click */
 .product-card[data-active='true'] {
   border: 2px solid #f2a922;
   box-shadow: 0 0 15px rgba(242, 169, 34, 0.5);
 }
 
+/* Icon styling and glow */
 .product-icon {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   background-color: #f2a922;
   color: white;
   border-radius: 50%;
@@ -97,8 +109,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 2rem;
+  transition: all 0.3s ease;
 }
 
+.product-card:hover .product-icon {
+  box-shadow: 0 0 10px #f2a922, 0 0 20px #f2a922;
+  transform: scale(1.08);
+}
+
+/* Title and paragraph style */
+.product-card h6 {
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  color: #215732;
+}
+
+.product-card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+/* Learn more button with glow */
 .learn-more-btn {
   background-color: #64dd17;
   color: white;
@@ -115,9 +150,21 @@
   transform: scale(1.05);
 }
 
-/* NEW FLAT DIVIDER */
 .flat-divider-bottom {
   height: 20px;
   width: 100%;
   background-color: #f2a922;
+}
+
+@keyframes fadeInGlow {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+    text-shadow: none;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    text-shadow: 0 0 5px #64dd17, 0 0 10px #64dd17;
+  }
 }
