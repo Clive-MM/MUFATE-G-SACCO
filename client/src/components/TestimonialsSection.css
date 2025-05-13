@@ -1,0 +1,67 @@
+/* ==== Testimonials Section Wrapper ==== */
+.testimonials-section {
+  background-color: #ffffff;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+/* ==== Section Title ==== */
+.testimonial-title {
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  color: #002d5a;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 2.5rem;
+}
+
+/* ==== Grid Layout ==== */
+.testimonials-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .testimonials-grid {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 3rem;
+  }
+}
+
+/* ==== Testimonial Card ==== */
+.testimonial-card {
+  max-width: 320px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-6px);
+}
+
+/* ==== Quote Text ==== */
+.testimonial-quote {
+  font-size: 1rem;
+  color: #333;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+}
+
+/* ==== Name ==== */
+.testimonial-name {
+  color: #1e7f18;
+  font-weight: bold;
+  font-size: 1.05rem;
+}
