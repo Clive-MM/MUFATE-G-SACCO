@@ -32,31 +32,29 @@ const AboutSection = () => {
         >
           {/* Left: Text Section */}
           <Box sx={{ flex: 1, p: { xs: 3, md: 5 } }}>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 'bold',
-                color: '#003c3c',
-                position: 'relative',
-                display: 'inline-block',
-                mb: 3,
-                textTransform: 'uppercase',
-                letterSpacing: 1,
-                fontSize: { xs: '1.6rem', md: '2rem' },
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  left: 0,
-                  bottom: -6,
-                  width: 50,
-                  height: 4,
-                  backgroundColor: '#64dd17',
-                  borderRadius: 2,
-                },
-              }}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
             >
-              About Us
-            </Typography>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 'bold',
+                  color: 'transparent',
+                  backgroundImage: 'linear-gradient(to right, #64dd17, #003c3c)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  mb: 3,
+                  textTransform: 'uppercase',
+                  letterSpacing: 1,
+                  fontSize: { xs: '1.8rem', md: '2.2rem' },
+                }}
+              >
+                About Us
+              </Typography>
+            </motion.div>
 
             <Typography
               variant="body1"
@@ -119,7 +117,7 @@ const AboutSection = () => {
             </Button>
 
             <Typography variant="subtitle2" sx={{ mt: 3, fontStyle: 'italic', color: '#777' }}>
-              "Empowering tea farmers with trusted financial growth, one transaction at a time."
+              "Invest Here, Reap Here."
             </Typography>
           </Box>
 

@@ -1,17 +1,15 @@
-
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
 
-
 .slick-dots.custom-dots li button:before {
   font-size: 14px;
-  color: #64dd17; 
+  color: #64dd17;
   opacity: 0.5;
   transition: all 0.3s ease;
 }
 
 .slick-dots.custom-dots li.slick-active button:before {
-  color: #a0f27d; 
+  color: #a0f27d;
   opacity: 1;
   font-size: 16px;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import './FeedbackBanner.css';
 
 const FeedbackBanner = () => {
@@ -12,7 +13,13 @@ const FeedbackBanner = () => {
         <Typography className="feedback-text">
           Your opinion matters to us! Help us serve you better by sharing your thoughts, suggestions, or experiences with Mufate "G" Sacco. Whether it’s a compliment, a concern, or an idea — we’re here to listen.
         </Typography>
-        <Button className="feedback-button">Click Here</Button>
+        <Button
+          className="feedback-button"
+          component={RouterLink}
+          to="/contact"
+        >
+          Click Here
+        </Button>
       </Box>
     </Box>
   );

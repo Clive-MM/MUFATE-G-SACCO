@@ -6,6 +6,7 @@ import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
   Facebook, Instagram, X
 } from '@mui/icons-material';
+import { Link as RouterLink } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => {
@@ -39,12 +40,20 @@ const Footer = () => {
         <Box className="footer-column">
           <Typography className="footer-heading">RECENT POSTS</Typography>
           <Box className="footer-images">
-            <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746217592/CROP_ADVANCE_LOAN_IMAGE_rxkpxb.png" alt="Post 1" />
-            <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746220668/school_fees_Loan_image_sslrcp.png" alt="Post 2" />
+            <Link component={RouterLink} to="/news">
+              <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746217592/CROP_ADVANCE_LOAN_IMAGE_rxkpxb.png" alt="Post 1" />
+            </Link>
+            <Link component={RouterLink} to="/news">
+              <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746220668/school_fees_Loan_image_sslrcp.png" alt="Post 2" />
+            </Link>
           </Box>
           <Box className="footer-images">
-            <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746215520/Schools_Sacco_Client_njawjp.jpg" alt="Post 3" />
-            <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746215778/sacco_Clients_dqus7m.jpg" alt="Post 4" />
+            <Link component={RouterLink} to="/news">
+              <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746215520/Schools_Sacco_Client_njawjp.jpg" alt="Post 3" />
+            </Link>
+            <Link component={RouterLink} to="/news">
+              <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746215778/sacco_Clients_dqus7m.jpg" alt="Post 4" />
+            </Link>
           </Box>
         </Box>
 
@@ -52,14 +61,14 @@ const Footer = () => {
         <Box className="footer-column">
           <Typography className="footer-heading">QUICK LINKS</Typography>
           <ul className="footer-links">
-            <li><Link href="#">Home</Link></li>
-            <li><Link href="#">About us</Link></li>
-            <li><Link href="#">Services</Link></li>
-            <li><Link href="#">Our Products</Link></li>
-            <li><Link href="#">Blogs & Posts</Link></li>
-            <li><Link href="#">FAQs</Link></li>
-            <li><Link href="#">Membership</Link></li>
-            <li><Link href="#">Contact us</Link></li>
+            <li><Link component={RouterLink} to="/">Home</Link></li>
+            <li><Link component={RouterLink} to="/about">About us</Link></li>
+            <li><Link component={RouterLink} to="/services">Services</Link></li>
+            <li><Link component={RouterLink} to="/products">Our Products</Link></li>
+            <li><Link component={RouterLink} to="/news">Blogs & Posts</Link></li>
+            <li><Link component={RouterLink} to="/faqs">FAQs</Link></li>
+            <li><Link component={RouterLink} to="/membership">Membership</Link></li>
+            <li><Link component={RouterLink} to="/contact">Contact us</Link></li>
           </ul>
         </Box>
 
