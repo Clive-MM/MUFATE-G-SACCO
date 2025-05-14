@@ -90,7 +90,11 @@ const Footer = () => {
             </Box>
             <Box className="contact-item">
               <Box className="icon-wrapper"><AccessTime /></Box>
-              <span>Monday - Friday 8:30 - 5.30PM</span>
+              <span>Monday - Friday 8:30AM - 5.30PM</span>
+            </Box>
+            <Box className="contact-item">
+              <Box className="icon-wrapper"><AccessTime /></Box>
+              <span>Saturday 8:30AM - 12.30PM</span>
             </Box>
           </Box>
         </Box>
