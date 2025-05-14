@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import {
     AppBar,
     Toolbar,
@@ -8,7 +8,6 @@ import {
     Link,
     Stack,
     Paper,
-    Switch,
     Tooltip,
     IconButton,
     Drawer,
@@ -20,13 +19,12 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PhoneIcon from '@mui/icons-material/Phone';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
 
-const Navbar = ({ toggleTheme, mode }) => {
+const Navbar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const location = useLocation();
 
     const navLinks = [
         { to: '/', label: 'Home' },
@@ -53,70 +51,58 @@ const Navbar = ({ toggleTheme, mode }) => {
             }}
         >
             <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
-                {/* Logo */}
                 <Box sx={{ flex: 1 }}>
                     <Link component={RouterLink} to="/" sx={{ display: 'inline-block' }}>
                         <img
                             src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
-                            alt="Sacco Logo"
-                            style={{ height: '100px', objectFit: 'contain' }}
+                            alt="MUFATE G SACCO logo"
+                            loading="lazy"
+                            style={{
+                                height: isMobile ? '80px' : '120px',
+                                objectFit: 'contain',
+                            }}
                         />
                     </Link>
                 </Box>
 
-            
                 {isMobile ? (
                     <IconButton onClick={() => setDrawerOpen(true)}>
                         <MenuIcon sx={{ color: 'primary.main' }} />
                     </IconButton>
                 ) : (
-                    <Stack direction="row" spacing={3} sx={{ flex: 3, justifyContent: 'center', fontSize: '16px', fontWeight: 500 }}>
+                    <Stack
+                        direction="row"
+                        spacing={3}
+                        sx={{ flex: 3, justifyContent: 'center', fontSize: '16px', fontWeight: 500 }}
+                    >
                         {navLinks.map((item) => (
                             <Link
-                                key={item.to}
-                                component={RouterLink}
-                                to={item.to}
-                                underline="none"
-                                color="inherit"
-                                sx={{
-                                    transition: 'transform 0.3s ease, color 0.3s ease',
-                                    '&:hover': {
-                                        color: 'primary.main',
-                                        transform: 'translateY(-3px) scale(1.1)',
-                                    },
-                                }}
-                            >
-                                {item.label}
-                            </Link>
+  key={item.to}
+  component={RouterLink}
+  to={item.to}
+  underline="none"
+  color={location.pathname === item.to ? 'primary.main' : 'inherit'}
+  sx={{
+    fontWeight: location.pathname === item.to ? 'bold' : 500,
+    textShadow: location.pathname === item.to
+      ? '0 0 8px rgba(100, 221, 23, 0.8)'
+      : 'none',
+    transform: location.pathname === item.to ? 'scale(1.1)' : 'scale(1)',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      color: 'primary.main',
+      transform: 'translateY(-3px) scale(1.1)',
+    },
+  }}
+>
+  {item.label}
+</Link>
+
                         ))}
                     </Stack>
                 )}
 
-              
                 <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 2 }}>
-                    <Tooltip title="Toggle light/dark mode" arrow>
-                        <Switch
-                            checked={mode === 'dark'}
-                            onChange={toggleTheme}
-                            icon={<LightModeIcon sx={{ fontSize: 20 }} />}
-                            checkedIcon={<DarkModeIcon sx={{ fontSize: 20 }} />}
-                            color="default"
-                            sx={{
-                                '& .MuiSwitch-switchBase': {
-                                    color: mode === 'dark' ? '#76ff03' : '#64dd17',
-                                    '&.Mui-checked': {
-                                        color: '#64dd17',
-                                        '& + .MuiSwitch-track': {
-                                            backgroundColor: '#64dd17',
-                                        },
-                                    },
-                                },
-                                '& .MuiSwitch-track': {
-                                    backgroundColor: mode === 'dark' ? '#444' : '#bbb',
-                                },
-                            }}
-                        />
-                    </Tooltip>
                     {!isMobile && (
                         <Button
                             component={RouterLink}
@@ -143,12 +129,10 @@ const Navbar = ({ toggleTheme, mode }) => {
                         >
                             Contact Us
                         </Button>
-
                     )}
                 </Box>
             </Toolbar>
 
-           
             <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
                 <List sx={{ width: 250 }}>
                     {navLinks.map((item) => (
@@ -158,12 +142,31 @@ const Navbar = ({ toggleTheme, mode }) => {
                             component={RouterLink}
                             to={item.to}
                             onClick={() => setDrawerOpen(false)}
+                            selected={location.pathname === item.to}
                         >
-                            <ListItemText primary={item.label} />
+                            <ListItemText
+                                primary={item.label}
+                                primaryTypographyProps={{
+                                    fontWeight: location.pathname === item.to ? 'bold' : 'normal',
+                                    color: location.pathname === item.to ? 'primary.main' : 'text.primary',
+                                }}
+                            />
                         </ListItem>
                     ))}
-                    <ListItem button component={RouterLink} to="/contact" onClick={() => setDrawerOpen(false)}>
-                        <ListItemText primary="Contact Us" />
+                    <ListItem
+                        button
+                        component={RouterLink}
+                        to="/contact"
+                        onClick={() => setDrawerOpen(false)}
+                        selected={location.pathname === '/contact'}
+                    >
+                        <ListItemText
+                            primary="Contact Us"
+                            primaryTypographyProps={{
+                                fontWeight: location.pathname === '/contact' ? 'bold' : 'normal',
+                                color: location.pathname === '/contact' ? 'primary.main' : 'text.primary',
+                            }}
+                        />
                     </ListItem>
                 </List>
             </Drawer>

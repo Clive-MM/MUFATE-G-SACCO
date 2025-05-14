@@ -1,11 +1,10 @@
-/* ==== Testimonials Section Wrapper ==== */
 .testimonials-section {
   background-color: #ffffff;
   padding: 4rem 1.5rem;
   text-align: center;
 }
 
-/* ==== Section Title ==== */
+
 .testimonial-title {
   font-size: 1.4rem;
   text-transform: uppercase;
@@ -25,7 +24,7 @@
   transform: scale(1.03);
 }
 
-/* Add an underline accent below the heading */
+
 .testimonial-title {
   background-color: #ffffff;
   display: inline-block;
@@ -49,7 +48,7 @@
   text-shadow: 0 0 6px #64dd17;
 }
 
-/* Optional animation */
+
 @keyframes fadeInGlow {
   0% {
     opacity: 0;
@@ -64,7 +63,7 @@
 }
 
 
-/* ==== Grid Layout ==== */
+
 .testimonials-grid {
   display: flex;
   flex-direction: column;
@@ -81,7 +80,7 @@
   }
 }
 
-/* ==== Testimonial Card ==== */
+
 .testimonial-card {
   max-width: 320px;
   padding: 2rem 1.5rem;
@@ -98,7 +97,7 @@
   transform: translateY(-6px);
 }
 
-/* ==== Quote Text ==== */
+
 .testimonial-quote {
   font-size: 2rem;
   color: #333;
