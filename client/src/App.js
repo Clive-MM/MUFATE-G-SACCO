@@ -4,6 +4,8 @@ import { Box } from '@mui/material';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
 
+import AboutUs from './pages/AboutUs/AboutUs';
+
 function App({ toggleTheme, mode }) {
   return (
     <Box
@@ -18,6 +20,9 @@ function App({ toggleTheme, mode }) {
         <Navbar toggleTheme={toggleTheme} mode={mode} />
         <Routes>
           <Route path="/" element={<Home />} />
+
+          {/* ✅ NEW ROUTE for About Us (Who We Are) */}
+          <Route path="/about/who-we-are" element={<AboutUs />} />
         </Routes>
       </BrowserRouter>
     </Box>
