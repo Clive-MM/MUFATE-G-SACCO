@@ -150,7 +150,7 @@ const AboutUs = () => {
 
 
       {/* CTA Section */}
-            {/* CTA Section */}
+            
       <Box
         component="section"
         sx={{
@@ -194,7 +194,7 @@ const AboutUs = () => {
               Join Mufate Sacco Today!
             </Typography>
             <Typography sx={{ fontSize: '15px', lineHeight: 1.6, mb: 2 }}>
-              Download our Sacco brochure and follow the requirements to become part of Mufate G Sacco.
+              Ready to join? Check out our membership brochure and take the next step today.
             </Typography>
 
             <motion.div
