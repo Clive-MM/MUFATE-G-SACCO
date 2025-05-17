@@ -12,6 +12,7 @@ const AboutUs = () => {
   const [branches, setBranches] = useState([]);
   const [coreValues, setCoreValues] = useState([]);
 
+
   useEffect(() => {
     axios.get('http://localhost:5000/branches')
       .then(res => setBranches(res.data.branches || []))
@@ -38,115 +39,115 @@ const AboutUs = () => {
       <AboutUsSection />
 
       {/* Branches & Core Values Section */}
-      <section style={{ background: '#f4f4f4', padding: '2rem 1rem' }}>
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: 'bold',
-            fontSize: { xs: '1.8rem', md: '2.2rem' },
-            color: '#2e7d32',
-            textAlign: 'center',
-            mb: 4,
-            textTransform: 'uppercase',
-            letterSpacing: 1,
-          }}
-        >
-          Our Branches
-        </Typography>
+      <section
+  style={{
+    background: 'linear-gradient(135deg, #e8f5e9, #f1f8e9)',
+    padding: '4rem 1.5rem',
+  }}
+>
+  <Typography
+    variant="h3"
+    sx={{
+      fontWeight: '800',
+      fontSize: { xs: '2rem', md: '2.4rem' },
+      color: '#1b5e20',
+      textAlign: { xs: 'center', md: 'left' },
+      mb: 6,
+      letterSpacing: 2,
+      textShadow: '0 2px 3px rgba(0,0,0,0.1)',
+      ml: { md: '12%' }, // pushes left on larger screens
+    }}
+  >
+    OUR BRANCHES
+  </Typography>
 
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: 3,
-            maxWidth: '1200px',
-            margin: '0 auto',
-          }}
-        >
-          {/* Branch Cards */}
-          {branches.map((branch, index) => (
-            <motion.div
-              key={branch.BranchID}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-            >
-              <Card
-                elevation={4}
-                sx={{
-                  borderRadius: 3,
-                  backgroundColor: '#003c3c',
-                  color: '#fff',
-                  textAlign: 'center',
-                  py: 3,
-                  px: 2,
-                  transition: 'all 0.4s ease',
-                  '&:hover': {
-                    backgroundColor: '#2e7d32',
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
-                  },
-                }}
-              >
-                <CardContent>
-                  <RoomIcon sx={{ fontSize: 40, color: '#64dd17', mb: 1 }} />
-                  <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold', textTransform: 'capitalize' }}>
-                    {branch.BranchName}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>{branch.Location}</Typography>
-                  <Typography variant="body2" sx={{ mb: 2 }}>
-                    <strong>Contact:</strong> {branch.ContactNumber}
-                  </Typography>
-                  
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+  <Box
+    sx={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+      gap: 4,
+      maxWidth: '1200px',
+      margin: '0 auto',
+    }}
+  >
+    {[...branches, { CoreValues: true }].map((item, index) => (
+      <motion.div
+        key={index}
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: index * 0.2 }}
+      >
+        <Card
+  elevation={6}
+  sx={{
+    width: '100%',                        // Responsive width
+    minHeight: '320px',                   // Force equal height
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '20px',
+    background: item.CoreValues
+      ? 'linear-gradient(to bottom right, #003c3c, #004d40)'
+      : 'linear-gradient(to bottom right, #004d40, #00695c)',
+    color: '#ffffff',
+    textAlign: 'center',
+    py: 4,
+    px: 3,
+    boxShadow: '0 12px 20px rgba(0, 0, 0, 0.3)',
+    transition: 'all 0.4s ease-in-out',
+    '&:hover': {
+      transform: 'scale(1.05) translateY(-6px)',
+      boxShadow: '0 18px 30px rgba(0, 0, 0, 0.4)',
+      border: item.CoreValues ? '2px solid #64dd17' : '2px solid #76ff03',
+    },
+  }}
+>
 
-          {/* Core Values Card */}
-          {coreValues.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: branches.length * 0.2 }}
-            >
-              <Card
-                elevation={4}
-                sx={{
-                  borderRadius: 3,
-                  backgroundColor: '#003c3c',
-                  color: '#fff',
-                  textAlign: 'center',
-                  py: 3,
-                  px: 2,
-                  transition: 'all 0.4s ease',
-                  '&:hover': {
-                    backgroundColor: '#1565c0',
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
-                  },
-                }}
-              >
-                <CardContent>
-                  <FavoriteIcon sx={{ fontSize: 40, color: '#ff8a65', mb: 1 }} />
-                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                    Our Core Values
-                  </Typography>
-                  <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                    {coreValues.map((value, i) => (
-                      <li key={i}>
-                        <Typography variant="body2" sx={{ mb: 1 }}>
-                           {value.CoreValueName}
-                        </Typography>
-                      </li>
-                    ))}
-                  </Box>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-        </Box>
-      </section>
+          <CardContent>
+            {item.CoreValues ? (
+              <>
+                <FavoriteIcon sx={{ fontSize: 50, color: '#ff7043', mb: 2 }} />
+                <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', fontSize: '1.4rem' }}>
+                  Our Core Values
+                </Typography>
+                <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
+                  {coreValues.map((value, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 * i }}
+                    >
+                      <Typography variant="body2" sx={{ mb: 1, fontSize: '1rem' }}>
+                        {value.CoreValueName}
+                      </Typography>
+                    </motion.li>
+                  ))}
+                </Box>
+              </>
+            ) : (
+              <>
+                <RoomIcon sx={{ fontSize: 50, color: '#76ff03', mb: 2 }} />
+                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, fontSize: '1.4rem' }}>
+                  {item.BranchName}
+                </Typography>
+                <Typography variant="body2" sx={{ fontSize: '1rem', mb: 1 }}>
+                  {item.Location}
+                </Typography>
+                <Typography variant="body2" sx={{ fontSize: '1rem' }}>
+                  <strong>Contact:</strong> {item.ContactNumber}
+                </Typography>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
+    ))}
+  </Box>
+</section>
+
+
 
       {/* CTA Section */}
             {/* CTA Section */}
@@ -193,37 +194,43 @@ const AboutUs = () => {
               Join Mufate Sacco Today!
             </Typography>
             <Typography sx={{ fontSize: '15px', lineHeight: 1.6, mb: 2 }}>
-              Download our Sacco brochure and follow the requirements to become part of Mufate Sacco.
+              Download our Sacco brochure and follow the requirements to become part of Mufate G Sacco.
             </Typography>
 
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
-              <Box
-                component="a"
-                href="http://localhost:3000/membership"
-                sx={{
-                  display: 'inline-block',
-                  px: 3,
-                  py: 1.2,
-                  backgroundColor: '#fff',
-                  color: '#04374f',
-                  borderRadius: '4px',
-                  fontWeight: 'bold',
-                  textDecoration: 'none',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-                  transition: 'background-color 0.3s, box-shadow 0.3s',
-                  '&:hover': {
-                    backgroundColor: '#e0e0e0',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                  },
-                }}
-              >
-                Register Now
-              </Box>
-            </motion.div>
+  whileHover={{ scale: 1.08 }}
+  whileTap={{ scale: 0.95 }}
+  transition={{ type: 'spring', stiffness: 300 }}
+>
+  <Box
+    component="a"
+    href="http://localhost:3000/membership"
+    sx={{
+      display: 'inline-block',
+      px: 3,
+      py: 1.2,
+      backgroundColor: '#64dd17', 
+      color: '#fff',
+      borderRadius: '20px',
+      fontWeight: 'bold',
+      textDecoration: 'none',
+      fontSize: '0.9rem',
+      boxShadow: '0 0 6px #64dd17',
+      transition: 'all 0.4s ease-in-out',
+      '&:hover': {
+        backgroundColor: '#76ff03',
+        boxShadow: '0 0 20px #76ff03',
+      },
+      '&:focus': {
+        outline: 'none',
+        boxShadow: '0 0 15px #76ff03',
+      },
+    }}
+  >
+    Register Now
+  </Box>
+</motion.div>
+
           </Box>
         </Box>
       </Box>
