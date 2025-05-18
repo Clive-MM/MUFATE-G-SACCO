@@ -89,7 +89,7 @@ const AboutSection = () => {
 
             <Button
               component={RouterLink}
-              to="/about"
+              to="/about/who-we-are"
               variant="contained"
               size="medium"
               sx={{
