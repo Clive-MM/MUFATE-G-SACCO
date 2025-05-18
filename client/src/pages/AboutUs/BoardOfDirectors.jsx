@@ -23,27 +23,18 @@ const BoardOfDirectors = () => {
       <Box sx={{ px: { xs: 2, md: 4 }, py: 5, flexGrow: 1 }}>
         {/* ✅ Animated Section Header */}
         <Typography
-          variant="h4"
-          align="center"
-          sx={{
-            fontWeight: 'bold',
-            position: 'relative',
-            color: 'primary.main',
-            mb: 4,
-            '&::after': {
-              content: '""',
-              display: 'block',
-              width: '60px',
-              height: '4px',
-              backgroundColor: '#2e7d32',
-              margin: '8px auto 0',
-              borderRadius: '8px',
-              animation: 'fadeIn 1s ease-in-out',
-            },
-          }}
-        >
-          Board of Directors
-        </Typography>
+  variant="h4"
+  align="center"
+  sx={{
+    fontWeight: 'bold',
+    position: 'relative',
+    color: 'primary.main',
+    mb: 4
+  }}
+>
+  Board of Directors
+</Typography>
+
 
         <Grid container spacing={4} justifyContent="center">
           {bodList.map(member => (
