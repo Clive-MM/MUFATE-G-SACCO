@@ -108,7 +108,7 @@ const Footer = () => {
       {/* Footer Bottom */}
       <Box className="footer-bottom">
         <Typography variant="body2">
-          Mufate Sacco Society Limited © 2024. All Rights Reserved.
+          Mufate Sacco Society Limited © 2025. All Rights Reserved.
         </Typography>
       </Box>
     </Box>
