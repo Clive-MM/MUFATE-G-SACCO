@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-from models.models import db, User, Career, CoreValue,Resource,FAQ, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership
+from models.models import db, User, Career, CoreValue,Resource,FAQ, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership, BOD, Management
 import cloudinary.uploader
 
 routes = Blueprint('routes', __name__)
@@ -1354,3 +1354,34 @@ def view_registered_members():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch members.', 'error': str(e)}), 500
+
+
+#Viewing the BOD Members
+@routes.route('/bod/view', methods=['GET'])
+def view_bod():
+    bod_list = BOD.query.all()
+    result = [
+        {
+            "BODID": member.BODID,
+            "Name": member.Name,
+            "Designation": member.Designation,
+            "ImageURL": member.ImageURL
+        }
+        for member in bod_list
+    ]
+    return jsonify(result), 200
+
+#VIEW MANAGEMENT TEAM
+@routes.route('/management/view', methods=['GET'])
+def view_management():
+    management_list = Management.query.all()
+    result = [
+        {
+            "MGTID": member.MGTID,
+            "MGTName": member.MGTName,
+            "Designation": member.Designation,
+            "ImageURL": member.ImageURL
+        }
+        for member in management_list
+    ]
+    return jsonify(result), 200

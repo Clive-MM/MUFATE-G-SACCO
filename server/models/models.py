@@ -226,3 +226,19 @@ class SaccoClient(db.Model):
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class BOD(db.Model):
+    __tablename__ = 'BOD'
+    BODID = db.Column(db.Integer, primary_key=True)
+    Name = db.Column(db.String(100), nullable=False)
+    Designation = db.Column(db.String(100))
+    ImageURL = db.Column(db.Text)
+
+class Management(db.Model):
+    __tablename__ = 'Management'
+    MGTID = db.Column(db.Integer, primary_key=True)
+    MGTName = db.Column(db.String(100), nullable=False)
+    Designation = db.Column(db.String(100))
+    ImageURL = db.Column(db.Text)
+
+
+

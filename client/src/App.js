@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
-
+import BoardOfDirectors from './pages/AboutUs/BoardOfDirectors';
+import ManagementTeam from './pages/AboutUs/ManagementTeam';
 import AboutUs from './pages/AboutUs/AboutUs';
 
 function App({ toggleTheme, mode }) {
@@ -17,12 +18,14 @@ function App({ toggleTheme, mode }) {
       }}
     >
       <BrowserRouter>
-        <Navbar toggleTheme={toggleTheme} mode={mode} />
+        <Navbar  />
         <Routes>
           <Route path="/" element={<Home />} />
 
           {/* ✅ NEW ROUTE for About Us (Who We Are) */}
           <Route path="/about/who-we-are" element={<AboutUs />} />
+          <Route path="/about/board-of-directors" element={<BoardOfDirectors />} />
+           <Route path="/about/management" element={<ManagementTeam />} />
         </Routes>
       </BrowserRouter>
     </Box>
