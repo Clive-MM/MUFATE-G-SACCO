@@ -171,9 +171,9 @@ const Navbar = () => {
                                                 zIndex: 10,
                                             }}
                                         >
-                                            <Link component={RouterLink} to="/products/fosa" sx={dropdownLinkStyle}>FOSA Products</Link>
-                                            <Link component={RouterLink} to="/products/bosa" sx={dropdownLinkStyle}>BOSA Products</Link>
-                                            <Link component={RouterLink} to="/products/savings" sx={dropdownLinkStyle}>Savings</Link>
+                                            <Link component={RouterLink} to="/products/fosa" sx={dropdownLinkStyle}>FOSA LOANS</Link>
+                                            <Link component={RouterLink} to="/products/bosa" sx={dropdownLinkStyle}>BOSA LOANS</Link>
+                                            <Link component={RouterLink} to="/products/savings" sx={dropdownLinkStyle}>SAVINGS</Link>
                                         </Box>
                                     </Box>
                                 );
