@@ -97,6 +97,8 @@ class Service(db.Model):
     ImageURL = db.Column(db.String(255))
     Description = db.Column(db.String(1000))
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
+    ServiceCategory = db.Column(db.String(50))  
+    LoanFormURL = db.Column(db.String(255))     
 
 class SaccoStatistics(db.Model):
     __tablename__ = 'Sacco_Statistics'

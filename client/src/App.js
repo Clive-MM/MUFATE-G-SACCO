@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import BoardOfDirectors from './pages/AboutUs/BoardOfDirectors';
 import ManagementTeam from './pages/AboutUs/ManagementTeam';
 import AboutUs from './pages/AboutUs/AboutUs';
+import FosaProducts from './pages/Products/FosaProducts';
 
 function App({ toggleTheme, mode }) {
   return (
@@ -26,6 +27,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/about/who-we-are" element={<AboutUs />} />
           <Route path="/about/board-of-directors" element={<BoardOfDirectors />} />
            <Route path="/about/management" element={<ManagementTeam />} />
+           <Route path="/products/fosa" element={<FosaProducts />} />
         </Routes>
       </BrowserRouter>
     </Box>

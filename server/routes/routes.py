@@ -274,9 +274,22 @@ def upload_resource():
         if not title or not file or not is_active_id:
             return jsonify({'message': '❌ Title, file, and IsActiveID are required!'}), 400
 
-        # Upload file to Cloudinary (as raw file type, because it's a PDF or document)
+        # Extract file extension
+        filename = file.filename
+        extension = filename.split('.')[-1]
+
+        # Upload to Cloudinary as raw file type
         upload_result = cloudinary.uploader.upload(file, resource_type='raw')
-        file_url = upload_result['secure_url']
+
+        # Defensive: check if secure_url exists
+        if 'public_id' not in upload_result or 'version' not in upload_result:
+            return jsonify({'message': '❌ Upload failed.', 'cloudinary_response': upload_result}), 500
+
+        public_id = upload_result['public_id']
+        version = upload_result['version']
+
+        # Force download link (fl_attachment adds download prompt)
+        file_url = f"https://res.cloudinary.com/djydkcx01/raw/upload/fl_attachment:{public_id}/v{version}/{public_id}.{extension}"
 
         # Save to database
         new_resource = Resource(
@@ -1020,7 +1033,7 @@ def create_service():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create service.', 'error': str(e)}), 500
     
-#Route for viewing the services offered by the sacco
+# Route for viewing the services offered by the SACCO
 @routes.route('/services', methods=['GET'])
 def view_services():
     try:
@@ -1033,6 +1046,8 @@ def view_services():
                 'ServiceName': svc.ServiceName,
                 'ImageURL': svc.ImageURL,
                 'Description': svc.Description,
+                'ServiceCategory': svc.ServiceCategory,
+                'LoanFormURL': svc.LoanFormURL,
                 'CreatedAt': svc.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
             })
 
@@ -1042,7 +1057,6 @@ def view_services():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch services.', 'error': str(e)}), 500
-
 
 #Creating sacco clients 
 @routes.route('/clients/create', methods=['POST'])

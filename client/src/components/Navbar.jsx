@@ -8,30 +8,22 @@ import {
     Link,
     Stack,
     Paper,
-    Tooltip,
+   
     IconButton,
-    Drawer,
-    List,
-    ListItem,
-    ListItemText,
+  
+    
     useTheme,
     useMediaQuery,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Typography,
+   
+   
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PhoneIcon from '@mui/icons-material/Phone';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import InfoIcon from '@mui/icons-material/Info';
-import CategoryIcon from '@mui/icons-material/Category';
-import GroupIcon from '@mui/icons-material/Group';
-import BusinessIcon from '@mui/icons-material/Business';
-import SavingsIcon from '@mui/icons-material/Savings';
+
 import { motion } from 'framer-motion';
 
 const Navbar = () => {
+    // eslint-disable-next-line
     const [drawerOpen, setDrawerOpen] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
