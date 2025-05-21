@@ -85,7 +85,9 @@ class Product(db.Model):
 
     ProductID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     ProductName = db.Column(db.String(100), nullable=False)
-    Description = db.Column(db.String(1000))
+    Intro = db.Column(db.String(1000))             
+    Features = db.Column(db.String(1000))           
+    Benefits = db.Column(db.String(1000))           
     ImageURL = db.Column(db.String(255))
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
 

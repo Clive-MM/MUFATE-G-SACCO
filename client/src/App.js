@@ -8,6 +8,7 @@ import ManagementTeam from './pages/AboutUs/ManagementTeam';
 import AboutUs from './pages/AboutUs/AboutUs';
 import FosaProducts from './pages/Products/FosaProducts';
 import BosaProducts from './pages/Products/BosaProducts';
+import Savings from './pages/Products/Savings';
 
 function App({ toggleTheme, mode }) {
   return (
@@ -30,6 +31,7 @@ function App({ toggleTheme, mode }) {
            <Route path="/about/management" element={<ManagementTeam />} />
            <Route path="/products/fosa" element={<FosaProducts />} />
            <Route path="/products/bosa" element={<BosaProducts />} />
+           <Route path="/products/savings" element={<Savings />} />
         </Routes>
       </BrowserRouter>
     </Box>

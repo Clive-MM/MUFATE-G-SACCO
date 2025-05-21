@@ -792,7 +792,7 @@ def create_product():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create product.', 'error': str(e)}), 500
 
-#View products 
+# View products 
 @routes.route('/products', methods=['GET'])
 def view_products():
     try:
@@ -805,7 +805,9 @@ def view_products():
             product_list.append({
                 'ProductID': product.ProductID,
                 'ProductName': product.ProductName,
-                'Description': product.Description,
+                'Intro': product.Intro,
+                'Features': product.Features,
+                'Benefits': product.Benefits,
                 'ImageURL': product.ImageURL,
                 'CreatedAt': product.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
             })
@@ -816,6 +818,7 @@ def view_products():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch products.', 'error': str(e)}), 500
+
 
 
 #Viewing a particular product
