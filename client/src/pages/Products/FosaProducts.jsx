@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box, Typography, Card, CardContent, CardActionArea, Button } from '@mui/material';
-import Footer from '../../components/Footer';
+import Slider from 'react-slick';
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Button
+} from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Footer from '../../components/Footer';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const FosaProducts = () => {
   const [fosaLoans, setFosaLoans] = useState([]);
@@ -21,145 +31,115 @@ const FosaProducts = () => {
     AOS.init({ duration: 1000 });
   }, []);
 
+ const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 600,              // Slide transition speed (ms)
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 3000,     // Delay between slides (ms) – adjust as needed
+  pauseOnHover: true,      // Pause when user hovers on card
+  arrows: true,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2,
+      }
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 1,
+      }
+    }
+  ]
+};
+
   return (
-    <Box sx={{ backgroundColor: '#fff', overflow: 'hidden', minHeight: '100vh' }}>
-      {/* Header */}
-      <Box
+    <Box sx={{ background: 'linear-gradient(to bottom, #215732, #0a3d2e)', py: 6 }}>
+      {/* Section Heading */}
+      <Typography
+        variant="h5"
+        align="center"
         sx={{
-          position: 'relative',
-          height: '60px',
+          color: '#fff',
+          fontWeight: 'bold',
+          textTransform: 'uppercase',
           mb: 4,
-          display: 'flex',
-          alignItems: 'center',
-          px: 2,
+          letterSpacing: '1px',
+          textShadow: '0 0 6px #f2a922'
         }}
       >
-        <Typography
-          sx={{
-            backgroundColor: '#fff',
-            px: 3,
-            py: 1,
-            zIndex: 2,
-            color: '#002d5a',
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            fontSize: '1rem',
-            letterSpacing: '1px',
-            textShadow: '0 0 5px #64dd17, 0 0 10px #64dd17',
-            animation: 'fadeInGlow 1.5s ease forwards',
-            cursor: 'default',
-            '&:hover': {
-              color: '#76ff03',
-              textShadow: '0 0 8px #76ff03, 0 0 16px #76ff03',
-              transform: 'scale(1.03)',
-            },
-          }}
-        >
-          FOSA Loan Products
-        </Typography>
+        FOSA Loan Products
+      </Typography>
 
-        <Box
-          sx={{
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: '180px',
-            width: 'calc(100% - 180px)',
-            height: '100%',
-            backgroundColor: '#215732',
-            zIndex: 1,
-          }}
-        />
-      </Box>
-
-      {/* Grid */}
-      <Box
-        sx={{
-          background: 'linear-gradient(to bottom, #215732, #0a3d2e)',
-          px: 2,
-          py: 4,
-        }}
-      >
-        <Box
-          sx={{
-            maxWidth: '1100px',
-            mx: 'auto',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 4,
-            justifyContent: 'center',
-          }}
-        >
-          {fosaLoans.map((loan, index) => (
-            <Card
-              key={loan.ServiceID}
-              data-aos="fade-up"
-              sx={{
-                backgroundColor: '#fff',
-                padding: '1rem 1.25rem',
-                borderRadius: '16px',
-                transition: 'all 0.3s ease',
-                width: '100%',
-                maxWidth: '330px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                height: '100%',
-                boxShadow: 3,
-                cursor: 'pointer',
-                textAlign: 'center',
-                '&:hover': {
-                  transform: 'translateY(-6px)',
-                  boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
-                },
-              }}
-            >
-              <CardActionArea sx={{ height: '100%' }}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  {loan.ImageURL && (
-                    <Box
-                      component="img"
-                      src={loan.ImageURL}
-                      alt={loan.ServiceName}
-                      sx={{
-                        width: 150,
-                        height: 150,
-                        objectFit: 'cover',
-                        borderRadius: '16px',
-                        mb: 2,
-                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-                        transition: 'transform 0.3s ease',
-                        '&:hover': {
-                          transform: 'scale(1.03)',
-                        },
-                      }}
-                    />
-                  )}
-
+      {/* Slider */}
+      <Box sx={{ maxWidth: '1200px', mx: 'auto', px: 2 }}>
+        <Slider {...sliderSettings}>
+          {fosaLoans.map((loan) => (
+            <Box key={loan.ServiceID} px={2}>
+              <Card
+                data-aos="zoom-in"
+                sx={{
+                  borderRadius: '20px',
+                  boxShadow: 4,
+                  height: '100%',
+                  transition: 'transform 0.4s ease, box-shadow 0.4s ease',
+                  cursor: 'pointer',
+                  backgroundColor: '#fff',
+                  '&:hover': {
+                    transform: 'scale(1.03)',
+                    boxShadow: '0 0 25px rgba(100, 221, 23, 0.6)',
+                    border: '2px solid #64dd17',
+                  },
+                }}
+              >
+                {loan.ImageURL && (
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={loan.ImageURL}
+                    alt={loan.ServiceName}
+                    sx={{
+                      objectFit: 'cover',
+                      borderTopLeftRadius: '20px',
+                      borderTopRightRadius: '20px',
+                    }}
+                  />
+                )}
+                <CardContent>
                   <Typography
                     variant="h6"
-                    fontWeight="bold"
-                    sx={{ textTransform: 'uppercase', color: '#215732', mb: 1 }}
+                    sx={{
+                      fontWeight: 'bold',
+                      color: '#215732',
+                      textTransform: 'uppercase',
+                      mb: 1
+                    }}
                   >
                     {loan.ServiceName}
                   </Typography>
-
-                  <Typography variant="body2" sx={{ color: '#444', mb: 2 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: '#555', minHeight: '60px' }}
+                  >
                     {loan.Description}
                   </Typography>
-
                   {loan.LoanFormURL && (
                     <Button
                       href={loan.LoanFormURL}
                       target="_blank"
                       download
                       sx={{
+                        mt: 2,
                         backgroundColor: '#64dd17',
                         color: '#fff',
                         fontWeight: 'bold',
-                        borderRadius: '30px',
                         px: 3,
                         py: 1,
+                        borderRadius: '30px',
                         boxShadow: '0 0 10px #64dd17',
                         transition: 'all 0.3s ease',
                         '&:hover': {
@@ -173,13 +153,14 @@ const FosaProducts = () => {
                     </Button>
                   )}
                 </CardContent>
-              </CardActionArea>
-            </Card>
+              </Card>
+            </Box>
           ))}
-        </Box>
+        </Slider>
       </Box>
 
-      <Box sx={{ height: '20px', backgroundColor: '#f2a922' }} />
+      {/* Footer Divider and Footer */}
+      <Box sx={{ height: '20px', backgroundColor: '#f2a922', mt: 6 }} />
       <Footer />
     </Box>
   );
