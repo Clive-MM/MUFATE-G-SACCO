@@ -38,7 +38,7 @@ const FosaProducts = () => {
   slidesToShow: 3,
   slidesToScroll: 1,
   autoplay: true,
-  autoplaySpeed: 3000,     // Delay between slides (ms) – adjust as needed
+  autoplaySpeed: 2500,     // Delay between slides (ms) – adjust as needed
   pauseOnHover: true,      // Pause when user hovers on card
   arrows: true,
   responsive: [
