@@ -9,6 +9,7 @@ import AboutUs from './pages/AboutUs/AboutUs';
 import FosaProducts from './pages/Products/FosaProducts';
 import BosaProducts from './pages/Products/BosaProducts';
 import Savings from './pages/Products/Savings';
+import Services from './pages/Services/Services';
 
 function App({ toggleTheme, mode }) {
   return (
@@ -32,6 +33,8 @@ function App({ toggleTheme, mode }) {
            <Route path="/products/fosa" element={<FosaProducts />} />
            <Route path="/products/bosa" element={<BosaProducts />} />
            <Route path="/products/savings" element={<Savings />} />
+           <Route path="/services" element={<Services />} />
+
         </Routes>
       </BrowserRouter>
     </Box>
