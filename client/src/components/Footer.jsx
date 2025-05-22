@@ -62,9 +62,9 @@ const Footer = () => {
           <Typography className="footer-heading">QUICK LINKS</Typography>
           <ul className="footer-links">
             <li><Link component={RouterLink} to="/">Home</Link></li>
-            <li><Link component={RouterLink} to="/about">About us</Link></li>
+            <li><Link component={RouterLink} to="/about/who-we-are">About us</Link></li>
             <li><Link component={RouterLink} to="/services">Services</Link></li>
-            <li><Link component={RouterLink} to="/products">Our Products</Link></li>
+            <li><Link component={RouterLink} to="/products/bosa">Our Products</Link></li>
             <li><Link component={RouterLink} to="/news">Blogs & Posts</Link></li>
             <li><Link component={RouterLink} to="/faqs">FAQs</Link></li>
             <li><Link component={RouterLink} to="/membership">Membership</Link></li>

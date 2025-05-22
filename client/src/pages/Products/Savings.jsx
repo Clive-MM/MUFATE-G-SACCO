@@ -120,13 +120,13 @@ const SavingsProducts = () => {
                                 <CardHeader
                                     avatar={<Avatar sx={{ bgcolor: '#215732' }}><SavingsIcon /></Avatar>}
                                     title={item.ProductName}
-                                    subheader={item.CreatedAt}
+                                   
                                 />
 
                                 {item.ImageURL && (
                                     <CardMedia
                                         component="img"
-                                        height="200"
+                                        height="250"
                                         image={item.ImageURL}
                                         alt={item.ProductName}
                                         sx={{ objectFit: 'cover' }}
@@ -205,7 +205,7 @@ const SavingsProducts = () => {
                                     {item.ImageURL && (
                                         <CardMedia
                                             component="img"
-                                            height="200"
+                                            height="300"
                                             image={item.ImageURL}
                                             alt={item.ProductName}
                                             sx={{ objectFit: 'cover' }}
