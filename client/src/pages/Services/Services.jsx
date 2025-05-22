@@ -1,6 +1,6 @@
 import React from 'react';
 import HeroBanner from './HeroBanner';
-// import MobileBanking from './MobileBanking';
+ import MobileBanking from './MobileBanking';
 // import SalaryProcessing from './SalaryProcessing';
 // import StrategicPartners from './StrategicPartners';
 
@@ -10,6 +10,7 @@ const Services = () => {
         <>
            
             <HeroBanner />
+            <MobileBanking/>
             
         </>
     );
