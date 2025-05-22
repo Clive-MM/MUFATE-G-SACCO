@@ -75,40 +75,37 @@ const MobileBanking = () => {
 
                 </motion.div>
             </Box>
-
-            {/* ✅ Right Side Phone Images */}
-            {/* ✅ Right Side Phone Images (No Cards or Borders) */}
-<Box
-  sx={{
-    display: 'flex',
-    gap: 4,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    zIndex: 2,
-  }}
->
-  {[
-    "https://res.cloudinary.com/djydkcx01/image/upload/v1746212408/Withdraw_Money_euixjq.png",
-    "https://res.cloudinary.com/djydkcx01/image/upload/v1746212284/Money_Deposit_ftr3ov.png",
-  ].map((src, idx) => (
-    <motion.img
-      key={idx}
-      src={src}
-      alt={`phone-${idx}`}
-      style={{
-        width: '250px',
-        height: 'auto',
-        borderRadius: '20px',
-      }}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: idx * 0.3 }}
-      whileHover={{ scale: 1.05 }}
-    />
-  ))}
-</Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 4,
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    zIndex: 2,
+                }}
+            >
+                {[
+                    "https://res.cloudinary.com/djydkcx01/image/upload/v1746212408/Withdraw_Money_euixjq.png",
+                    "https://res.cloudinary.com/djydkcx01/image/upload/v1746212284/Money_Deposit_ftr3ov.png",
+                ].map((src, idx) => (
+                    <motion.img
+                        key={idx}
+                        src={src}
+                        alt={`phone-${idx}`}
+                        style={{
+                            width: '250px',
+                            height: 'auto',
+                            borderRadius: '20px',
+                        }}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: idx * 0.3 }}
+                        whileHover={{ scale: 1.05 }}
+                    />
+                ))}
+            </Box>
 
         </Box>
     );
