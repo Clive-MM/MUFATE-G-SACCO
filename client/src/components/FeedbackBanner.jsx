@@ -63,7 +63,7 @@ const FeedbackBanner = () => {
               We’d Love to Hear from You
             </Typography>
             <Typography sx={{ mt: 1, color: '#333', fontSize: '15px' }}>
-              Your feedback helps us improve our services and serve you better. Please take a moment to share your thoughts, experiences, or suggestions with Mufate Sacco. All responses are confidential and appreciated.
+              Your feedback helps us improve our services and serve you better. Please take a moment to share your thoughts, experiences, or suggestions with Mufate G Sacco. All responses are confidential and appreciated.
             </Typography>
           </Box>
 
