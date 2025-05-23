@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
+import SmartphoneIcon from '@mui/icons-material/Smartphone'; // ✅ Small icon next to heading
 
 const MobileBanking = () => {
     return (
@@ -8,7 +9,7 @@ const MobileBanking = () => {
             sx={{
                 position: 'relative',
                 display: 'flex',
-                flexDirection: { xs: 'column', md: 'row' },
+                flexDirection: { xs: 'column-reverse', md: 'row' }, // ✅ Improved mobile responsiveness
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 px: { xs: 2, md: 10 },
@@ -19,40 +20,58 @@ const MobileBanking = () => {
                 minHeight: { md: '480px' },
             }}
         >
-            {/* ✅ Green Background Patch Behind Phones */}
+            {/* ✅ Gradient Green Background Patch */}
             <Box
                 sx={{
                     position: 'absolute',
                     right: 0,
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    width: { xs: '100%', md: '50%' }, // <-- Increased from 42% to 55%
+                    width: { xs: '100%', md: '50%' },
                     height: '240px',
-                    backgroundColor: '#004d40',
+                    background: 'linear-gradient(135deg, #004d40, #00695c)', // ✅ Gradient
                     borderTopLeftRadius: '30px',
                     borderBottomLeftRadius: '30px',
                     zIndex: 0,
                 }}
             />
 
+            {/* ✅ Soft Glow Overlay */}
+            <Box
+                sx={{
+                    position: 'absolute',
+                    right: '25%',
+                    top: '50%',
+                    transform: 'translate(50%, -50%)',
+                    width: 300,
+                    height: 300,
+                    backgroundColor: '#ffffff33',
+                    borderRadius: '50%',
+                    filter: 'blur(60px)',
+                    zIndex: 1,
+                }}
+            />
 
             {/* ✅ Left Text Content */}
             <Box sx={{ flex: 1, zIndex: 2 }}>
                 <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
                 >
                     <Typography
-                        variant="h6"
+                        variant="h4"
                         sx={{
-                            fontWeight: 700,
+                            display: 'flex',
+                            alignItems: 'center',
+                            fontWeight: 800,
                             color: '#003b2f',
                             textTransform: 'uppercase',
-                            letterSpacing: '1px',
-                            mb: 2,
+                            letterSpacing: '1.5px',
+                            mb: 3,
                         }}
                     >
+                        <SmartphoneIcon sx={{ mr: 1 }} />
                         M-Banking Services
                     </Typography>
 
@@ -71,10 +90,10 @@ const MobileBanking = () => {
                         our mobile platform puts the power of banking in your hands — securely and conveniently.
                         Use <strong>*882*51#</strong> to access your account.
                     </Typography>
-
-
                 </motion.div>
             </Box>
+
+            {/* ✅ Phones / Illustrations */}
             <Box
                 sx={{
                     display: 'flex',
@@ -98,6 +117,7 @@ const MobileBanking = () => {
                             width: '250px',
                             height: 'auto',
                             borderRadius: '20px',
+                            boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)', // ✅ Shadow depth
                         }}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -106,7 +126,6 @@ const MobileBanking = () => {
                     />
                 ))}
             </Box>
-
         </Box>
     );
 };
