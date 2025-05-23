@@ -199,7 +199,7 @@ class Career(db.Model):
     is_active = db.relationship('IsActive', backref='careers')
     PostedDate = db.Column(db.DateTime, default=datetime.utcnow)
 
-class Resource(db.Model):
+class Resources(db.Model):
     __tablename__ = 'Resources'
 
     ResourceID = db.Column(db.Integer, primary_key=True, autoincrement=True)

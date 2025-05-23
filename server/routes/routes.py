@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-from models.models import db, User, Career, CoreValue,Resource,FAQ, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership, BOD, Management
+from models.models import db, User, Career, CoreValue,FAQ, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership, BOD, Management, Resources
 import cloudinary.uploader
 
 routes = Blueprint('routes', __name__)
@@ -1402,3 +1402,38 @@ def view_management():
         for member in management_list
     ]
     return jsonify(result), 200
+
+
+#view resources
+@routes.route('/resources/recent', methods=['GET'])
+def get_recent_resources():
+    try:
+        recent_titles = [
+            "Institutions Loan Application Form",
+            "Member Application Document",
+            "Mobile Banking Application",
+            "MUFATE G SACCO Brochure",
+            "Specimen Capture Form"
+        ]
+
+        # Only fetch active and recently added resources
+        resources = Resources.query.filter(
+            Resources.IsActiveID == 1,
+            Resources.Title.in_(recent_titles)
+        ).order_by(Resources.UploadedAt.desc()).all()
+
+        resource_list = []
+        for resource in resources:
+            resource_list.append({
+                'ResourceID': resource.ResourceID,
+                'Title': resource.Title,
+                'FilePath': resource.FilePath,
+                'UploadedAt': resource.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'resources': resource_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch recent resources.', 'error': str(e)}), 500
