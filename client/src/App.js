@@ -26,7 +26,7 @@ function App({ toggleTheme, mode }) {
         <Routes>
           <Route path="/" element={<Home />} />
 
-          {/* ✅ NEW ROUTE for About Us (Who We Are) */}
+          {/* ✅ NEW ROUTE ) */}
           <Route path="/about/who-we-are" element={<AboutUs />} />
           <Route path="/about/board-of-directors" element={<BoardOfDirectors />} />
            <Route path="/about/management" element={<ManagementTeam />} />

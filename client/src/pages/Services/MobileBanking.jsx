@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
-import SmartphoneIcon from '@mui/icons-material/Smartphone'; // ✅ Small icon next to heading
+import SmartphoneIcon from '@mui/icons-material/Smartphone'; 
 
 const MobileBanking = () => {
     return (
@@ -9,7 +9,7 @@ const MobileBanking = () => {
             sx={{
                 position: 'relative',
                 display: 'flex',
-                flexDirection: { xs: 'column-reverse', md: 'row' }, // ✅ Improved mobile responsiveness
+                flexDirection: { xs: 'column-reverse', md: 'row' }, 
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 px: { xs: 2, md: 10 },
@@ -117,7 +117,7 @@ const MobileBanking = () => {
                             width: '250px',
                             height: 'auto',
                             borderRadius: '20px',
-                            boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)', // ✅ Shadow depth
+                            boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)', 
                         }}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}

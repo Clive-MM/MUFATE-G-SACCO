@@ -19,7 +19,7 @@ const SalaryProcessing = () => {
                 gap: 6,
             }}
         >
-            {/* 📸 Image with Enhanced Styling and Motion */}
+            
             <Box
                 sx={{
                     position: 'relative',
@@ -47,7 +47,7 @@ const SalaryProcessing = () => {
                 />
             </Box>
 
-            {/* 📝 Text Content */}
+        
             <Box sx={{ color: '#fff', maxWidth: '600px', zIndex: 2 }}>
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}

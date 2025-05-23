@@ -2,7 +2,7 @@ import React from 'react';
 import HeroBanner from './HeroBanner';
  import MobileBanking from './MobileBanking';
 import SalaryProcessing from './SalaryProcessing';
-// import StrategicPartners from './StrategicPartners';
+import StrategicPartners from './StrategicPartners';
 
 
 const Services = () => {
@@ -12,6 +12,7 @@ const Services = () => {
             <HeroBanner />
             <MobileBanking/>
             <SalaryProcessing/>
+            <StrategicPartners/>
             
         </>
     );

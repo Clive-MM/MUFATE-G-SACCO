@@ -13,7 +13,7 @@ const HeroBanner = () => {
         width: '100%',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: { xs: 'center', md: 'flex-end' }, // Push to right on desktop
+        justifyContent: { xs: 'center', md: 'flex-end' }, 
         px: { xs: 2, md: 10 },
         color: '#fff',
         textAlign: { xs: 'center', md: 'left' },
