@@ -29,6 +29,10 @@ const ResourcesPage = () => {
       });
   }, []);
 
+  const handleDownload = (fileUrl) => {
+    window.open(fileUrl, '_blank');
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.98 }}
@@ -38,7 +42,6 @@ const ResourcesPage = () => {
     >
       <Box sx={{ background: 'radial-gradient(circle at top, #e8f5e9, #1b5e20)' }}>
         <Box sx={{ pt: 6, pb: 6, px: { xs: 2, md: 10 } }}>
-          {/* ✅ Heading */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -82,21 +85,19 @@ const ResourcesPage = () => {
                         transition: 'transform 0.3s ease',
                         '&:hover': {
                           transform: 'translateY(-5px)',
-                          boxShadow: '0 8px 25px rgba(255, 215, 0, 0.25)', // Gold hover glow
+                          boxShadow: '0 8px 25px rgba(255, 215, 0, 0.25)',
                         },
                       }}
                     >
                       <CardContent sx={{ textAlign: 'center' }}>
                         <Typography
                           variant="h6"
-                          sx={{ fontWeight: 700, mb: 2, color: '#2e7d32' }} // Dark green
+                          sx={{ fontWeight: 700, mb: 2, color: '#2e7d32' }}
                         >
                           {res.Title}
                         </Typography>
                         <Button
-                          href={res.FilePath}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          onClick={() => handleDownload(res.FilePath)}
                           variant="contained"
                           startIcon={<CloudDownload />}
                           sx={{
@@ -106,7 +107,7 @@ const ResourcesPage = () => {
                             fontWeight: 600,
                             '&:hover': {
                               backgroundColor: '#33691e',
-                              boxShadow: '0 0 12px #ffd700', // Gold shadow
+                              boxShadow: '0 0 12px #ffd700',
                               transform: 'scale(1.06)',
                             },
                             transition: 'all 0.3s ease-in-out',
@@ -123,7 +124,6 @@ const ResourcesPage = () => {
           )}
         </Box>
 
-        {/* ✅ Footer positioned and styled correctly */}
         <Box sx={{ mt: '-24px' }}>
           <Footer />
         </Box>
