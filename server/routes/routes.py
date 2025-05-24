@@ -1412,7 +1412,7 @@ def get_recent_resources():
             "Institutions Loan Application Form",
             "Member Application Document",
             "Mobile Banking Application",
-            "MUFATE G SACCO Brochure",
+            "MUFATE G SACCO Bronchure",
             "Specimen Capture Form"
         ]
 

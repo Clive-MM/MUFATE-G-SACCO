@@ -30,7 +30,7 @@ const AboutSection = () => {
             boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
           }}
         >
-          {/* Left: Text Section */}
+         
           <Box sx={{ flex: 1, p: { xs: 3, md: 5 } }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -121,7 +121,7 @@ const AboutSection = () => {
             </Typography>
           </Box>
 
-          {/* Right: Image Section */}
+         
           <Box
             sx={{
               flex: 1,

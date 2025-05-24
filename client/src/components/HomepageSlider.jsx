@@ -42,7 +42,7 @@ const HomepageSlider = () => {
               overflow: 'hidden',
             }}
           >
-            {/* HD Image */}
+           
             <img
               src={slide.ImagePath}
               alt={slide.Title}
@@ -56,7 +56,7 @@ const HomepageSlider = () => {
               }}
             />
 
-            {/* Dark Overlay */}
+          
             <Box
               sx={{
                 position: 'absolute',
@@ -68,7 +68,7 @@ const HomepageSlider = () => {
               }}
             />
 
-            {/* Centered Slide Text */}
+            
             <Box
               sx={{
                 position: 'absolute',

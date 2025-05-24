@@ -36,7 +36,7 @@ const Footer = () => {
           </Box>
         </Box>
 
-        {/* Column 2: Recent Posts */}
+      
         <Box className="footer-column">
           <Typography className="footer-heading">RECENT POSTS</Typography>
           <Box className="footer-images">
@@ -57,7 +57,7 @@ const Footer = () => {
           </Box>
         </Box>
 
-        {/* Column 3: Quick Links */}
+        
         <Box className="footer-column">
           <Typography className="footer-heading">QUICK LINKS</Typography>
           <ul className="footer-links">
@@ -100,12 +100,12 @@ const Footer = () => {
         </Box>
       </Box>
 
-      {/* Scroll-to-top button */}
+     
       <IconButton className="scroll-to-top" onClick={scrollToTop}>
         <ArrowUpward />
       </IconButton>
 
-      {/* Footer Bottom */}
+  
       <Box className="footer-bottom">
         <Typography variant="body2">
           Mufate Sacco Society Limited © 2025. All Rights Reserved.
