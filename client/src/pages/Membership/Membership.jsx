@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import MembershipInfo from './MembershipInfo';
 import JoiningInstructions from './JoiningInstructions';
+import MembershipBenefits from './MembershipBenefits';
 
 
 const Membership = () => {
@@ -81,6 +82,7 @@ const Membership = () => {
       
       <MembershipInfo/>
       <JoiningInstructions/>
+      <MembershipBenefits/>
     </Box>
 
   );
