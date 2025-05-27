@@ -19,6 +19,7 @@ const JoiningInstructions = () => {
   return (
     <Box
       sx={{
+        position: 'relative',
         background: 'linear-gradient(to bottom, #ffffff, #d6d6d6)',
         borderBottomLeftRadius: '16px',
         borderBottomRightRadius: '16px',
@@ -30,8 +31,33 @@ const JoiningInstructions = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        overflow: 'hidden',
       }}
     >
+      {/* Vertical Colored Bars */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          right: { xs: '4px', sm: '16px', md: '80px' },
+          display: 'flex',
+          flexDirection: 'row',
+          gap: { xs: '4px', sm: '12px', md: '50px' },
+          zIndex: 0,
+        }}
+      >
+        {['#003B49', '#2E7D32', '#F9A825', '#00695C', '#000'].map((color, index) => (
+          <Box
+            key={index}
+            sx={{
+              width: { xs: '10px', sm: '20px', md: '90px' },
+              backgroundColor: color,
+            }}
+          />
+        ))}
+      </Box>
+
       {/* Animated Heading */}
       <MotionTypography
         variant="h6"
@@ -47,6 +73,7 @@ const JoiningInstructions = () => {
           mb: 3,
           letterSpacing: '1px',
           cursor: 'pointer',
+          fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' },
         }}
       >
         Joining Instructions
@@ -69,10 +96,10 @@ const JoiningInstructions = () => {
             transition={{ type: 'spring', stiffness: 300 }}
             style={{
               color: '#003B49',
-              fontSize: '1.05rem',
+              fontSize: '1rem',
               fontWeight: 500,
-              lineHeight: 1.8,
-              marginBottom: '8px',
+              lineHeight: 1.6,
+              marginBottom: '6px',
               cursor: 'default',
             }}
           >
@@ -94,8 +121,9 @@ const JoiningInstructions = () => {
             backgroundColor: '#2E7D32',
             color: '#fff',
             fontWeight: 'bold',
-            px: 4,
-            py: 1,
+            px: { xs: 2, sm: 3, md: 4 },
+            py: { xs: 1, sm: 1.25 },
+            fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' },
             textTransform: 'uppercase',
             borderRadius: '8px',
             boxShadow: '0 0 10px 2px rgba(255, 215, 0, 0.6)',
