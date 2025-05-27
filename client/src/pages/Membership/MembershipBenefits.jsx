@@ -13,16 +13,19 @@ const MembershipBenefits = () => {
   return (
     <Box
       sx={{
-        height: { xs: 'auto', md: '75vh' },
+        width: '100%',
         backgroundColor: '#004144',
         color: '#fff',
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
         alignItems: 'center',
         justifyContent: 'center',
-        px: 0, // Remove padding from section container
+        px: 0,
         py: { xs: 4, md: 6 },
         gap: { xs: 4, md: 8 },
+        maxWidth: '1600px', // prevents excessive stretch on ultra-wide screens
+        mx: 'auto', // centers the section
+        height: { xs: 'auto', md: '75vh' },
       }}
     >
       {/* Left - Flush Image Card */}
@@ -32,8 +35,12 @@ const MembershipBenefits = () => {
           borderRadius: 2,
           overflow: 'hidden',
           width: { xs: '100%', md: '45%' },
-          height: { md: 'calc(85vh - 96px)' },
-          ml: 0, // No margin-left
+          height: {
+            xs: '250px', // capped height for small screens
+            md: 'calc(75vh - 96px)',
+          },
+          ml: 0,
+          flexShrink: 0,
         }}
       >
         <Box
