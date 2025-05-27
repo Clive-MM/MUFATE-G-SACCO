@@ -100,7 +100,7 @@ const JoiningInstructions = () => {
                         display: 'flex',
                         justifyContent: 'flex-end',
                         alignItems: 'flex-end',
-                        ml: { md: 50 }, // additional spacing to push bars further right
+                        ml: { md: 53 }, 
                     }}
                 >
                     <Box
