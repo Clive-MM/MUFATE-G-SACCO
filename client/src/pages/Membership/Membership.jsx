@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import MembershipInfo from './MembershipInfo';
+import JoiningInstructions from './JoiningInstructions';
 
 
 const Membership = () => {
@@ -79,6 +80,7 @@ const Membership = () => {
       </Box>
       
       <MembershipInfo/>
+      <JoiningInstructions/>
     </Box>
 
   );

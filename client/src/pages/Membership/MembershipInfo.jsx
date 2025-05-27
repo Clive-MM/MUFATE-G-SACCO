@@ -7,7 +7,7 @@ const MembershipInfo = () => {
     <Box
       sx={{
         background: 'linear-gradient(to bottom,rgb(189, 225, 237),rgb(233, 241, 250))', 
-        borderRadius: '10px',
+        
         boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
