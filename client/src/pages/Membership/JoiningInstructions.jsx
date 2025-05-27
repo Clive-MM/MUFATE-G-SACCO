@@ -52,7 +52,7 @@ const JoiningInstructions = () => {
         Joining Instructions
       </MotionTypography>
 
-      {/* Animated List */}
+      {/* Styled Instruction List */}
       <Box
         component="ul"
         sx={{
@@ -65,13 +65,14 @@ const JoiningInstructions = () => {
         {instructions.map((item, index) => (
           <motion.li
             key={index}
-            whileHover={{ x: 5, scale: 1.01 }}
+            whileHover={{ x: 5 }}
             transition={{ type: 'spring', stiffness: 300 }}
             style={{
-              color: '#333',
-              fontSize: '1rem',
-              lineHeight: 1.7,
-              marginBottom: '6px',
+              color: '#003B49',
+              fontSize: '1.05rem',
+              fontWeight: 500,
+              lineHeight: 1.8,
+              marginBottom: '8px',
               cursor: 'default',
             }}
           >
@@ -81,7 +82,7 @@ const JoiningInstructions = () => {
       </Box>
 
       {/* Glowing Download Button */}
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 4 }}>
         <Button
           component="a"
           href="https://raw.githubusercontent.com/Clive-MM/Mufate-G-SACCO-DOCUMENTS/main/MEMBER-APPLICATION-DOCUMENT.pdf"
