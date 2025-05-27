@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import MembershipInfo from './MembershipInfo';
 import JoiningInstructions from './JoiningInstructions';
 import MembershipBenefits from './MembershipBenefits';
+import Footer from '../../components/Footer';
+
+
 
 
 const Membership = () => {
@@ -83,6 +86,7 @@ const Membership = () => {
       <MembershipInfo/>
       <JoiningInstructions/>
       <MembershipBenefits/>
+      <Footer/>
     </Box>
 
   );

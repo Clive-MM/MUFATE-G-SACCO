@@ -6,8 +6,7 @@ const MembershipInfo = () => {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(to bottom,rgb(189, 225, 237),rgb(233, 241, 250))', 
-        
+        background: 'linear-gradient(to bottom,rgb(189, 225, 237),rgb(233, 241, 250))',
         boxShadow: '0 4px 24px rgba(0,0,0,0.05)',
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
@@ -20,30 +19,28 @@ const MembershipInfo = () => {
       }}
     >
       {/* ✅ Text Section */}
-      <Box sx={{ color: '#333', maxWidth: '600px', zIndex: 2 }}>
+      <Box sx={{ color: '#003B49', maxWidth: '600px', zIndex: 2 }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
           <Typography
-            variant="h5"
+            variant="h4"
             sx={{
               fontWeight: 700,
               textTransform: 'uppercase',
-              letterSpacing: '1px',
-              mb: 3,
-              color: '#003B49',
+              fontSize: { xs: '1.4rem', md: '2rem' },
+              mb: 2,
             }}
           >
             Membership
           </Typography>
 
           <Typography
-            variant="body1"
             sx={{
-              lineHeight: 1.8,
-              fontSize: '1.05rem',
+              fontSize: { xs: '1rem', md: '1.1rem' },
+              lineHeight: 1.6,
             }}
           >
             Becoming a member of Mufate G Sacco means joining a community committed to financial growth,

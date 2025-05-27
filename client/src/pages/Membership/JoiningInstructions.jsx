@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import { motion } from 'framer-motion';
 import DownloadIcon from '@mui/icons-material/Download';
 
 const instructions = [
@@ -13,14 +12,12 @@ const instructions = [
   'Open a savings account and start making deposits.',
 ];
 
-const MotionTypography = motion(Typography);
-
 const JoiningInstructions = () => {
   return (
     <Box
       sx={{
         position: 'relative',
-        background: 'linear-gradient(to bottom, #ffffff, #d6d6d6)',
+        background: 'linear-gradient(to bottom, rgb(189, 225, 237), rgb(233, 241, 250))',
         borderBottomLeftRadius: '16px',
         borderBottomRightRadius: '16px',
         px: { xs: 2, md: 8 },
@@ -58,57 +55,37 @@ const JoiningInstructions = () => {
         ))}
       </Box>
 
-      {/* Animated Heading */}
-      <MotionTypography
-        variant="h6"
-        whileHover={{
-          scale: 1.05,
-          textShadow: '0px 0px 8px rgba(0, 91, 115, 0.6)',
-        }}
-        transition={{ type: 'spring', stiffness: 300 }}
+      {/* Heading */}
+      <Typography
+        variant="h4"
         sx={{
           color: '#003B49',
-          textTransform: 'uppercase',
           fontWeight: 700,
+          textTransform: 'uppercase',
+          fontSize: { xs: '1.4rem', md: '2rem' },
           mb: 3,
-          letterSpacing: '1px',
-          cursor: 'pointer',
-          fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' },
         }}
       >
         Joining Instructions
-      </MotionTypography>
+      </Typography>
 
-      {/* Styled Instruction List */}
-      <Box
-        component="ul"
-        sx={{
-          pl: 0,
-          mb: 2,
-          listStyle: 'none',
-          ml: 0,
-        }}
-      >
-        {instructions.map((item, index) => (
-          <motion.li
-            key={index}
-            whileHover={{ x: 5 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-            style={{
+      {/* Instructions List */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        {instructions.map((item, idx) => (
+          <Typography
+            key={idx}
+            sx={{
               color: '#003B49',
-              fontSize: '1rem',
-              fontWeight: 500,
+              fontSize: { xs: '1rem', md: '1.1rem' },
               lineHeight: 1.6,
-              marginBottom: '6px',
-              cursor: 'default',
             }}
           >
             {item}
-          </motion.li>
+          </Typography>
         ))}
       </Box>
 
-      {/* Glowing Download Button */}
+      {/* Download Button */}
       <Box sx={{ mt: 4 }}>
         <Button
           component="a"
