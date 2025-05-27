@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import axios from 'axios';
 
-// Icons
+
 import GroupsIcon from '@mui/icons-material/Groups';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
@@ -51,7 +51,7 @@ const SaccoStatsSection = () => {
         px: { xs: 2, sm: 4, md: 8 },
       }}
     >
-      {/* Heading */}
+     
       <Typography
         variant="h4"
         sx={{

@@ -11,6 +11,7 @@ import BosaProducts from './pages/Products/BosaProducts';
 import Savings from './pages/Products/Savings';
 import Services from './pages/Services/Services';
 import Resources from './pages/Resources';
+import Membership from './pages/Membership';
 
 function App({ toggleTheme, mode }) {
   return (
@@ -36,6 +37,7 @@ function App({ toggleTheme, mode }) {
            <Route path="/products/savings" element={<Savings />} />
            <Route path="/services" element={<Services />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/membership" element={<Membership />} />
         </Routes>
       </BrowserRouter>
     </Box>
