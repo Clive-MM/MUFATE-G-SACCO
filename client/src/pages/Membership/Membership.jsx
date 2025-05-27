@@ -1,11 +1,13 @@
 import React from 'react';
-import { Box, Typography} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
+import MembershipInfo from './MembershipInfo';
+
 
 const Membership = () => {
   return (
     <Box>
-      
+
       <Box
         role="banner"
         aria-label="Membership Hero Section"
@@ -72,10 +74,13 @@ const Membership = () => {
             Empowering communities through savings, investment, and unity for a better tomorrow.
           </Typography>
 
-          
+
         </Box>
       </Box>
+      
+      <MembershipInfo/>
     </Box>
+
   );
 };
 

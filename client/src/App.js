@@ -11,7 +11,7 @@ import BosaProducts from './pages/Products/BosaProducts';
 import Savings from './pages/Products/Savings';
 import Services from './pages/Services/Services';
 import Resources from './pages/Resources';
-import Membership from './pages/Membership';
+import Membership from './pages/Membership/Membership';
 
 function App({ toggleTheme, mode }) {
   return (
