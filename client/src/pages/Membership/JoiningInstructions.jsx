@@ -3,7 +3,7 @@ import { Box, Typography, Button, Grid } from '@mui/material';
 import { motion } from 'framer-motion';
 
 const instructions = [
-    'Get the membership application form (from the office or website).',
+    'Get the membership application form from the office or website.',
     'Fill in the form with your correct details.',
     'Attach a copy of your ID/Passport, and a passport-size photo.',
     'Pay the registration fee of Kshs 100.',
