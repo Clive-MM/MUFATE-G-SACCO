@@ -13,6 +13,9 @@ import Services from './pages/Services/Services';
 import Resources from './pages/Resources';
 import Membership from './pages/Membership/Membership';
 
+import ContactUs from './pages/ContactUs/ContactUs';
+// import Careers from './pages/Careers/Careers';
+
 function App({ toggleTheme, mode }) {
   return (
     <Box
@@ -36,8 +39,10 @@ function App({ toggleTheme, mode }) {
            <Route path="/products/bosa" element={<BosaProducts />} />
            <Route path="/products/savings" element={<Savings />} />
            <Route path="/services" element={<Services />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/membership" element={<Membership />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/membership" element={<Membership />} />
+          <Route path="/contact" element={<ContactUs />} />
+          {/* <Route path="/careers" element={<Careers />} /> */}
         </Routes>
       </BrowserRouter>
     </Box>

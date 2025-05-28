@@ -30,13 +30,20 @@ const Footer = () => {
             services to farmers, business community and other institutions.
           </Typography>
           <Box className="footer-icons">
-            <IconButton><X /></IconButton>
+            <IconButton
+              component="a"
+              href="https://x.com/GMufate"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <X />
+            </IconButton>
             <IconButton><Instagram /></IconButton>
             <IconButton><Facebook /></IconButton>
           </Box>
         </Box>
 
-      
+
         <Box className="footer-column">
           <Typography className="footer-heading">RECENT POSTS</Typography>
           <Box className="footer-images">
@@ -57,7 +64,7 @@ const Footer = () => {
           </Box>
         </Box>
 
-        
+
         <Box className="footer-column">
           <Typography className="footer-heading">QUICK LINKS</Typography>
           <ul className="footer-links">
@@ -100,12 +107,12 @@ const Footer = () => {
         </Box>
       </Box>
 
-     
+
       <IconButton className="scroll-to-top" onClick={scrollToTop}>
         <ArrowUpward />
       </IconButton>
 
-  
+
       <Box className="footer-bottom">
         <Typography variant="body2">
           Mufate Sacco Society Limited © 2025. All Rights Reserved.
