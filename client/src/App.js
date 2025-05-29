@@ -12,7 +12,7 @@ import Savings from './pages/Products/Savings';
 import Services from './pages/Services/Services';
 import Resources from './pages/Resources';
 import Membership from './pages/Membership/Membership';
-
+import FAQs from './more/FAQs';
 import ContactUs from './pages/ContactUs/ContactUs';
 // import Careers from './pages/Careers/Careers';
 
@@ -42,6 +42,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/resources" element={<Resources />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/contact" element={<ContactUs />} />
+          <Route path="/faqs" element={<FAQs />} />
           {/* <Route path="/careers" element={<Careers />} /> */}
         </Routes>
       </BrowserRouter>

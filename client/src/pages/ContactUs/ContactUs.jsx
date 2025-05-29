@@ -2,6 +2,8 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import ContactDetails from './ContactDetails';
 import FeedbackForm from './FeedbackForm';
+import Footer from '../../components/Footer';
+
 
 const ContactUs = () => {
   return (
@@ -56,6 +58,8 @@ const ContactUs = () => {
       {/* Contact Info Section */}
       <ContactDetails />
       <FeedbackForm/>
+      <Footer/>
+      
     </>
   );
 };
