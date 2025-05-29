@@ -1,5 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import ContactDetails from './ContactDetails';
+import FeedbackForm from './FeedbackForm';
 
 const ContactUs = () => {
   return (
@@ -7,9 +9,10 @@ const ContactUs = () => {
       {/* Hero Section */}
       <Box
         sx={{
-          height: { xs: '40vh', md: '80vh' },
+          height: { xs: '80vh', md: '120vh' },
           position: 'relative',
-          backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1748438814/ChatGPT_Image_May_28_2025_04_25_45_PM_vedkd0.png)',
+          backgroundImage:
+            'url(https://res.cloudinary.com/djydkcx01/image/upload/v1748438814/ChatGPT_Image_May_28_2025_04_25_45_PM_vedkd0.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -18,13 +21,13 @@ const ContactUs = () => {
           alignItems: 'flex-start',
           justifyContent: 'center',
           px: { xs: 3, md: 8 },
+          py: { xs: 4, md: 6 },
           color: '#fff',
         }}
       >
-        {/* Main Heading */}
         <Typography
-          variant="h4"
           sx={{
+            fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.5rem' },
             fontWeight: 'bold',
             textShadow: '2px 2px 8px rgba(0,0,0,0.6)',
             zIndex: 1,
@@ -33,22 +36,26 @@ const ContactUs = () => {
           Let’s Get In Touch
         </Typography>
 
-        {/* Subtext */}
         <Typography
-          variant="h6"
           sx={{
+            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' },
             mt: 2,
-            maxWidth: '600px',
+            maxWidth: { xs: '100%', sm: '90%', md: '600px' },
             fontWeight: 'normal',
             textShadow: '1px 1px 6px rgba(0,0,0,0.4)',
             lineHeight: 1.6,
             fontStyle: 'italic',
+            wordWrap: 'break-word',
             zIndex: 1,
           }}
         >
           Have any questions or need support? Our team is ready to help you with anything you need.
         </Typography>
       </Box>
+
+      {/* Contact Info Section */}
+      <ContactDetails />
+      <FeedbackForm/>
     </>
   );
 };

@@ -435,7 +435,7 @@ def submit_feedback():
         db.session.add(new_feedback)
         db.session.commit()
 
-        return jsonify({'message': '✅ Thank you for your feedback!'}), 201
+        return jsonify({'message': '😊 Thank you for your feedback!'}), 201
 
     except Exception as e:
         import traceback
