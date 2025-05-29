@@ -30,7 +30,7 @@ const ContactDetails = () => {
           mb: 2,
         }}
       >
-        Contact
+        Contact us
       </Typography>
 
       {/* Paragraph Content */}
