@@ -1235,26 +1235,37 @@ def create_homepage_slider():
         }), 500
 
 
-#Viewing homepage sliders
+# Viewing selected homepage sliders (ImageID 1, 3, 2, 4 in that order)
 @routes.route('/slider/view', methods=['GET'])
 def view_homepage_sliders():
     try:
-        # Fetch only active sliders (IsActiveID = 1)
-        sliders = HomepageSlider.query.filter_by(IsActiveID=1).order_by(HomepageSlider.Timestamp.desc()).all()
+        # Define specific IDs in custom order
+        ordered_ids = [1, 3, 2, 4]
 
+        # Query for only the selected IDs
+        sliders = HomepageSlider.query.filter(
+            HomepageSlider.ImageID.in_(ordered_ids),
+            HomepageSlider.IsActiveID == 1
+        ).all()
+
+        # Maintain custom order
+        slider_dict = {slide.ImageID: slide for slide in sliders}
         slider_list = []
-        for slide in sliders:
-            slider_list.append({
-                'Title': slide.Title,
-                'Description': slide.Description,
-                'ImagePath': slide.ImagePath,
-                'Timestamp': slide.Timestamp.strftime('%Y-%m-%d %H:%M:%S')
-            })
+        for id in ordered_ids:
+            if id in slider_dict:
+                slide = slider_dict[id]
+                slider_list.append({
+                    'Title': slide.Title,
+                    'Description': slide.Description,
+                    'ImagePath': slide.ImagePath,
+                    'Timestamp': slide.Timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                })
 
         return jsonify({'sliders': slider_list}), 200
 
     except Exception as e:
         return jsonify({'message': '❌ Failed to fetch sliders.', 'error': str(e)}), 500
+
     
 #Customer Registration
 @routes.route('/membership/register', methods=['POST'])
@@ -1437,3 +1448,55 @@ def get_recent_resources():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch recent resources.', 'error': str(e)}), 500
+
+
+# Route to fetch career hero image
+@routes.route('/career-hero', methods=['GET'])
+def get_career_hero_image():
+    try:
+        # Query the image with ImageID = 5
+        image = HomepageSlider.query.filter_by(ImageID=5, IsActiveID=1).first()
+
+        if not image:
+            return jsonify({'message': 'No active career hero image found.'}), 404
+
+        image_data = {
+            'ImageID': image.ImageID,
+            'Title': image.Title,
+            'Description': image.Description,
+            'ImagePath': image.ImagePath,
+            'Timestamp': image.Timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+        return jsonify({'career_hero': image_data}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Error fetching career hero image.', 'error': str(e)}), 500
+
+
+# Route to fetch second career hero image (ImageID = 6)
+@routes.route('/career-hero-2', methods=['GET'])
+def get_career_hero_image_2():
+    try:
+        # Query the image with ImageID = 6
+        image = HomepageSlider.query.filter_by(ImageID=6, IsActiveID=1).first()
+
+        if not image:
+            return jsonify({'message': 'No active image found with ImageID = 6'}), 404
+
+        image_data = {
+            'ImageID': image.ImageID,
+            'Title': image.Title,
+            'Description': image.Description,
+            'ImagePath': image.ImagePath,
+            'Timestamp': image.Timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+        return jsonify({'career_hero_2': image_data}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Error fetching ImageID = 6.', 'error': str(e)}), 500

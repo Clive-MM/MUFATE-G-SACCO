@@ -14,7 +14,7 @@ import Resources from './pages/Resources';
 import Membership from './pages/Membership/Membership';
 import FAQs from './more/FAQs';
 import ContactUs from './pages/ContactUs/ContactUs';
-// import Careers from './pages/Careers/Careers';
+import Careers from './pages/Careers/Careers';
 
 function App({ toggleTheme, mode }) {
   return (
@@ -43,7 +43,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/membership" element={<Membership />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/faqs" element={<FAQs />} />
-          {/* <Route path="/careers" element={<Careers />} /> */}
+          <Route path="/careers" element={<Careers />} />
         </Routes>
       </BrowserRouter>
     </Box>
