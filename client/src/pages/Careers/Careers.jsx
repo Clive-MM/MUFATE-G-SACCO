@@ -81,7 +81,7 @@ const Careers = () => {
               }}
               style={{
                 width: '100%',
-                maxWidth: '480px',
+                maxWidth: '600px',
                 borderRadius: '16px',
               }}
             />
