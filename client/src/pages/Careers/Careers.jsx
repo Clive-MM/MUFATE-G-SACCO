@@ -110,7 +110,7 @@ const Careers = () => {
             mx: 'auto',
             fontSize: '1.15rem',
             lineHeight: 1.9,
-            color: '#2e3d35', // ✅ Dark green-gray for readability
+            color: '#2e3d35', 
             fontWeight: 500,
             letterSpacing: '0.3px',
           }}
