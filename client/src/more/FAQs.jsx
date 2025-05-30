@@ -28,8 +28,10 @@ const FAQs = () => {
       sx={{
         m: 0,
         p: 0,
-        background: 'linear-gradient(to bottom right, #c0e0f7, #eaf6fb)',
+        background: 'linear-gradient(to bottom right, #00695c, #80cbc4)',
         minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       <Card
@@ -40,9 +42,10 @@ const FAQs = () => {
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
           height: { xs: 'auto', md: '70vh' },
+          backgroundColor: 'transparent',
         }}
       >
-        {/* FAQ Section */}
+        {/* FAQ Section with SACCO Gradient + Glass Effect */}
         <Box
           sx={{
             flex: 1,
@@ -52,6 +55,10 @@ const FAQs = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
+            background: 'rgba(255, 255, 255, 0.15)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            color: '#003B49',
           }}
         >
           <Typography
@@ -59,9 +66,9 @@ const FAQs = () => {
             sx={{
               fontWeight: 'bold',
               mb: 3,
-              color: '#003B49',
+              color: '#ffffff',
               textAlign: isMobile ? 'center' : 'left',
-              textShadow: '1px 1px #b0c4de',
+              textShadow: '1px 1px rgba(0,0,0,0.3)',
             }}
           >
             Frequently Asked Questions
@@ -76,8 +83,8 @@ const FAQs = () => {
                 sx={{
                   p: 2,
                   borderRadius: '10px',
-                  backgroundColor: hoveredIndex === index ? '#e0f7fa' : 'transparent',
-                  boxShadow: hoveredIndex === index ? '0 0 12px rgba(0, 172, 193, 0.6)' : 'none',
+                  backgroundColor: hoveredIndex === index ? 'rgba(255,255,255,0.25)' : 'transparent',
+                  boxShadow: hoveredIndex === index ? '0 0 12px rgba(255, 255, 255, 0.3)' : 'none',
                   transition: 'all 0.3s ease-in-out',
                   cursor: 'pointer',
                 }}
@@ -86,7 +93,7 @@ const FAQs = () => {
                   sx={{
                     fontSize: '1.1rem',
                     fontWeight: 600,
-                    color: '#004D61',
+                    color: '#ffffff',
                     transition: 'color 0.3s',
                     textAlign: 'left',
                   }}
@@ -98,7 +105,7 @@ const FAQs = () => {
                     sx={{
                       mt: 1,
                       fontSize: '0.95rem',
-                      color: '#00695C',
+                      color: '#e0f2f1',
                       pl: 2,
                       animation: 'fadeIn 0.4s ease-in-out',
                     }}
