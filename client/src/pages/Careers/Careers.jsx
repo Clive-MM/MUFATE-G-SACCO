@@ -42,7 +42,7 @@ const Careers = () => {
   }
 
   return (
-    <Box sx={{ fontFamily: `'Segoe UI', sans-serif`, pb: 12 }}>
+    <Box sx={{ fontFamily: `'Segoe UI', sans-serif`, pb: { xs: 10, md: 12 } }}>
       {/* Hero Image 1 Section */}
       <Box sx={{ position: 'relative', width: '100%' }}>
         <Box
@@ -57,7 +57,7 @@ const Careers = () => {
           }}
         />
 
-        {/* Overlay Hero Image 2 - Centered & Glowing */}
+        {/* Overlay Hero Image 2 - Responsive Centered & Glowing */}
         {hero2 && (
           <Box
             sx={{
@@ -65,7 +65,7 @@ const Careers = () => {
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
-              bottom: '-100px',
+              bottom: { xs: '-60px', sm: '-80px', md: '-100px' },
               zIndex: 5,
             }}
           >
@@ -77,10 +77,11 @@ const Careers = () => {
               transition={{ duration: 1 }}
               whileHover={{
                 scale: 1.03,
-                boxShadow: '0 0 30px rgba(0, 255, 100, 0.8)', // ✅ Green glow
+                boxShadow: '0 0 30px rgba(0, 255, 100, 0.8)',
               }}
               style={{
-                width: '40%',
+                width: '100%',
+                maxWidth: '480px',
                 borderRadius: '16px',
               }}
             />
@@ -89,14 +90,14 @@ const Careers = () => {
       </Box>
 
       {/* Description Section */}
-      <Box sx={{ textAlign: 'center', mt: 14, px: 2 }}>
+      <Box sx={{ textAlign: 'center', mt: { xs: 12, md: 16 }, px: 2 }}>
         <Typography
           variant="h3"
           sx={{
             fontWeight: 800,
-            fontSize: { xs: '2.2rem', md: '2.8rem' },
+            fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.8rem' },
             letterSpacing: '0.5px',
-            color: '#014421', // ✅ Deep green brand color
+            color: '#014421',
             mb: 2,
             textTransform: 'uppercase',
           }}
@@ -108,9 +109,9 @@ const Careers = () => {
           sx={{
             maxWidth: '850px',
             mx: 'auto',
-            fontSize: '1.15rem',
+            fontSize: { xs: '1rem', md: '1.15rem' },
             lineHeight: 1.9,
-            color: '#2e3d35', 
+            color: '#2e3d35',
             fontWeight: 500,
             letterSpacing: '0.3px',
           }}
