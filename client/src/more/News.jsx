@@ -55,7 +55,7 @@ const News = () => {
           textShadow: '0 0 6px #f2a922'
         }}
       >
-        MUFATE G SACCO News & Updates
+        MUFATE G SACCO News
       </Typography>
 
       <Grid container spacing={4} justifyContent="center" px={2}>
