@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box, Typography, IconButton, Link
 } from '@mui/material';
@@ -7,9 +7,18 @@ import {
   Facebook, Instagram, X
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
+import axios from 'axios';
 import './Footer.css';
 
 const Footer = () => {
+  const [postImages, setPostImages] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/posts/images')
+      .then((res) => setPostImages(res.data.images))
+      .catch((err) => console.error('❌ Failed to fetch recent post images:', err));
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -43,28 +52,26 @@ const Footer = () => {
           </Box>
         </Box>
 
-
+        {/* ✅ Column 2: Dynamic Recent Posts */}
         <Box className="footer-column">
           <Typography className="footer-heading">RECENT POSTS</Typography>
           <Box className="footer-images">
-            <Link component={RouterLink} to="/news">
-              <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746217592/CROP_ADVANCE_LOAN_IMAGE_rxkpxb.png" alt="Post 1" />
-            </Link>
-            <Link component={RouterLink} to="/news">
-              <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746220668/school_fees_Loan_image_sslrcp.png" alt="Post 2" />
-            </Link>
+            {postImages.slice(0, 2).map((post) => (
+              <Link key={post.PostID} component={RouterLink} to="/news">
+                <img src={post.CoverImage} alt={`Post ${post.PostID}`} />
+              </Link>
+            ))}
           </Box>
           <Box className="footer-images">
-            <Link component={RouterLink} to="/news">
-              <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746215520/Schools_Sacco_Client_njawjp.jpg" alt="Post 3" />
-            </Link>
-            <Link component={RouterLink} to="/news">
-              <img src="https://res.cloudinary.com/djydkcx01/image/upload/v1746215778/sacco_Clients_dqus7m.jpg" alt="Post 4" />
-            </Link>
+            {postImages.slice(2, 4).map((post) => (
+              <Link key={post.PostID} component={RouterLink} to="/news">
+                <img src={post.CoverImage} alt={`Post ${post.PostID}`} />
+              </Link>
+            ))}
           </Box>
         </Box>
 
-
+        {/* Column 3: Quick Links */}
         <Box className="footer-column">
           <Typography className="footer-heading">QUICK LINKS</Typography>
           <ul className="footer-links">
@@ -107,11 +114,9 @@ const Footer = () => {
         </Box>
       </Box>
 
-
       <IconButton className="scroll-to-top" onClick={scrollToTop}>
         <ArrowUpward />
       </IconButton>
-
 
       <Box className="footer-bottom">
         <Typography variant="body2">

@@ -1500,3 +1500,21 @@ def get_career_hero_image_2():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Error fetching ImageID = 6.', 'error': str(e)}), 500
+
+
+
+@routes.route('/posts/images', methods=['GET'])
+def get_post_images():
+    try:
+        # Fetch the latest 4 posts ordered by DatePosted (descending)
+        posts = Post.query.order_by(Post.DatePosted.desc()).limit(4).all()
+
+        # Only extract CoverImage URLs
+        images = [{'PostID': post.PostID, 'CoverImage': post.CoverImage} for post in posts if post.CoverImage]
+
+        return jsonify({'images': images}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch post images.', 'error': str(e)}), 500
