@@ -66,7 +66,7 @@ const AboutSection = () => {
                 maxWidth: '95%',
               }}
             >
-              At MUFATE SACCO, we are committed to empowering our members through reliable,
+              At MUFATE G SACCO,Mudete Factory Tea Growers SACCO LTD, we are committed to empowering our members through reliable,
               efficient, and transparent financial services. With over a decade of experience
               serving the tea farming community, our dedicated team ensures every transaction is
               handled with integrity and precision.
