@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import CareerListing from './CareerListing';
+import Footer from '../../components/Footer';
 
 const Careers = () => {
   const [hero1, setHero1] = useState(null);
@@ -42,7 +44,14 @@ const Careers = () => {
   }
 
   return (
-    <Box sx={{ fontFamily: `'Segoe UI', sans-serif`, pb: { xs: 10, md: 12 } }}>
+    <Box
+      sx={{
+        fontFamily: `'Segoe UI', sans-serif`,
+        background: '#f8fff3', // match footer background
+        m: 0,
+        p: 0,
+      }}
+    >
       {/* Hero Image 1 Section */}
       <Box sx={{ position: 'relative', width: '100%' }}>
         <Box
@@ -57,7 +66,7 @@ const Careers = () => {
           }}
         />
 
-        {/* Overlay Hero Image 2 - Responsive Centered & Glowing */}
+        {/* Overlay Hero Image 2 */}
         {hero2 && (
           <Box
             sx={{
@@ -89,8 +98,8 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* Description Section */}
-      <Box sx={{ textAlign: 'center', mt: { xs: 12, md: 16 }, px: 2 }}>
+      {/* Description */}
+      <Box sx={{ textAlign: 'center', mt: { xs: 12, md: 16 }, px: 2, mb: 6 }}>
         <Typography
           variant="h3"
           sx={{
@@ -119,6 +128,10 @@ const Careers = () => {
           {hero1?.Description}
         </Typography>
       </Box>
+
+      <CareerListing />
+
+      <Footer />
     </Box>
   );
 };
