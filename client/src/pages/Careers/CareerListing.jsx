@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
-  Card,
   CardContent,
   Chip,
   Divider,
   CircularProgress,
 } from '@mui/material';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 
 const CareerListing = () => {
@@ -68,22 +70,22 @@ const CareerListing = () => {
         </Typography>
       ) : (
         careers.map((job) => (
-          <Card
+          <motion.div
             key={job.CareerID}
-            sx={{
-              mb: 5,
-              borderRadius: '20px',
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            whileHover={{ scale: 1.02 }}
+            style={{
               backgroundColor: '#fff',
-              boxShadow: 4,
-              transition: 'transform 0.4s ease, box-shadow 0.4s ease',
-              '&:hover': {
-                transform: 'scale(1.03)',
-                boxShadow: '0 0 25px rgba(100, 221, 23, 0.6)',
-                border: '2px solid #64dd17',
-              },
-              maxWidth: 900,
-              mx: 'auto',
-              px: 2,
+              borderRadius: '20px',
+              padding: '24px',
+              marginBottom: '40px',
+              maxWidth: '900px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              boxShadow: '0px 5px 20px rgba(0,0,0,0.15)',
+              border: '2px solid transparent',
             }}
           >
             <CardContent>
@@ -116,11 +118,23 @@ const CareerListing = () => {
               />
 
               <Typography
+                variant="subtitle1"
+                sx={{
+                  fontWeight: 600,
+                  color: '#2e7d32',
+                  mb: 0.5,
+                  fontSize: '1.05rem',
+                }}
+              >
+                Job Description:
+              </Typography>
+
+              <Typography
                 variant="body1"
                 sx={{
                   color: '#333',
                   fontSize: '1.05rem',
-                  mb: 1,
+                  mb: 1.5,
                 }}
               >
                 {job.JobDescription}
@@ -141,11 +155,15 @@ const CareerListing = () => {
               <Typography
                 variant="body2"
                 sx={{
-                  mb: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
                   fontWeight: 'bold',
                   color: '#333',
+                  mb: 1,
                 }}
               >
+                <AccessTimeIcon sx={{ fontSize: 18, color: '#014421' }} />
                 Deadline: {job.Deadline}
               </Typography>
 
@@ -154,14 +172,18 @@ const CareerListing = () => {
               <Typography
                 variant="body2"
                 sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
                   color: '#555',
                   fontSize: '0.95rem',
                 }}
               >
+                <MailOutlineIcon sx={{ fontSize: 18, color: '#014421' }} />
                 <strong>How to Apply:</strong> {job.ApplicationInstructions}
               </Typography>
             </CardContent>
-          </Card>
+          </motion.div>
         ))
       )}
     </Box>
