@@ -292,7 +292,7 @@ def upload_resource():
         file_url = f"https://res.cloudinary.com/djydkcx01/raw/upload/fl_attachment:{public_id}/v{version}/{public_id}.{extension}"
 
         # Save to database
-        new_resource = Resource(
+        new_resource = Resources(
             Title=title,
             FilePath=file_url,
             IsActiveID=is_active_id
@@ -312,7 +312,7 @@ def upload_resource():
 @routes.route('/resources', methods=['GET'])
 def list_resources():
     try:
-        resources = Resource.query.filter_by(IsActiveID=1).order_by(Resource.UploadedAt.desc()).all()
+        resources = Resources.query.filter_by(IsActiveID=1).order_by(Resources.UploadedAt.desc()).all()
         resource_list = []
 
         for res in resources:
@@ -334,7 +334,7 @@ def list_resources():
 def download_resource(resource_id):
     try:
         # Find the resource in the database
-        resource = Resource.query.get(resource_id)
+        resource = Resources.query.get(resource_id)
         if not resource:
             return jsonify({'message': '❌ Resource not found.'}), 404
 
