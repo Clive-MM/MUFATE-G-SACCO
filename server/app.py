@@ -2,9 +2,12 @@ from flask import Flask
 from models.models import db, IsActive, FeedbackStatus  
 from cloudinary_config import cloudinary
 from flask_cors import CORS
+import os
+from dotenv import load_dotenv
 
 
-
+# ✅ Load environment variables from custom file
+load_dotenv(dotenv_path=".mufate_env")
 
 app = Flask(__name__)
 
@@ -12,13 +15,13 @@ CORS(app)
 
 
 # ✅ Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    "mssql+pyodbc://@localhost,1433/MUFATE_G_SACCO"
-    "?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes"
-)
 
+
+
+# ✅ Load DB URI from environment variable
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'GYwNuK5IA72w8sH_fVxYcOWtY0RJ9wBrP5B93RvBEG06NC5ETopjLjRSNQJnr2LUXTWfBBKZU-F6Q3K3kKNu8w'
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['JWT_IDENTITY_CLAIM'] = 'identity'
 
 

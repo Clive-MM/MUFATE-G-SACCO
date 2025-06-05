@@ -1,0 +1,3 @@
+DATABASE_URL=mssql+pyodbc://mufate-g-sacco:AZiza%402812@34.70.201.145:1433/MUFATE_G_SACCO?driver=ODBC+Driver+17+for+SQL+Server&Encrypt=no&TrustServerCertificate=yes
+
+JWT_SECRET_KEY=GYwNuK5IA72w8sH_fVxYcOWtY0RJ9wBrP5B93RvBEG06NC5ETopjLjRSNQJnr2LUXTWfBBKZU-F6Q3K3kKNu8w
