@@ -2,16 +2,10 @@ services:
   - type: web
     name: mufate-backend
     env: docker
-    plan: free
+    repo: https://github.com/Clive-MM/MUFATE-G-SACCO
     branch: main
-    buildFilter:
-      paths:
-        - Dockerfile
-        - requirements.txt
-        - app.py
-        - models/**
-        - routes/**
-    autoDeploy: true
+    rootDir: server
+    plan: free
     envVars:
       - key: DATABASE_URL
         sync: false
