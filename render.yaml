@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: mufate-backend
+    env: docker
+    plan: free
+    branch: main
+    buildFilter:
+      paths:
+        - Dockerfile
+        - requirements.txt
+        - app.py
+        - models/**
+        - routes/**
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
