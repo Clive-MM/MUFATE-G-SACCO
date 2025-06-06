@@ -16,7 +16,7 @@ const StrategicPartners = () => {
   const [partners, setPartners] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/partnerships')
+    axios.get('https://mufate-g-sacco.onrender.com/partnerships')
       .then(res => setPartners(res.data.partnerships))
       .catch(err => console.error('Error fetching partners:', err));
   }, []);

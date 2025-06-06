@@ -14,7 +14,7 @@ const Footer = () => {
   const [postImages, setPostImages] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/posts/images')
+    axios.get('https://mufate-g-sacco.onrender.com/posts/images')
       .then((res) => setPostImages(res.data.images))
       .catch((err) => console.error('❌ Failed to fetch recent post images:', err));
   }, []);
@@ -104,7 +104,7 @@ const Footer = () => {
             </Box>
             <Box className="contact-item">
               <Box className="icon-wrapper"><AccessTime /></Box>
-              <span>Monday - Friday 8:30AM - 5.30PM</span>
+              <span>Monday - Friday 8:30AM - 4.00PM</span>
             </Box>
             <Box className="contact-item">
               <Box className="icon-wrapper"><AccessTime /></Box>

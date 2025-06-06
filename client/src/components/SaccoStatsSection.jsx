@@ -16,7 +16,7 @@ const SaccoStatsSection = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/statistics') // Update this if hosted elsewhere
+      .get('https://mufate-g-sacco.onrender.com/statistics') 
       .then((res) => {
         setStats(res.data.statistics);
         setLoading(false);

@@ -9,7 +9,7 @@ const ManagementTeam = () => {
   const [managementList, setManagementList] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/management/view')
+    axios.get('https://mufate-g-sacco.onrender.com/management/view')
       .then(response => setManagementList(response.data))
       .catch(error => console.error('Error fetching management data:', error));
   }, []);

@@ -26,7 +26,7 @@ const FeedbackBanner = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post('http://127.0.0.1:5000/feedback', formData);
+      const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
       alert(res.data.message);
       setOpen(false);
     } catch (err) {

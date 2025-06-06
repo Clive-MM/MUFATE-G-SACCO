@@ -19,7 +19,7 @@ const FosaProducts = () => {
   const [fosaLoans, setFosaLoans] = useState([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5000/services')
+    axios.get('https://mufate-g-sacco.onrender.com/services')
       .then(res => {
         const filtered = res.data.services.filter(service => service.ServiceCategory === 'FOSA');
         setFosaLoans(filtered);

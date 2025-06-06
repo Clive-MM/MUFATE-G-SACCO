@@ -18,7 +18,7 @@ const ResourcesPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/resources/recent')
+    axios.get('https://mufate-g-sacco.onrender.com/resources/recent')
       .then(res => {
         setResources(res.data.resources);
         setLoading(false);

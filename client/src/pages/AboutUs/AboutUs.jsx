@@ -14,13 +14,13 @@ const AboutUs = () => {
 
 
   useEffect(() => {
-    axios.get('http://localhost:5000/branches')
+    axios.get('https://mufate-g-sacco.onrender.com/branches')
       .then(res => setBranches(res.data.branches || []))
       .catch(error => console.error("Error fetching branches:", error));
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/corevalues')
+    axios.get('https://mufate-g-sacco.onrender.com/corevalues')
       .then(res => setCoreValues(res.data.core_values || []))
       .catch(error => console.error("Error fetching core values:", error));
   }, []);
@@ -204,7 +204,7 @@ const AboutUs = () => {
 >
   <Box
     component="a"
-    href="http://localhost:3000/membership"
+    href="https://mufate-g-sacco.onrender.com/membership"
     sx={{
       display: 'inline-block',
       px: 3,

@@ -7,7 +7,7 @@ const TestimonialsSection = () => {
     const [testimonials, setTestimonials] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/clients')
+        axios.get('https://mufate-g-sacco.onrender.com/clients')
             .then((res) => {
                 setTestimonials(res.data.clients);
             })
