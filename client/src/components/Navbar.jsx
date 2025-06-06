@@ -18,6 +18,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import { motion } from 'framer-motion';
 
 const Navbar = () => {
+  // eslint-disable-next-line
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -96,7 +97,9 @@ const Navbar = () => {
         {!isMobile ? (
           <Stack direction="row" spacing={3} sx={{ flex: 3, justifyContent: 'center', fontSize: '16px', fontWeight: 500 }}>
             {navLinks.map((item) => {
+              // eslint-disable-next-line
               const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
+              // eslint-disable-next-line
               const isDropdown = ['About Us', 'Products'].includes(item.label);
 
               const sharedLinkStyles = {

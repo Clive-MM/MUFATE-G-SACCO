@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
@@ -6,6 +7,7 @@ from models.models import db, User, Career, CoreValue,FAQ, Feedback, MobileBanki
 import cloudinary.uploader
 
 routes = Blueprint('routes', __name__)
+CORS(routes)  
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
