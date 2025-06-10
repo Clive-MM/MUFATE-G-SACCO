@@ -9,7 +9,7 @@ const BoardOfDirectors = () => {
   const [bodList, setBodList] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/bod/view')
+    axios.get('https://mufate-g-sacco.onrender.com/bod/view')
       .then(response => setBodList(response.data))
       .catch(error => console.error('Error fetching BOD data:', error));
   }, []);

@@ -67,8 +67,7 @@ with app.app_context():
 def index():
     return "Hello MUFATE G SACCO"
 
-# ✅ Run server
+# ✅ Run server (for local testing only)
 if __name__ == "__main__":
-    app.config["PROPAGATE_EXCEPTIONS"] = True
-    app.config["DEBUG"] = True
-    app.run(debug=True)
+    app.run()
+

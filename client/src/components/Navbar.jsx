@@ -12,6 +12,7 @@ import {
   Typography,
   useTheme,
   useMediaQuery,
+  Drawer
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -35,6 +36,16 @@ const Navbar = () => {
     { to: '/news', label: 'News' },
   ];
 
+  const drawerLinkStyle = {
+    fontSize: '1rem',
+    color: 'text.primary',
+    '&:hover': {
+      color: 'primary.main',
+      transform: 'translateX(5px)',
+    },
+    transition: 'all 0.3s ease',
+  };
+
   const dropdownLinkStyle = {
     px: 2,
     py: 1,
@@ -45,6 +56,17 @@ const Navbar = () => {
       color: 'primary.main',
     },
   };
+
+  const sharedLinkStyles = (isActive) => ({
+    fontWeight: isActive ? 'bold' : 500,
+    textShadow: isActive ? '0 0 8px rgba(100, 221, 23, 0.8)' : 'none',
+    transform: isActive ? 'scale(1.1)' : 'scale(1)',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+      color: 'primary.main',
+      transform: 'translateY(-3px) scale(1.1)',
+    },
+  });
 
   return (
     <AppBar
@@ -59,7 +81,7 @@ const Navbar = () => {
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
-        {/* Logo with Text */}
+        {/* Logo and Name */}
         <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
           <Link
             component={RouterLink}
@@ -92,28 +114,16 @@ const Navbar = () => {
           </Link>
         </Box>
 
-        {/* Navigation Links */}
+        {/* Desktop Nav */}
         {!isMobile ? (
-          <Stack direction="row" spacing={3} sx={{ flex: 3, justifyContent: 'center', fontSize: '16px', fontWeight: 500 }}>
+          <Stack direction="row" spacing={3} sx={{ flex: 3, justifyContent: 'center' }}>
             {navLinks.map((item) => {
               const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
-              const isDropdown = ['About Us', 'Products'].includes(item.label);
-
-              const sharedLinkStyles = {
-                fontWeight: isActive ? 'bold' : 500,
-                textShadow: isActive ? '0 0 8px rgba(100, 221, 23, 0.8)' : 'none',
-                transform: isActive ? 'scale(1.1)' : 'scale(1)',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  color: 'primary.main',
-                  transform: 'translateY(-3px) scale(1.1)',
-                },
-              };
 
               if (item.label === 'About Us') {
                 return (
                   <Box key="about" sx={{ position: 'relative', '&:hover .dropdown-menu': { display: 'flex' } }}>
-                    <Link underline="none" color={isActive ? 'primary.main' : 'inherit'} sx={sharedLinkStyles}>
+                    <Link underline="none" color={isActive ? 'primary.main' : 'inherit'} sx={sharedLinkStyles(isActive)}>
                       About Us
                     </Link>
                     <Box
@@ -146,7 +156,7 @@ const Navbar = () => {
               if (item.label === 'Products') {
                 return (
                   <Box key="products" sx={{ position: 'relative', '&:hover .dropdown-menu': { display: 'flex' } }}>
-                    <Link underline="none" color={isActive ? 'primary.main' : 'inherit'} sx={sharedLinkStyles}>
+                    <Link underline="none" color={isActive ? 'primary.main' : 'inherit'} sx={sharedLinkStyles(isActive)}>
                       Products
                     </Link>
                     <Box
@@ -168,9 +178,9 @@ const Navbar = () => {
                         zIndex: 10,
                       }}
                     >
-                      <Link component={RouterLink} to="/products/fosa" sx={dropdownLinkStyle}>FOSA LOANS</Link>
-                      <Link component={RouterLink} to="/products/bosa" sx={dropdownLinkStyle}>BOSA LOANS</Link>
-                      <Link component={RouterLink} to="/products/savings" sx={dropdownLinkStyle}>SAVINGS</Link>
+                      <Link component={RouterLink} to="/products/fosa" sx={dropdownLinkStyle}>FOSA Loans</Link>
+                      <Link component={RouterLink} to="/products/bosa" sx={dropdownLinkStyle}>BOSA Loans</Link>
+                      <Link component={RouterLink} to="/products/savings" sx={dropdownLinkStyle}>Savings</Link>
                     </Box>
                   </Box>
                 );
@@ -183,7 +193,7 @@ const Navbar = () => {
                   to={item.to}
                   underline="none"
                   color={isActive ? 'primary.main' : 'inherit'}
-                  sx={sharedLinkStyles}
+                  sx={sharedLinkStyles(isActive)}
                 >
                   {item.label}
                 </Link>
@@ -191,14 +201,90 @@ const Navbar = () => {
             })}
           </Stack>
         ) : (
-          <IconButton onClick={() => setDrawerOpen(true)}>
-            <MenuIcon sx={{ color: 'primary.main' }} />
-          </IconButton>
+          <>
+            <IconButton onClick={() => setDrawerOpen(true)}>
+              <MenuIcon sx={{ color: 'primary.main' }} />
+            </IconButton>
+
+            <Drawer
+              anchor="left"
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+              sx={{ '& .MuiDrawer-paper': { width: '80%', padding: 2 } }}
+            >
+              <Stack spacing={2}>
+                {navLinks.map((item) => {
+                  if (item.label === 'About Us') {
+                    return (
+                      <Box key="about-us">
+                        <Typography sx={{ fontWeight: 'bold', mb: 1, color: 'primary.main' }}>About Us</Typography>
+                        <Stack pl={2} spacing={1}>
+                          <Link component={RouterLink} to="/about/who-we-are" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>Who We Are</Link>
+                          <Link component={RouterLink} to="/about/board-of-directors" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>Board of Directors</Link>
+                          <Link component={RouterLink} to="/about/management" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>Management</Link>
+                        </Stack>
+                      </Box>
+                    );
+                  }
+
+                  if (item.label === 'Products') {
+                    return (
+                      <Box key="products">
+                        <Typography sx={{ fontWeight: 'bold', mb: 1, color: 'primary.main' }}>Products</Typography>
+                        <Stack pl={2} spacing={1}>
+                          <Link component={RouterLink} to="/products/fosa" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>FOSA Loans</Link>
+                          <Link component={RouterLink} to="/products/bosa" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>BOSA Loans</Link>
+                          <Link component={RouterLink} to="/products/savings" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>Savings</Link>
+                        </Stack>
+                      </Box>
+                    );
+                  }
+
+                  return (
+                    <Link
+                      key={item.to}
+                      component={RouterLink}
+                      to={item.to}
+                      onClick={() => setDrawerOpen(false)}
+                      underline="none"
+                      sx={drawerLinkStyle}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+
+                <Button
+                  component={RouterLink}
+                  to="/contact"
+                  onClick={() => setDrawerOpen(false)}
+                  startIcon={<PhoneIcon />}
+                  variant="contained"
+                  sx={{
+                    mt: 3,
+                    background: 'linear-gradient(to right, #64dd17, #76ff03)',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    px: 2,
+                    py: 1,
+                    borderRadius: '30px',
+                    textTransform: 'uppercase',
+                    '&:hover': {
+                      background: 'linear-gradient(to right, #76ff03, #64dd17)',
+                      transform: 'scale(1.05)',
+                    },
+                  }}
+                >
+                  Contact Us
+                </Button>
+              </Stack>
+            </Drawer>
+          </>
         )}
 
-        {/* Contact Button */}
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 2 }}>
-          {!isMobile && (
+        {/* Contact Button (Desktop Only) */}
+        {!isMobile && (
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 2 }}>
             <Button
               component={RouterLink}
               to="/contact"
@@ -224,8 +310,8 @@ const Navbar = () => {
             >
               Contact Us
             </Button>
-          )}
-        </Box>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );

@@ -28,7 +28,7 @@ const News = () => {
   const [expandedPostId, setExpandedPostId] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/posts')
+    axios.get('https://mufate-g-sacco.onrender.com/posts')
       .then(response => setPosts(response.data.posts))
       .catch(error => console.error('❌ Error fetching news posts:', error));
   }, []);

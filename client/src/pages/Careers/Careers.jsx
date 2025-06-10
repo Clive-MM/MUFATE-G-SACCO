@@ -13,8 +13,8 @@ const Careers = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const res1 = await axios.get('http://localhost:5000/career-hero');
-        const res2 = await axios.get('http://localhost:5000/career-hero-2');
+        const res1 = await axios.get('https://mufate-g-sacco.onrender.com/career-hero');
+        const res2 = await axios.get('https://mufate-g-sacco.onrender.com/career-hero-2');
         setHero1(res1.data.career_hero);
         setHero2(res2.data.career_hero_2);
       } catch (error) {

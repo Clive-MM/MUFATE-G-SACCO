@@ -20,7 +20,7 @@ const CareerListing = () => {
   useEffect(() => {
     const fetchCareers = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/careers');
+        const res = await axios.get('https://mufate-g-sacco.onrender.com/careers');
         setCareers(res.data.careers);
       } catch (error) {
         console.error('❌ Failed to fetch career posts:', error);

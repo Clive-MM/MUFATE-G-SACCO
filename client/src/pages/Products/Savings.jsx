@@ -28,7 +28,7 @@ const SavingsProducts = () => {
     const [expanded, setExpanded] = useState(null);
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:5000/products')
+        axios.get('https://mufate-g-sacco.onrender.com/products')
             .then(res => {
                 setSavings(res.data.products);
             })
