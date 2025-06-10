@@ -6,9 +6,7 @@ const instructions = [
   'Get the membership application form from the office or website.',
   'Fill in the form with your correct details.',
   'Attach a copy of your ID/Passport, and a passport-size photo.',
-  'Pay the registration fee of Kshs 100.',
-  'Deposit the minimum operating balance of Kshs 1,000.',
-  'Pay Bank plate cards processing fee of Kshs 200.',
+  'Pay account opening fees of 15000.',  
   'Open a savings account and start making deposits.',
 ];
 
