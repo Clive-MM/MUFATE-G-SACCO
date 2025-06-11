@@ -204,7 +204,7 @@ const AboutUs = () => {
 >
   <Box
     component="a"
-    href="https://mufate-g-sacco.onrender.com/membership"
+    href="/membership"
     sx={{
       display: 'inline-block',
       px: 3,
