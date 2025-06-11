@@ -39,6 +39,7 @@ const Navbar = () => {
   const drawerLinkStyle = {
     fontSize: '1rem',
     color: 'text.primary',
+    textDecoration: 'none',
     '&:hover': {
       color: 'primary.main',
       transform: 'translateX(5px)',
@@ -61,6 +62,7 @@ const Navbar = () => {
     fontWeight: isActive ? 'bold' : 500,
     textShadow: isActive ? '0 0 8px rgba(100, 221, 23, 0.8)' : 'none',
     transform: isActive ? 'scale(1.1)' : 'scale(1)',
+    textDecoration: 'none',
     transition: 'all 0.3s ease',
     '&:hover': {
       color: 'primary.main',
@@ -86,6 +88,7 @@ const Navbar = () => {
           <Link
             component={RouterLink}
             to="/"
+            underline="none"
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -123,7 +126,7 @@ const Navbar = () => {
               if (item.label === 'About Us') {
                 return (
                   <Box key="about" sx={{ position: 'relative', '&:hover .dropdown-menu': { display: 'flex' } }}>
-                    <Link underline="none" color={isActive ? 'primary.main' : 'inherit'} sx={sharedLinkStyles(isActive)}>
+                    <Link underline="none" sx={sharedLinkStyles(isActive)}>
                       About Us
                     </Link>
                     <Box
@@ -145,9 +148,9 @@ const Navbar = () => {
                         zIndex: 10,
                       }}
                     >
-                      <Link component={RouterLink} to="/about/who-we-are" sx={dropdownLinkStyle}>Who We Are</Link>
-                      <Link component={RouterLink} to="/about/board-of-directors" sx={dropdownLinkStyle}>Board of Directors</Link>
-                      <Link component={RouterLink} to="/about/management" sx={dropdownLinkStyle}>Management</Link>
+                      <Link component={RouterLink} to="/about/who-we-are" underline="none" sx={dropdownLinkStyle}>Who We Are</Link>
+                      <Link component={RouterLink} to="/about/board-of-directors" underline="none" sx={dropdownLinkStyle}>Board of Directors</Link>
+                      <Link component={RouterLink} to="/about/management" underline="none" sx={dropdownLinkStyle}>Management</Link>
                     </Box>
                   </Box>
                 );
@@ -156,7 +159,7 @@ const Navbar = () => {
               if (item.label === 'Products') {
                 return (
                   <Box key="products" sx={{ position: 'relative', '&:hover .dropdown-menu': { display: 'flex' } }}>
-                    <Link underline="none" color={isActive ? 'primary.main' : 'inherit'} sx={sharedLinkStyles(isActive)}>
+                    <Link underline="none" sx={sharedLinkStyles(isActive)}>
                       Products
                     </Link>
                     <Box
@@ -178,9 +181,9 @@ const Navbar = () => {
                         zIndex: 10,
                       }}
                     >
-                      <Link component={RouterLink} to="/products/fosa" sx={dropdownLinkStyle}>FOSA Loans</Link>
-                      <Link component={RouterLink} to="/products/bosa" sx={dropdownLinkStyle}>BOSA Loans</Link>
-                      <Link component={RouterLink} to="/products/savings" sx={dropdownLinkStyle}>Savings</Link>
+                      <Link component={RouterLink} to="/products/fosa" underline="none" sx={dropdownLinkStyle}>FOSA Loans</Link>
+                      <Link component={RouterLink} to="/products/bosa" underline="none" sx={dropdownLinkStyle}>BOSA Loans</Link>
+                      <Link component={RouterLink} to="/products/savings" underline="none" sx={dropdownLinkStyle}>Savings</Link>
                     </Box>
                   </Box>
                 );
@@ -192,7 +195,6 @@ const Navbar = () => {
                   component={RouterLink}
                   to={item.to}
                   underline="none"
-                  color={isActive ? 'primary.main' : 'inherit'}
                   sx={sharedLinkStyles(isActive)}
                 >
                   {item.label}
@@ -219,9 +221,9 @@ const Navbar = () => {
                       <Box key="about-us">
                         <Typography sx={{ fontWeight: 'bold', mb: 1, color: 'primary.main' }}>About Us</Typography>
                         <Stack pl={2} spacing={1}>
-                          <Link component={RouterLink} to="/about/who-we-are" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>Who We Are</Link>
-                          <Link component={RouterLink} to="/about/board-of-directors" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>Board of Directors</Link>
-                          <Link component={RouterLink} to="/about/management" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>Management</Link>
+                          <Link component={RouterLink} to="/about/who-we-are" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>Who We Are</Link>
+                          <Link component={RouterLink} to="/about/board-of-directors" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>Board of Directors</Link>
+                          <Link component={RouterLink} to="/about/management" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>Management</Link>
                         </Stack>
                       </Box>
                     );
@@ -232,9 +234,9 @@ const Navbar = () => {
                       <Box key="products">
                         <Typography sx={{ fontWeight: 'bold', mb: 1, color: 'primary.main' }}>Products</Typography>
                         <Stack pl={2} spacing={1}>
-                          <Link component={RouterLink} to="/products/fosa" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>FOSA Loans</Link>
-                          <Link component={RouterLink} to="/products/bosa" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>BOSA Loans</Link>
-                          <Link component={RouterLink} to="/products/savings" onClick={() => setDrawerOpen(false)} sx={drawerLinkStyle}>Savings</Link>
+                          <Link component={RouterLink} to="/products/fosa" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>FOSA Loans</Link>
+                          <Link component={RouterLink} to="/products/bosa" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>BOSA Loans</Link>
+                          <Link component={RouterLink} to="/products/savings" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>Savings</Link>
                         </Stack>
                       </Box>
                     );
