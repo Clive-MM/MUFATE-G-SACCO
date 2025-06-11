@@ -16,13 +16,13 @@ const ContactUs = () => {
           backgroundImage:
             'url(https://res.cloudinary.com/djydkcx01/image/upload/v1748438814/ChatGPT_Image_May_28_2025_04_25_45_PM_vedkd0.png)',
           backgroundSize: 'cover',
-          // Adjust backgroundPosition for different screen sizes
-          backgroundPosition: { xs: '70% center', md: 'center' }, // For mobile, move focus to the right (70%), for laptop, keep center
+          backgroundPosition: { xs: '70% center', md: 'center' },
           backgroundRepeat: 'no-repeat',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
-          justifyContent: 'center',
+          // Adjust vertical alignment to start from the top
+          justifyContent: 'flex-start', // Changed from 'center'
           px: { xs: 3, md: 8 },
           py: { xs: 4, md: 6 },
           color: '#fff',
@@ -34,6 +34,8 @@ const ContactUs = () => {
             fontWeight: 'bold',
             textShadow: '2px 2px 8px rgba(0,0,0,0.6)',
             zIndex: 1,
+            // Add margin-top to push the text down, especially for mobile
+            mt: { xs: '25vh', sm: '30vh', md: '40vh' }, // Adjust these values as needed
           }}
         >
           Let’s Get In Touch
