@@ -35,7 +35,7 @@ const ContactUs = () => {
             textShadow: '2px 2px 8px rgba(0,0,0,0.6)',
             zIndex: 1,
             // Add margin-top to push the text down, especially for mobile
-            mt: { xs: '15vh', sm: '20vh', md: '25vh' }, // Adjust these values as needed
+            mt: { xs: '40vh', sm: '45vh', md: '50vh' }, // Adjust these values as needed
           }}
         >
           Let’s Get In Touch
