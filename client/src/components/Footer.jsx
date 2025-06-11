@@ -7,6 +7,7 @@ import {
   Facebook, Instagram, X
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
+import { FaWhatsapp } from 'react-icons/fa'; // ✅ WhatsApp Icon
 import axios from 'axios';
 import './Footer.css';
 
@@ -62,6 +63,15 @@ const Footer = () => {
               rel="noopener noreferrer"
             >
               <Facebook />
+            </IconButton>
+            <IconButton
+              component="a"
+              href="https://wa.me/254791331932?text=Hello%20Mufate%20G%20Sacco%2C%20I%20would%20like%20to%20inquire%20about%20..."
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ color: '#25D366' }} // WhatsApp green
+            >
+              <FaWhatsapp size={24} />
             </IconButton>
           </Box>
         </Box>
@@ -134,7 +144,7 @@ const Footer = () => {
 
       <Box className="footer-bottom">
         <Typography variant="body2">
-          Mufate Sacco Society Limited © 2025. All Rights Reserved.
+          Mufate G Sacco Society Limited © 2025. All Rights Reserved.
         </Typography>
       </Box>
     </Box>
