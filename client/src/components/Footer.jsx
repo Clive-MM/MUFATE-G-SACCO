@@ -48,7 +48,14 @@ const Footer = () => {
               <X />
             </IconButton>
             <IconButton><Instagram /></IconButton>
-            <IconButton><Facebook /></IconButton>
+            <IconButton>
+              component="a"
+              href="https://www.facebook.com/share/1CLhxfKxb2/"
+              target="_blank"
+              rel="noopener noreferrer"
+              <Facebook />         
+            
+            </IconButton>
           </Box>
         </Box>
 
