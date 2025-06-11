@@ -47,7 +47,7 @@ const Careers = () => {
     <Box
       sx={{
         fontFamily: `'Segoe UI', sans-serif`,
-        background: '#f8fff3', // match footer background
+        background: '#f8fff3',
         m: 0,
         p: 0,
       }}
@@ -61,7 +61,7 @@ const Careers = () => {
           sx={{
             width: '100%',
             height: 'auto',
-            objectFit: 'contain',
+            objectFit: 'cover',
             display: 'block',
           }}
         />
@@ -74,8 +74,9 @@ const Careers = () => {
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
-              bottom: { xs: '-60px', sm: '-80px', md: '-100px' },
+              bottom: { xs: '-40px', sm: '-60px', md: '-80px' },
               zIndex: 5,
+              px: { xs: 2, sm: 4, md: 0 },
             }}
           >
             <motion.img
@@ -98,13 +99,16 @@ const Careers = () => {
         )}
       </Box>
 
+      {/* Spacer below image on mobile */}
+      <Box sx={{ height: { xs: 60, sm: 80, md: 100 } }} />
+
       {/* Description */}
-      <Box sx={{ textAlign: 'center', mt: { xs: 12, md: 16 }, px: 2, mb: 6 }}>
+      <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
         <Typography
           variant="h3"
           sx={{
             fontWeight: 800,
-            fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.8rem' },
+            fontSize: { xs: '1.6rem', sm: '2rem', md: '2.8rem' },
             letterSpacing: '0.5px',
             color: '#014421',
             mb: 2,
@@ -119,7 +123,7 @@ const Careers = () => {
             maxWidth: '850px',
             mx: 'auto',
             fontSize: { xs: '1rem', md: '1.15rem' },
-            lineHeight: 1.9,
+            lineHeight: 1.8,
             color: '#2e3d35',
             fontWeight: 500,
             letterSpacing: '0.3px',
@@ -130,7 +134,6 @@ const Careers = () => {
       </Box>
 
       <CareerListing />
-
       <Footer />
     </Box>
   );
