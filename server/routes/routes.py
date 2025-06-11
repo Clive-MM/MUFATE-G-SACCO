@@ -3,7 +3,7 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-from models.models import db, User, Career, CoreValue,FAQ, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership, BOD, Management, Resources
+from models.models import db, User, Career, CoreValue,FAQ,HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership, BOD, Management, Resources
 import cloudinary.uploader
 
 routes = Blueprint('routes', __name__)
