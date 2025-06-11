@@ -34,8 +34,8 @@ const ContactUs = () => {
             fontWeight: 'bold',
             textShadow: '2px 2px 8px rgba(0,0,0,0.6)',
             zIndex: 1,
-            // Add margin-top to push the text down, especially for mobile
-            mt: { xs: '55vh', sm: '60vh', md: '65vh' }, // Adjust these values as needed
+            
+            mt: { xs: '55vh', sm: '60vh', md: '65vh' }, 
           }}
         >
           Let’s Get In Touch
