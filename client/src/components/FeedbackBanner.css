@@ -1,4 +1,3 @@
-
 .feedback-section {
   display: flex;
   justify-content: center;
@@ -8,7 +7,6 @@
   background-color: #ffffff;
   overflow: hidden;
 }
-
 
 .feedback-section::before,
 .feedback-section::after {
@@ -22,7 +20,6 @@
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15); 
 }
 
-
 .feedback-section::before {
   left: 0;
   border-top-right-radius: 30px;
@@ -35,8 +32,6 @@
   border-bottom-left-radius: 30px;
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
 }
-
-
 
 .feedback-wrapper {
   background-color: #f2a922;
@@ -56,9 +51,8 @@
   border: 2px solid #fff3c4;
 }
 
-
 .feedback-title {
-  font-size: bold;
+  font-size: 1.5rem;
   font-weight: 800;
   color: #1a1a1a;
   margin-bottom: 1.2rem;
@@ -78,8 +72,6 @@
   transform: scale(1.02);
 }
 
-
-
 .feedback-text {
   font-size: 1.1rem;
   line-height: 1.9;
@@ -88,19 +80,17 @@
   padding: 0 1rem;
   font-family: 'Segoe UI', 'Roboto', sans-serif;
   text-align: center;
-
   text-shadow: 
     0.5px 0.5px 0.5px rgba(0, 0, 0, 0.08),
     0 0 1px rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
 }
 
-
 .feedback-button {
   background-color: #ffffff !important;
   color: #0be00b !important;                  
   font-weight: 700;
-  font-size: BOLD;
+  font-size: 1rem;
   padding: 0.65rem 1.8rem;
   border-radius: 30px;
   border: 2px solid #215732;
@@ -117,3 +107,36 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
+/* ========================
+   ✅ Mobile Responsiveness
+   ======================== */
+@media screen and (max-width: 600px) {
+  .feedback-section {
+    padding: 2rem 1rem;
+  }
+
+  .feedback-section::before,
+  .feedback-section::after {
+    width: 150px;
+    border-radius: 20px;
+  }
+
+  .feedback-wrapper {
+    padding: 1.5rem 1rem;
+    max-width: 95%;
+  }
+
+  .feedback-title {
+    font-size: 1.2rem;
+  }
+
+  .feedback-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .feedback-button {
+    font-size: 0.9rem;
+    padding: 0.5rem 1.4rem;
+  }
+}
