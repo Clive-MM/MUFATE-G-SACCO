@@ -7,11 +7,13 @@ import OurProductsSection from '../components/ProductSection';
 import TestimonialsSection from '../components/TestimonialsSection';
 import FeedbackBanner from '../components/FeedbackBanner';
 import Footer from '../components/Footer';
+import HolidayBanner from '../components/HolidayBanner';
 
 
 const Home = () => {
   return (
     <>
+       <HolidayBanner />
       <HomepageSlider />
        <AboutSection />
        <SaccoStatsSection />
