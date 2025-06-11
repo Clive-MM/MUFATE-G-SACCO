@@ -23,7 +23,7 @@ const products = [
     description:
       'Build a strong financial foundation with our flexible savings plans. Mufate Sacco helps you save consistently and securely, offering products designed to support everything from daily expenses to long-term dreams.',
     icon: <SavingsIcon fontSize="large" />,
-    link: 'https://mufate-g-sacco.onrender.com/products/savings',
+    link: '/products/savings',
   },
   {
     id: 3,
@@ -31,7 +31,7 @@ const products = [
     description:
       'Grow your wealth with our secure and high-yield investment options. Whether you’re planning for the future or seeking steady returns, our investment products are tailored to meet your financial goals with confidence.',
     icon: <TrendingUpIcon fontSize="large" />,
-    link: 'https://mufate-g-sacco.onrender.com/products/savings',
+    link: '/products/savings',
   },
 ];
 
