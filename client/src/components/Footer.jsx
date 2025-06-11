@@ -47,31 +47,38 @@ const Footer = () => {
             >
               <X />
             </IconButton>
-            <IconButton><Instagram /></IconButton>
-            <IconButton>
+            <IconButton
+              component="a"
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Instagram />
+            </IconButton>
+            <IconButton
               component="a"
               href="https://www.facebook.com/share/1CLhxfKxb2/"
               target="_blank"
               rel="noopener noreferrer"
-              <Facebook />         
-            
+            >
+              <Facebook />
             </IconButton>
           </Box>
         </Box>
 
-        {/* ✅ Column 2: Dynamic Recent Posts */}
+        {/* Column 2: Dynamic Recent Posts */}
         <Box className="footer-column">
           <Typography className="footer-heading">RECENT POSTS</Typography>
           <Box className="footer-images">
             {postImages.slice(0, 2).map((post) => (
-              <Link key={post.PostID} component={RouterLink} to="/news">
+              <Link key={post.PostID} component={RouterLink} to="/news" underline="none">
                 <img src={post.CoverImage} alt={`Post ${post.PostID}`} />
               </Link>
             ))}
           </Box>
           <Box className="footer-images">
             {postImages.slice(2, 4).map((post) => (
-              <Link key={post.PostID} component={RouterLink} to="/news">
+              <Link key={post.PostID} component={RouterLink} to="/news" underline="none">
                 <img src={post.CoverImage} alt={`Post ${post.PostID}`} />
               </Link>
             ))}
@@ -82,14 +89,14 @@ const Footer = () => {
         <Box className="footer-column">
           <Typography className="footer-heading">QUICK LINKS</Typography>
           <ul className="footer-links">
-            <li><Link component={RouterLink} to="/">Home</Link></li>
-            <li><Link component={RouterLink} to="/about/who-we-are">About us</Link></li>
-            <li><Link component={RouterLink} to="/services">Services</Link></li>
-            <li><Link component={RouterLink} to="/products/bosa">Our Products</Link></li>
-            <li><Link component={RouterLink} to="/news">Blogs & Posts</Link></li>
-            <li><Link component={RouterLink} to="/faqs">FAQs</Link></li>
-            <li><Link component={RouterLink} to="/membership">Membership</Link></li>
-            <li><Link component={RouterLink} to="/contact">Contact us</Link></li>
+            <li><Link component={RouterLink} to="/" underline="none">Home</Link></li>
+            <li><Link component={RouterLink} to="/about/who-we-are" underline="none">About us</Link></li>
+            <li><Link component={RouterLink} to="/services" underline="none">Services</Link></li>
+            <li><Link component={RouterLink} to="/products/bosa" underline="none">Our Products</Link></li>
+            <li><Link component={RouterLink} to="/news" underline="none">Blogs & Posts</Link></li>
+            <li><Link component={RouterLink} to="/faqs" underline="none">FAQs</Link></li>
+            <li><Link component={RouterLink} to="/membership" underline="none">Membership</Link></li>
+            <li><Link component={RouterLink} to="/contact" underline="none">Contact us</Link></li>
           </ul>
         </Box>
 
