@@ -29,16 +29,16 @@ const JoiningInstructions = () => {
         overflow: 'hidden',
       }}
     >
-      {/* Vertical Colored Bars */}
+      {/* Vertical Colored Bars (hidden on mobile) */}
       <Box
         sx={{
           position: 'absolute',
           top: 0,
           bottom: 0,
-          right: { xs: '4px', sm: '16px', md: '80px' },
-          display: 'flex',
+          right: { sm: '16px', md: '80px' },
+          display: { xs: 'none', sm: 'flex' },
           flexDirection: 'row',
-          gap: { xs: '4px', sm: '12px', md: '50px' },
+          gap: { sm: '12px', md: '50px' },
           zIndex: 0,
         }}
       >
@@ -46,7 +46,7 @@ const JoiningInstructions = () => {
           <Box
             key={index}
             sx={{
-              width: { xs: '10px', sm: '20px', md: '90px' },
+              width: { sm: '20px', md: '90px' },
               backgroundColor: color,
             }}
           />
