@@ -10,6 +10,8 @@ const Careers = () => {
   const [hero2, setHero2] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
+
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -52,7 +54,7 @@ const Careers = () => {
         p: 0,
       }}
     >
-      {/* Hero Image 1 Section */}
+      {/* Hero Image 1 */}
       <Box sx={{ position: 'relative', width: '100%' }}>
         <Box
           component="img"
@@ -60,13 +62,13 @@ const Careers = () => {
           alt={hero1?.Title || 'Career Hero'}
           sx={{
             width: '100%',
-            height: 'auto',
+            height: { xs: '40vh', sm: '50vh', md: '60vh' },
             objectFit: 'cover',
             display: 'block',
           }}
         />
 
-        {/* Overlay Hero Image 2 */}
+        {/* Hero Image 2 with conditional hover */}
         {hero2 && (
           <Box
             sx={{
@@ -85,10 +87,14 @@ const Careers = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1 }}
-              whileHover={{
-                scale: 1.03,
-                boxShadow: '0 0 30px rgba(0, 255, 100, 0.8)',
-              }}
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.03,
+                      boxShadow: '0 0 30px rgba(0, 255, 100, 0.8)',
+                    }
+                  : {}
+              }
               style={{
                 width: '100%',
                 maxWidth: '600px',
@@ -99,17 +105,17 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* Spacer below image on mobile */}
+      {/* Spacer below image */}
       <Box sx={{ height: { xs: 60, sm: 80, md: 100 } }} />
 
-      {/* Description */}
+      {/* Text Section */}
       <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
         <Typography
           variant="h3"
           sx={{
             fontWeight: 800,
-            fontSize: { xs: '1.6rem', sm: '2rem', md: '2.8rem' },
-            letterSpacing: '0.5px',
+            fontSize: { xs: '1.6rem', sm: '2.2rem', md: '2.8rem' },
+            lineHeight: { xs: 1.4, sm: 1.6, md: 1.8 },
             color: '#014421',
             mb: 2,
             textTransform: 'uppercase',
@@ -122,8 +128,8 @@ const Careers = () => {
           sx={{
             maxWidth: '850px',
             mx: 'auto',
-            fontSize: { xs: '1rem', md: '1.15rem' },
-            lineHeight: 1.8,
+            fontSize: { xs: '1rem', sm: '1.075rem', md: '1.15rem' },
+            lineHeight: { xs: 1.7, sm: 1.8, md: 1.9 },
             color: '#2e3d35',
             fontWeight: 500,
             letterSpacing: '0.3px',
