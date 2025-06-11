@@ -245,4 +245,16 @@ class Management(db.Model):
     ImageURL = db.Column(db.Text)
 
 
+class HolidayMessage(db.Model):
+    __tablename__ = 'HolidayMessages'  
+
+    HolidayID = db.Column(db.Integer, primary_key=True)
+    HolidayName = db.Column(db.String(100), nullable=False)
+    Message = db.Column(db.String(255), nullable=False)
+    Month = db.Column(db.Integer, nullable=False)
+    Day = db.Column(db.Integer, nullable=False)
+    IsActive = db.Column(db.Integer)  
+    CreatedAt = db.Column(db.DateTime)
+
+
 

@@ -5,19 +5,21 @@ import CelebrationIcon from '@mui/icons-material/Celebration';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const HolidayBanner = () => {
-  const [message, setMessage] = useState('');
+  const [holiday, setHoliday] = useState(null);
 
   useEffect(() => {
     axios.get('https://mufate-g-sacco.onrender.com/holiday/message')
       .then(res => {
-        if (res.data.message) setMessage(res.data.message);
+        if (res.data.message) {
+          setHoliday(res.data);
+        }
       })
       .catch(err => console.error('❌ Failed to load holiday message:', err));
   }, []);
 
   return (
     <AnimatePresence>
-      {message && (
+      {holiday && (
         <motion.div
           key="holiday-banner"
           initial={{ y: -60, opacity: 0 }}
@@ -36,14 +38,20 @@ const HolidayBanner = () => {
               fontSize: { xs: '0.9rem', sm: '1rem' },
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 1,
+              gap: 0.5,
               zIndex: 10,
             }}
           >
-            <CelebrationIcon sx={{ fontSize: '1.4rem' }} />
-            <Typography component="span">{message}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CelebrationIcon sx={{ fontSize: '1.4rem' }} />
+              <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                {holiday.holiday}
+              </Typography>
+            </Box>
+            <Typography component="span">{holiday.message}</Typography>
           </Box>
         </motion.div>
       )}

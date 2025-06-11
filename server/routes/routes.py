@@ -3,7 +3,7 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-from models.models import db, User, Career, CoreValue,FAQ,HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership, BOD, Management, Resources
+from models.models import db, User, Career, CoreValue,FAQ,HolidayMessages, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership, BOD, Management, Resources
 import cloudinary.uploader
 
 routes = Blueprint('routes', __name__)
@@ -1520,3 +1520,22 @@ def get_post_images():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch post images.', 'error': str(e)}), 500
+
+#Return the holiday
+@app.route('/holiday/message', methods=['GET'])
+def get_holiday_message():
+    from datetime import datetime
+    today = datetime.today()
+    holiday = HolidayMessage.query.filter_by(
+        Month=today.month,
+        Day=today.day,
+        IsActive=1
+    ).first()
+
+    if holiday:
+        return jsonify({
+            'holiday': holiday.HolidayName,
+            'message': holiday.Message
+        }), 200
+    else:
+        return jsonify({ 'message': None }), 200
