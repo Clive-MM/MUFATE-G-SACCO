@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, TextField, Button, Alert } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
@@ -9,6 +9,7 @@ const FeedbackForm = () => {
         Message: '',
     });
     const [alert, setAlert] = useState({ type: '', message: '' });
+
     useEffect(() => {
         if (alert.message) {
             const timer = setTimeout(() => {
@@ -53,27 +54,28 @@ const FeedbackForm = () => {
                 background: 'linear-gradient(to bottom, rgb(189, 225, 237), rgb(233, 241, 250))',
                 borderBottomLeftRadius: '16px',
                 borderBottomRightRadius: '16px',
-                px: { xs: 2, md: 8 },
-                pt: { xs: 3, md: 3 },
-                pb: { xs: 3, md: 4 },
+                px: { xs: 2, md: 8 }, // Padding horizontal
+                pt: { xs: 3, md: 3 }, // Padding top
+                pb: { xs: 3, md: 4 }, // Padding bottom
                 mt: 0,
                 minHeight: '75vh',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
-                overflow: 'hidden',
+                justifyContent: 'center', // Keeps content centered vertically
+                overflow: 'hidden', // Ensures bars don't cause horizontal scroll if they go out
             }}
         >
-            {/* Vertical Colored Bars (Right) */}
+            {/* Vertical Colored Bars (Right) - REMOVED FOR SMALLER SCREENS */}
             <Box
                 sx={{
                     position: 'absolute',
                     top: 0,
                     bottom: 0,
-                    right: { xs: '4px', sm: '16px', md: '80px' },
-                    display: 'flex',
+                    right: { md: '80px' }, // Only defined for md and up
+                    // Hide bars on xs and sm screens, display only on md and larger
+                    display: { xs: 'none', md: 'flex' }, // Key change here!
                     flexDirection: 'row',
-                    gap: { xs: '4px', sm: '12px', md: '50px' },
+                    gap: { md: '50px' }, // Only defined for md and up
                     zIndex: 0,
                 }}
             >
@@ -81,7 +83,7 @@ const FeedbackForm = () => {
                     <Box
                         key={index}
                         sx={{
-                            width: { xs: '10px', sm: '20px', md: '90px' },
+                            width: { md: '90px' }, // Only defined for md and up
                             backgroundColor: color,
                         }}
                     />
@@ -97,6 +99,7 @@ const FeedbackForm = () => {
                     textTransform: 'uppercase',
                     fontSize: { xs: '1.4rem', md: '2rem' },
                     mb: 3,
+                    zIndex: 1, // Ensure text is above any potential background elements
                 }}
             >
                 We Value Your Feedback
@@ -107,12 +110,14 @@ const FeedbackForm = () => {
                 component="form"
                 onSubmit={handleSubmit}
                 sx={{
-                    zIndex: 1,
+                    zIndex: 1, // Ensure form is above any potential background elements
                     maxWidth: { xs: '100%', md: '600px' },
                     width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
+                    // No need for margin-right on form if bars are hidden on small screens
+                    // mr: { xs: '15px', sm: '30px', md: 0 }, // This line can be removed or set to 0
                 }}
             >
                 {alert.message && (
