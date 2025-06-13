@@ -5,11 +5,15 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from datetime import datetime
 from models.models import db, User, Career, CoreValue,FAQ,HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership, BOD, Management, Resources
 import cloudinary.uploader
+from flask_mail import Message
+
 
 routes = Blueprint('routes', __name__)
 CORS(routes)  
 bcrypt = Bcrypt()
 jwt = JWTManager()
+
+mail = None
 
 # ✅ Test route
 @routes.route('/test', methods=['GET'])
@@ -1539,3 +1543,28 @@ def get_holiday_message():
         }), 200
     else:
         return jsonify({ 'message': None }), 200
+
+@routes.route('/test-email', methods=['GET'])
+def test_email():
+    try:
+        msg = Message(
+            subject="✅ Test Email from MUFATE G SACCO",
+            recipients=["maderumoyia@mudetesacco.co.ke"],
+            body="""
+Hello,
+
+This is a test email from your deployed Flask backend.
+If you received this, Flask-Mail is working correctly! ✅
+
+Regards,
+MUFATE G SACCO
+"""
+        )
+        mail.send(msg)
+        return jsonify({'message': '✅ Test email sent successfully!'}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to send email.', 'error': str(e)}), 500
+
