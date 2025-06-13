@@ -415,38 +415,6 @@ def list_faqs():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch FAQs.', 'error': str(e)}), 500
-
-# ✅ Public route to submit feedback
-@routes.route('/feedback', methods=['POST'])
-def submit_feedback():
-    try:
-        data = request.get_json()
-
-        email = data.get('Email')
-        subject = data.get('Subject')
-        message = data.get('Message')
-
-        #  Validate basic fields
-        if not email or not subject or not message:
-            return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
-
-        # Insert feedback into the database
-        new_feedback = Feedback(
-            Email=email,
-            Subject=subject,
-            Message=message,
-            StatusID=1  # 1 for 'Unread' status (default when someone submits feedback)
-        )
-
-        db.session.add(new_feedback)
-        db.session.commit()
-
-        return jsonify({'message': '😊 Thank you for your feedback!'}), 201
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': '❌ Failed to submit feedback.', 'error': str(e)}), 500
     
 #Route for viewing the feedbacks for the admin only   
 @routes.route('/admin/feedbacks', methods=['GET'])
@@ -1544,27 +1512,87 @@ def get_holiday_message():
     else:
         return jsonify({ 'message': None }), 200
 
-@routes.route('/test-email', methods=['GET'])
-def test_email():
+# ✅ Public route to submit feedback
+@routes.route('/feedback', methods=['POST'])
+def submit_feedback():
     try:
-        msg = Message(
-            subject="✅ Test Email from MUFATE G SACCO",
+        data = request.get_json()
+
+        email = data.get('Email')
+        subject = data.get('Subject')
+        message = data.get('Message')
+
+        if not email or not subject or not message:
+            return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
+
+        # Save feedback to the database
+        new_feedback = Feedback(
+            Email=email,
+            Subject=subject,
+            Message=message,
+            StatusID=1
+        )
+        db.session.add(new_feedback)
+        db.session.commit()
+
+        # ✅ Send notification to SACCO admin
+        admin_msg = Message(
+            subject=f"📥 New Feedback: {subject}",
             recipients=["maderumoyia@mudetesacco.co.ke"],
-            body="""
-Hello,
+            body=f"""
+You have received new feedback from {email}.
 
-This is a test email from your deployed Flask backend.
-If you received this, Flask-Mail is working correctly! ✅
+Subject: {subject}
+Message:
+{message}
 
-Regards,
-MUFATE G SACCO
+-- MUFATE G SACCO Website
 """
         )
-        mail.send(msg)
-        return jsonify({'message': '✅ Test email sent successfully!'}), 200
+
+        # ✅ Send acknowledgment to the user
+        user_msg = Message(
+            subject="✅ Thank You for Your Feedback - MUFATE G SACCO",
+            recipients=[email],
+            body=f"""
+Dear Member,
+
+Thank you for reaching out to MUFATE G SACCO. We have received your message:
+
+"{subject}"
+
+Our team will review it and get back to you as necessary.
+
+Warm regards,
+MUFA​TE G SACCO Team
+maderumoyia@mudetesacco.co.ke
+"""
+        )
+
+        try:
+            mail.send(admin_msg)
+            mail.send(user_msg)
+        except Exception as email_error:
+            print("⚠️ Email sending failed:", email_error)
+
+        return jsonify({'message': '😊 Thank you for your feedback!', 'feedback_id': new_feedback.id}), 201
 
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({'message': '❌ Failed to send email.', 'error': str(e)}), 500
+        return jsonify({'message': '❌ Failed to submit feedback.', 'error': str(e)}), 500
+
+# ✅ Optional: Test route for email
+@routes.route('/test-email')
+def test_email():
+    try:
+        test_msg = Message(
+            subject="🚀 Test Email from MUFATE G SACCO",
+            recipients=["maderumoyia@mudetesacco.co.ke"],
+            body="This is a test email to verify mail configuration."
+        )
+        mail.send(test_msg)
+        return jsonify({'message': '✅ Test email sent successfully!'})
+    except Exception as e:
+        return jsonify({'message': '❌ Failed to send test email', 'error': str(e)}), 500
 
