@@ -6,7 +6,7 @@ import os
 
 from models.models import db, IsActive, FeedbackStatus
 from cloudinary_config import cloudinary  # assuming this initializes Cloudinary
-from routes.routes import routes, bcrypt, jwt  # routes module will consume mail instance
+from routes.routes import routes, bcrypt, jwt, init_mail # routes module will consume mail instance
 
 # ✅ Load environment variables from .mufate_env
 load_dotenv(dotenv_path=".mufate_env")

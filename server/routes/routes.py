@@ -15,6 +15,11 @@ jwt = JWTManager()
 
 mail = None
 
+def init_mail(mail_instance):
+    global mail
+    mail = mail_instance
+
+
 # ✅ Test route
 @routes.route('/test', methods=['GET'])
 def test_route():
