@@ -1563,8 +1563,8 @@ Thank you for reaching out to MUFATE G SACCO. We have received your message:
 
 Our team will review it and get back to you as necessary.
 
-Warm regards,
-MUFA​TE G SACCO Team
+Warm regards,  
+MUFA​TE G SACCO Team  
 maderumoyia@mudetesacco.co.ke
 """
         )
@@ -1573,7 +1573,12 @@ maderumoyia@mudetesacco.co.ke
             mail.send(admin_msg)
             mail.send(user_msg)
         except Exception as email_error:
-            print("⚠️ Email sending failed:", email_error)
+            import traceback
+            traceback.print_exc()
+            return jsonify({
+                'message': '❌ Feedback saved but email failed to send.',
+                'error': str(email_error)
+            }), 500
 
         return jsonify({'message': '😊 Thank you for your feedback!', 'feedback_id': new_feedback.id}), 201
 
@@ -1582,17 +1587,7 @@ maderumoyia@mudetesacco.co.ke
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to submit feedback.', 'error': str(e)}), 500
 
-# ✅ Optional: Test route for email
-@routes.route('/test-email')
-def test_email():
-    try:
-        test_msg = Message(
-            subject="🚀 Test Email from MUFATE G SACCO",
-            recipients=["maderumoyia@mudetesacco.co.ke"],
-            body="This is a test email to verify mail configuration."
-        )
-        mail.send(test_msg)
-        return jsonify({'message': '✅ Test email sent successfully!'})
-    except Exception as e:
-        return jsonify({'message': '❌ Failed to send test email', 'error': str(e)}), 500
+
+
+
 
