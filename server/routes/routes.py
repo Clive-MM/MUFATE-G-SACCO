@@ -1531,40 +1531,38 @@ def submit_feedback():
         subject = data.get('Subject')
         message = data.get('Message')
 
+        # ✅ Validate input
         if not email or not subject or not message:
             return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
 
-        # Save feedback to the database
+        # ✅ Save feedback to the database
         new_feedback = Feedback(
             Email=email,
             Subject=subject,
             Message=message,
-            StatusID=1
+            StatusID=1  # Default to "Unread"
         )
         db.session.add(new_feedback)
         db.session.commit()
 
-        # Send notification to SACCO admin
+        # ✅ Prepare email to SACCO admin
         admin_msg = Message(
             subject=f"📥 New Feedback: {subject}",
             recipients=["maderumoyia@mudetesacco.co.ke"],
-            body=f"""
-You have received new feedback from {email}.
+            body=f"""You have received new feedback from {email}.
 
 Subject: {subject}
 Message:
 {message}
 
--- MUFATE G SACCO Website
-"""
+-- MUFATE G SACCO Website"""
         )
 
-        # Send acknowledgment to the user
+        # ✅ Prepare acknowledgment email to user
         user_msg = Message(
             subject="✅ Thank You for Your Feedback - MUFATE G SACCO",
             recipients=[email],
-            body=f"""
-Dear Member,
+            body=f"""Dear Member,
 
 Thank you for reaching out to MUFATE G SACCO. We have received your message:
 
@@ -1574,10 +1572,10 @@ Our team will review it and get back to you as necessary.
 
 Warm regards,  
 MUFA​TE G SACCO Team  
-maderumoyia@mudetesacco.co.ke
-"""
+maderumoyia@mudetesacco.co.ke"""
         )
 
+        # ✅ Try sending emails
         try:
             mail.send(admin_msg)
             mail.send(user_msg)
@@ -1585,16 +1583,20 @@ maderumoyia@mudetesacco.co.ke
             import traceback
             traceback.print_exc()
             return jsonify({
-                'message': '❌ Feedback saved but email failed to send.',
+                'message': '⚠️ Feedback saved, but email failed to send.',
                 'error': str(email_error)
             }), 500
 
-        return jsonify({'message': '😊 Thank you for your feedback!', 'feedback_id': new_feedback.id}), 201
+        return jsonify({
+            'message': '😊 Thank you for your feedback!',
+            'feedback_id': new_feedback.FeedbackID
+        }), 201
 
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({'message': '❌ Failed to submit feedback.', 'error': str(e)}), 500
-
-
+        return jsonify({
+            'message': '❌ Failed to submit feedback.',
+            'error': str(e)
+        }), 500
 
