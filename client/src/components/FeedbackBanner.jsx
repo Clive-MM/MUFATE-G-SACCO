@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
+import { useSnackbar } from 'notistack';
 import './FeedbackBanner.css';
 
 const FeedbackBanner = () => {
@@ -24,6 +25,7 @@ const FeedbackBanner = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { enqueueSnackbar } = useSnackbar(); // ✅ Notistack hook
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,10 +34,11 @@ const FeedbackBanner = () => {
   const handleSubmit = async () => {
     try {
       const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
-      alert(res.data.message);
+      enqueueSnackbar(res.data.message, { variant: 'success' }); // ✅ Success message
       setOpen(false);
+      setFormData({ Email: '', Subject: '', Message: '' });
     } catch (err) {
-      alert('❌ Failed to submit feedback.');
+      enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' }); // ✅ Error message
     }
   };
 
