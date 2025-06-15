@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { SnackbarProvider } from 'notistack';
 import CssBaseline from '@mui/material/CssBaseline';
 
 const Root = () => {
@@ -11,12 +12,8 @@ const Root = () => {
     createTheme({
       palette: {
         mode,
-        primary: {
-          main: '#64dd17',
-        },
-        secondary: {
-          main: '#76ff03',
-        },
+        primary: { main: '#64dd17' },
+        secondary: { main: '#76ff03' },
         background: {
           default: mode === 'light' ? '#f8f6f2' : '#121212',
           paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
@@ -25,16 +22,20 @@ const Root = () => {
           primary: mode === 'light' ? '#000' : '#fff',
         },
       },
-      typography: {
-        fontFamily: 'Roboto, sans-serif',
-      },
+      typography: { fontFamily: 'Roboto, sans-serif' },
     }), [mode]
   );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <App toggleTheme={() => setMode(prev => (prev === 'light' ? 'dark' : 'light'))} mode={mode} />
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        autoHideDuration={4000}
+      >
+        <App toggleTheme={() => setMode(prev => (prev === 'light' ? 'dark' : 'light'))} mode={mode} />
+      </SnackbarProvider>
     </ThemeProvider>
   );
 };

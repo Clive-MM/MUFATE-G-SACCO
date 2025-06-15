@@ -1,23 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, Alert } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, TextField, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { useSnackbar } from 'notistack';
 
 const FeedbackForm = () => {
+    const { enqueueSnackbar } = useSnackbar(); // Hook from notistack
     const [formData, setFormData] = useState({
         Email: '',
         Subject: '',
         Message: '',
     });
-    const [alert, setAlert] = useState({ type: '', message: '' });
-
-    useEffect(() => {
-        if (alert.message) {
-            const timer = setTimeout(() => {
-                setAlert({ type: '', message: '' });
-            }, 4000);
-            return () => clearTimeout(timer);
-        }
-    }, [alert]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,7 +17,6 @@ const FeedbackForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setAlert({ type: '', message: '' });
 
         try {
             const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
@@ -37,13 +28,13 @@ const FeedbackForm = () => {
             const result = await response.json();
 
             if (response.status === 201) {
-                setAlert({ type: 'success', message: result.message });
+                enqueueSnackbar(result.message, { variant: 'success' });
                 setFormData({ Email: '', Subject: '', Message: '' });
             } else {
-                setAlert({ type: 'error', message: result.message });
+                enqueueSnackbar(result.message || 'Submission failed.', { variant: 'error' });
             }
         } catch (error) {
-            setAlert({ type: 'error', message: 'Something went wrong. Please try again.' });
+            enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
         }
     };
 
@@ -54,28 +45,27 @@ const FeedbackForm = () => {
                 background: 'linear-gradient(to bottom, rgb(189, 225, 237), rgb(233, 241, 250))',
                 borderBottomLeftRadius: '16px',
                 borderBottomRightRadius: '16px',
-                px: { xs: 2, md: 8 }, // Padding horizontal
-                pt: { xs: 3, md: 3 }, // Padding top
-                pb: { xs: 3, md: 4 }, // Padding bottom
+                px: { xs: 2, md: 8 },
+                pt: { xs: 3, md: 3 },
+                pb: { xs: 3, md: 4 },
                 mt: 0,
                 minHeight: '75vh',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center', // Keeps content centered vertically
-                overflow: 'hidden', // Ensures bars don't cause horizontal scroll if they go out
+                justifyContent: 'center',
+                overflow: 'hidden',
             }}
         >
-            {/* Vertical Colored Bars (Right) - REMOVED FOR SMALLER SCREENS */}
+            {/* Vertical Colored Bars */}
             <Box
                 sx={{
                     position: 'absolute',
                     top: 0,
                     bottom: 0,
-                    right: { md: '80px' }, // Only defined for md and up
-                    // Hide bars on xs and sm screens, display only on md and larger
-                    display: { xs: 'none', md: 'flex' }, // Key change here!
+                    right: { md: '80px' },
+                    display: { xs: 'none', md: 'flex' },
                     flexDirection: 'row',
-                    gap: { md: '50px' }, // Only defined for md and up
+                    gap: { md: '50px' },
                     zIndex: 0,
                 }}
             >
@@ -83,7 +73,7 @@ const FeedbackForm = () => {
                     <Box
                         key={index}
                         sx={{
-                            width: { md: '90px' }, // Only defined for md and up
+                            width: { md: '90px' },
                             backgroundColor: color,
                         }}
                     />
@@ -99,7 +89,7 @@ const FeedbackForm = () => {
                     textTransform: 'uppercase',
                     fontSize: { xs: '1.4rem', md: '2rem' },
                     mb: 3,
-                    zIndex: 1, // Ensure text is above any potential background elements
+                    zIndex: 1,
                 }}
             >
                 We Value Your Feedback
@@ -110,22 +100,14 @@ const FeedbackForm = () => {
                 component="form"
                 onSubmit={handleSubmit}
                 sx={{
-                    zIndex: 1, // Ensure form is above any potential background elements
+                    zIndex: 1,
                     maxWidth: { xs: '100%', md: '600px' },
                     width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
-                    // No need for margin-right on form if bars are hidden on small screens
-                    // mr: { xs: '15px', sm: '30px', md: 0 }, // This line can be removed or set to 0
                 }}
             >
-                {alert.message && (
-                    <Alert severity={alert.type} sx={{ mb: 1 }}>
-                        {alert.message}
-                    </Alert>
-                )}
-
                 <TextField
                     label="Email"
                     name="Email"
