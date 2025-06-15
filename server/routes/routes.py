@@ -2,23 +2,28 @@ from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-from datetime import datetime
-from models.models import db, User, Career, CoreValue,FAQ,HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline,Partnership, Post,  Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics,  HomepageSlider, Membership, BOD, Management, Resources
-import cloudinary.uploader
 from flask_mail import Message
+from datetime import datetime
+from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources
+import cloudinary.uploader
 
 
+# ✅ Initialize Blueprint and Flask extensions
 routes = Blueprint('routes', __name__)
-CORS(routes)  
+CORS(routes)
+
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
 mail = None
 
-def init_mail(mail_instance):
+# ✅ Placeholder for mail - will be assigned later from app.py
+mail = None
+
+# ✅ Register mail instance
+def register_mail_instance(mail_instance):
     global mail
     mail = mail_instance
-
 
 # ✅ Test route
 @routes.route('/test', methods=['GET'])
@@ -1522,7 +1527,6 @@ def get_holiday_message():
 def submit_feedback():
     try:
         data = request.get_json()
-
         email = data.get('Email')
         subject = data.get('Subject')
         message = data.get('Message')
@@ -1540,7 +1544,7 @@ def submit_feedback():
         db.session.add(new_feedback)
         db.session.commit()
 
-        # ✅ Send notification to SACCO admin
+        # Send notification to SACCO admin
         admin_msg = Message(
             subject=f"📥 New Feedback: {subject}",
             recipients=["maderumoyia@mudetesacco.co.ke"],
@@ -1555,7 +1559,7 @@ Message:
 """
         )
 
-        # ✅ Send acknowledgment to the user
+        # Send acknowledgment to the user
         user_msg = Message(
             subject="✅ Thank You for Your Feedback - MUFATE G SACCO",
             recipients=[email],
@@ -1591,8 +1595,6 @@ maderumoyia@mudetesacco.co.ke
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to submit feedback.', 'error': str(e)}), 500
-
-
 
 
 

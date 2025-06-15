@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 import os
 
 from models.models import db, IsActive, FeedbackStatus
-from cloudinary_config import cloudinary  # assuming this initializes Cloudinary
-from routes.routes import routes, bcrypt, jwt, init_mail # routes module will consume mail instance
+from cloudinary_config import cloudinary
+from routes.routes import routes, bcrypt, jwt, register_mail_instance  # ✅ updated import name
 
 # ✅ Load environment variables from .mufate_env
 load_dotenv(dotenv_path=".mufate_env")
@@ -15,13 +15,13 @@ load_dotenv(dotenv_path=".mufate_env")
 app = Flask(__name__)
 CORS(app)
 
-# ✅ Load environment configurations
+# ✅ Environment configurations
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['JWT_IDENTITY_CLAIM'] = 'identity'
 
-# ✅ Mail configuration from environment variables
+# ✅ Mail configuration
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
 app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
 app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS') == 'True'
@@ -29,17 +29,19 @@ app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 
-# ✅ Initialize Flask extensions
+# ✅ Initialize extensions
 db.init_app(app)
 mail = Mail(app)
 bcrypt.init_app(app)
 jwt.init_app(app)
 
-# ✅ Pass mail instance to the routes module
-routes.mail = mail
+# ✅ Register mail instance to routes
+register_mail_instance(mail)  # ✅ key fix
+
+# ✅ Register routes
 app.register_blueprint(routes)
 
-# ✅ Create DB tables and seed initial values
+# ✅ Create tables and seed
 with app.app_context():
     db.create_all()
     print("✅ Tables created successfully from models.py")
@@ -72,6 +74,6 @@ with app.app_context():
 def index():
     return "Hello MUFATE G SACCO"
 
-# ✅ Local server run
+# ✅ Run server
 if __name__ == "__main__":
     app.run()
