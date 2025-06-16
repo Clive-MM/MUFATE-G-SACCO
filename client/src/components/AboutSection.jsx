@@ -1,226 +1,143 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Dialog,
-  DialogContent,
-  IconButton,
-  useTheme,
-  useMediaQuery,
-  Snackbar,
-  Alert
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import axios from 'axios';
-import './FeedbackBanner.css';
+import React from 'react';
+import { Box, Typography, Button, Paper } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-const FeedbackBanner = () => {
-  const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    Email: '',
-    Subject: '',
-    Message: ''
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success'
-  });
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async () => {
-    if (!formData.Email || !formData.Subject || !formData.Message) {
-      setSnackbar({
-        open: true,
-        message: '❌ Please fill in all fields.',
-        severity: 'warning'
-      });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
-      setSnackbar({
-        open: true,
-        message: res.data.message,
-        severity: 'success'
-      });
-      setOpen(false);
-      setFormData({ Email: '', Subject: '', Message: '' });
-    } catch (err) {
-      setSnackbar({
-        open: true,
-        message: err?.response?.data?.message || '❌ Failed to submit feedback.',
-        severity: 'error'
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
+const AboutSection = () => {
   return (
-    <Box className="feedback-section">
-      <Box className="feedback-wrapper">
-        <Typography className="feedback-title">
-          We Value Your Feedback
-        </Typography>
-        <Typography className="feedback-text">
-          Your opinion matters to us! Help us serve you better by sharing your thoughts, suggestions, or experiences with Mufate "G" Sacco.
-        </Typography>
-        <Button className="feedback-button" onClick={() => setOpen(true)}>
-          Click Here
-        </Button>
-      </Box>
-
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        fullWidth
-        maxWidth="md"
-        PaperProps={{
-          sx: {
-            width: '100%',
-            maxWidth: isMobile ? '95%' : '700px',
-            borderRadius: 3,
-            mx: 'auto',
-            my: 2,
-          }
-        }}
+    <Box sx={{ backgroundColor: '#f6fef7', px: 0, py: 6 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        <DialogContent
+        <Paper
+          elevation={0}
           sx={{
             display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'stretch',
-            gap: isMobile ? 3 : 5,
-            p: isMobile ? 2 : 4,
-            position: 'relative',
+            flexDirection: { xs: 'column', md: 'row' },
+            borderRadius: 4,
+            overflow: 'hidden',
             width: '100%',
-            boxSizing: 'border-box'
+            mx: 'auto',
+            maxWidth: '1300px',
+            backgroundColor: '#fff',
+            border: '2px solid transparent',
+            backgroundImage:
+              'linear-gradient(white, white), linear-gradient(to right, #64dd17, #b2f2bb)',
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'content-box, border-box',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
           }}
         >
-          {/* Left Section */}
-          <Box sx={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
-            <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
-              <img
-                src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
-                alt="MUFATE G SACCO logo"
-                style={{ height: isMobile ? '80px' : '100px', objectFit: 'contain' }}
-              />
-            </Box>
-
-            <Typography
-              variant={isMobile ? 'h6' : 'h5'}
-              sx={{ mt: 2, fontWeight: 'bold', color: '#003B2F' }}
+         
+          <Box sx={{ flex: 1, p: { xs: 3, md: 5 } }}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
             >
-              We’d Love to Hear from You
-            </Typography>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 'bold',
+                  color: 'transparent',
+                  backgroundImage: 'linear-gradient(to right, #64dd17, #003c3c)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  mb: 3,
+                  textTransform: 'uppercase',
+                  letterSpacing: 1,
+                  fontSize: { xs: '1.8rem', md: '2.2rem' },
+                }}
+              >
+                About Us
+              </Typography>
+            </motion.div>
 
             <Typography
+              variant="body1"
               sx={{
-                mt: 1,
-                fontSize: isMobile ? '14px' : '15px',
-                color: '#333',
-                lineHeight: 1.7
+                color: '#555',
+                fontSize: '1.05rem',
+                lineHeight: 1.9,
+                mb: 2.5,
+                maxWidth: '95%',
               }}
             >
-              Your feedback helps us improve our services and serve you better. Please take a moment to share your thoughts, experiences, or suggestions with Mufate G Sacco. All responses are confidential and appreciated.
+              At MUFATE G SACCO,Mudete Factory Tea Growers SACCO LTD, we are committed to empowering our members through reliable,
+              efficient, and transparent financial services. With over a decade of experience
+              serving the tea farming community, our dedicated team ensures every transaction is
+              handled with integrity and precision.
             </Typography>
-          </Box>
 
-          {/* Right Section - Form */}
-          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField
-              label="Email"
-              name="Email"
-              value={formData.Email}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-            />
-            <TextField
-              label="Subject"
-              name="Subject"
-              value={formData.Subject}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-            />
-            <TextField
-              label="Message"
-              name="Message"
-              value={formData.Message}
-              onChange={handleChange}
-              multiline
-              rows={4}
-              fullWidth
-              size="small"
-            />
+            <Typography
+              variant="body1"
+              sx={{
+                color: '#555',
+                fontSize: '1.05rem',
+                lineHeight: 1.9,
+                mb: 2.5,
+                maxWidth: '95%',
+              }}
+            >
+              We provide tailored savings, credit, and investment solutions designed to support
+              your growth and prosperity. Your hard work in the fields deserves a financial partner
+              you can trust—and that’s exactly what we deliver.
+            </Typography>
+
             <Button
-              onClick={handleSubmit}
-              disabled={loading}
+              component={RouterLink}
+              to="/about/who-we-are"
+              variant="contained"
+              size="medium"
               sx={{
-                backgroundColor: '#003B2F',
+                backgroundColor: '#64dd17',
                 color: '#fff',
-                fontWeight: 600,
+                fontWeight: 'bold',
+                px: 3,
+                py: 1,
+                borderRadius: '20px',
+                fontSize: '0.9rem',
+                transition: 'all 0.4s ease-in-out',
+                boxShadow: '0 0 6px #64dd17',
                 '&:hover': {
-                  backgroundColor: '#2e7d32'
-                }
+                  backgroundColor: '#76ff03',
+                  transform: 'scale(1.08)',
+                  boxShadow: '0 0 20px #76ff03',
+                },
+                '&:focus': {
+                  outline: 'none',
+                  boxShadow: '0 0 15px #76ff03',
+                },
               }}
             >
-              {loading ? 'Submitting...' : 'SUBMIT'}
+              Learn More
             </Button>
+
+            <Typography variant="subtitle2" sx={{ mt: 3, fontStyle: 'italic', color: '#777' }}>
+              "Invest Here, Reap Here."
+            </Typography>
           </Box>
 
-          {/* Close Button */}
-          <IconButton
-            onClick={() => setOpen(false)}
+         
+          <Box
             sx={{
-              position: 'absolute',
-              top: 12,
-              right: 12,
-              backgroundColor: '#fff',
-              border: '1px solid #ccc',
-              width: 32,
-              height: 32,
-              '&:hover': {
-                backgroundColor: '#ffe0b2'
-              }
+              flex: 1,
+              minHeight: { xs: 300, md: 'auto' },
+              backgroundImage:
+                'url("https://res.cloudinary.com/djydkcx01/image/upload/v1746218402/MICRO_FINANCE_IMAGE_byqicj.png")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
             }}
-          >
-            <CloseIcon sx={{ color: '#ef6c00', fontSize: '20px' }} />
-          </IconButton>
-        </DialogContent>
-      </Dialog>
-
-      {/* Snackbar Notification */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={5000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert severity={snackbar.severity} onClose={handleSnackbarClose} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+          />
+        </Paper>
+      </motion.div>
     </Box>
   );
 };
 
-export default FeedbackBanner;
+export default AboutSection;
+
+
