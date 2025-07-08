@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
-  Facebook, Instagram, X
+  Facebook,  X
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa'; // ✅ WhatsApp Icon
