@@ -16,7 +16,7 @@ import FAQs from './more/FAQs';
 import ContactUs from './pages/ContactUs/ContactUs';
 import Careers from './pages/Careers/Careers';
 import News from './more/News';
-import SaccoGallery from './more/saccogallery';
+
 
 function App({ toggleTheme, mode }) {
   return (
@@ -47,7 +47,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/news" element={<News />} />
-          <Route path="/gallery" element={<SaccoGallery />} />
+          
         </Routes>
       </BrowserRouter>
     </Box>

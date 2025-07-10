@@ -8,7 +8,7 @@ import axios from 'axios';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Footer from '../components/Footer';
-import SaccoGallery from './saccogallery';
+import saccoGallery from './saccogallery';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -129,7 +129,7 @@ const News = () => {
       </Grid>
 
       <Box sx={{ height: '20px', backgroundColor: '#f2a922', mt: 6 }} />
-      <SaccoGallery/>
+      <saccoGallery/>
       <Footer />
     </Box>
   );

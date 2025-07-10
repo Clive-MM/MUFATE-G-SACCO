@@ -4,7 +4,7 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import axios from 'axios';
 
-const Saccogallery = () => {
+const saccogallery = () => {
   const [photos, setPhotos] = useState([]);
   const [index, setIndex] = useState(-1);
 
@@ -46,4 +46,4 @@ const Saccogallery = () => {
   );
 };
 
-export default Saccogallery;
+export default saccogallery;
