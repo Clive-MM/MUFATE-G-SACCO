@@ -1,48 +1,106 @@
 import React, { useEffect, useState } from 'react';
-import Gallery from 'react-photo-gallery';
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
 import axios from 'axios';
+import LightGallery from 'lightgallery/react';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lg-thumbnail.css';
+
+import {
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardMedia,
+  CardActionArea,
+  Box,
+  CircularProgress,
+  CardContent
+} from '@mui/material';
 
 const SaccoGallery = () => {
   const [photos, setPhotos] = useState([]);
-  const [index, setIndex] = useState(-1);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/gallery')  
+    axios.get('https://mufate-g-sacco.onrender.com/gallery')
       .then((res) => {
-        const rawGallery = res.data.gallery || [];  
-        const formatted = rawGallery.map(photo => ({
-          src: photo.ImageURL,
-          width: 4,
-          height: 3,
-          title: photo.Title,
-          description: photo.Description,
-        }));
-        setPhotos(formatted);
+        const gallery = res.data.gallery || [];
+        setPhotos(gallery);
+        setLoading(false);
       })
-      .catch((err) => console.error('❌ Error fetching gallery photos:', err));
+      .catch((err) => {
+        console.error('❌ Failed to load gallery:', err);
+        setLoading(false);
+      });
   }, []);
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2 style={{ textAlign: 'center', color: '#215732', marginBottom: '1.5rem' }}>
-        SACCO Activities & Gallery
-      </h2>
-      <Gallery photos={photos} onClick={(_, { index }) => setIndex(index)} />
-      {index >= 0 && (
-        <Lightbox
-          mainSrc={photos[index].src}
-          nextSrc={photos[(index + 1) % photos.length]?.src}
-          prevSrc={photos[(index + photos.length - 1) % photos.length]?.src}
-          onCloseRequest={() => setIndex(-1)}
-          onMovePrevRequest={() => setIndex((index + photos.length - 1) % photos.length)}
-          onMoveNextRequest={() => setIndex((index + 1) % photos.length)}
-          imageTitle={photos[index]?.title}
-          imageCaption={photos[index]?.description}
-        />
+    <Container maxWidth="lg" sx={{ py: 6 }}>
+      <Typography variant="h4" align="center" gutterBottom color="primary">
+        GALLERY
+      </Typography>
+
+      {loading ? (
+        <Box display="flex" justifyContent="center" py={5}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <LightGallery speed={500} plugins={[]} elementClassNames="custom-gallery">
+          <Grid container spacing={3} justifyContent="center">
+            {photos.map((photo, idx) => (
+              <Grid item xs={12} sm={6} md={4} key={idx}>
+                <Card
+                  sx={{
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    height: '100%',
+                    backgroundColor: '#fefefe',
+                    transition: 'transform 0.3s ease',
+                    '&:hover': { transform: 'scale(1.02)' }
+                  }}
+                >
+                  <CardActionArea
+                    component="a"
+                    href={photo.ImageURL}
+                    data-sub-html={`
+                      <div style="text-align: center;">
+                        <h4>${photo.Title}</h4>
+                        <p>${photo.Description}</p>
+                      </div>
+                    `}
+                  >
+                    <CardMedia
+                      component="img"
+                      image={photo.ImageURL}
+                      alt={photo.Title}
+                      sx={{
+                        width: '100%',
+                        height: 'auto',
+                        objectFit: 'contain',
+                        maxHeight: 400,
+                        padding: 1,
+                        backgroundColor: '#fff'
+                      }}
+                    />
+                  </CardActionArea>
+
+                  {/* 📸 Caption Below Image */}
+                  <CardContent>
+                    <Typography
+                      variant="subtitle1"
+                      align="center"
+                      sx={{ color: 'blue', fontWeight: 500 }}
+                    >
+                      {photo.Title}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </LightGallery>
       )}
-    </div>
+    </Container>
   );
 };
 
