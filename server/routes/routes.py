@@ -1599,7 +1599,6 @@ maderumoyia@mudetesacco.co.ke"""
             'message': '❌ Failed to submit feedback.',
             'error': str(e)
         }), 500
-
  
 #✅Route to fetch active gallery photos
 @routes.route('/gallery', methods=['GET'])
