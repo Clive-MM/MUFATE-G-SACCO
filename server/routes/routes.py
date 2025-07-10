@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
 from datetime import datetime
-from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources
+from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto
 import cloudinary.uploader
 
 
@@ -1600,3 +1600,26 @@ maderumoyia@mudetesacco.co.ke"""
             'error': str(e)
         }), 500
 
+ 
+#✅Route to fetch active gallery photos
+@routes.route('/gallery', methods=['GET'])
+def get_gallery_photos():
+    try:
+        photos = GalleryPhoto.query.filter_by(IsActive=True).order_by(GalleryPhoto.UploadedAt.desc()).all()
+
+        gallery_list = []
+        for photo in photos:
+            gallery_list.append({
+                'PhotoID': photo.PhotoID,
+                'Title': photo.Title,
+                'Description': photo.Description,
+                'ImageURL': photo.ImageURL,
+                'UploadedAt': photo.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'gallery': gallery_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch gallery photos.', 'error': str(e)}), 500

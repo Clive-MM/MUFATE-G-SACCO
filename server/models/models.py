@@ -256,5 +256,12 @@ class HolidayMessage(db.Model):
     Month = db.Column(db.Integer, nullable=False)
     Day = db.Column(db.Integer, nullable=False)
 
+class GalleryPhoto(db.Model):
+    __tablename__ = 'GalleryPhotos'
 
-
+    PhotoID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Title = db.Column(db.String(100))
+    Description = db.Column(db.Text)  # Matches NVARCHAR(MAX)
+    ImageURL = db.Column(db.String(500), nullable=False)
+    UploadedAt = db.Column(db.DateTime, default=datetime.utcnow)
+    IsActive = db.Column(db.Boolean, default=True)
