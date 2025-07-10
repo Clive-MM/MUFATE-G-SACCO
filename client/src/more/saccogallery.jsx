@@ -9,9 +9,9 @@ const Saccogallery = () => {
   const [index, setIndex] = useState(-1);
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/gallery')  // ✅ Matches your route
+    axios.get('https://mufate-g-sacco.onrender.com/gallery')  
       .then((res) => {
-        const rawGallery = res.data.gallery || [];  // ✅ Extract gallery from response
+        const rawGallery = res.data.gallery || [];  
         const formatted = rawGallery.map(photo => ({
           src: photo.ImageURL,
           width: 4,
