@@ -1,47 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Typography, Card, CardMedia, CardContent, Grid, Collapse, IconButton
+  Box, Typography, Card, CardMedia, CardContent, Collapse,
+  IconButton, CardHeader, Avatar
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
+import Slider from 'react-slick';
 import axios from 'axios';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 import Footer from '../components/Footer';
 import SaccoGallery from './saccogallery';
 
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  marginLeft: 'auto',
-  color: '#215732',
-  transform: expand ? 'rotate(180deg)' : 'rotate(0deg)',
-  transition: 'transform 0.3s ease',
-  '&:hover': {
-    color: '#76ff03',
-    transform: expand ? 'scale(1.2) rotate(0deg)' : 'scale(1.2) rotate(180deg)'
-  }
-}));
+const ExpandMore = styled(({ expand, ...other }) => <IconButton {...other} />)(
+  ({ expand }) => ({
+    marginLeft: 'auto',
+    color: '#215732',
+    transform: expand ? 'rotate(180deg)' : 'rotate(0deg)',
+    transition: 'transform 0.3s ease',
+    '&:hover': {
+      color: '#76ff03',
+      transform: expand ? 'scale(1.2) rotate(0deg)' : 'scale(1.2) rotate(180deg)'
+    }
+  })
+);
 
 const News = () => {
   const [posts, setPosts] = useState([]);
-  const [expandedPostId, setExpandedPostId] = useState(null);
+  const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
     axios.get('https://mufate-g-sacco.onrender.com/posts')
-      .then(response => setPosts(response.data.posts))
-      .catch(error => console.error('❌ Error fetching news posts:', error));
-  }, []);
-
-  useEffect(() => {
+      .then(res => setPosts(res.data.posts))
+      .catch(err => console.error('❌ Fetch error:', err));
     AOS.init({ duration: 1000 });
   }, []);
 
-  const handleExpandClick = (postId) => {
-    setExpandedPostId(expandedPostId === postId ? null : postId);
+  const settings = {
+    dots: true,
+    arrows: false,
+    infinite: true,
+    speed: 600,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    responsive: [{ breakpoint: 900, settings: { slidesToShow: 1 } }]
   };
+
+  const toggleExpand = id => setExpandedId(expandedId === id ? null : id);
 
   return (
     <Box sx={{ background: 'linear-gradient(to bottom, #215732, #0a3d2e)', py: 6 }}>
@@ -49,89 +59,86 @@ const News = () => {
         variant="h4"
         align="center"
         sx={{
-          color: '#fff',
-          fontWeight: 'bold',
-          textTransform: 'uppercase',
-          mb: 4,
-          letterSpacing: '1px',
-          textShadow: '0 0 6px #f2a922'
+          color: '#fff', fontWeight: 'bold', textTransform: 'uppercase',
+          mb: 4, letterSpacing: 1, textShadow: '0 0 6px #f2a922'
         }}
       >
         MUFATE G SACCO NEWS
       </Typography>
 
-      <Grid container spacing={4} justifyContent="center" px={2}>
-        {posts.map(post => (
-          <Grid item xs={12} sm={6} md={6} key={post.PostID} data-aos="fade-up">
-            <Card
-              sx={{
-                borderRadius: '20px',
-                backgroundColor: '#fff',
-                boxShadow: 4,
-                transition: 'transform 0.4s ease, box-shadow 0.4s ease',
-                '&:hover': {
-                  transform: 'scale(1.03)',
-                  boxShadow: '0 0 25px rgba(100, 221, 23, 0.6)',
-                  border: '2px solid #64dd17'
-                },
-                maxWidth: 500,
-                mx: 'auto'
-              }}
-            >
-              {/* Cover Image */}
-              {post.CoverImage && (
-                <CardMedia
-                  component="img"
-                  height="250"
-                  image={post.CoverImage}
-                  alt={post.Title}
-                  sx={{ objectFit: 'contain', p: 2 }}
-                />
-              )}
-
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: 700,
-                    color: '#014421',
-                    textTransform: 'uppercase',
-                    mb: 1,
+      <Box sx={{ maxWidth: 1400, mx: 'auto', px: 2 }}>
+        <Slider {...settings}>
+          {posts.map(post => (
+            <Box key={post.PostID} px={2} data-aos="fade-up">
+              <Card
+                sx={{
+                  borderRadius: 3, backgroundColor: '#fff', boxShadow: 4,
+                  transition: 'transform .4s, box-shadow .4s',
+                  '&:hover': {
+                    transform: 'scale(1.03)',
+                    boxShadow: '0 0 25px rgba(100,221,23,.6)',
+                    border: '2px solid #64dd17'
+                  },
+                  maxWidth: 640, mx: 'auto'
+                }}
+              >
+                {/* Header with title & date */}
+                <CardHeader
+                  avatar={
+                    <Avatar sx={{ bgcolor: '#215732' }}>
+                      {post.Title.charAt(0)}
+                    </Avatar>
+                  }
+                  title={post.Title}
+                  subheader={new Date(post.DatePosted).toLocaleDateString()}
+                  titleTypographyProps={{
+                    fontWeight: 700, textTransform: 'uppercase', fontSize: '1rem'
                   }}
-                >
-                  {post.Title}
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#555', mb: 1 }}>
-                  {new Date(post.DatePosted).toLocaleDateString()}
-                </Typography>
-              </CardContent>
+                  subheaderTypographyProps={{
+                    color: 'text.secondary', fontSize: '.8rem'
+                  }}
+                />
 
-              <CardContent sx={{ pt: 0 }}>
-                <ExpandMore
-                  expand={expandedPostId === post.PostID}
-                  onClick={() => handleExpandClick(post.PostID)}
-                  aria-expanded={expandedPostId === post.PostID}
-                  aria-label="show more"
-                >
-                  <ExpandMoreIcon />
-                </ExpandMore>
-              </CardContent>
+                {/* Cover image */}
+                {post.CoverImage && (
+                  <CardMedia
+                    component="img"
+                    image={post.CoverImage}
+                    alt={post.Title}
+                    sx={{
+                      height: 450,
+                      width: '100%',
+                      objectFit: 'fit'
+                    }}
+                  />
+                )}
 
-              <Collapse in={expandedPostId === post.PostID} timeout="auto" unmountOnExit>
-                <CardContent>
-                  <Typography variant="body1" sx={{ color: '#333', whiteSpace: 'pre-line' }}>
-                    {post.Content}
-                  </Typography>
+                <CardContent sx={{ pt: 0 }}>
+                  <ExpandMore
+                    expand={expandedId === post.PostID}
+                    onClick={() => toggleExpand(post.PostID)}
+                    aria-expanded={expandedId === post.PostID}
+                    aria-label="show more"
+                  >
+                    <ExpandMoreIcon />
+                  </ExpandMore>
                 </CardContent>
-              </Collapse>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
 
-      <Box sx={{ height: '20px', backgroundColor: '#f2a922', mt: 6 }} />
+                <Collapse in={expandedId === post.PostID} timeout="auto" unmountOnExit>
+                  <CardContent>
+                    <Typography variant="body1" sx={{ whiteSpace: 'pre-line', color: '#333' }}>
+                      {post.Content}
+                    </Typography>
+                  </CardContent>
+                </Collapse>
+              </Card>
+            </Box>
+          ))}
+        </Slider>
+      </Box>
+
+      <Box sx={{ height: 20, backgroundColor: '#f2a922', mt: 6 }} />
       <SaccoGallery />
-
       <Footer />
     </Box>
   );
