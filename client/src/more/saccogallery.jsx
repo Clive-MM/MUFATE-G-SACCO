@@ -87,6 +87,7 @@ const SaccoGallery = () => {
                     />
                   </CardActionArea>
 
+
                   <CardContent>
                     <Typography
                       variant="subtitle1"
