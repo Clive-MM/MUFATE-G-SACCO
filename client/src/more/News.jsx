@@ -48,7 +48,12 @@ const News = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
-    responsive: [{ breakpoint: 900, settings: { slidesToShow: 1 } }]
+    responsive: [
+      {
+        breakpoint: 900,
+        settings: { slidesToShow: 1 }
+      }
+    ]
   };
 
   const toggleExpand = id => setExpandedId(expandedId === id ? null : id);
@@ -59,30 +64,38 @@ const News = () => {
         variant="h4"
         align="center"
         sx={{
-          color: '#fff', fontWeight: 'bold', textTransform: 'uppercase',
-          mb: 4, letterSpacing: 1, textShadow: '0 0 6px #f2a922'
+          color: '#fff',
+          fontWeight: 'bold',
+          textTransform: 'uppercase',
+          mb: 4,
+          letterSpacing: 1,
+          textShadow: '0 0 6px #f2a922',
+          fontSize: { xs: '1.4rem', sm: '2rem', md: '2.5rem' }
         }}
       >
         MUFATE G SACCO NEWS
       </Typography>
 
-      <Box sx={{ maxWidth: 1400, mx: 'auto', px: 2 }}>
+      <Box sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 1, sm: 2 } }}>
         <Slider {...settings}>
           {posts.map(post => (
-            <Box key={post.PostID} px={2} data-aos="fade-up">
+            <Box key={post.PostID} px={1} data-aos="fade-up">
               <Card
                 sx={{
-                  borderRadius: 3, backgroundColor: '#fff', boxShadow: 4,
+                  borderRadius: 3,
+                  backgroundColor: '#fff',
+                  boxShadow: 4,
                   transition: 'transform .4s, box-shadow .4s',
                   '&:hover': {
                     transform: 'scale(1.03)',
                     boxShadow: '0 0 25px rgba(100,221,23,.6)',
                     border: '2px solid #64dd17'
                   },
-                  maxWidth: 640, mx: 'auto'
+                  width: '100%',
+                  maxWidth: { xs: 360, sm: 500, md: 640 },
+                  mx: 'auto'
                 }}
               >
-                {/* Header with title & date */}
                 <CardHeader
                   avatar={
                     <Avatar sx={{ bgcolor: '#215732' }}>
@@ -92,23 +105,25 @@ const News = () => {
                   title={post.Title}
                   subheader={new Date(post.DatePosted).toLocaleDateString()}
                   titleTypographyProps={{
-                    fontWeight: 700, textTransform: 'uppercase', fontSize: '1rem'
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    fontSize: { xs: '0.9rem', sm: '1rem' }
                   }}
                   subheaderTypographyProps={{
-                    color: 'text.secondary', fontSize: '.8rem'
+                    color: 'text.secondary',
+                    fontSize: { xs: '0.75rem', sm: '.85rem' }
                   }}
                 />
 
-                {/* Cover image */}
                 {post.CoverImage && (
                   <CardMedia
                     component="img"
                     image={post.CoverImage}
                     alt={post.Title}
                     sx={{
-                      height: 450,
+                      height: { xs: 220, sm: 300, md: 450 },
                       width: '100%',
-                      objectFit: 'fit'
+                      objectFit: 'cover'
                     }}
                   />
                 )}

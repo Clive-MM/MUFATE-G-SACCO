@@ -35,8 +35,17 @@ const SaccoGallery = () => {
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
-      <Typography variant="h4" align="center" gutterBottom color="primary">
+    <Container maxWidth="xl" sx={{ py: { xs: 4, sm: 6 }, px: { xs: 1, sm: 3 } }}>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        color="primary"
+        sx={{
+          fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+          fontWeight: 'bold'
+        }}
+      >
         GALLERY
       </Typography>
 
@@ -46,7 +55,7 @@ const SaccoGallery = () => {
         </Box>
       ) : (
         <LightGallery speed={500} plugins={[]} elementClassNames="custom-gallery">
-          <Grid container spacing={3} justifyContent="center">
+          <Grid container spacing={{ xs: 2, sm: 3 }} justifyContent="center">
             {photos.map((photo, idx) => (
               <Grid item xs={12} sm={6} md={4} key={idx}>
                 <Card
@@ -60,14 +69,9 @@ const SaccoGallery = () => {
                   }}
                 >
                   <CardActionArea
-                    component="a"
-                    href={photo.ImageURL}
-                    data-sub-html={`
-                      <div style="text-align: center;">
-                        <h4>${photo.Title}</h4>
-                        <p>${photo.Description}</p>
-                      </div>
-                    `}
+                    component="div"
+                    data-src={photo.ImageURL}
+                    data-sub-html={`<div style="text-align: center;"><h4>${photo.Title}</h4><p>${photo.Description}</p></div>`}
                   >
                     <CardMedia
                       component="img"
@@ -75,21 +79,23 @@ const SaccoGallery = () => {
                       alt={photo.Title}
                       sx={{
                         width: '100%',
-                        height: 'auto',
+                        height: { xs: 200, sm: 250, md: 300 },
                         objectFit: 'contain',
-                        maxHeight: 400,
                         padding: 1,
                         backgroundColor: '#fff'
                       }}
                     />
                   </CardActionArea>
 
-                  {/* 📸 Caption Below Image */}
                   <CardContent>
                     <Typography
                       variant="subtitle1"
                       align="center"
-                      sx={{ color: 'blue', fontWeight: 500 }}
+                      sx={{
+                        color: 'blue',
+                        fontWeight: 500,
+                        fontSize: { xs: '0.85rem', sm: '1rem' }
+                      }}
                     >
                       {photo.Title}
                     </Typography>
