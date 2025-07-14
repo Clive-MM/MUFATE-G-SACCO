@@ -89,16 +89,18 @@ const StrategicPartners = () => {
                     <CardActionArea>
                       {partner.LogoImageURL && (
                         <CardMedia
-                          component="img"
-                          height="180"
-                          image={partner.LogoImageURL}
-                          alt={partner.PartnerName}
-                          sx={{
-                            objectFit: 'cover',
-                            backgroundColor: '#fff',
-                            filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.15))',
-                          }}
-                        />
+  component="img"
+  image={partner.LogoImageURL}
+  alt={partner.PartnerName}
+  sx={{
+    height: 180,
+    objectFit: 'contain',
+    backgroundColor: '#fff',
+    p: 2,
+    filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.15))',
+  }}
+/>
+
                       )}
                       <CardContent>
                         <Typography
