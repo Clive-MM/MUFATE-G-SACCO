@@ -167,7 +167,7 @@ def view_careers():
     try:
         careers = Career.query.filter_by(IsActiveID=1).all()  # Only show active posts
         if not careers:
-            return jsonify({'message': 'ℹ️ No active career posts found.'}), 404
+            return jsonify({'message': 'ℹ️ No vacancies career posts found.'}), 404
 
         career_list = []
         for career in careers:
