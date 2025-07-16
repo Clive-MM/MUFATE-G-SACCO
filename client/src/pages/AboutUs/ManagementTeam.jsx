@@ -47,7 +47,7 @@ const ManagementTeam = () => {
               >
                 <CardMedia
                   component="img"
-                  height="250"
+                  height="400"
                   image={member.ImageURL}
                   alt={member.MGTName}
                   sx={{ objectFit: 'cover' }}
