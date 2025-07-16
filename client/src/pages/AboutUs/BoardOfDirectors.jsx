@@ -47,7 +47,7 @@ const BoardOfDirectors = () => {
               >
                 <CardMedia
                   component="img"
-                  height="250"
+                  height="350"
                   image={member.ImageURL}
                   alt={member.Name}
                   sx={{ objectFit: 'cover' }}

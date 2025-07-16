@@ -49,7 +49,7 @@ const StrategicPartners = () => {
                 mb: 1,
               }}
             >
-              Our Strategic Partners
+              Trusted Partners in Growth
             </Typography>
 
             <Box
@@ -89,17 +89,17 @@ const StrategicPartners = () => {
                     <CardActionArea>
                       {partner.LogoImageURL && (
                         <CardMedia
-  component="img"
-  image={partner.LogoImageURL}
-  alt={partner.PartnerName}
-  sx={{
-    height: 180,
-    objectFit: 'contain',
-    backgroundColor: '#fff',
-    p: 2,
-    filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.15))',
-  }}
-/>
+                          component="img"
+                          image={partner.LogoImageURL}
+                          alt={partner.PartnerName}
+                          sx={{
+                            height: 180,
+                            objectFit: 'contain',
+                            backgroundColor: '#fff',
+                            p: 2,
+                            filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.15))',
+                          }}
+                        />
 
                       )}
                       <CardContent>
