@@ -46,15 +46,15 @@ const BoardOfDirectors = () => {
                 }}
               >
                 <CardMedia
-  component="img"
-  height="700"
-  image={member.ImageURL}
-  alt={member.Name}
-  sx={{
-    objectFit: 'cover',
-    objectPosition: 'top',
-  }}
-/>
+                  component="img"
+                  height="400"
+                  image={member.ImageURL}
+                  alt={member.Name}
+                  sx={{
+                    objectFit: 'cover',
+                    objectPosition: 'top',
+                  }}
+                />
 
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography
