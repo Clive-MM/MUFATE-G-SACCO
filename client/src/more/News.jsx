@@ -4,6 +4,8 @@ import {
   IconButton, CardHeader, Avatar
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { styled } from '@mui/material/styles';
 import Slider from 'react-slick';
 import axios from 'axios';
@@ -31,6 +33,7 @@ const ExpandMore = styled(({ expand, ...other }) => <IconButton {...other} />)(
 const News = () => {
   const [posts, setPosts] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
+  const sliderRef = React.useRef(null);
 
   useEffect(() => {
     axios.get('https://mufate-g-sacco.onrender.com/posts')
@@ -41,13 +44,15 @@ const News = () => {
 
   const settings = {
     dots: true,
-    arrows: false,
+    arrows: false, // We'll add custom arrows manually
     infinite: true,
-    speed: 600,
+    speed: 800,
     slidesToShow: 2,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
+    cssEase: 'ease-in-out',
     responsive: [
       {
         breakpoint: 900,
@@ -76,8 +81,44 @@ const News = () => {
         MUFATE G SACCO NEWS
       </Typography>
 
-      <Box sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 1, sm: 2 } }}>
-        <Slider {...settings}>
+      <Box sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 1, sm: 2 }, position: 'relative' }}>
+        {/* Custom Left Arrow */}
+        <IconButton
+          onClick={() => sliderRef.current?.slickPrev()}
+          sx={{
+            position: 'absolute',
+            top: '40%',
+            left: -10,
+            zIndex: 2,
+            backgroundColor: '#fff',
+            color: '#215732',
+            '&:hover': {
+              backgroundColor: '#f2a922'
+            }
+          }}
+        >
+          <ArrowBackIosNewIcon />
+        </IconButton>
+
+        {/* Custom Right Arrow */}
+        <IconButton
+          onClick={() => sliderRef.current?.slickNext()}
+          sx={{
+            position: 'absolute',
+            top: '40%',
+            right: -10,
+            zIndex: 2,
+            backgroundColor: '#fff',
+            color: '#215732',
+            '&:hover': {
+              backgroundColor: '#f2a922'
+            }
+          }}
+        >
+          <ArrowForwardIosIcon />
+        </IconButton>
+
+        <Slider ref={sliderRef} {...settings}>
           {posts.map(post => (
             <Box key={post.PostID} px={1} data-aos="fade-up">
               <Card
