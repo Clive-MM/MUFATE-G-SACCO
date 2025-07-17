@@ -42,7 +42,7 @@ const AboutUsSection = () => {
           <Typography
             sx={{
               fontSize: '1.9rem',
-              color: '#215732',
+              color: '#3ede08ff',
               fontWeight: 800,
               fontFamily: 'Segoe UI, sans-serif',
               display: 'flex',
