@@ -82,8 +82,8 @@ const AboutUs = () => {
                   alignItems: 'center',
                   borderRadius: '20px',
                   background: item.CoreValues
-                    ? 'linear-gradient(to bottom right, #003c3c, #004d40)'
-                    : 'linear-gradient(to bottom right, #004d40, #00695c)',
+                    ? 'linear-gradient(to bottom right, #5fd225ff, #4ff00aff)'
+                    : 'linear-gradient(to bottom right, #5fd225ff, #4ff00aff)',
                   color: '#ffffff',
                   textAlign: 'center',
                   py: 4,
