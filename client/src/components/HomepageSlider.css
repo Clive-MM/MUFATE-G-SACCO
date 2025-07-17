@@ -1,15 +1,22 @@
-@import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css";
-
-.slick-dots.custom-dots li button:before {
-  font-size: 14px;
-  color: #64dd17;
-  opacity: 0.5;
-  transition: all 0.3s ease;
+/* Responsive image settings */
+.slider-image {
+  width: 100%;
+  height: 100%;
+  object-position: center;
+  display: block;
+  background-color: #000;
 }
 
-.slick-dots.custom-dots li.slick-active button:before {
-  color: #a0f27d;
-  opacity: 1;
-  font-size: 16px;
+/* Mobile - show full image without crop */
+@media (max-width: 600px) {
+  .slider-image {
+    object-fit: contain;
+  }
+}
+
+/* Desktop - use full-screen cropped background style */
+@media (min-width: 601px) {
+  .slider-image {
+    object-fit: cover;
+  }
 }

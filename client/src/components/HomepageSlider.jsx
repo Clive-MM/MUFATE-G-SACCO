@@ -4,7 +4,7 @@ import Slider from 'react-slick';
 import { Box, Typography, Button } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import './HomepageSlider.css';
+import './HomepageSlider.css'; // ✅ Import the updated CSS
 
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
@@ -37,26 +37,20 @@ const HomepageSlider = () => {
             key={index}
             sx={{
               position: 'relative',
-              height: { xs: '75vh', md: '85vh' },
+              height: { xs: '80vh', md: '90vh' },
               width: '100%',
               overflow: 'hidden',
             }}
           >
-           
+            {/* ✅ Responsive image */}
             <img
               src={slide.ImagePath}
               alt={slide.Title}
               loading="lazy"
-              style={{
-                height: '100%',
-                width: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                display: 'block',
-              }}
+              className="slider-image"
             />
 
-          
+            {/* Overlay */}
             <Box
               sx={{
                 position: 'absolute',
@@ -68,7 +62,7 @@ const HomepageSlider = () => {
               }}
             />
 
-            
+            {/* Text content */}
             <Box
               sx={{
                 position: 'absolute',
