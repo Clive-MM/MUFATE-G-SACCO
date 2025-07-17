@@ -110,7 +110,7 @@ const Careers = () => {
             fontWeight: 800,
             fontSize: { xs: '1.6rem', sm: '2rem', md: '2.8rem' },
             letterSpacing: '0.5px',
-            color: '#014421',
+            color: '#64dd17',
             mb: 2,
             textTransform: 'uppercase',
           }}
@@ -124,7 +124,7 @@ const Careers = () => {
             mx: 'auto',
             fontSize: { xs: '1rem', md: '1.15rem' },
             lineHeight: 1.8,
-            color: '#2e3d35',
+            color: '#64dd17',
             fontWeight: 500,
             letterSpacing: '0.3px',
           }}
