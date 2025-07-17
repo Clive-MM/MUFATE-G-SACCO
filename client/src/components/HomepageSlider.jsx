@@ -42,7 +42,7 @@ const HomepageSlider = () => {
     return (
       <Box
         sx={{
-          height: '100vh',
+          height: '80vh',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
