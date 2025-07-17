@@ -88,7 +88,7 @@ const BosaProducts = () => {
                 image={loan.ImageURL}
                 alt={loan.ServiceName}
                 sx={{
-                  height: 260,
+                  height: 300,
                   width: '100%',
                   objectFit: 'cover',
                   borderTopLeftRadius: '20px',
