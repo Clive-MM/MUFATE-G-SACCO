@@ -44,7 +44,7 @@ const News = () => {
 
   const settings = {
     dots: true,
-    arrows: false, // We'll add custom arrows manually
+    arrows: false, 
     infinite: true,
     speed: 800,
     slidesToShow: 2,

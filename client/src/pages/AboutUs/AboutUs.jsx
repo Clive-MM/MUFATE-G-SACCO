@@ -29,7 +29,7 @@ const AboutUs = () => {
       {/* Hero Image */}
       <div style={{ overflow: 'hidden', width: '100%' }}>
         <img
-          src="https://res.cloudinary.com/djydkcx01/image/upload/v1747331947/ChatGPT_Image_May_15_2025_08_58_50_PM_uwznuh.png"
+          src="https://res.cloudinary.com/djydkcx01/image/upload/v1752730090/IMG_9698_nwftoq.jpg"
           alt="About Us Hero"
           style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }}
         />
