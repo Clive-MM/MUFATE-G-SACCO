@@ -4,7 +4,7 @@ import Slider from 'react-slick';
 import { Box, Typography, Button } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import './HomepageSlider.css'; // ✅ Import the updated CSS
+import './HomepageSlider.css'; // Custom styling
 
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
@@ -25,24 +25,27 @@ const HomepageSlider = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 4000,
     arrows: false,
   };
 
   return (
-    <Box sx={{ mt: 0 }}>
+    <Box sx={{ mt: 0, width: '100%', backgroundColor: '#000' }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <Box
             key={index}
             sx={{
               position: 'relative',
-              height: { xs: '100vh', md: '100vh' },
               width: '100%',
+              height: { xs: 'auto', md: '100vh' },
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
               overflow: 'hidden',
+              backgroundColor: '#000',
             }}
           >
-            {/* ✅ Responsive image */}
             <img
               src={slide.ImagePath}
               alt={slide.Title}
@@ -58,11 +61,11 @@ const HomepageSlider = () => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundColor: 'rgba(0,0,0,0.5)',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
               }}
             />
 
-            {/* Text content */}
+            {/* Centered Text */}
             <Box
               sx={{
                 position: 'absolute',
@@ -72,22 +75,20 @@ const HomepageSlider = () => {
                 textAlign: 'center',
                 color: '#fff',
                 zIndex: 2,
-                maxWidth: '90%',
                 px: 2,
               }}
             >
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.7 }}
               >
                 <Typography
                   variant="h4"
                   sx={{
                     fontWeight: 'bold',
                     mb: 2,
-                    textShadow: '1px 1px 6px rgba(0,0,0,0.8)',
-                    letterSpacing: '1px',
+                    textShadow: '2px 2px 6px rgba(0,0,0,0.8)',
                   }}
                 >
                   {slide.Title}
@@ -95,17 +96,17 @@ const HomepageSlider = () => {
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.3 }}
               >
                 <Typography
                   variant="body2"
                   sx={{
+                    maxWidth: 600,
+                    mx: 'auto',
                     mb: 3,
                     textShadow: '1px 1px 4px rgba(0,0,0,0.6)',
-                    maxWidth: '600px',
-                    mx: 'auto',
                   }}
                 >
                   {slide.Description}
@@ -113,7 +114,7 @@ const HomepageSlider = () => {
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.6 }}
               >
@@ -130,16 +131,11 @@ const HomepageSlider = () => {
                     py: 1,
                     borderRadius: '20px',
                     fontSize: '0.9rem',
-                    transition: 'all 0.4s ease-in-out',
                     boxShadow: '0 0 6px #64dd17',
                     '&:hover': {
                       backgroundColor: '#76ff03',
                       transform: 'scale(1.08)',
                       boxShadow: '0 0 20px #76ff03',
-                    },
-                    '&:focus': {
-                      outline: 'none',
-                      boxShadow: '0 0 15px #76ff03',
                     },
                   }}
                 >
