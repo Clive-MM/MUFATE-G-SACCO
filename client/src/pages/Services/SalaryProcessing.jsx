@@ -6,7 +6,7 @@ const SalaryProcessing = () => {
     return (
         <Box
             sx={{
-                backgroundColor: '#003b5c',
+                backgroundColor: '#64dd17',
                 display: 'flex',
                 flexDirection: { xs: 'column', md: 'row' },
                 alignItems: 'center',
