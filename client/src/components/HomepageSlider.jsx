@@ -6,14 +6,12 @@ import {
   Typography,
   Button,
   CircularProgress,
-  IconButton,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import './HomepageSlider.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import './HomepageSlider.css';
 
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
@@ -33,17 +31,16 @@ const HomepageSlider = () => {
   }, []);
 
   const settings = {
+    dots: true,
+    dotsClass: 'slick-dots custom-dots',
     infinite: true,
     speed: 800,
     fade: true,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 200,
+    autoplaySpeed: 5000,
     arrows: true,
-    dots: false, // ❌ remove dots
-    prevArrow: <CustomPrevArrow />,
-    nextArrow: <CustomNextArrow />,
   };
 
   if (loading) {
@@ -108,7 +105,7 @@ const HomepageSlider = () => {
               }}
             />
 
-            {/* Centered content */}
+            {/* Content */}
             <Box
               sx={{
                 position: 'relative',
@@ -189,47 +186,5 @@ const HomepageSlider = () => {
     </Box>
   );
 };
-
-// ✅ Custom Next Arrow
-function CustomNextArrow(props) {
-  const { onClick } = props;
-  return (
-    <IconButton
-      onClick={onClick}
-      sx={{
-        position: 'absolute',
-        top: '50%',
-        right: 10,
-        zIndex: 4,
-        transform: 'translateY(-50%)',
-        backgroundColor: 'rgba(255,255,255,0.1)',
-        '&:hover': { backgroundColor: '#76ff03' },
-      }}
-    >
-      <ArrowForwardIos sx={{ color: '#fff' }} />
-    </IconButton>
-  );
-}
-
-// ✅ Custom Prev Arrow
-function CustomPrevArrow(props) {
-  const { onClick } = props;
-  return (
-    <IconButton
-      onClick={onClick}
-      sx={{
-        position: 'absolute',
-        top: '50%',
-        left: 10,
-        zIndex: 4,
-        transform: 'translateY(-50%)',
-        backgroundColor: 'rgba(255,255,255,0.1)',
-        '&:hover': { backgroundColor: '#76ff03' },
-      }}
-    >
-      <ArrowBackIos sx={{ color: '#fff' }} />
-    </IconButton>
-  );
-}
 
 export default HomepageSlider;
