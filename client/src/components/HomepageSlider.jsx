@@ -6,9 +6,13 @@ import {
   Typography,
   Button,
   CircularProgress,
+  IconButton,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import './HomepageSlider.css';
 
 const HomepageSlider = () => {
@@ -29,8 +33,6 @@ const HomepageSlider = () => {
   }, []);
 
   const settings = {
-    dots: true,
-    dotsClass: 'slick-dots custom-dots',
     infinite: true,
     speed: 800,
     fade: true,
@@ -39,13 +41,16 @@ const HomepageSlider = () => {
     autoplay: true,
     autoplaySpeed: 5000,
     arrows: true,
+    dots: false, // ❌ remove dots
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
   };
 
   if (loading) {
     return (
       <Box
         sx={{
-          height: '100vh',
+          height: '80vh',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -68,9 +73,29 @@ const HomepageSlider = () => {
               width: '100%',
               height: '100vh',
               overflow: 'hidden',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#000',
             }}
           >
-            {/* Blurred Background */}
+            {/* Full image */}
+            <img
+              src={slide.ImagePath}
+              alt={slide.Title}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                zIndex: 1,
+              }}
+            />
+
+            {/* Dark overlay */}
             <Box
               sx={{
                 position: 'absolute',
@@ -78,51 +103,19 @@ const HomepageSlider = () => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundImage: `url(${slide.ImagePath})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                filter: 'blur(12px) brightness(0.6)',
-                transform: 'scale(1.1)',
-                zIndex: 1,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                zIndex: 2,
               }}
             />
 
-            {/* Centered full image */}
+            {/* Centered content */}
             <Box
               sx={{
                 position: 'relative',
-                zIndex: 2,
-                height: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <img
-                src={slide.ImagePath}
-                alt={slide.Title}
-                loading="lazy"
-                style={{
-                  maxHeight: '90vh',
-                  maxWidth: '95vw',
-                  objectFit: 'contain',
-                  borderRadius: '8px',
-                  boxShadow: '0 0 30px rgba(0,0,0,0.5)',
-                }}
-              />
-            </Box>
-
-            {/* Overlayed content */}
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '10%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                textAlign: 'center',
-                color: '#fff',
                 zIndex: 3,
+                textAlign: 'center',
                 px: 2,
+                color: '#fff',
               }}
             >
               <motion.div
@@ -196,5 +189,47 @@ const HomepageSlider = () => {
     </Box>
   );
 };
+
+// ✅ Custom Next Arrow
+function CustomNextArrow(props) {
+  const { onClick } = props;
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        right: 10,
+        zIndex: 4,
+        transform: 'translateY(-50%)',
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        '&:hover': { backgroundColor: '#76ff03' },
+      }}
+    >
+      <ArrowForwardIos sx={{ color: '#fff' }} />
+    </IconButton>
+  );
+}
+
+// ✅ Custom Prev Arrow
+function CustomPrevArrow(props) {
+  const { onClick } = props;
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: 10,
+        zIndex: 4,
+        transform: 'translateY(-50%)',
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        '&:hover': { backgroundColor: '#76ff03' },
+      }}
+    >
+      <ArrowBackIos sx={{ color: '#fff' }} />
+    </IconButton>
+  );
+}
 
 export default HomepageSlider;
