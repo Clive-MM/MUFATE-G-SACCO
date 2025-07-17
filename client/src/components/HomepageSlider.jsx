@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, CircularProgress } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import './HomepageSlider.css'; // Custom styling
+import './HomepageSlider.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/slider/view`)
-      .then((response) => setSlides(response.data.sliders))
-      .catch((error) => console.error('Error fetching sliders:', error));
+      .then((response) => {
+        setSlides(response.data.sliders);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching sliders:', error);
+        setLoading(false);
+      });
   }, []);
 
   const settings = {
@@ -26,11 +35,27 @@ const HomepageSlider = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 4000,
-    arrows: false,
+    arrows: true,
   };
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#000',
+        }}
+      >
+        <CircularProgress sx={{ color: '#64dd17' }} />
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ mt: 0, width: '100%', backgroundColor: '#000' }}>
+    <Box sx={{ mt: 0, width: '100%' }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <Box
@@ -38,22 +63,11 @@ const HomepageSlider = () => {
             sx={{
               position: 'relative',
               width: '100%',
-              height: { xs: 'auto', md: '100vh' },
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              height: '100vh',
               overflow: 'hidden',
-              backgroundColor: '#000',
             }}
           >
-            <img
-              src={slide.ImagePath}
-              alt={slide.Title}
-              loading="lazy"
-              className="slider-image"
-            />
-
-            {/* Overlay */}
+            {/* Image as background using absolute fill */}
             <Box
               sx={{
                 position: 'absolute',
@@ -61,27 +75,46 @@ const HomepageSlider = () => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                backgroundImage: `url(${slide.ImagePath})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                zIndex: 1,
               }}
             />
 
-            {/* Centered Text */}
+            {/* Dark overlay */}
             <Box
               sx={{
                 position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                zIndex: 2,
+              }}
+            />
+
+            {/* Centered content */}
+            <Box
+              sx={{
+                position: 'relative',
+                zIndex: 3,
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
                 textAlign: 'center',
                 color: '#fff',
-                zIndex: 2,
                 px: 2,
               }}
             >
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7 }}
+                transition={{ duration: 0.8 }}
               >
                 <Typography
                   variant="h4"
@@ -104,7 +137,6 @@ const HomepageSlider = () => {
                   variant="body2"
                   sx={{
                     maxWidth: 600,
-                    mx: 'auto',
                     mb: 3,
                     textShadow: '1px 1px 4px rgba(0,0,0,0.6)',
                   }}
