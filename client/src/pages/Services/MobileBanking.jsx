@@ -65,7 +65,7 @@ const MobileBanking = () => {
                             display: 'flex',
                             alignItems: 'center',
                             fontWeight: 800,
-                            color: '#003b2f',
+                            color: '#64dd17',
                             textTransform: 'uppercase',
                             letterSpacing: '1.5px',
                             mb: 3,
