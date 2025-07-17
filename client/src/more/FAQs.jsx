@@ -28,7 +28,7 @@ const FAQs = () => {
       sx={{
         m: 0,
         p: 0,
-        background: 'linear-gradient(to bottom right, #2e7d32,rgba(10, 245, 18, 0.83))',
+        background: 'linear-gradient(to bottom right, #41d817ff,rgba(10, 245, 18, 0.83))',
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
