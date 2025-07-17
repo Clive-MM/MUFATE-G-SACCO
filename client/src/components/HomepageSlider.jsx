@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
-import { Box, Typography, Button, CircularProgress } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './HomepageSlider.css';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
@@ -29,12 +32,12 @@ const HomepageSlider = () => {
     dots: true,
     dotsClass: 'slick-dots custom-dots',
     infinite: true,
-    speed: 1000,
+    speed: 800,
     fade: true,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 5000,
     arrows: true,
   };
 
@@ -42,7 +45,7 @@ const HomepageSlider = () => {
     return (
       <Box
         sx={{
-          height: '80vh',
+          height: '100vh',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -55,7 +58,7 @@ const HomepageSlider = () => {
   }
 
   return (
-    <Box sx={{ mt: 0, width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <Box
@@ -67,7 +70,7 @@ const HomepageSlider = () => {
               overflow: 'hidden',
             }}
           >
-            {/* Image as background using absolute fill */}
+            {/* Blurred Background */}
             <Box
               sx={{
                 position: 'absolute',
@@ -78,43 +81,54 @@ const HomepageSlider = () => {
                 backgroundImage: `url(${slide.ImagePath})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
+                filter: 'blur(12px) brightness(0.6)',
+                transform: 'scale(1.1)',
                 zIndex: 1,
               }}
             />
 
-            {/* Dark overlay */}
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                zIndex: 2,
-              }}
-            />
-
-            {/* Centered content */}
+            {/* Centered full image */}
             <Box
               sx={{
                 position: 'relative',
-                zIndex: 3,
+                zIndex: 2,
                 height: '100%',
                 display: 'flex',
-                flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
+              }}
+            >
+              <img
+                src={slide.ImagePath}
+                alt={slide.Title}
+                loading="lazy"
+                style={{
+                  maxHeight: '90vh',
+                  maxWidth: '95vw',
+                  objectFit: 'contain',
+                  borderRadius: '8px',
+                  boxShadow: '0 0 30px rgba(0,0,0,0.5)',
+                }}
+              />
+            </Box>
+
+            {/* Overlayed content */}
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: '10%',
+                left: '50%',
+                transform: 'translateX(-50%)',
                 textAlign: 'center',
                 color: '#fff',
+                zIndex: 3,
                 px: 2,
               }}
             >
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.7 }}
               >
                 <Typography
                   variant="h4"
@@ -137,6 +151,7 @@ const HomepageSlider = () => {
                   variant="body2"
                   sx={{
                     maxWidth: 600,
+                    mx: 'auto',
                     mb: 3,
                     textShadow: '1px 1px 4px rgba(0,0,0,0.6)',
                   }}

@@ -1,12 +1,25 @@
 .slick-dots.custom-dots li button:before {
-  font-size: 14px;
+  font-size: 12px;
   color: #64dd17;
-  opacity: 0.5;
+  opacity: 0.4;
   transition: all 0.3s ease;
 }
 
 .slick-dots.custom-dots li.slick-active button:before {
   color: #a0f27d;
   opacity: 1;
-  font-size: 16px;
+  font-size: 14px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: #76ff03;
+  font-size: 32px;
+  opacity: 0.9;
+}
+
+.slick-prev:hover:before,
+.slick-next:hover:before {
+  color: #a0f27d;
+  transform: scale(1.2);
 }
