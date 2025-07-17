@@ -70,29 +70,10 @@ const HomepageSlider = () => {
               width: '100%',
               height: '100vh',
               overflow: 'hidden',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
               backgroundColor: '#000',
             }}
           >
-            {/* Full image */}
-            <img
-              src={slide.ImagePath}
-              alt={slide.Title}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                zIndex: 1,
-              }}
-            />
-
-            {/* Dark overlay */}
+            {/* 🔁 Blurred Background */}
             <Box
               sx={{
                 position: 'absolute',
@@ -100,19 +81,52 @@ const HomepageSlider = () => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                zIndex: 2,
+                backgroundImage: `url(${slide.ImagePath})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                filter: 'blur(16px) brightness(0.5)',
+                transform: 'scale(1.1)',
+                zIndex: 1,
               }}
             />
 
-            {/* Content */}
+            {/* ✅ Clear Centered Image */}
             <Box
               sx={{
                 position: 'relative',
+                zIndex: 2,
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={slide.ImagePath}
+                alt={slide.Title}
+                loading="lazy"
+                style={{
+                  maxHeight: '90vh',
+                  maxWidth: '95vw',
+                  objectFit: 'contain',
+                  borderRadius: '12px',
+                  boxShadow: '0 0 30px rgba(0,0,0,0.4)',
+                }}
+              />
+            </Box>
+
+            {/* ✨ Text Overlay */}
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: '8%',
+                left: '50%',
+                transform: 'translateX(-50%)',
                 zIndex: 3,
                 textAlign: 'center',
-                px: 2,
                 color: '#fff',
+                px: 2,
               }}
             >
               <motion.div
