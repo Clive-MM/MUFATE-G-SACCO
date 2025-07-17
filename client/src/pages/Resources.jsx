@@ -53,7 +53,7 @@ const ResourcesPage = () => {
               sx={{
                 fontWeight: 800,
                 fontSize: { xs: '1.8rem', md: '2.2rem' },
-                color: '#003b5c',
+                color: '#64dd17',
                 letterSpacing: '0.5px',
                 mb: 5,
               }}
