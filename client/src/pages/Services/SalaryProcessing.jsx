@@ -35,7 +35,7 @@ const SalaryProcessing = () => {
                         maxWidth: '500px',
                         height: 'auto',
                         borderRadius: '20px',
-                        boxShadow: '0 0 25px rgba(0, 255, 200, 0.25), 0 10px 30px rgba(0,0,0,0.2)',
+                        boxShadow: '0 0 25px rgba(192, 233, 12, 0.25), 0 10px 30px rgba(0,0,0,0.2)',
                         transition: 'transform 0.3s ease',
                         cursor: 'pointer',
                     }}
