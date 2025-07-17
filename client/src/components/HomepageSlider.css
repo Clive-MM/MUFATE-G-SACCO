@@ -4,7 +4,7 @@
 /* Maintain aspect ratio without cropping */
 .slider-image {
   max-width: 100%;
-  max-height: 100vh;
+  max-height: 120vh;
   height: auto;
   width: auto;
   object-fit: contain;
