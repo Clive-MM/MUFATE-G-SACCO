@@ -37,7 +37,7 @@ const HomepageSlider = () => {
             key={index}
             sx={{
               position: 'relative',
-              height: { xs: '60vh', md: '70vh' },
+              height: { xs: '75vh', md: '85vh' },
               width: '100%',
               overflow: 'hidden',
             }}
