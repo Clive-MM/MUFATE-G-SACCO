@@ -6,9 +6,11 @@ import {
   Typography,
   Button,
   CircularProgress,
+  IconButton,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import './HomepageSlider.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -31,8 +33,7 @@ const HomepageSlider = () => {
   }, []);
 
   const settings = {
-    dots: true,
-    dotsClass: 'slick-dots custom-dots',
+    dots: false, // ⛔ Removed dots
     infinite: true,
     speed: 800,
     fade: true,
@@ -41,6 +42,8 @@ const HomepageSlider = () => {
     autoplay: true,
     autoplaySpeed: 5000,
     arrows: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
   };
 
   if (loading) {
@@ -200,5 +203,47 @@ const HomepageSlider = () => {
     </Box>
   );
 };
+
+const NextArrow = ({ onClick }) => (
+  <IconButton
+    onClick={onClick}
+    sx={{
+      position: 'absolute',
+      right: 20,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      zIndex: 4,
+      backgroundColor: '#64dd17',
+      color: '#fff',
+      '&:hover': {
+        backgroundColor: '#FFD700',
+        color: '#000',
+      },
+    }}
+  >
+    <ArrowForwardIos />
+  </IconButton>
+);
+
+const PrevArrow = ({ onClick }) => (
+  <IconButton
+    onClick={onClick}
+    sx={{
+      position: 'absolute',
+      left: 20,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      zIndex: 4,
+      backgroundColor: '#64dd17',
+      color: '#fff',
+      '&:hover': {
+        backgroundColor: '#FFD700',
+        color: '#000',
+      },
+    }}
+  >
+    <ArrowBackIosNew />
+  </IconButton>
+);
 
 export default HomepageSlider;
