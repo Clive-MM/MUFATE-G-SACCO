@@ -160,7 +160,7 @@ def update_career(career_id):
         return jsonify({'message': '❌ An error occurred while updating career.', 'error': str(e)}), 500
 
 
-#Route for viewing career posts
+
 # ✅ Public route to view all active career posts
 @routes.route('/careers', methods=['GET'])
 def view_careers():

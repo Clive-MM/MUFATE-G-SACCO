@@ -14,7 +14,7 @@ const MembershipBenefits = () => {
     <Box
       sx={{
         width: '100%',
-        backgroundColor: '#004144',
+        backgroundColor: 'rgba(73, 248, 4, 1)',
         color: '#fff',
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
