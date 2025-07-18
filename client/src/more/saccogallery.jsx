@@ -40,7 +40,7 @@ const SaccoGallery = () => {
         variant="h4"
         align="center"
         gutterBottom
-        color="primary"
+        color='#ffffff'
         sx={{
           fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
           fontWeight: 'bold'
