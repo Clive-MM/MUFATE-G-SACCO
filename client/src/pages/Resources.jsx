@@ -40,7 +40,7 @@ const ResourcesPage = () => {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <Box sx={{ background: 'radial-gradient(circle at top, #e8f5e9, #05ea15ff)' }}>
+      <Box sx={{ background: 'radial-gradient(circle at top, #e8f5e9, #49ed08ff)' }}>
         <Box sx={{ pt: 6, pb: 6, px: { xs: 2, md: 10 } }}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
