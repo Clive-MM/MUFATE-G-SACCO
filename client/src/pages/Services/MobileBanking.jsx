@@ -88,7 +88,7 @@ const MobileBanking = () => {
                         Experience the ease of banking from anywhere with Mufate G’s M-Banking services.
                         From checking balances and transferring funds to paying bills and accessing mini-statements,
                         our mobile platform puts the power of banking in your hands — securely and conveniently.
-                        Use <strong>*882*51#</strong> to access your account.
+                        Use <strong>*882*51#</strong> to access your account.Use <strong>506492</strong> and your <strong><strong>*882*51#</strong></strong> to deposit money into your account.
                     </Typography>
                 </motion.div>
             </Box>
