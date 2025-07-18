@@ -14,7 +14,7 @@ const AboutUsSection = () => {
         alignItems: 'center',
         px: 2,
         py: { xs: 3, md: 6 },
-        background: 'radial-gradient(circle at top left, #0d402b, #1b5e20)',
+        background: 'radial-gradient(circle at top left, #12be32ff, #08f818ff)',
       }}
     >
       <motion.div
