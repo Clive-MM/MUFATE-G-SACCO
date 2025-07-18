@@ -64,7 +64,7 @@ const News = () => {
   const toggleExpand = id => setExpandedId(expandedId === id ? null : id);
 
   return (
-    <Box sx={{ background: 'linear-gradient(to bottom, #215732, #0a3d2e)', py: 6 }}>
+    <Box sx={{ background: 'linear-gradient(to bottom, #67ef06ff, #1cea09ff)', py: 6 }}>
       <Typography
         variant="h4"
         align="center"
