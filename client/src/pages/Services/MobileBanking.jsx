@@ -29,7 +29,7 @@ const MobileBanking = () => {
                     transform: 'translateY(-50%)',
                     width: { xs: '100%', md: '50%' },
                     height: '240px',
-                    background: 'linear-gradient(135deg, #004d40, #00695c)', // ✅ Gradient
+                    background: 'linear-gradient(135deg, #5cdf0aff, #9ff107)', // ✅ Gradient
                     borderTopLeftRadius: '30px',
                     borderBottomLeftRadius: '30px',
                     zIndex: 0,
