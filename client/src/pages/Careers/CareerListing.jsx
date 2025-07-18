@@ -66,7 +66,7 @@ const CareerListing = () => {
 
       {careers.length === 0 ? (
         <Typography textAlign="center" color="#ffffffcc">
-          No active career opportunities at the moment.
+          No vacant career opportunities at the moment.
         </Typography>
       ) : (
         careers.map((job) => (

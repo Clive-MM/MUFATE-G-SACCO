@@ -124,7 +124,7 @@ const Careers = () => {
             mx: 'auto',
             fontSize: { xs: '1rem', md: '1.15rem' },
             lineHeight: 1.8,
-            color: '#64dd17',
+            color: '#050c01ff',
             fontWeight: 500,
             letterSpacing: '0.3px',
           }}
