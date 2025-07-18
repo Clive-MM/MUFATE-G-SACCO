@@ -43,7 +43,7 @@ const CareerListing = () => {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(to bottom, #215732, #0a3d2e)',
+        background: 'linear-gradient(to bottom, #24d00eff, #3afa05ff)',
         px: { xs: 2, md: 8 },
         py: { xs: 6, md: 10 },
         fontFamily: `'Segoe UI', sans-serif`,
