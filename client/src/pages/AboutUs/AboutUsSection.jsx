@@ -83,7 +83,7 @@ const AboutUsSection = () => {
           <Typography
             sx={{
               fontSize: '1.6rem',
-              color: '#2e7d32',
+              color: '#3ede08ff',
               fontWeight: 700,
               fontFamily: 'Segoe UI, sans-serif',
               display: 'flex',
@@ -123,7 +123,7 @@ const AboutUsSection = () => {
           <Typography
             sx={{
               fontSize: '1.6rem',
-              color: '#2e7d32',
+              color: '#3ede08ff',
               fontWeight: 700,
               fontFamily: 'Segoe UI, sans-serif',
               display: 'flex',
