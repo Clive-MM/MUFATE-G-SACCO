@@ -42,7 +42,7 @@
 }
 
 .footer-icons .MuiIconButton-root {
-  background-color: #215732;
+  background-color: #7de606;
   color: white;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -141,7 +141,7 @@
 }
 
 .icon-wrapper {
-  background-color: #215732;
+  background-color: #3cef05;
   padding: 6px;
   border-radius: 50%;
   display: flex;
