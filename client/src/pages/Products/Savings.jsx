@@ -71,7 +71,7 @@ const SavingsProducts = () => {
     };
 
     return (
-        <Box sx={{ background: 'linear-gradient(to bottom, #215732, #0a3d2e)', py: 6 }}>
+        <Box sx={{ background: 'linear-gradient(to bottom, #5cdf0aff, #9ff107)', py: 6 }}>
             <Typography
                 variant="h5"
                 align="center"
