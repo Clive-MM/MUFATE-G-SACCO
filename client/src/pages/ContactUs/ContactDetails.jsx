@@ -5,7 +5,7 @@ const ContactDetails = () => {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(to bottom, rgb(189, 225, 237), rgb(233, 241, 250))',
+        background: 'linear-gradient(to bottom, rgba(54, 200, 46, 1), rgba(126, 228, 9, 1))',
         borderBottomLeftRadius: '16px',
         borderBottomRightRadius: '16px',
         px: { xs: 2, md: 8 },

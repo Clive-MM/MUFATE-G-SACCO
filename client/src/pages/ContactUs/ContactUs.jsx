@@ -22,7 +22,7 @@ const ContactUs = () => {
           flexDirection: 'column',
           alignItems: 'flex-start',
           // Adjust vertical alignment to start from the top
-          justifyContent: 'flex-start', // Changed from 'center'
+          justifyContent: 'flex-start', 
           px: { xs: 3, md: 8 },
           py: { xs: 4, md: 6 },
           color: '#fff',
