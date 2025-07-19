@@ -55,7 +55,7 @@ const ContactDetails = () => {
         <Link
           href="mailto:info@mudetesacco.co.ke"
           underline="hover"
-          sx={{ fontWeight: 'bold', color: '#310af6ff' }}
+          sx={{ fontWeight: 'bold', color: '#2c04f4ff' }}
         >
           info@mudetesacco.co.ke
         </Link>{' '}
