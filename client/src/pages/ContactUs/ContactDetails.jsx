@@ -23,7 +23,7 @@ const ContactDetails = () => {
       <Typography
         variant="h4"
         sx={{
-          color: '#003B49',
+          color: '#f1f4f5ff',
           fontWeight: 700,
           textTransform: 'uppercase',
           fontSize: { xs: '1.4rem', md: '2rem' },
@@ -48,14 +48,14 @@ const ContactDetails = () => {
           +254791331932
         </Box>{' '}
         /{' '}
-        <Box component="span" sx={{ fontWeight: 'bold', color: '#2E7D32' }}>
+        <Box component="span" sx={{ fontWeight: 'bold', color: '#3b2e7dff' }}>
           +254794515407
         </Box>{' '}
         or write us an email at{' '}
         <Link
           href="mailto:info@mudetesacco.co.ke"
           underline="hover"
-          sx={{ fontWeight: 'bold', color: '#F9A825' }}
+          sx={{ fontWeight: 'bold', color: '#310af6ff' }}
         >
           info@mudetesacco.co.ke
         </Link>{' '}
