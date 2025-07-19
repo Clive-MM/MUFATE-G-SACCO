@@ -48,7 +48,7 @@ const ContactDetails = () => {
           +254791331932
         </Box>{' '}
         /{' '}
-        <Box component="span" sx={{ fontWeight: 'bold', color: '#3b2e7dff' }}>
+        <Box component="span" sx={{ fontWeight: 'bold', color: '#2c04f4ff' }}>
           +254794515407
         </Box>{' '}
         or write us an email at{' '}
