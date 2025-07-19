@@ -44,7 +44,7 @@ const ContactDetails = () => {
       >
         Have a question, suggestion, or need support? Reach out and our team will assist you shortly.
         Our team is ready to support you with answers, guidance, and solutions. Call us on{' '}
-        <Box component="span" sx={{ fontWeight: 'bold', color: '#2E7D32' }}>
+        <Box component="span" sx={{ fontWeight: 'bold', color: '#2c04f4ff' }}>
           +254791331932
         </Box>{' '}
         /{' '}
