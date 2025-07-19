@@ -88,7 +88,7 @@ const MobileBanking = () => {
                         Experience the ease of banking from anywhere with Mufate G’s M-Banking services.
                         From checking balances and transferring funds to paying bills and accessing mini-statements,
                         our mobile platform puts the power of banking in your hands — securely and conveniently.
-                        Use <strong>*882*51#</strong> to access your account.Use Lipa na MPESA service to deposit money into your account using the paybillnumber <strong>506492</strong> .
+                        Use <strong>*882*51#</strong> to access your account.Use Lipa na MPESA service to deposit money into your account using the paybill number <strong>506492</strong> .
                     </Typography>
                 </motion.div>
             </Box>
