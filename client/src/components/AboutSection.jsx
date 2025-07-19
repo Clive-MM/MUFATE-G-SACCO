@@ -127,7 +127,7 @@ const AboutSection = () => {
               flex: 1,
               minHeight: { xs: 300, md: 'auto' },
               backgroundImage:
-                'url("https://res.cloudinary.com/djydkcx01/image/upload/v1752139675/IMG-20250709-WA0010_ni2p9e.jpg")',
+                'url("https://res.cloudinary.com/djydkcx01/image/upload/v1752695489/IMG_9530_afei7v.jpg")',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
