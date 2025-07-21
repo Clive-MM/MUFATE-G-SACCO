@@ -33,7 +33,7 @@ const HomepageSlider = () => {
   }, []);
 
   const settings = {
-    dots: false, // ⛔ Removed dots
+    dots: false,
     infinite: true,
     speed: 800,
     fade: true,
@@ -76,7 +76,7 @@ const HomepageSlider = () => {
               backgroundColor: '#000',
             }}
           >
-            {/* 🔁 Blurred Background */}
+            {/* Blurred Background */}
             <Box
               sx={{
                 position: 'absolute',
@@ -94,7 +94,7 @@ const HomepageSlider = () => {
               }}
             />
 
-            {/* ✅ Clear Centered Image */}
+            {/* Clear Centered Image */}
             <Box
               sx={{
                 position: 'relative',
@@ -103,6 +103,7 @@ const HomepageSlider = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
+                px: 2,
               }}
             >
               <img
@@ -110,26 +111,28 @@ const HomepageSlider = () => {
                 alt={slide.Title}
                 loading="lazy"
                 style={{
-                  maxHeight: '90vh',
-                  maxWidth: '95vw',
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: '80vh',
                   objectFit: 'contain',
-                  borderRadius: '12px',
-                  boxShadow: '0 0 30px rgba(0,0,0,0.4)',
+                  borderRadius: '10px',
+                  boxShadow: '0 0 20px rgba(0,0,0,0.4)',
                 }}
               />
             </Box>
 
-            {/* ✨ Text Overlay */}
+            {/* Text Overlay */}
             <Box
               sx={{
                 position: 'absolute',
-                bottom: '8%',
+                bottom: { xs: '4%', sm: '6%', md: '8%' },
                 left: '50%',
                 transform: 'translateX(-50%)',
                 zIndex: 3,
                 textAlign: 'center',
                 color: '#fff',
                 px: 2,
+                width: '90%',
               }}
             >
               <motion.div
@@ -142,6 +145,7 @@ const HomepageSlider = () => {
                   sx={{
                     fontWeight: 'bold',
                     mb: 2,
+                    fontSize: { xs: '1.4rem', sm: '2rem', md: '2.5rem' },
                     textShadow: '2px 2px 6px rgba(0,0,0,0.8)',
                   }}
                 >
@@ -160,6 +164,7 @@ const HomepageSlider = () => {
                     maxWidth: 600,
                     mx: 'auto',
                     mb: 3,
+                    fontSize: { xs: '0.9rem', sm: '1rem' },
                     textShadow: '1px 1px 4px rgba(0,0,0,0.6)',
                   }}
                 >
@@ -184,7 +189,7 @@ const HomepageSlider = () => {
                     px: 3,
                     py: 1,
                     borderRadius: '20px',
-                    fontSize: '0.9rem',
+                    fontSize: { xs: '0.8rem', sm: '0.9rem' },
                     boxShadow: '0 0 6px #64dd17',
                     '&:hover': {
                       backgroundColor: '#76ff03',
