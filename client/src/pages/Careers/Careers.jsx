@@ -66,7 +66,7 @@ const Careers = () => {
           }}
         />
 
-        {/* Overlay Hero Image 2 */}
+        {/* Updated Hero Image 2 Position */}
         {hero2 && (
           <Box
             sx={{
@@ -74,7 +74,7 @@ const Careers = () => {
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
-              bottom: { xs: '-20px', sm: '-40px', md: '-80px' },
+              bottom: { xs: '-120px', sm: '-140px', md: '-160px' },
               zIndex: 5,
               px: { xs: 2, sm: 4, md: 0 },
             }}
@@ -106,7 +106,7 @@ const Careers = () => {
       </Box>
 
       {/* Spacer below image */}
-      <Box sx={{ height: { xs: 60, sm: 80, md: 100 } }} />
+      <Box sx={{ height: { xs: 100, sm: 120, md: 160 } }} />
 
       {/* Description Section */}
       <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
@@ -147,3 +147,7 @@ const Careers = () => {
 };
 
 export default Careers;
+
+/*
+💡 Let me know if you want hero2 to animate differently — for example, sliding up or down instead of fading/zooming in.
+*/
