@@ -79,7 +79,7 @@ const Careers = () => {
               position: 'absolute',
               left: '50%',
               transform: 'translateX(-50%)',
-              bottom: { xs: '-160px', sm: '-180px', md: '-200px' }, // 👈 further lowered
+              bottom: { xs: '-100px', sm: '-120px', md: '-140px' }, // 👈 lowered further
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
@@ -107,8 +107,8 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* Spacer below hero2 image */}
-      <Box sx={{ height: { xs: 200, sm: 220, md: 240 } }} />
+      {/* Spacer adjusted to match lower image */}
+      <Box sx={{ height: { xs: 140, sm: 160, md: 180 } }} />
 
       {/* Description Section */}
       <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
