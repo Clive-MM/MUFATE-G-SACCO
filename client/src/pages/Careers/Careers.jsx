@@ -72,14 +72,14 @@ const Careers = () => {
           }}
         />
 
-        {/* Lowered Overlay Hero2 */}
+        {/* Overlay Hero2 */}
         {hero2 && (
           <Box
             sx={{
               position: 'absolute',
               left: '50%',
               transform: 'translateX(-50%)',
-              bottom: { xs: '-100px', sm: '-120px', md: '-140px' }, // 👈 lowered further
+              bottom: { xs: '-30px', sm: '-50px', md: '-80px' },
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
@@ -107,8 +107,8 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* Spacer adjusted to match lower image */}
-      <Box sx={{ height: { xs: 140, sm: 160, md: 180 } }} />
+      {/* Spacer for mobile to avoid tight overlap */}
+      <Box sx={{ height: { xs: 80, sm: 100, md: 120 } }} />
 
       {/* Description Section */}
       <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
@@ -141,6 +141,7 @@ const Careers = () => {
         </Typography>
       </Box>
 
+      {/* Career listings and footer */}
       <CareerListing />
       <Footer />
     </Box>
