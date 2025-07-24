@@ -74,35 +74,41 @@ const Careers = () => {
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
-              bottom: { xs: '-40px', sm: '-60px', md: '-80px' },
+              bottom: { xs: '-20px', sm: '-40px', md: '-80px' },
               zIndex: 5,
               px: { xs: 2, sm: 4, md: 0 },
             }}
           >
-            <motion.img
-              src={hero2.ImagePath}
-              alt="Career Sub Image"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1 }}
-              whileHover={{
-                scale: 1.03,
-                boxShadow: '0 0 30px rgba(0, 255, 100, 0.8)',
-              }}
-              style={{
+            <Box
+              sx={{
                 width: '100%',
-                maxWidth: '600px',
-                borderRadius: '16px',
+                maxWidth: { xs: '90%', sm: '80%', md: '600px' },
               }}
-            />
+            >
+              <motion.img
+                src={hero2.ImagePath}
+                alt="Career Sub Image"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1 }}
+                whileHover={{
+                  scale: 1.03,
+                  boxShadow: '0 0 30px rgba(0, 255, 100, 0.8)',
+                }}
+                style={{
+                  width: '100%',
+                  borderRadius: '16px',
+                }}
+              />
+            </Box>
           </Box>
         )}
       </Box>
 
-      {/* Spacer below image on mobile */}
+      {/* Spacer below image */}
       <Box sx={{ height: { xs: 60, sm: 80, md: 100 } }} />
 
-      {/* Description */}
+      {/* Description Section */}
       <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
         <Typography
           variant="h3"
@@ -133,6 +139,7 @@ const Careers = () => {
         </Typography>
       </Box>
 
+      {/* Career Listings and Footer */}
       <CareerListing />
       <Footer />
     </Box>
