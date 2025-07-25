@@ -9,7 +9,8 @@ const AboutSection = () => {
     "https://res.cloudinary.com/djydkcx01/image/upload/v1753423604/IMG_4947_wave6f.jpg",
     "https://res.cloudinary.com/djydkcx01/image/upload/v1753423603/IMG_5049_bwdgmv.jpg",
     "https://res.cloudinary.com/djydkcx01/image/upload/v1753423600/Delegates_following_proceedings...._tmrjcy.jpg",
-    "https://res.cloudinary.com/djydkcx01/image/upload/v1753423598/1_10_m4w5gx.jpg"
+    "https://res.cloudinary.com/djydkcx01/image/upload/v1753423598/1_10_m4w5gx.jpg",
+    "https://res.cloudinary.com/djydkcx01/image/upload/v1753424586/IMG_9498_bwtmvs.jpg"
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
