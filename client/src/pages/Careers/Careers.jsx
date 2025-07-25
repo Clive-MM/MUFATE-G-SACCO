@@ -147,7 +147,3 @@ const Careers = () => {
 };
 
 export default Careers;
-
-/*
-💡 Let me know if you want hero2 to animate differently — for example, sliding up or down instead of fading/zooming in.
-*/

@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Paper } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const AboutSection = () => {
+  // Array of image URLs
+  const images = [
+    "https://res.cloudinary.com/djydkcx01/image/upload/v1753423604/IMG_4947_wave6f.jpg",
+    "https://res.cloudinary.com/djydkcx01/image/upload/v1753423603/IMG_5049_bwdgmv.jpg",
+    "https://res.cloudinary.com/djydkcx01/image/upload/v1753423600/Delegates_following_proceedings...._tmrjcy.jpg",
+    "https://res.cloudinary.com/djydkcx01/image/upload/v1753423598/1_10_m4w5gx.jpg"
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto-change image every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
     <Box sx={{ backgroundColor: '#f6fef7', px: 0, py: 6 }}>
       <motion.div
@@ -30,7 +49,7 @@ const AboutSection = () => {
             boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
           }}
         >
-         
+          {/* LEFT SIDE CONTENT */}
           <Box sx={{ flex: 1, p: { xs: 3, md: 5 } }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -66,7 +85,7 @@ const AboutSection = () => {
                 maxWidth: '95%',
               }}
             >
-              At MUFATE G SACCO,Mudete Factory Tea Growers SACCO LTD, we are committed to empowering our members through reliable,
+              At MUFATE G SACCO, Mudete Factory Tea Growers SACCO LTD, we are committed to empowering our members through reliable,
               efficient, and transparent financial services. With over a decade of experience
               serving the tea farming community, our dedicated team ensures every transaction is
               handled with integrity and precision.
@@ -121,15 +140,15 @@ const AboutSection = () => {
             </Typography>
           </Box>
 
-         
+          {/* RIGHT SIDE SLIDESHOW */}
           <Box
             sx={{
               flex: 1,
               minHeight: { xs: 300, md: 'auto' },
-              backgroundImage:
-                'url("https://res.cloudinary.com/djydkcx01/image/upload/v1752695489/IMG_9530_afei7v.jpg")',
+              backgroundImage: `url(${images[currentIndex]})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
+              transition: 'background-image 0.8s ease-in-out',
             }}
           />
         </Paper>
@@ -139,5 +158,3 @@ const AboutSection = () => {
 };
 
 export default AboutSection;
-
-
