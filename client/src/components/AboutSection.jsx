@@ -10,8 +10,7 @@ const AboutSection = () => {
     "https://res.cloudinary.com/djydkcx01/image/upload/v1753423603/IMG_5049_bwdgmv.jpg",
     "https://res.cloudinary.com/djydkcx01/image/upload/v1753423600/Delegates_following_proceedings...._tmrjcy.jpg",
     "https://res.cloudinary.com/djydkcx01/image/upload/v1753423598/1_10_m4w5gx.jpg",
-    "https://res.cloudinary.com/djydkcx01/image/upload/v1753423599/MUFATE_Sacco_Vice_Chairman_Mr_H_Mukavale_rglyuo.jpg",
-    "https://res.cloudinary.com/djydkcx01/image/upload/v1753424882/ceo_v5as3v.jpg"
+    "https://res.cloudinary.com/djydkcx01/image/upload/v1753423599/MUFATE_Sacco_Vice_Chairman_Mr_H_Mukavale_rglyuo.jpg"
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
