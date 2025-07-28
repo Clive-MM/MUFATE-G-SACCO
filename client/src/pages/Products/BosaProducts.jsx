@@ -83,7 +83,8 @@ const BosaProducts = () => {
           display: 'grid',
           gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' },
           gap: 4,
-          alignItems: 'start'
+          alignItems: 'start',
+          gridAutoRows: 'minmax(auto, max-content)' // ✅ Prevent layout jumping
         }}
       >
         {filteredLoans.map((loan, index) => {
@@ -103,7 +104,10 @@ const BosaProducts = () => {
                 transition: 'all 0.4s ease',
                 width: '100%',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                transform: isExpanded ? 'scale(1.02)' : 'scale(1)', // ✅ Subtle enlarge effect
+                zIndex: isExpanded ? 5 : 1, // ✅ Ensure expanded card is on top
+                position: 'relative'
               }}
             >
               {/* Card Header */}
@@ -154,7 +158,6 @@ const BosaProducts = () => {
               {/* Expandable Section */}
               <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                  {/* Features */}
                   {loan.Features && (
                     <Box mb={2}>
                       <Typography sx={{ fontWeight: 'bold', color: '#2e7d32' }}>Features</Typography>
@@ -166,7 +169,6 @@ const BosaProducts = () => {
                     </Box>
                   )}
 
-                  {/* Benefits */}
                   {loan.Benefits && (
                     <Box>
                       <Typography sx={{ fontWeight: 'bold', color: '#2e7d32' }}>Benefits</Typography>
@@ -178,7 +180,6 @@ const BosaProducts = () => {
                     </Box>
                   )}
 
-                  {/* Download Button */}
                   {loan.LoanFormURL && (
                     <Box sx={{ mt: 2 }}>
                       <a
@@ -208,7 +209,7 @@ const BosaProducts = () => {
         })}
       </Box>
 
-      {/* Footer Divider and Footer */}
+      {/* Footer */}
       <Box sx={{ height: '20px', backgroundColor: '#f2a922', mt: 6 }} />
       <Footer />
     </Box>
