@@ -1,137 +1,115 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import LightGallery from "lightgallery/react";
-import "lightgallery/css/lightgallery.css";
-import "lightgallery/css/lg-zoom.css";
-import "lightgallery/css/lg-thumbnail.css";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import LightGallery from 'lightgallery/react';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lg-thumbnail.css';
 
 import {
   Container,
   Typography,
+  Grid,
+  Card,
+  CardMedia,
+  CardActionArea,
   Box,
   CircularProgress,
-  Grid,
-} from "@mui/material";
+  CardContent
+} from '@mui/material';
 
 const SaccoGallery = () => {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("https://mufate-g-sacco.onrender.com/gallery")
+    axios.get('https://mufate-g-sacco.onrender.com/gallery')
       .then((res) => {
-        setPhotos(res.data.gallery || []);
+        const gallery = res.data.gallery || [];
+        setPhotos(gallery);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("❌ Failed to load gallery:", err);
+        console.error('❌ Failed to load gallery:', err);
         setLoading(false);
       });
   }, []);
 
   return (
-    <Box
-      sx={{
-        background: "linear-gradient(to bottom, #62ee0aff, #64dd17)", // Dark green → bright green
-        py: 6,
-      }}
-    >
-      <Container maxWidth="xl">
-        {/* Heading */}
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{
-            color: "#FFD700", // Gold heading
-            fontWeight: "bold",
-            textTransform: "uppercase",
-            mb: 4,
-            letterSpacing: "1px",
-            textShadow: "0 0 6px rgba(255, 215, 0, 0.8)",
-            fontSize: { xs: "1.8rem", sm: "2.2rem", md: "2.5rem" },
-          }}
-        >
-          SACCO Gallery
-        </Typography>
+    <Container maxWidth="xl" sx={{ py: { xs: 4, sm: 6 }, px: { xs: 1, sm: 3 } }}>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        color='#ffffff'
+        sx={{
+          fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+          fontWeight: 'bold'
+        }}
+      >
+        GALLERY
+      </Typography>
 
-        {loading ? (
-          <Box display="flex" justifyContent="center" py={5}>
-            <CircularProgress sx={{ color: "#FFD700" }} /> {/* Gold spinner */}
-          </Box>
-        ) : (
-          <LightGallery speed={500} plugins={[]} elementClassNames="custom-gallery">
-            <Grid
-              container
-              spacing={{ xs: 2, sm: 3 }}
-              justifyContent="center"
-              sx={{ position: "relative" }}
-            >
-              {photos.map((photo, idx) => (
-                <Grid
-                  key={idx}
-                  item
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  data-src={photo.ImageURL}
-                  data-sub-html={`<div style="text-align:center;"><h4>${photo.Title}</h4><p>${photo.Description}</p></div>`}
-                  style={{ cursor: "pointer" }}
+      {loading ? (
+        <Box display="flex" justifyContent="center" py={5}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <LightGallery speed={500} plugins={[]} elementClassNames="custom-gallery">
+          <Grid container spacing={{ xs: 2, sm: 3 }} justifyContent="center">
+            {photos.map((photo, idx) => (
+              <Grid item xs={12} sm={6} md={4} key={idx}>
+                <Card
+                  sx={{
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    height: '100%',
+                    backgroundColor: '#fefefe',
+                    transition: 'transform 0.3s ease',
+                    '&:hover': { transform: 'scale(1.02)' }
+                  }}
                 >
-                  <Box
-                    sx={{
-                      position: "relative",
-                      width: "100%",
-                      height: 300,
-                      borderRadius: 3,
-                      overflow: "hidden",
-                      boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
-                      backgroundImage: `url(${photo.ImageURL})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      transition: "transform 0.4s ease, box-shadow 0.4s ease",
-                      "&:hover": {
-                        transform: "scale(1.05)",
-                        boxShadow: "0 12px 30px rgba(100, 221, 23, 0.6)",
-                      },
-                    }}
+                  <CardActionArea
+                    component="div"
+                    data-src={photo.ImageURL}
+                    data-sub-html={`<div style="text-align: center;"><h4>${photo.Title}</h4><p>${photo.Description}</p></div>`}
                   >
-                    {/* Overlay Content */}
-                    <Box
+                    <CardMedia
+                      component="img"
+                      image={photo.ImageURL}
+                      alt={photo.Title}
                       sx={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        width: "100%",
-                        bgcolor: "rgba(0,0,0,0.6)",
-                        p: 2,
-                        transition: "background 0.3s ease",
+                        width: '100%',
+                        height: { xs: 200, sm: 250, md: 300 },
+                        objectFit: 'contain',
+                        padding: 1,
+                        backgroundColor: '#fff'
+                      }}
+                    />
+                  </CardActionArea>
+
+                  <CardContent>
+                    <Typography
+                      variant="subtitle1"
+                      align="center"
+                      sx={{
+                        color: 'blue',
+                        fontWeight: 500,
+                        fontSize: { xs: '0.85rem', sm: '1rem' }
                       }}
                     >
-                      <Typography
-                        variant="subtitle1"
-                        sx={{
-                          fontWeight: "bold",
-                          fontSize: "1rem",
-                          textAlign: "center",
-                          color: "#FFD700", // Gold text
-                          textShadow: "0px 2px 5px rgba(0,0,0,0.8)",
-                        }}
-                      >
-                        {photo.Title}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </LightGallery>
-        )}
-      </Container>
-    </Box>
+                      {photo.Title}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </LightGallery>
+      )}
+    </Container>
   );
 };
 
 export default SaccoGallery;
+
+
