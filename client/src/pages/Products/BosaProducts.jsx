@@ -129,7 +129,7 @@ const BosaProducts = () => {
                 {loan.ImageURL && (
                   <CardMedia
                     component="img"
-                    height="250"
+                    height="350"
                     image={loan.ImageURL}
                     alt={loan.ServiceName}
                     sx={{ objectFit: 'cover' }}
