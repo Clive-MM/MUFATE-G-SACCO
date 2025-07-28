@@ -33,7 +33,7 @@ const SaccoGallery = () => {
   return (
     <Box
       sx={{
-        background: "linear-gradient(to bottom, #1b5e20, #64dd17)", // Dark green → bright green
+        background: "linear-gradient(to bottom, #62ee0aff, #64dd17)", // Dark green → bright green
         py: 6,
       }}
     >
