@@ -82,123 +82,130 @@ const BosaProducts = () => {
           px: 2,
           display: 'grid',
           gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' },
-          gap: 4
+          gap: 4,
+          alignItems: 'start'
         }}
       >
-        {filteredLoans.map((loan, index) => (
-          <Card
-            key={loan.ServiceID}
-            data-aos="zoom-in"
-            sx={{
-              borderRadius: '20px',
-              backgroundColor: '#fff',
-              boxShadow: 4,
-              transition: 'transform 0.4s ease, box-shadow 0.4s ease',
-              '&:hover': {
-                transform: 'scale(1.03)',
-                boxShadow: '0 0 25px rgba(100, 221, 23, 0.6)',
-                border: '2px solid #64dd17',
-              },
-              maxWidth: 400,
-              mx: 'auto'
-            }}
-          >
-            {/* Card Header */}
-            <CardHeader
-              avatar={<Avatar sx={{ bgcolor: '#215732' }}><AccountBalanceIcon /></Avatar>}
-              title={loan.ServiceName}
-            />
+        {filteredLoans.map((loan, index) => {
+          const isExpanded = expanded === index;
 
-            {/* Card Image */}
-            {loan.ImageURL && (
-              <CardMedia
-                component="img"
-                height="250"
-                image={loan.ImageURL}
-                alt={loan.ServiceName}
-                sx={{ objectFit: 'cover' }}
+          return (
+            <Card
+              key={loan.ServiceID}
+              data-aos="zoom-in"
+              sx={{
+                borderRadius: '20px',
+                backgroundColor: isExpanded ? '#fafff5' : '#fff',
+                border: isExpanded ? '2px solid #64dd17' : '2px solid transparent',
+                boxShadow: isExpanded
+                  ? '0 0 25px rgba(100, 221, 23, 0.5)'
+                  : '0 4px 12px rgba(0, 0, 0, 0.1)',
+                transition: 'all 0.4s ease',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
+              {/* Card Header */}
+              <CardHeader
+                avatar={<Avatar sx={{ bgcolor: '#215732' }}><AccountBalanceIcon /></Avatar>}
+                title={loan.ServiceName}
               />
-            )}
 
-            {/* Short Description */}
-            <CardContent>
-              <Typography variant="body2" sx={{ color: '#555' }}>
-                {loan.Description}
-              </Typography>
-            </CardContent>
+              {/* Card Image */}
+              {loan.ImageURL && (
+                <CardMedia
+                  component="img"
+                  height="250"
+                  image={loan.ImageURL}
+                  alt={loan.ServiceName}
+                  sx={{ objectFit: 'cover' }}
+                />
+              )}
 
-            {/* Expand Button */}
-            <CardActions disableSpacing>
-              <IconButton
-                onClick={() => handleExpandClick(index)}
-                aria-expanded={expanded === index}
-                aria-label="show more"
-                sx={{
-                  marginLeft: 'auto',
-                  color: '#215732',
-                  transform: expanded === index ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.3s ease',
-                  '&:hover': { color: '#76ff03', transform: 'scale(1.2) rotate(180deg)' }
-                }}
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-            </CardActions>
-
-            {/* Expandable Section */}
-            <Collapse in={expanded === index} timeout="auto" unmountOnExit>
+              {/* Short Description */}
               <CardContent>
-                {/* Features */}
-                {loan.Features && (
-                  <Box mb={2}>
-                    <Typography sx={{ fontWeight: 'bold', color: '#2e7d32' }}>Features</Typography>
-                    <ul style={{ margin: 0, paddingLeft: '20px', color: '#444' }}>
-                      {loan.Features.split('.').filter(f => f.trim() !== '').map((f, i) => (
-                        <li key={i} style={{ marginBottom: '4px' }}>{f.trim()}</li>
-                      ))}
-                    </ul>
-                  </Box>
-                )}
-
-                {/* Benefits */}
-                {loan.Benefits && (
-                  <Box>
-                    <Typography sx={{ fontWeight: 'bold', color: '#2e7d32' }}>Benefits</Typography>
-                    <ul style={{ margin: 0, paddingLeft: '20px', color: '#444' }}>
-                      {loan.Benefits.split('.').filter(b => b.trim() !== '').map((b, i) => (
-                        <li key={i} style={{ marginBottom: '4px' }}>{b.trim()}</li>
-                      ))}
-                    </ul>
-                  </Box>
-                )}
-
-                {/* Download Form Button */}
-                {loan.LoanFormURL && (
-                  <Box sx={{ mt: 2 }}>
-                    <a
-                      href={loan.LoanFormURL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: 'inline-block',
-                        background: 'linear-gradient(90deg, #64dd17, #76ff03)',
-                        color: '#fff',
-                        fontWeight: 'bold',
-                        padding: '10px 20px',
-                        borderRadius: '30px',
-                        textDecoration: 'none',
-                        boxShadow: '0 0 12px rgba(118, 255, 3, 0.6)',
-                        transition: 'all 0.3s ease'
-                      }}
-                    >
-                      Download Form
-                    </a>
-                  </Box>
-                )}
+                <Typography variant="body2" sx={{ color: '#555' }}>
+                  {loan.Description}
+                </Typography>
               </CardContent>
-            </Collapse>
-          </Card>
-        ))}
+
+              {/* Expand Button */}
+              <CardActions disableSpacing>
+                <IconButton
+                  onClick={() => handleExpandClick(index)}
+                  aria-expanded={isExpanded}
+                  aria-label="show more"
+                  sx={{
+                    marginLeft: 'auto',
+                    color: '#215732',
+                    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.3s ease',
+                    '&:hover': {
+                      color: '#76ff03',
+                      transform: 'scale(1.2) rotate(180deg)',
+                    }
+                  }}
+                >
+                  <ExpandMoreIcon />
+                </IconButton>
+              </CardActions>
+
+              {/* Expandable Section */}
+              <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                <CardContent>
+                  {/* Features */}
+                  {loan.Features && (
+                    <Box mb={2}>
+                      <Typography sx={{ fontWeight: 'bold', color: '#2e7d32' }}>Features</Typography>
+                      <ul style={{ margin: 0, paddingLeft: '20px', color: '#444' }}>
+                        {loan.Features.split('.').filter(f => f.trim() !== '').map((f, i) => (
+                          <li key={i} style={{ marginBottom: '4px' }}>{f.trim()}</li>
+                        ))}
+                      </ul>
+                    </Box>
+                  )}
+
+                  {/* Benefits */}
+                  {loan.Benefits && (
+                    <Box>
+                      <Typography sx={{ fontWeight: 'bold', color: '#2e7d32' }}>Benefits</Typography>
+                      <ul style={{ margin: 0, paddingLeft: '20px', color: '#444' }}>
+                        {loan.Benefits.split('.').filter(b => b.trim() !== '').map((b, i) => (
+                          <li key={i} style={{ marginBottom: '4px' }}>{b.trim()}</li>
+                        ))}
+                      </ul>
+                    </Box>
+                  )}
+
+                  {/* Download Button */}
+                  {loan.LoanFormURL && (
+                    <Box sx={{ mt: 2 }}>
+                      <a
+                        href={loan.LoanFormURL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-block',
+                          background: 'linear-gradient(90deg, #64dd17, #76ff03)',
+                          color: '#fff',
+                          fontWeight: 'bold',
+                          padding: '10px 20px',
+                          borderRadius: '30px',
+                          textDecoration: 'none',
+                          boxShadow: '0 0 12px rgba(118, 255, 3, 0.6)',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        Download Form
+                      </a>
+                    </Box>
+                  )}
+                </CardContent>
+              </Collapse>
+            </Card>
+          );
+        })}
       </Box>
 
       {/* Footer Divider and Footer */}
