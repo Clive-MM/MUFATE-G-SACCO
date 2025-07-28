@@ -28,12 +28,15 @@ const BosaProducts = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/services')
-      .then(res => {
-        const filtered = res.data.services.filter(service => service.ServiceCategory === 'BOSA');
+    axios
+      .get('https://mufate-g-sacco.onrender.com/services')
+      .then((res) => {
+        const filtered = res.data.services.filter(
+          (service) => service.ServiceCategory === 'BOSA'
+        );
         setBosaLoans(filtered);
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   }, []);
 
   useEffect(() => {
@@ -89,7 +92,7 @@ const BosaProducts = () => {
         BOSA Loan Products
       </Typography>
 
-      {/* Search */}
+      {/* Search Bar */}
       <Box sx={{ maxWidth: 400, mx: 'auto', mb: 4 }}>
         <TextField
           fullWidth
@@ -129,7 +132,7 @@ const BosaProducts = () => {
                 {loan.ImageURL && (
                   <CardMedia
                     component="img"
-                    height="350"
+                    height="250"
                     image={loan.ImageURL}
                     alt={loan.ServiceName}
                     sx={{ objectFit: 'cover' }}
@@ -172,12 +175,36 @@ const BosaProducts = () => {
                         </Typography>
                       </Box>
                     )}
+
                     {loan.Benefits && (
-                      <Box>
+                      <Box mb={2}>
                         <Typography sx={{ fontWeight: 'bold', color: '#2e7d32' }}>Benefits</Typography>
                         <Typography variant="body2" sx={{ color: '#444' }}>
                           {loan.Benefits}
                         </Typography>
+                      </Box>
+                    )}
+
+                    {loan.LoanFormURL && (
+                      <Box sx={{ mt: 2 }}>
+                        <a
+                          href={loan.LoanFormURL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'inline-block',
+                            background: 'linear-gradient(90deg, #64dd17, #76ff03)',
+                            color: '#fff',
+                            fontWeight: 'bold',
+                            padding: '10px 20px',
+                            borderRadius: '30px',
+                            textDecoration: 'none',
+                            boxShadow: '0 0 12px rgba(118, 255, 3, 0.6)',
+                            transition: 'all 0.3s ease',
+                          }}
+                        >
+                          Download Form
+                        </a>
                       </Box>
                     )}
                   </CardContent>
@@ -256,12 +283,36 @@ const BosaProducts = () => {
                           </Typography>
                         </Box>
                       )}
+
                       {loan.Benefits && (
-                        <Box>
+                        <Box mb={2}>
                           <Typography sx={{ fontWeight: 'bold', color: '#2e7d32' }}>Benefits</Typography>
                           <Typography variant="body2" sx={{ color: '#444' }}>
                             {loan.Benefits}
                           </Typography>
+                        </Box>
+                      )}
+
+                      {loan.LoanFormURL && (
+                        <Box sx={{ mt: 2 }}>
+                          <a
+                            href={loan.LoanFormURL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'inline-block',
+                              background: 'linear-gradient(90deg, #64dd17, #76ff03)',
+                              color: '#fff',
+                              fontWeight: 'bold',
+                              padding: '10px 20px',
+                              borderRadius: '30px',
+                              textDecoration: 'none',
+                              boxShadow: '0 0 12px rgba(118, 255, 3, 0.6)',
+                              transition: 'all 0.3s ease',
+                            }}
+                          >
+                            Download Form
+                          </a>
                         </Box>
                       )}
                     </CardContent>
