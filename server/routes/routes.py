@@ -1021,6 +1021,7 @@ def create_service():
         return jsonify({'message': '❌ Failed to create service.', 'error': str(e)}), 500
     
 # Route for viewing the services offered by the SACCO
+# Route for viewing the services offered by the SACCO
 @routes.route('/services', methods=['GET'])
 def view_services():
     try:
@@ -1035,6 +1036,8 @@ def view_services():
                 'Description': svc.Description,
                 'ServiceCategory': svc.ServiceCategory,
                 'LoanFormURL': svc.LoanFormURL,
+                'Features': svc.Features,           
+                'Benefits': svc.Benefits,           
                 'CreatedAt': svc.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
             })
 
@@ -1044,6 +1047,7 @@ def view_services():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch services.', 'error': str(e)}), 500
+
 
 #Creating sacco clients 
 @routes.route('/clients/create', methods=['POST'])

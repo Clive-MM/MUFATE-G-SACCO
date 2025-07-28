@@ -31,31 +31,21 @@ const FosaProducts = () => {
     AOS.init({ duration: 1000 });
   }, []);
 
- const sliderSettings = {
-  dots: true,
-  infinite: true,
-  speed: 600,              // Slide transition speed (ms)
-  slidesToShow: 3,
-  slidesToScroll: 1,
-  autoplay: true,
-  autoplaySpeed: 2500,     // Delay between slides (ms) – adjust as needed
-  pauseOnHover: true,      // Pause when user hovers on card
-  arrows: true,
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 2,
-      }
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 1,
-      }
-    }
-  ]
-};
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 600,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2500,
+    pauseOnHover: true,
+    arrows: true,
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 2 } },
+      { breakpoint: 600, settings: { slidesToShow: 1 } }
+    ]
+  };
 
   return (
     <Box sx={{ background: 'linear-gradient(to bottom, #5cdf0aff, #9ff107)', py: 6 }}>
@@ -121,12 +111,27 @@ const FosaProducts = () => {
                   >
                     {loan.ServiceName}
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: '#555', minHeight: '60px' }}
-                  >
+
+                  {/* Description */}
+                  <Typography variant="body2" sx={{ color: '#555', mb: 1 }}>
                     {loan.Description}
                   </Typography>
+
+                  {/* ✅ Features Section */}
+                  {loan.Features && (
+                    <Typography variant="body2" sx={{ color: '#333', fontWeight: 500, mb: 1 }}>
+                      <strong>Features:</strong> {loan.Features}
+                    </Typography>
+                  )}
+
+                  {/* ✅ Benefits Section */}
+                  {loan.Benefits && (
+                    <Typography variant="body2" sx={{ color: '#333', fontWeight: 500, mb: 1 }}>
+                      <strong>Benefits:</strong> {loan.Benefits}
+                    </Typography>
+                  )}
+
+                  {/* Download Button */}
                   {loan.LoanFormURL && (
                     <Button
                       href={loan.LoanFormURL}

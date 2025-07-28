@@ -100,7 +100,9 @@ class Service(db.Model):
     Description = db.Column(db.String(1000))
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
     ServiceCategory = db.Column(db.String(50))  
-    LoanFormURL = db.Column(db.String(255))     
+    LoanFormURL = db.Column(db.String(255)) 
+    Features = db.Column(db.String(1000))    
+    Benefits = db.Column(db.String(1000))
 
 class SaccoStatistics(db.Model):
     __tablename__ = 'Sacco_Statistics'
