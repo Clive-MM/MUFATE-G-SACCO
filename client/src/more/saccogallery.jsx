@@ -15,6 +15,7 @@ import {
   Box,
   useMediaQuery,
   useTheme,
+  Paper,
 } from "@mui/material";
 import { motion } from "framer-motion";
 
@@ -87,50 +88,54 @@ const SaccoGallery = () => {
                   ease: "easeOut",
                 }}
               >
-                <ImageListItem>
-                  <a
-                    href={photo.ImageURL}
-                    data-sub-html={`<div style="text-align:center; padding:10px;">
-                                      <h3 style="margin:0; font-size:20px; font-weight:bold;">${photo.Title}</h3>
-                                      <p style="margin:5px 0 0; font-size:16px; color:#ddd;">${photo.Description || ""}</p>
-                                    </div>`}
-                  >
-                    <img
-                      src={photo.ImageURL}
-                      alt={photo.Title}
-                      loading="lazy"
-                      style={{
-                        borderRadius: "8px",
-                        width: "100%",
-                        display: "block",
-                        transition: "transform 0.3s ease",
-                      }}
-                      onMouseOver={(e) =>
-                        (e.currentTarget.style.transform = "scale(1.03)")
-                      }
-                      onMouseOut={(e) =>
-                        (e.currentTarget.style.transform = "scale(1)")
-                      }
-                    />
-                  </a>
+                <Paper
+                  elevation={3}
+                  sx={{
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                    "&:hover": {
+                      transform: "scale(1.03)",
+                      boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.3)",
+                    },
+                  }}
+                >
+                  <ImageListItem>
+                    <a
+                      href={photo.ImageURL}
+                      data-sub-html={`<div style="text-align:center; padding:10px;">
+                                        <h3 style="margin:0; font-size:20px; font-weight:bold;">${photo.Title}</h3>
+                                      </div>`}
+                    >
+                      <img
+                        src={photo.ImageURL}
+                        alt={photo.Title}
+                        loading="lazy"
+                        style={{
+                          width: "100%",
+                          height: "250px",
+                          objectFit: "cover",
+                          display: "block",
+                        }}
+                      />
+                    </a>
 
-                  <ImageListItemBar
-                    title={photo.Title}
-                    subtitle={photo.Description || ""}
-                    sx={{
-                      background:
-                        "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)",
-                      "& .MuiImageListItemBar-title": {
-                        fontWeight: "bold",
-                        fontSize: "1rem",
-                      },
-                      "& .MuiImageListItemBar-subtitle": {
-                        fontSize: "0.85rem",
-                        fontStyle: "italic",
-                      },
-                    }}
-                  />
-                </ImageListItem>
+                    <ImageListItemBar
+                      title={photo.Title}
+                      sx={{
+                        background:
+                          "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)",
+                        "& .MuiImageListItemBar-title": {
+                          fontWeight: "bold",
+                          fontSize: "1rem",
+                          whiteSpace: "normal", // ✅ Wrap text fully
+                          overflow: "visible",
+                          textOverflow: "unset",
+                        },
+                      }}
+                    />
+                  </ImageListItem>
+                </Paper>
               </motion.div>
             ))}
           </ImageList>
