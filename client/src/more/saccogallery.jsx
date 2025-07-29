@@ -11,13 +11,11 @@ import {
   ImageList,
   ImageListItem,
   ImageListItemBar,
-  IconButton,
   CircularProgress,
   Box,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
 import { motion } from "framer-motion";
 
 const SaccoGallery = () => {
@@ -98,7 +96,7 @@ const SaccoGallery = () => {
                                     </div>`}
                   >
                     <img
-                      src={`${photo.ImageURL}`}
+                      src={photo.ImageURL}
                       alt={photo.Title}
                       loading="lazy"
                       style={{
@@ -119,14 +117,6 @@ const SaccoGallery = () => {
                   <ImageListItemBar
                     title={photo.Title}
                     subtitle={photo.Description || ""}
-                    actionIcon={
-                      <IconButton
-                        sx={{ color: "rgba(255, 255, 255, 0.8)" }}
-                        aria-label={`info about ${photo.Title}`}
-                      >
-                        <InfoIcon />
-                      </IconButton>
-                    }
                     sx={{
                       background:
                         "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)",
