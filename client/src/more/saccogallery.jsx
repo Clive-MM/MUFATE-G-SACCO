@@ -8,13 +8,14 @@ import "lightgallery/css/lg-thumbnail.css";
 import {
   Container,
   Typography,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
   CircularProgress,
   Box,
-  useMediaQuery,
   useTheme,
+  useMediaQuery,
   Paper,
 } from "@mui/material";
 import { motion } from "framer-motion";
@@ -49,26 +50,38 @@ const SaccoGallery = () => {
   return (
     <Box
       sx={{
-        background: "linear-gradient(135deg, #f9f9f9, #eef5ff)",
+        background: "linear-gradient(135deg, #d9f8d3, #b5f3a6)",
         py: { xs: 4, sm: 6 },
       }}
     >
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        sx={{
+          background: "#fff",
+          borderRadius: 3,
+          boxShadow: "0px 5px 20px rgba(0,0,0,0.1)",
+          py: 4,
+          px: 3,
+        }}
+      >
+        {/* ✅ Heading Style Like M-BANKING SERVICES */}
         <Typography
           variant="h4"
           align="center"
           gutterBottom
           sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             fontSize: { xs: "1.8rem", md: "2.5rem" },
             fontWeight: "bold",
-            color: "#333",
+            textTransform: "uppercase",
+            color: "#41E116", // ✅ Bright green
+            letterSpacing: "1px",
             mb: 4,
-            borderBottom: "3px solid #1976d2",
-            display: "inline-block",
-            px: 2,
           }}
         >
-           MUFATE G SACCO GALLERY
+          📸 MUFATE G SACCO GALLERY
         </Typography>
 
         {loading ? (
@@ -77,83 +90,62 @@ const SaccoGallery = () => {
           </Box>
         ) : (
           <LightGallery speed={500} plugins={[]} elementClassNames="custom-gallery">
-            <ImageList
-              sx={{
-                width: "100%",
-                maxWidth: "1200px",
-                margin: "auto",
-              }}
-              cols={getCols()}
-              gap={20}
-            >
+            <Grid container spacing={3} justifyContent="center">
               {photos.map((photo, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: idx * 0.1,
-                    ease: "easeOut",
-                  }}
-                >
-                  <Paper
-                    elevation={3}
-                    sx={{
-                      borderRadius: 3,
-                      overflow: "hidden",
-                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                      "&:hover": {
-                        transform: "scale(1.04)",
-                        boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.3)",
-                      },
+                <Grid item xs={12} sm={6} md={4} key={idx}>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: idx * 0.1,
+                      ease: "easeOut",
                     }}
                   >
-                    <ImageListItem>
+                    <Paper
+                      elevation={3}
+                      sx={{
+                        borderRadius: 3,
+                        overflow: "hidden",
+                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                        "&:hover": {
+                          transform: "scale(1.03)",
+                          boxShadow: "0px 10px 25px rgba(0, 0, 0, 0.3)",
+                        },
+                      }}
+                    >
                       <a
                         href={photo.ImageURL}
                         data-sub-html={`<div style="text-align:center; padding:10px;">
                                           <h3 style="margin:0; font-size:20px; font-weight:bold;">${photo.Title}</h3>
                                         </div>`}
                       >
-                        <img
-                          src={photo.ImageURL}
+                        <CardMedia
+                          component="img"
+                          height="250"
+                          image={photo.ImageURL}
                           alt={photo.Title}
-                          loading="lazy"
-                          style={{
-                            width: "100%",
-                            height: "250px",
-                            objectFit: "cover",
-                            display: "block",
-                          }}
+                          sx={{ objectFit: "cover" }}
                         />
                       </a>
-
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileHover={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ImageListItemBar
-                          title={photo.Title}
+                      <CardContent sx={{ textAlign: "center" }}>
+                        <Typography
+                          variant="subtitle1"
                           sx={{
-                            background:
-                              "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)",
-                            "& .MuiImageListItemBar-title": {
-                              fontWeight: "bold",
-                              fontSize: "1rem",
-                              whiteSpace: "normal", // ✅ No cutoff
-                              overflow: "visible",
-                              textOverflow: "unset",
-                            },
+                            fontWeight: "bold",
+                            fontSize: "1rem",
+                            whiteSpace: "normal",
+                            wordWrap: "break-word",
                           }}
-                        />
-                      </motion.div>
-                    </ImageListItem>
-                  </Paper>
-                </motion.div>
+                        >
+                          {photo.Title}
+                        </Typography>
+                      </CardContent>
+                    </Paper>
+                  </motion.div>
+                </Grid>
               ))}
-            </ImageList>
+            </Grid>
           </LightGallery>
         )}
       </Container>
