@@ -50,7 +50,7 @@ const SaccoGallery = () => {
   return (
     <Box
       sx={{
-        background: "linear-gradient(135deg, #d9f8d3, #b5f3a6)",
+        background: "linear-gradient(135deg, #76f15dff, #54f42cff)",
         py: { xs: 4, sm: 6 },
       }}
     >
@@ -126,8 +126,8 @@ const SaccoGallery = () => {
                           alt={photo.Title}
                           sx={{
                             width: "100%",
-                            maxHeight: 400, // ✅ Set a max height but not fixed
-                            objectFit: "contain", // ✅ Show full image without cropping
+                            maxHeight: 400, 
+                            objectFit: "contain", 
                             backgroundColor: "#fff",
                           }}
                         />
