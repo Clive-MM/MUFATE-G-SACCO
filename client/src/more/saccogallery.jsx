@@ -10,11 +10,15 @@ import {
   Typography,
   ImageList,
   ImageListItem,
+  ImageListItemBar,
+  IconButton,
   CircularProgress,
   Box,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import { motion } from "framer-motion";
 
 const SaccoGallery = () => {
   const [photos, setPhotos] = useState([]);
@@ -23,14 +27,11 @@ const SaccoGallery = () => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
   const isSm = useMediaQuery(theme.breakpoints.between("sm", "md"));
-  const isMd = useMediaQuery(theme.breakpoints.up("md"));
 
-  // Dynamically set columns based on screen size
   const getCols = () => {
     if (isXs) return 1;
     if (isSm) return 2;
-    if (isMd) return 3;
-    return 4;
+    return 3;
   };
 
   useEffect(() => {
@@ -56,10 +57,10 @@ const SaccoGallery = () => {
           fontSize: { xs: "1.8rem", md: "2.5rem" },
           fontWeight: "bold",
           color: "#fff",
-          mb: 4
+          mb: 4,
         }}
       >
-        MUFATE G SACCO GALLERY
+        📸 MUFATE G SACCO GALLERY
       </Typography>
 
       {loading ? (
@@ -69,37 +70,78 @@ const SaccoGallery = () => {
       ) : (
         <LightGallery speed={500} plugins={[]} elementClassNames="custom-gallery">
           <ImageList
-            variant="masonry"
-            cols={getCols()}
-            gap={12}
             sx={{
               width: "100%",
               maxWidth: "1200px",
-              margin: "auto"
+              margin: "auto",
             }}
+            cols={getCols()}
+            gap={16}
           >
             {photos.map((photo, idx) => (
-              <ImageListItem key={idx}>
-                <a
-                  href={photo.ImageURL}
-                  data-sub-html={`<div style="text-align:center;"><h4>${photo.Title}</h4><p>${photo.Description}</p></div>`}
-                >
-                  <img
-                    src={`${photo.ImageURL}`}
-                    alt={photo.Title}
-                    loading="lazy"
-                    style={{
-                      borderRadius: "10px",
-                      boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-                      transition: "transform 0.3s ease",
-                      width: "100%",
-                      display: "block"
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.5,
+                  delay: idx * 0.1,
+                  ease: "easeOut",
+                }}
+              >
+                <ImageListItem>
+                  <a
+                    href={photo.ImageURL}
+                    data-sub-html={`<div style="text-align:center; padding:10px;">
+                                      <h3 style="margin:0; font-size:20px; font-weight:bold;">${photo.Title}</h3>
+                                      <p style="margin:5px 0 0; font-size:16px; color:#ddd;">${photo.Description || ""}</p>
+                                    </div>`}
+                  >
+                    <img
+                      src={`${photo.ImageURL}`}
+                      alt={photo.Title}
+                      loading="lazy"
+                      style={{
+                        borderRadius: "8px",
+                        width: "100%",
+                        display: "block",
+                        transition: "transform 0.3s ease",
+                      }}
+                      onMouseOver={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.03)")
+                      }
+                      onMouseOut={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                    />
+                  </a>
+
+                  <ImageListItemBar
+                    title={photo.Title}
+                    subtitle={photo.Description || ""}
+                    actionIcon={
+                      <IconButton
+                        sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                        aria-label={`info about ${photo.Title}`}
+                      >
+                        <InfoIcon />
+                      </IconButton>
+                    }
+                    sx={{
+                      background:
+                        "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)",
+                      "& .MuiImageListItemBar-title": {
+                        fontWeight: "bold",
+                        fontSize: "1rem",
+                      },
+                      "& .MuiImageListItemBar-subtitle": {
+                        fontSize: "0.85rem",
+                        fontStyle: "italic",
+                      },
                     }}
-                    onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
-                    onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
                   />
-                </a>
-              </ImageListItem>
+                </ImageListItem>
+              </motion.div>
             ))}
           </ImageList>
         </LightGallery>
