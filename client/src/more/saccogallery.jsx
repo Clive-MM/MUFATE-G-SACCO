@@ -64,7 +64,7 @@ const SaccoGallery = () => {
           px: 3,
         }}
       >
-        {/* ✅ Heading Style Like M-BANKING SERVICES */}
+        {/* ✅ Green Heading Style */}
         <Typography
           variant="h4"
           align="center"
@@ -76,7 +76,7 @@ const SaccoGallery = () => {
             fontSize: { xs: "1.8rem", md: "2.5rem" },
             fontWeight: "bold",
             textTransform: "uppercase",
-            color: "#41E116", // ✅ Bright green
+            color: "#41E116",
             letterSpacing: "1px",
             mb: 4,
           }}
@@ -122,10 +122,14 @@ const SaccoGallery = () => {
                       >
                         <CardMedia
                           component="img"
-                          height="250"
                           image={photo.ImageURL}
                           alt={photo.Title}
-                          sx={{ objectFit: "cover" }}
+                          sx={{
+                            width: "100%",
+                            maxHeight: 400, // ✅ Set a max height but not fixed
+                            objectFit: "contain", // ✅ Show full image without cropping
+                            backgroundColor: "#fff",
+                          }}
                         />
                       </a>
                       <CardContent sx={{ textAlign: "center" }}>
