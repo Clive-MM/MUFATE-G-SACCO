@@ -6,6 +6,8 @@ from flask_mail import Message
 from datetime import datetime
 from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto
 import cloudinary.uploader
+import re
+
 
 
 # ✅ Initialize Blueprint and Flask extensions
@@ -1021,7 +1023,7 @@ def create_service():
         return jsonify({'message': '❌ Failed to create service.', 'error': str(e)}), 500
     
 # Route for viewing the services offered by the SACCO
-# Route for viewing the services offered by the SACCO
+
 @routes.route('/services', methods=['GET'])
 def view_services():
     try:
@@ -1256,72 +1258,94 @@ def view_homepage_sliders():
 
     
 #Customer Registration
+def is_valid_phone(phone):
+    return bool(re.fullmatch(r"254\d{9}", phone))
+
 @routes.route('/membership/register', methods=['POST'])
 def register_member():
     try:
-        # Get form data and files
-        full_name = request.form.get('FullName')
-        id_type = request.form.get('IDType')
-        id_number = request.form.get('IDNumber')
-        dob_str = request.form.get('DOB')
-        marital_status = request.form.get('MaritalStatus')
-        gender = request.form.get('Gender')
-        address = request.form.get('Address')
-        telephone = request.form.get('Telephone')
-        alt_phone = request.form.get('AlternatePhone')
-        kra_pin = request.form.get('KRAPin')
-        county = request.form.get('County')
-        sub_county = request.form.get('SubCounty')
-        email = request.form.get('Email')
-        contact_person = request.form.get('ContactPerson')
-        contact_phone = request.form.get('ContactPersonPhone')
-        nominee_name = request.form.get('NomineeName')
-        nominee_id = request.form.get('NomineeID')
-        nominee_contact = request.form.get('NomineeContact')
-        nominee_relation = request.form.get('NomineeRelation')
+        # ✅ Required form fields
+        required_fields = [
+            "FullName", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender",
+            "Address", "Telephone", "AlternatePhone", "KRAPin", "County",
+            "SubCounty", "Email", "ContactPerson", "ContactPersonPhone",
+            "NomineeName", "NomineeID", "NomineeContact", "NomineeRelation"
+        ]
 
-        # Required uploads
-        id_back_file = request.files.get('IDBackURL')
-        id_front_file = request.files.get('IDFrontURL')
-        signature_file = request.files.get('SignatureURL')
-        passport_file = request.files.get('PASSPORTURL')
+        missing_fields = [f for f in required_fields if not request.form.get(f)]
+        if missing_fields:
+            return jsonify({"message": f"❌ Missing required fields: {', '.join(missing_fields)}"}), 400
+
+        # ✅ Extract form data
+        data = {field: request.form.get(field) for field in required_fields}
+
+        # ✅ Validate phone numbers (must start with 254 and be 12 digits)
+        if not is_valid_phone(data["Telephone"]):
+            return jsonify({"message": "❌ Telephone must be in format 254XXXXXXXXX"}), 400
+
+        if not is_valid_phone(data["AlternatePhone"]):
+            return jsonify({"message": "❌ AlternatePhone must be in format 254XXXXXXXXX"}), 400
+
+        if not is_valid_phone(data["ContactPersonPhone"]):
+            return jsonify({"message": "❌ ContactPersonPhone must be in format 254XXXXXXXXX"}), 400
+
+        if not is_valid_phone(data["NomineeContact"]):
+            return jsonify({"message": "❌ NomineeContact must be in format 254XXXXXXXXX"}), 400
+
+        # ✅ Validate DOB format
+        try:
+            dob = datetime.strptime(data["DOB"], "%Y-%m-%d").date()
+        except ValueError:
+            return jsonify({"message": "❌ DOB must be in YYYY-MM-DD format"}), 400
+
+        # ✅ Check for duplicates
+        if Membership.query.filter_by(IDNumber=data["IDNumber"]).first():
+            return jsonify({"message": "❌ Member with this ID Number already exists."}), 400
+
+        if Membership.query.filter_by(Email=data["Email"]).first():
+            return jsonify({"message": "❌ Member with this Email already exists."}), 400
+
+        if Membership.query.filter_by(Telephone=data["Telephone"]).first():
+            return jsonify({"message": "❌ Member with this Telephone already exists."}), 400
+
+        # ✅ File uploads
+        id_back_file = request.files.get("IDBackURL")
+        id_front_file = request.files.get("IDFrontURL")
+        signature_file = request.files.get("SignatureURL")
+        passport_file = request.files.get("PASSPORTURL")
 
         if not all([id_back_file, id_front_file, signature_file, passport_file]):
-            return jsonify({'message': '❌ All ID, signature, and passport files are required.'}), 400
+            return jsonify({"message": "❌ All ID, signature, and passport files are required."}), 400
 
-        # Parse date of birth
         try:
-            dob = datetime.strptime(dob_str, '%Y-%m-%d').date()
-        except Exception:
-            return jsonify({'message': '❌ DOB must be in YYYY-MM-DD format'}), 400
+            id_back_url = cloudinary.uploader.upload(id_back_file).get("secure_url")
+            id_front_url = cloudinary.uploader.upload(id_front_file).get("secure_url")
+            signature_url = cloudinary.uploader.upload(signature_file).get("secure_url")
+            passport_url = cloudinary.uploader.upload(passport_file).get("secure_url")
+        except Exception as upload_error:
+            return jsonify({"message": "❌ File upload failed.", "error": str(upload_error)}), 500
 
-        # Upload files to Cloudinary
-        id_back_url = cloudinary.uploader.upload(id_back_file)['secure_url']
-        id_front_url = cloudinary.uploader.upload(id_front_file)['secure_url']
-        signature_url = cloudinary.uploader.upload(signature_file)['secure_url']
-        passport_url = cloudinary.uploader.upload(passport_file)['secure_url']
-
-        # Save to database
+        # ✅ Create new member
         new_member = Membership(
-            FullName=full_name,
-            IDType=id_type,
-            IDNumber=id_number,
+            FullName=data["FullName"],
+            IDType=data["IDType"],
+            IDNumber=data["IDNumber"],
             DOB=dob,
-            MaritalStatus=marital_status,
-            Gender=gender,
-            Address=address,
-            Telephone=telephone,
-            AlternatePhone=alt_phone,
-            KRAPin=kra_pin,
-            County=county,
-            SubCounty=sub_county,
-            Email=email,
-            ContactPerson=contact_person,
-            ContactPersonPhone=contact_phone,
-            NomineeName=nominee_name,
-            NomineeID=nominee_id,
-            NomineeContact=nominee_contact,
-            NomineeRelation=nominee_relation,
+            MaritalStatus=data["MaritalStatus"],
+            Gender=data["Gender"],
+            Address=data["Address"],
+            Telephone=data["Telephone"],
+            AlternatePhone=data["AlternatePhone"],
+            KRAPin=data["KRAPin"],
+            County=data["County"],
+            SubCounty=data["SubCounty"],
+            Email=data["Email"],
+            ContactPerson=data["ContactPerson"],
+            ContactPersonPhone=data["ContactPersonPhone"],
+            NomineeName=data["NomineeName"],
+            NomineeID=data["NomineeID"],
+            NomineeContact=data["NomineeContact"],
+            NomineeRelation=data["NomineeRelation"],
             IDBackURL=id_back_url,
             IDFrontURL=id_front_url,
             SignatureURL=signature_url,
@@ -1331,12 +1355,24 @@ def register_member():
         db.session.add(new_member)
         db.session.commit()
 
-        return jsonify({'message': '✅ Member registered successfully!'}), 201
+        # ✅ Send admin notification email
+        msg = Message(
+            subject="New SACCO Member Registration",
+            sender="noreply@sacco.com",
+            recipients=["maderumoyia@mudetesacco.co.ke"],  # Change to actual admin email
+            body=f"New member registered: {new_member.FullName}, ID: {new_member.IDNumber}, Phone: {new_member.Telephone}"
+        )
+        mail.send(msg)
+
+        return jsonify({
+            "message": "✅ Member registered successfully! Please pay KES 1,500 to complete the registration process."
+        }), 201
 
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({'message': '❌ Registration failed.', 'error': str(e)}), 500
+        return jsonify({"message": "❌ Registration failed.", "error": str(e)}), 500
+
 
 #Viewing the list of registered members
 @routes.route('/admin/members', methods=['GET'])

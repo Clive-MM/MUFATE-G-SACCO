@@ -134,26 +134,26 @@ class Membership(db.Model):
     IDNumber = db.Column(db.String(50), nullable=False)
     DOB = db.Column(db.Date, nullable=False)
     MaritalStatus = db.Column(db.String(50), nullable=False)
-    Gender = db.Column(db.String(20))
-    Address = db.Column(db.String(200))
+    Gender = db.Column(db.String(20), nullable=False)           # ✅ Added nullable=False
+    Address = db.Column(db.String(200), nullable=False)         # ✅ Added nullable=False
     Telephone = db.Column(db.String(20), nullable=False)
-    AlternatePhone = db.Column(db.String(20))
-    KRAPin = db.Column(db.String(20))
+    AlternatePhone = db.Column(db.String(20), nullable=False)   # ✅ Added nullable=False
+    KRAPin = db.Column(db.String(20), nullable=False)           # ✅ Added nullable=False
     County = db.Column(db.String(100), nullable=False)
     SubCounty = db.Column(db.String(100), nullable=False)
-    Email = db.Column(db.String(100))
+    Email = db.Column(db.String(100), nullable=False)           # ✅ Added nullable=False
     ContactPerson = db.Column(db.String(100), nullable=False)
     ContactPersonPhone = db.Column(db.String(20), nullable=False)
-    NomineeName = db.Column(db.String(100))
-    NomineeID = db.Column(db.String(50))
-    NomineeContact = db.Column(db.String(20))
-    NomineeRelation = db.Column(db.String(50))
+    NomineeName = db.Column(db.String(100), nullable=False)     # ✅ Added nullable=False
+    NomineeID = db.Column(db.String(50), nullable=False)        # ✅ Added nullable=False
+    NomineeContact = db.Column(db.String(20), nullable=False)   # ✅ Added nullable=False
+    NomineeRelation = db.Column(db.String(50), nullable=False)  # ✅ Added nullable=False
     IDBackURL = db.Column(db.String(255), nullable=False)
     IDFrontURL = db.Column(db.String(255), nullable=False)
     SignatureURL = db.Column(db.String(255), nullable=False)
     PASSPORTURL = db.Column(db.String(255), nullable=False)
-    RegisteredAt = db.Column(db.DateTime, default=datetime.utcnow)
-
+    RegisteredAt = db.Column(db.DateTime, default=datetime.utcnow) 
+    
 class FeedbackStatus(db.Model):
     __tablename__ = 'Feedback_Status'
 
