@@ -140,7 +140,7 @@ const MemberRegistration = () => {
       Object.keys(files).forEach((k) => formDataToSend.append(k, files[k]));
 
       const res = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/membership/register`,
+        "https://mufate-g-sacco.onrender.com/membership/register",
         formDataToSend,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -152,6 +152,24 @@ const MemberRegistration = () => {
       setLoading(false);
     }
   };
+
+  const nomineeRelations = [
+    "Wife",
+    "Husband",
+    "Father",
+    "Mother",
+    "Son",
+    "Daughter",
+    "Brother",
+    "Sister",
+    "Uncle",
+    "Aunt",
+    "Nephew",
+    "Niece",
+    "Cousin",
+    "Friend",
+    "Other",
+  ];
 
   return (
     <Box
@@ -312,24 +330,58 @@ const MemberRegistration = () => {
           {/* NOMINEE DETAILS */}
           <StyledSection title="Nominee Details">
             <Grid container spacing={3}>
-              {[
-                "NomineeName",
-                "NomineeID",
-                "NomineeContact",
-                "NomineeRelation",
-              ].map((field) => (
-                <Grid item xs={12} sm={4} key={field}>
-                  <TextField
-                    label={field.replace(/([A-Z])/g, " $1").trim()}
-                    name={field}
-                    fullWidth
-                    variant="filled"
-                    sx={inputStyle}
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  label="Nominee Name"
+                  name="NomineeName"
+                  fullWidth
+                  variant="filled"
+                  sx={inputStyle}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  label="Nominee ID"
+                  name="NomineeID"
+                  fullWidth
+                  variant="filled"
+                  sx={inputStyle}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  label="Nominee Contact"
+                  name="NomineeContact"
+                  fullWidth
+                  variant="filled"
+                  sx={inputStyle}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <FormControl fullWidth variant="filled" required sx={inputStyle}>
+                  <InputLabel>Nominee Relation</InputLabel>
+                  <Select
+                    name="NomineeRelation"
+                    value={formData.NomineeRelation || ""}
                     onChange={handleChange}
-                    required
-                  />
-                </Grid>
-              ))}
+                  >
+                    {nomineeRelations.map((relation) => (
+                      <MenuItem key={relation} value={relation}>
+                        {relation}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid>
           </StyledSection>
 
