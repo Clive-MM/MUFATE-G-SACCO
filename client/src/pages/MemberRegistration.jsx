@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Paper,
 } from "@mui/material";
 import axios from "axios";
 
@@ -20,40 +21,19 @@ const MemberRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
 
-  const requiredFields = [
-    "FullName",
-    "IDType",
-    "IDNumber",
-    "DOB",
-    "MaritalStatus",
-    "Gender",
-    "Address",
-    "Telephone",
-    "AlternatePhone",
-    "KRAPin",
-    "County",
-    "SubCounty",
-    "Email",
-    "ContactPerson",
-    "ContactPersonPhone",
-    "NomineeName",
-    "NomineeID",
-    "NomineeContact",
-    "NomineeRelation",
-  ];
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleFileChange = (e) => {
-    setFiles({ ...files, [e.target.name]: e.target.files[0] });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleFileChange = (e) => setFiles({ ...files, [e.target.name]: e.target.files[0] });
 
   const validateForm = () => {
-    for (let field of requiredFields) {
-      if (!formData[field] || formData[field].trim() === "") {
-        alert(`❌ ${field} is required`);
+    const requiredFields = [
+      "FullName","IDType","IDNumber","DOB","MaritalStatus","Gender",
+      "Address","Telephone","AlternatePhone","KRAPin","County","SubCounty",
+      "Email","ContactPerson","ContactPersonPhone",
+      "NomineeName","NomineeID","NomineeContact","NomineeRelation"
+    ];
+    for (let f of requiredFields) {
+      if (!formData[f]) {
+        alert(`❌ ${f} is required`);
         return false;
       }
     }
@@ -74,30 +54,23 @@ const MemberRegistration = () => {
     return true;
   };
 
-  const handleSubmit = () => {
-    if (validateForm()) {
-      setOpenDialog(true); // Show payment popup
-    }
-  };
+  const handleSubmit = () => validateForm() && setOpenDialog(true);
 
   const confirmSubmission = async () => {
     setOpenDialog(false);
     setLoading(true);
-
     try {
       const formDataToSend = new FormData();
-      for (const key in formData) formDataToSend.append(key, formData[key]);
-      for (const key in files) formDataToSend.append(key, files[key]);
-
+      Object.keys(formData).forEach((k) => formDataToSend.append(k, formData[k]));
+      Object.keys(files).forEach((k) => formDataToSend.append(k, files[k]));
       const res = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/membership/register`,
         formDataToSend,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-
       setResponseMsg(res.data.message);
-    } catch (error) {
-      setResponseMsg(error.response?.data?.message || "❌ Registration failed");
+    } catch (err) {
+      setResponseMsg(err.response?.data?.message || "❌ Registration failed");
     } finally {
       setLoading(false);
     }
@@ -105,56 +78,115 @@ const MemberRegistration = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 5 }}>
-      <Typography variant="h4" fontWeight="bold" gutterBottom>
-        Member Registration
-      </Typography>
-      <Typography variant="body1" color="text.secondary" mb={3}>
-        Please fill in all required details to register as a SACCO member.
-      </Typography>
+      <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 4 }}>
+        <Typography variant="h4" fontWeight="bold" gutterBottom align="center">
+          Member Registration
+        </Typography>
+        <Typography variant="body1" color="text.secondary" mb={4} align="center">
+          Please fill in all required details to register as a SACCO member.
+        </Typography>
 
-      <Grid container spacing={2}>
-        {requiredFields.map((field) => (
-          <Grid item xs={12} sm={6} key={field}>
-            <TextField
-              label={field.replace(/([A-Z])/g, " $1").trim()}
-              name={field}
-              fullWidth
-              type={field === "DOB" ? "date" : "text"}
-              InputLabelProps={field === "DOB" ? { shrink: true } : {}}
-              onChange={handleChange}
-              required
-            />
-          </Grid>
-        ))}
+        {/* ✅ Bio Data Section */}
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
+          Bio Data
+        </Typography>
+        <Grid container spacing={2} sx={{ mb: 4 }}>
+          {["FullName", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender"].map((field) => (
+            <Grid item xs={12} sm={6} key={field}>
+              <TextField
+                label={field.replace(/([A-Z])/g, " $1").trim()}
+                name={field}
+                fullWidth
+                type={field === "DOB" ? "date" : "text"}
+                InputLabelProps={field === "DOB" ? { shrink: true } : {}}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+          ))}
+        </Grid>
 
-        {/* File Uploads */}
-        {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((fileField) => (
-          <Grid item xs={12} sm={6} key={fileField}>
-            <Button variant="outlined" component="label" fullWidth>
-              Upload {fileField.replace("URL", "")}
-              <input type="file" name={fileField} hidden onChange={handleFileChange} />
-            </Button>
-          </Grid>
-        ))}
-      </Grid>
+        {/* ✅ Contact Details Section */}
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
+          Contact Details
+        </Typography>
+        <Grid container spacing={2} sx={{ mb: 4 }}>
+          {["Address","Telephone","AlternatePhone","KRAPin","County","SubCounty","Email","ContactPerson","ContactPersonPhone"].map((field) => (
+            <Grid item xs={12} sm={6} key={field}>
+              <TextField
+                label={field.replace(/([A-Z])/g, " $1").trim()}
+                name={field}
+                fullWidth
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+          ))}
+        </Grid>
 
-      <Box textAlign="center" mt={4}>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={loading}
-          sx={{
-            background: "linear-gradient(to right, #64dd17, #76ff03)",
-            px: 4,
-            py: 1.5,
-            fontWeight: "bold",
-            borderRadius: "30px",
-            "&:hover": { transform: "scale(1.05)" },
-          }}
-        >
-          {loading ? "Submitting..." : "Register"}
-        </Button>
-      </Box>
+        {/* ✅ Nominee Details Section */}
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
+          Nominee Details
+        </Typography>
+        <Grid container spacing={2} sx={{ mb: 4 }}>
+          {["NomineeName", "NomineeID", "NomineeContact", "NomineeRelation"].map((field) => (
+            <Grid item xs={12} sm={6} key={field}>
+              <TextField
+                label={field.replace(/([A-Z])/g, " $1").trim()}
+                name={field}
+                fullWidth
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* ✅ Document Uploads */}
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
+          Document Uploads
+        </Typography>
+        <Grid container spacing={2} sx={{ mb: 4 }}>
+          {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((fileField) => (
+            <Grid item xs={12} sm={6} key={fileField}>
+              <Button
+                variant="outlined"
+                component="label"
+                fullWidth
+                sx={{
+                  py: 1.5,
+                  fontWeight: "bold",
+                  borderRadius: 2,
+                  "&:hover": { backgroundColor: "primary.light" },
+                }}
+              >
+                Upload {fileField.replace("URL", "")}
+                <input type="file" name={fileField} hidden onChange={handleFileChange} />
+              </Button>
+            </Grid>
+          ))}
+        </Grid>
+
+        <Box textAlign="center">
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={loading}
+            sx={{
+              background: "linear-gradient(to right, #64dd17, #76ff03)",
+              px: 5,
+              py: 1.5,
+              fontWeight: "bold",
+              fontSize: "1.1rem",
+              borderRadius: "30px",
+              boxShadow: 3,
+              "&:hover": { transform: "scale(1.05)" },
+            }}
+          >
+            {loading ? "Submitting..." : "Register"}
+          </Button>
+        </Box>
+      </Paper>
 
       {/* Payment Confirmation Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
@@ -174,7 +206,7 @@ const MemberRegistration = () => {
       </Dialog>
 
       {responseMsg && (
-        <Typography mt={3} color="primary" fontWeight="bold">
+        <Typography mt={3} color="primary" fontWeight="bold" textAlign="center">
           {responseMsg}
         </Typography>
       )}
