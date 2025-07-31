@@ -119,7 +119,7 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         {!isMobile ? (
-          <Stack direction="row" spacing={3} sx={{ flex: 3, justifyContent: 'center' }}>
+          <Stack direction="row" spacing={3} sx={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
             {navLinks.map((item) => {
               const isActive = location.pathname === item.to || location.pathname.startsWith(item.to);
 
@@ -201,6 +201,32 @@ const Navbar = () => {
                 </Link>
               );
             })}
+
+            {/* ✅ Added Register Button */}
+            <Button
+              component={RouterLink}
+              to="/customer_registration"
+              variant="contained"
+              sx={{
+                background: 'linear-gradient(to right, #64dd17, #76ff03)',
+                color: '#fff',
+                fontWeight: 'bold',
+                px: 3,
+                py: 1,
+                borderRadius: '30px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 12px rgba(100, 221, 23, 0.3)',
+                '&:hover': {
+                  background: 'linear-gradient(to right, #76ff03, #64dd17)',
+                  transform: 'scale(1.05)',
+                  boxShadow: '0 6px 20px rgba(100, 221, 23, 0.5)',
+                },
+              }}
+            >
+              Register Here
+            </Button>
           </Stack>
         ) : (
           <>
@@ -255,6 +281,30 @@ const Navbar = () => {
                     </Link>
                   );
                 })}
+
+                {/* ✅ Added Register Button for Mobile */}
+                <Button
+                  component={RouterLink}
+                  to="/customer_registration"
+                  onClick={() => setDrawerOpen(false)}
+                  variant="contained"
+                  sx={{
+                    mt: 2,
+                    background: 'linear-gradient(to right, #64dd17, #76ff03)',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    px: 2,
+                    py: 1,
+                    borderRadius: '30px',
+                    textTransform: 'uppercase',
+                    '&:hover': {
+                      background: 'linear-gradient(to right, #76ff03, #64dd17)',
+                      transform: 'scale(1.05)',
+                    },
+                  }}
+                >
+                  Register Here
+                </Button>
 
                 <Button
                   component={RouterLink}
