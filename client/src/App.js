@@ -48,7 +48,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/news" element={<News />} />
-          <Route path='/member-registration' element={MemberRegistration}/>
+          <Route path='/customer_registration' element={MemberRegistration}/>
         </Routes>
       </BrowserRouter>
     </Box>
