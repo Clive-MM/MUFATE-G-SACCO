@@ -56,14 +56,19 @@ const inputStyle = {
 const MemberRegistration = () => {
   const [formData, setFormData] = useState({});
   const [files, setFiles] = useState({});
+  const [fileNames, setFileNames] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  const handleFileChange = (e) =>
-    setFiles({ ...files, [e.target.name]: e.target.files[0] });
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFiles({ ...files, [e.target.name]: file });
+    setFileNames({ ...fileNames, [e.target.name]: file?.name || "" });
+  };
 
   const validateForm = () => {
     const requiredFields = [
@@ -88,22 +93,25 @@ const MemberRegistration = () => {
       "NomineeRelation",
     ];
 
-    for (let f of requiredFields) {
-      if (!formData[f]) {
-        alert(`❌ ${f} is required`);
+    for (let field of requiredFields) {
+      if (!formData[field] || formData[field].trim() === "") {
+        alert(`❌ ${field} is required`);
         return false;
       }
     }
 
     const phoneRegex = /^254\d{9}$/;
-    if (
-      !phoneRegex.test(formData.Telephone) ||
-      !phoneRegex.test(formData.AlternatePhone) ||
-      !phoneRegex.test(formData.ContactPersonPhone) ||
-      !phoneRegex.test(formData.NomineeContact)
-    ) {
-      alert("❌ All phone numbers must be in format 254XXXXXXXXX");
-      return false;
+    const phoneFields = [
+      "Telephone",
+      "AlternatePhone",
+      "ContactPersonPhone",
+      "NomineeContact",
+    ];
+    for (let p of phoneFields) {
+      if (!phoneRegex.test(formData[p])) {
+        alert(`❌ ${p} must be in format 254XXXXXXXXX`);
+        return false;
+      }
     }
 
     if (
@@ -123,6 +131,7 @@ const MemberRegistration = () => {
   const confirmSubmission = async () => {
     setOpenDialog(false);
     setLoading(true);
+
     try {
       const formDataToSend = new FormData();
       Object.keys(formData).forEach((k) =>
@@ -179,7 +188,7 @@ const MemberRegistration = () => {
             Please fill in all required details to register as a SACCO member.
           </Typography>
 
-          {/* ✅ BIO DATA */}
+          {/* BIO DATA */}
           <StyledSection title="Bio Data">
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4}>
@@ -271,7 +280,7 @@ const MemberRegistration = () => {
             </Grid>
           </StyledSection>
 
-          {/* ✅ CONTACT DETAILS */}
+          {/* CONTACT DETAILS */}
           <StyledSection title="Contact Details">
             <Grid container spacing={3}>
               {[
@@ -300,7 +309,7 @@ const MemberRegistration = () => {
             </Grid>
           </StyledSection>
 
-          {/* ✅ NOMINEE DETAILS */}
+          {/* NOMINEE DETAILS */}
           <StyledSection title="Nominee Details">
             <Grid container spacing={3}>
               {[
@@ -324,7 +333,7 @@ const MemberRegistration = () => {
             </Grid>
           </StyledSection>
 
-          {/* ✅ DOCUMENT UPLOADS */}
+          {/* FILE UPLOADS */}
           <StyledSection title="Document Uploads">
             <Grid container spacing={3}>
               {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map(
@@ -349,13 +358,24 @@ const MemberRegistration = () => {
                         onChange={handleFileChange}
                       />
                     </Button>
+
+                    {fileNames[fileField] && (
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        mt={1}
+                        align="center"
+                      >
+                        ✅ Selected: {fileNames[fileField]}
+                      </Typography>
+                    )}
                   </Grid>
                 )
               )}
             </Grid>
           </StyledSection>
 
-          {/* ✅ REGISTER BUTTON */}
+          {/* REGISTER BUTTON */}
           <Box textAlign="center">
             <Button
               variant="contained"
@@ -381,7 +401,7 @@ const MemberRegistration = () => {
         </Paper>
       </Container>
 
-      {/* ✅ Payment Dialog */}
+      {/* PAYMENT CONFIRMATION */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Payment Required</DialogTitle>
         <DialogContent>

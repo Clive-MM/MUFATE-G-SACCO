@@ -1256,41 +1256,31 @@ def view_homepage_sliders():
     except Exception as e:
         return jsonify({'message': '❌ Failed to fetch sliders.', 'error': str(e)}), 500
 
-    
-#Customer Registration
+#ROUTE FOR REGISTERING A CUSTOMER    
 def is_valid_phone(phone):
     return bool(re.fullmatch(r"254\d{9}", phone))
 
 @routes.route('/membership/register', methods=['POST'])
 def register_member():
     try:
-        # ✅ Required form fields
+        # ✅ Required fields
         required_fields = [
             "FullName", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender",
             "Address", "Telephone", "AlternatePhone", "KRAPin", "County",
             "SubCounty", "Email", "ContactPerson", "ContactPersonPhone",
             "NomineeName", "NomineeID", "NomineeContact", "NomineeRelation"
         ]
-
         missing_fields = [f for f in required_fields if not request.form.get(f)]
         if missing_fields:
             return jsonify({"message": f"❌ Missing required fields: {', '.join(missing_fields)}"}), 400
 
         # ✅ Extract form data
-        data = {field: request.form.get(field) for field in required_fields}
+        data = {f: request.form.get(f) for f in required_fields}
 
-        # ✅ Validate phone numbers (must start with 254 and be 12 digits)
-        if not is_valid_phone(data["Telephone"]):
-            return jsonify({"message": "❌ Telephone must be in format 254XXXXXXXXX"}), 400
-
-        if not is_valid_phone(data["AlternatePhone"]):
-            return jsonify({"message": "❌ AlternatePhone must be in format 254XXXXXXXXX"}), 400
-
-        if not is_valid_phone(data["ContactPersonPhone"]):
-            return jsonify({"message": "❌ ContactPersonPhone must be in format 254XXXXXXXXX"}), 400
-
-        if not is_valid_phone(data["NomineeContact"]):
-            return jsonify({"message": "❌ NomineeContact must be in format 254XXXXXXXXX"}), 400
+        # ✅ Validate phone numbers
+        for phone_field in ["Telephone", "AlternatePhone", "ContactPersonPhone", "NomineeContact"]:
+            if not is_valid_phone(data[phone_field]):
+                return jsonify({"message": f"❌ {phone_field} must be in format 254XXXXXXXXX"}), 400
 
         # ✅ Validate DOB format
         try:
@@ -1298,15 +1288,28 @@ def register_member():
         except ValueError:
             return jsonify({"message": "❌ DOB must be in YYYY-MM-DD format"}), 400
 
-        # ✅ Check for duplicates
-        if Membership.query.filter_by(IDNumber=data["IDNumber"]).first():
-            return jsonify({"message": "❌ Member with this ID Number already exists."}), 400
+        # ✅ Check for duplicates (IDNumber, Email, Telephone, AlternatePhone)
+        duplicate_member = Membership.query.filter(
+            (Membership.IDNumber == data["IDNumber"]) |
+            (Membership.Email == data["Email"]) |
+            (Membership.Telephone == data["Telephone"]) |
+            (Membership.AlternatePhone == data["AlternatePhone"])
+        ).first()
 
-        if Membership.query.filter_by(Email=data["Email"]).first():
-            return jsonify({"message": "❌ Member with this Email already exists."}), 400
+        if duplicate_member:
+            duplicate_fields = []
+            if duplicate_member.IDNumber == data["IDNumber"]:
+                duplicate_fields.append("ID Number")
+            if duplicate_member.Email == data["Email"]:
+                duplicate_fields.append("Email")
+            if duplicate_member.Telephone == data["Telephone"]:
+                duplicate_fields.append("Telephone")
+            if duplicate_member.AlternatePhone == data["AlternatePhone"]:
+                duplicate_fields.append("Alternate Phone")
 
-        if Membership.query.filter_by(Telephone=data["Telephone"]).first():
-            return jsonify({"message": "❌ Member with this Telephone already exists."}), 400
+            return jsonify({
+                "message": f"❌ Duplicate found for: {', '.join(duplicate_fields)}"
+            }), 400
 
         # ✅ File uploads
         id_back_file = request.files.get("IDBackURL")
@@ -1325,7 +1328,7 @@ def register_member():
         except Exception as upload_error:
             return jsonify({"message": "❌ File upload failed.", "error": str(upload_error)}), 500
 
-        # ✅ Create new member
+        # ✅ Save to DB
         new_member = Membership(
             FullName=data["FullName"],
             IDType=data["IDType"],
@@ -1351,21 +1354,21 @@ def register_member():
             SignatureURL=signature_url,
             PASSPORTURL=passport_url
         )
-
         db.session.add(new_member)
         db.session.commit()
 
-        # ✅ Send admin notification email
+        # ✅ Notify Admin
         msg = Message(
             subject="New SACCO Member Registration",
             sender="noreply@sacco.com",
-            recipients=["maderumoyia@mudetesacco.co.ke"],  
-            body=f"New member registered: {new_member.FullName}, ID: {new_member.IDNumber}, Phone: {new_member.Telephone}"
+            recipients=["maderumoyia@mudetesacco.co.ke"],
+            body=f"New member registered: {new_member.FullName}\n"
+                 f"ID: {new_member.IDNumber}\nPhone: {new_member.Telephone}"
         )
         mail.send(msg)
 
         return jsonify({
-            "message": "✅ Member registered successfully! Please pay KES 1,500 to the sacco complete the registration process."
+            "message": "✅ Member registered successfully! Please pay KES 1,500 to complete registration."
         }), 201
 
     except Exception as e:
