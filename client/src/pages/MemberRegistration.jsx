@@ -18,6 +18,41 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
+const StyledSection = ({ title, children }) => (
+  <Paper
+    sx={{
+      p: 3,
+      mb: 4,
+      borderRadius: 3,
+      boxShadow: "0px 4px 15px rgba(0,0,0,0.08)",
+      backgroundColor: "#f9fff9",
+    }}
+  >
+    <Typography
+      variant="h6"
+      sx={{
+        mb: 3,
+        fontWeight: "bold",
+        color: "#2e7d32",
+        borderBottom: "3px solid #66bb6a",
+        display: "inline-block",
+        pb: 0.5,
+      }}
+    >
+      {title}
+    </Typography>
+    {children}
+  </Paper>
+);
+
+const inputStyle = {
+  borderRadius: 2,
+  "& .MuiFilledInput-root": {
+    borderRadius: 2,
+    backgroundColor: "#fff",
+  },
+};
+
 const MemberRegistration = () => {
   const [formData, setFormData] = useState({});
   const [files, setFiles] = useState({});
@@ -145,186 +180,180 @@ const MemberRegistration = () => {
           </Typography>
 
           {/* ✅ BIO DATA */}
-          <Typography
-            variant="h6"
-            sx={{ mb: 2, fontWeight: "bold", color: "green" }}
-          >
-            Bio Data
-          </Typography>
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Full Name"
-                name="FullName"
-                fullWidth
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required>
-                <InputLabel>ID Type</InputLabel>
-                <Select
-                  name="IDType"
-                  value={formData.IDType || ""}
+          <StyledSection title="Bio Data">
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  label="Full Name"
+                  name="FullName"
+                  fullWidth
+                  variant="filled"
+                  sx={inputStyle}
                   onChange={handleChange}
-                >
-                  <MenuItem value="ID Card Number">ID Card Number</MenuItem>
-                  <MenuItem value="Passport Number">Passport Number</MenuItem>
-                  <MenuItem value="Certificate of Incorporation">
-                    Certificate of Incorporation
-                  </MenuItem>
-                  <MenuItem value="Group Reg Cert">Group Reg Cert</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+                  required
+                />
+              </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="ID Number"
-                name="IDNumber"
-                fullWidth
-                onChange={handleChange}
-                required
-              />
-            </Grid>
+              <Grid item xs={12} sm={4}>
+                <FormControl fullWidth variant="filled" required sx={inputStyle}>
+                  <InputLabel>ID Type</InputLabel>
+                  <Select
+                    name="IDType"
+                    value={formData.IDType || ""}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="ID Card Number">ID Card Number</MenuItem>
+                    <MenuItem value="Passport Number">Passport Number</MenuItem>
+                    <MenuItem value="Certificate of Incorporation">
+                      Certificate of Incorporation
+                    </MenuItem>
+                    <MenuItem value="Group Reg Cert">Group Reg Cert</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Date of Birth"
-                name="DOB"
-                type="date"
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required>
-                <InputLabel>Marital Status</InputLabel>
-                <Select
-                  name="MaritalStatus"
-                  value={formData.MaritalStatus || ""}
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  label="ID Number"
+                  name="IDNumber"
+                  fullWidth
+                  variant="filled"
+                  sx={inputStyle}
                   onChange={handleChange}
-                >
-                  <MenuItem value="Single">Single</MenuItem>
-                  <MenuItem value="Married">Married</MenuItem>
-                  <MenuItem value="Divorced">Divorced</MenuItem>
-                  <MenuItem value="Widowed">Widowed</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+                  required
+                />
+              </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required>
-                <InputLabel>Gender</InputLabel>
-                <Select
-                  name="Gender"
-                  value={formData.Gender || ""}
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  label="Date of Birth"
+                  name="DOB"
+                  type="date"
+                  fullWidth
+                  variant="filled"
+                  InputLabelProps={{ shrink: true }}
+                  sx={inputStyle}
                   onChange={handleChange}
-                >
-                  <MenuItem value="Male">Male</MenuItem>
-                  <MenuItem value="Female">Female</MenuItem>
-                  <MenuItem value="Other">Other</MenuItem>
-                </Select>
-              </FormControl>
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <FormControl fullWidth variant="filled" required sx={inputStyle}>
+                  <InputLabel>Marital Status</InputLabel>
+                  <Select
+                    name="MaritalStatus"
+                    value={formData.MaritalStatus || ""}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="Single">Single</MenuItem>
+                    <MenuItem value="Married">Married</MenuItem>
+                    <MenuItem value="Divorced">Divorced</MenuItem>
+                    <MenuItem value="Widowed">Widowed</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <FormControl fullWidth variant="filled" required sx={inputStyle}>
+                  <InputLabel>Gender</InputLabel>
+                  <Select
+                    name="Gender"
+                    value={formData.Gender || ""}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid>
-          </Grid>
+          </StyledSection>
 
           {/* ✅ CONTACT DETAILS */}
-          <Typography
-            variant="h6"
-            sx={{ mb: 2, fontWeight: "bold", color: "green" }}
-          >
-            Contact Details
-          </Typography>
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            {[
-              "Address",
-              "Telephone",
-              "AlternatePhone",
-              "KRAPin",
-              "County",
-              "SubCounty",
-              "Email",
-              "ContactPerson",
-              "ContactPersonPhone",
-            ].map((field) => (
-              <Grid item xs={12} sm={6} key={field}>
-                <TextField
-                  label={field.replace(/([A-Z])/g, " $1").trim()}
-                  name={field}
-                  fullWidth
-                  onChange={handleChange}
-                  required
-                />
-              </Grid>
-            ))}
-          </Grid>
+          <StyledSection title="Contact Details">
+            <Grid container spacing={3}>
+              {[
+                "Address",
+                "Telephone",
+                "AlternatePhone",
+                "KRAPin",
+                "County",
+                "SubCounty",
+                "Email",
+                "ContactPerson",
+                "ContactPersonPhone",
+              ].map((field) => (
+                <Grid item xs={12} sm={4} key={field}>
+                  <TextField
+                    label={field.replace(/([A-Z])/g, " $1").trim()}
+                    name={field}
+                    fullWidth
+                    variant="filled"
+                    sx={inputStyle}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </StyledSection>
 
           {/* ✅ NOMINEE DETAILS */}
-          <Typography
-            variant="h6"
-            sx={{ mb: 2, fontWeight: "bold", color: "green" }}
-          >
-            Nominee Details
-          </Typography>
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            {[
-              "NomineeName",
-              "NomineeID",
-              "NomineeContact",
-              "NomineeRelation",
-            ].map((field) => (
-              <Grid item xs={12} sm={6} key={field}>
-                <TextField
-                  label={field.replace(/([A-Z])/g, " $1").trim()}
-                  name={field}
-                  fullWidth
-                  onChange={handleChange}
-                  required
-                />
-              </Grid>
-            ))}
-          </Grid>
+          <StyledSection title="Nominee Details">
+            <Grid container spacing={3}>
+              {[
+                "NomineeName",
+                "NomineeID",
+                "NomineeContact",
+                "NomineeRelation",
+              ].map((field) => (
+                <Grid item xs={12} sm={4} key={field}>
+                  <TextField
+                    label={field.replace(/([A-Z])/g, " $1").trim()}
+                    name={field}
+                    fullWidth
+                    variant="filled"
+                    sx={inputStyle}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </StyledSection>
 
           {/* ✅ DOCUMENT UPLOADS */}
-          <Typography
-            variant="h6"
-            sx={{ mb: 2, fontWeight: "bold", color: "green" }}
-          >
-            Document Uploads
-          </Typography>
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map(
-              (fileField) => (
-                <Grid item xs={12} sm={6} key={fileField}>
-                  <Button
-                    variant="outlined"
-                    component="label"
-                    fullWidth
-                    sx={{
-                      py: 1.5,
-                      fontWeight: "bold",
-                      borderRadius: 2,
-                      "&:hover": { backgroundColor: "#eaffea" },
-                    }}
-                  >
-                    Upload {fileField.replace("URL", "")}
-                    <input
-                      type="file"
-                      name={fileField}
-                      hidden
-                      onChange={handleFileChange}
-                    />
-                  </Button>
-                </Grid>
-              )
-            )}
-          </Grid>
+          <StyledSection title="Document Uploads">
+            <Grid container spacing={3}>
+              {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map(
+                (fileField) => (
+                  <Grid item xs={12} sm={6} key={fileField}>
+                    <Button
+                      variant="outlined"
+                      component="label"
+                      fullWidth
+                      sx={{
+                        py: 1.5,
+                        fontWeight: "bold",
+                        borderRadius: 2,
+                        "&:hover": { backgroundColor: "#eaffea" },
+                      }}
+                    >
+                      Upload {fileField.replace("URL", "")}
+                      <input
+                        type="file"
+                        name={fileField}
+                        hidden
+                        onChange={handleFileChange}
+                      />
+                    </Button>
+                  </Grid>
+                )
+              )}
+            </Grid>
+          </StyledSection>
 
           {/* ✅ REGISTER BUTTON */}
           <Box textAlign="center">
