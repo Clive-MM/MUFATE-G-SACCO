@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Footer from "../components/Footer";
 import {
   Box,
   Button,
@@ -480,7 +481,9 @@ const MemberRegistration = () => {
           {responseMsg}
         </Typography>
       )}
+    <Footer/>  
     </Box>
+    
   );
 };
 
