@@ -7,7 +7,7 @@ from datetime import datetime
 from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto
 import cloudinary.uploader
 import re
-
+import traceback
 
 
 # ✅ Initialize Blueprint and Flask extensions
@@ -1270,9 +1270,16 @@ def register_member():
             "SubCounty", "Email", "ContactPerson", "ContactPersonPhone",
             "NomineeName", "NomineeID", "NomineeContact", "NomineeRelation"
         ]
+
+        # ✅ Check for missing fields
         missing_fields = [f for f in required_fields if not request.form.get(f)]
         if missing_fields:
-            return jsonify({"message": f"❌ Missing required fields: {', '.join(missing_fields)}"}), 400
+            return jsonify({
+                "message": "❌ Missing required fields",
+                "missing_fields": missing_fields,
+                "fields_received": list(request.form.keys()),
+                "files_received": list(request.files.keys())
+            }), 400
 
         # ✅ Extract form data
         data = {f: request.form.get(f) for f in required_fields}
@@ -1280,15 +1287,21 @@ def register_member():
         # ✅ Validate phone numbers
         for phone_field in ["Telephone", "AlternatePhone", "ContactPersonPhone", "NomineeContact"]:
             if not is_valid_phone(data[phone_field]):
-                return jsonify({"message": f"❌ {phone_field} must be in format 254XXXXXXXXX"}), 400
+                return jsonify({
+                    "message": f"❌ {phone_field} must be in format 254XXXXXXXXX",
+                    "fields_received": list(request.form.keys())
+                }), 400
 
         # ✅ Validate DOB format
         try:
             dob = datetime.strptime(data["DOB"], "%Y-%m-%d").date()
-        except ValueError:
-            return jsonify({"message": "❌ DOB must be in YYYY-MM-DD format"}), 400
+        except ValueError as e:
+            return jsonify({
+                "message": "❌ DOB must be in YYYY-MM-DD format",
+                "error": str(e)
+            }), 400
 
-        # ✅ Check for duplicates (IDNumber, Email, Telephone, AlternatePhone)
+        # ✅ Check for duplicates
         duplicate_member = Membership.query.filter(
             (Membership.IDNumber == data["IDNumber"]) |
             (Membership.Email == data["Email"]) |
@@ -1308,25 +1321,33 @@ def register_member():
                 duplicate_fields.append("Alternate Phone")
 
             return jsonify({
-                "message": f"❌ Duplicate found for: {', '.join(duplicate_fields)}"
+                "message": "❌ Duplicate member found",
+                "duplicate_fields": duplicate_fields
             }), 400
 
-        # ✅ File uploads
-        id_back_file = request.files.get("IDBackURL")
-        id_front_file = request.files.get("IDFrontURL")
-        signature_file = request.files.get("SignatureURL")
-        passport_file = request.files.get("PASSPORTURL")
+        # ✅ Check file uploads
+        required_files = ["IDBackURL", "IDFrontURL", "SignatureURL", "PASSPORTURL"]
+        missing_files = [f for f in required_files if f not in request.files or request.files[f].filename == ""]
+        if missing_files:
+            return jsonify({
+                "message": "❌ Missing required files",
+                "missing_files": missing_files,
+                "files_received": list(request.files.keys())
+            }), 400
 
-        if not all([id_back_file, id_front_file, signature_file, passport_file]):
-            return jsonify({"message": "❌ All ID, signature, and passport files are required."}), 400
-
+        # ✅ Upload files to Cloudinary
         try:
-            id_back_url = cloudinary.uploader.upload(id_back_file).get("secure_url")
-            id_front_url = cloudinary.uploader.upload(id_front_file).get("secure_url")
-            signature_url = cloudinary.uploader.upload(signature_file).get("secure_url")
-            passport_url = cloudinary.uploader.upload(passport_file).get("secure_url")
+            id_back_url = cloudinary.uploader.upload(request.files["IDBackURL"]).get("secure_url")
+            id_front_url = cloudinary.uploader.upload(request.files["IDFrontURL"]).get("secure_url")
+            signature_url = cloudinary.uploader.upload(request.files["SignatureURL"]).get("secure_url")
+            passport_url = cloudinary.uploader.upload(request.files["PASSPORTURL"]).get("secure_url")
         except Exception as upload_error:
-            return jsonify({"message": "❌ File upload failed.", "error": str(upload_error)}), 500
+            traceback.print_exc()
+            return jsonify({
+                "message": "❌ File upload failed",
+                "error": str(upload_error),
+                "files_received": list(request.files.keys())
+            }), 500
 
         # ✅ Save to DB
         new_member = Membership(
@@ -1354,28 +1375,39 @@ def register_member():
             SignatureURL=signature_url,
             PASSPORTURL=passport_url
         )
+
         db.session.add(new_member)
         db.session.commit()
 
         # ✅ Notify Admin
-        msg = Message(
-            subject="New SACCO Member Registration",
-            sender="noreply@sacco.com",
-            recipients=["maderumoyia@mudetesacco.co.ke"],
-            body=f"New member registered: {new_member.FullName}\n"
-                 f"ID: {new_member.IDNumber}\nPhone: {new_member.Telephone}"
-        )
-        mail.send(msg)
+        try:
+            msg = Message(
+                subject="New SACCO Member Registration",
+                sender="noreply@sacco.com",
+                recipients=["maderumoyia@mudetesacco.co.ke"],
+                body=f"New member registered:\n"
+                     f"Name: {new_member.FullName}\n"
+                     f"ID: {new_member.IDNumber}\n"
+                     f"Phone: {new_member.Telephone}"
+            )
+            mail.send(msg)
+        except Exception as email_error:
+            print("Email failed:", email_error)
 
         return jsonify({
-            "message": "✅ Member registered successfully! Please pay KES 1,500 to complete registration."
+            "message": "✅ Member registered successfully! Please pay KES 1,500 to complete registration.",
+            "fields_received": list(request.form.keys()),
+            "files_received": list(request.files.keys())
         }), 201
 
     except Exception as e:
-        import traceback
         traceback.print_exc()
-        return jsonify({"message": "❌ Registration failed.", "error": str(e)}), 500
-
+        return jsonify({
+            "message": "❌ Registration failed (unexpected error)",
+            "error": str(e),
+            "fields_received": list(request.form.keys()),
+            "files_received": list(request.files.keys())
+        }), 500
 
 #Viewing the list of registered members
 @routes.route('/admin/members', methods=['GET'])
