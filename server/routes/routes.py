@@ -1359,13 +1359,13 @@ def register_member():
         msg = Message(
             subject="New SACCO Member Registration",
             sender="noreply@sacco.com",
-            recipients=["maderumoyia@mudetesacco.co.ke"],  # Change to actual admin email
+            recipients=["maderumoyia@mudetesacco.co.ke"],  
             body=f"New member registered: {new_member.FullName}, ID: {new_member.IDNumber}, Phone: {new_member.Telephone}"
         )
         mail.send(msg)
 
         return jsonify({
-            "message": "✅ Member registered successfully! Please pay KES 1,500 to complete the registration process."
+            "message": "✅ Member registered successfully! Please pay KES 1,500 to the sacco complete the registration process."
         }), 201
 
     except Exception as e:

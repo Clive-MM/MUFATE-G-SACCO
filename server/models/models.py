@@ -134,26 +134,26 @@ class Membership(db.Model):
     IDNumber = db.Column(db.String(50), nullable=False)
     DOB = db.Column(db.Date, nullable=False)
     MaritalStatus = db.Column(db.String(50), nullable=False)
-    Gender = db.Column(db.String(20), nullable=False)           # ✅ Added nullable=False
-    Address = db.Column(db.String(200), nullable=False)         # ✅ Added nullable=False
+    Gender = db.Column(db.String(20), nullable=False)           
+    Address = db.Column(db.String(200), nullable=False)         
     Telephone = db.Column(db.String(20), nullable=False)
-    AlternatePhone = db.Column(db.String(20), nullable=False)   # ✅ Added nullable=False
-    KRAPin = db.Column(db.String(20), nullable=False)           # ✅ Added nullable=False
+    AlternatePhone = db.Column(db.String(20), nullable=False)  
+    KRAPin = db.Column(db.String(20), nullable=False)           
     County = db.Column(db.String(100), nullable=False)
     SubCounty = db.Column(db.String(100), nullable=False)
-    Email = db.Column(db.String(100), nullable=False)           # ✅ Added nullable=False
+    Email = db.Column(db.String(100), nullable=False)          
     ContactPerson = db.Column(db.String(100), nullable=False)
     ContactPersonPhone = db.Column(db.String(20), nullable=False)
-    NomineeName = db.Column(db.String(100), nullable=False)     # ✅ Added nullable=False
-    NomineeID = db.Column(db.String(50), nullable=False)        # ✅ Added nullable=False
-    NomineeContact = db.Column(db.String(20), nullable=False)   # ✅ Added nullable=False
-    NomineeRelation = db.Column(db.String(50), nullable=False)  # ✅ Added nullable=False
+    NomineeName = db.Column(db.String(100), nullable=False)    
+    NomineeID = db.Column(db.String(50), nullable=False)        
+    NomineeContact = db.Column(db.String(20), nullable=False)   
+    NomineeRelation = db.Column(db.String(50), nullable=False)  
     IDBackURL = db.Column(db.String(255), nullable=False)
     IDFrontURL = db.Column(db.String(255), nullable=False)
     SignatureURL = db.Column(db.String(255), nullable=False)
     PASSPORTURL = db.Column(db.String(255), nullable=False)
     RegisteredAt = db.Column(db.DateTime, default=datetime.utcnow) 
-    
+
 class FeedbackStatus(db.Model):
     __tablename__ = 'Feedback_Status'
 
@@ -253,7 +253,7 @@ class HolidayMessage(db.Model):
     HolidayID = db.Column(db.Integer, primary_key=True)
     HolidayName = db.Column(db.String(100), nullable=False)
     Message = db.Column(db.String(255), nullable=False)
-    IsActive = db.Column(db.Integer, nullable=False, default=1)  # maps to IsActive table
+    IsActive = db.Column(db.Integer, nullable=False, default=1)  
     CreatedAt = db.Column(db.DateTime)
     Month = db.Column(db.Integer, nullable=False)
     Day = db.Column(db.Integer, nullable=False)
@@ -263,7 +263,7 @@ class GalleryPhoto(db.Model):
 
     PhotoID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Title = db.Column(db.String(100))
-    Description = db.Column(db.Text)  # Matches NVARCHAR(MAX)
+    Description = db.Column(db.Text)  
     ImageURL = db.Column(db.String(500), nullable=False)
     UploadedAt = db.Column(db.DateTime, default=datetime.utcnow)
     IsActive = db.Column(db.Boolean, default=True)
