@@ -16,7 +16,7 @@ import FAQs from './more/FAQs';
 import ContactUs from './pages/ContactUs/ContactUs';
 import Careers from './pages/Careers/Careers';
 import News from './more/News';
-import MemberRegistration from './pages/MemberRegistration';
+import MemberRegistration from "./pages/MemberRegistration";
 
 
 function App({ toggleTheme, mode }) {
@@ -48,7 +48,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/news" element={<News />} />
-          <Route path='/customer_registration' element={MemberRegistration}/>
+          <Route path="/customer_registration" element={<MemberRegistration />} />
         </Routes>
       </BrowserRouter>
     </Box>
