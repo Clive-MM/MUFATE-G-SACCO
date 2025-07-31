@@ -11,6 +11,10 @@ import {
   DialogContent,
   DialogActions,
   Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import axios from "axios";
 
@@ -21,22 +25,41 @@ const MemberRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-  const handleFileChange = (e) => setFiles({ ...files, [e.target.name]: e.target.files[0] });
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleFileChange = (e) =>
+    setFiles({ ...files, [e.target.name]: e.target.files[0] });
 
   const validateForm = () => {
     const requiredFields = [
-      "FullName","IDType","IDNumber","DOB","MaritalStatus","Gender",
-      "Address","Telephone","AlternatePhone","KRAPin","County","SubCounty",
-      "Email","ContactPerson","ContactPersonPhone",
-      "NomineeName","NomineeID","NomineeContact","NomineeRelation"
+      "FullName",
+      "IDType",
+      "IDNumber",
+      "DOB",
+      "MaritalStatus",
+      "Gender",
+      "Address",
+      "Telephone",
+      "AlternatePhone",
+      "KRAPin",
+      "County",
+      "SubCounty",
+      "Email",
+      "ContactPerson",
+      "ContactPersonPhone",
+      "NomineeName",
+      "NomineeID",
+      "NomineeContact",
+      "NomineeRelation",
     ];
+
     for (let f of requiredFields) {
       if (!formData[f]) {
         alert(`❌ ${f} is required`);
         return false;
       }
     }
+
     const phoneRegex = /^254\d{9}$/;
     if (
       !phoneRegex.test(formData.Telephone) ||
@@ -47,7 +70,13 @@ const MemberRegistration = () => {
       alert("❌ All phone numbers must be in format 254XXXXXXXXX");
       return false;
     }
-    if (!files.IDFrontURL || !files.IDBackURL || !files.SignatureURL || !files.PASSPORTURL) {
+
+    if (
+      !files.IDFrontURL ||
+      !files.IDBackURL ||
+      !files.SignatureURL ||
+      !files.PASSPORTURL
+    ) {
       alert("❌ All required files must be uploaded");
       return false;
     }
@@ -61,7 +90,9 @@ const MemberRegistration = () => {
     setLoading(true);
     try {
       const formDataToSend = new FormData();
-      Object.keys(formData).forEach((k) => formDataToSend.append(k, formData[k]));
+      Object.keys(formData).forEach((k) =>
+        formDataToSend.append(k, formData[k])
+      );
       Object.keys(files).forEach((k) => formDataToSend.append(k, files[k]));
 
       const res = await axios.post(
@@ -69,6 +100,7 @@ const MemberRegistration = () => {
         formDataToSend,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
+
       setResponseMsg(res.data.message);
     } catch (err) {
       setResponseMsg(err.response?.data?.message || "❌ Registration failed");
@@ -80,42 +112,67 @@ const MemberRegistration = () => {
   return (
     <Container maxWidth="md" sx={{ py: 5 }}>
       <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 4 }}>
-        <Typography variant="h4" fontWeight="bold" gutterBottom align="center">
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          gutterBottom
+          align="center"
+        >
           Member Registration
         </Typography>
-        <Typography variant="body1" color="text.secondary" mb={4} align="center">
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          mb={4}
+          align="center"
+        >
           Please fill in all required details to register as a SACCO member.
         </Typography>
 
-        {/* ✅ BIO DATA SECTION */}
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
+        {/* ✅ BIO DATA */}
+        <Typography
+          variant="h6"
+          sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}
+        >
           Bio Data
         </Typography>
         <Grid container spacing={2} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6}>
-            <TextField label="Full Name" name="FullName" fullWidth onChange={handleChange} required />
+            <TextField
+              label="Full Name"
+              name="FullName"
+              fullWidth
+              onChange={handleChange}
+              required
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth required>
+              <InputLabel>ID Type</InputLabel>
+              <Select
+                name="IDType"
+                value={formData.IDType || ""}
+                onChange={handleChange}
+              >
+                <MenuItem value="ID Card Number">ID Card Number</MenuItem>
+                <MenuItem value="Passport Number">Passport Number</MenuItem>
+                <MenuItem value="Certificate of Incorporation">
+                  Certificate of Incorporation
+                </MenuItem>
+                <MenuItem value="Group Reg Cert">Group Reg Cert</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
 
           <Grid item xs={12} sm={6}>
             <TextField
-              select
-              label="ID Type"
-              name="IDType"
+              label="ID Number"
+              name="IDNumber"
               fullWidth
-              SelectProps={{ native: true }}
               onChange={handleChange}
               required
-            >
-              <option value="">-- Select ID Type --</option>
-              <option value="ID Card Number">ID Card Number</option>
-              <option value="Passport Number">Passport Number</option>
-              <option value="Certificate of Incorporation">Certificate of Incorporation</option>
-              <option value="Group Reg Cert">Group Reg Cert</option>
-            </TextField>
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField label="ID Number" name="IDNumber" fullWidth onChange={handleChange} required />
+            />
           </Grid>
 
           <Grid item xs={12} sm={6}>
@@ -131,49 +188,55 @@ const MemberRegistration = () => {
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField
-              select
-              label="Marital Status"
-              name="MaritalStatus"
-              fullWidth
-              SelectProps={{ native: true }}
-              onChange={handleChange}
-              required
-            >
-              <option value="">-- Select --</option>
-              <option value="Single">Single</option>
-              <option value="Married">Married</option>
-              <option value="Divorced">Divorced</option>
-              <option value="Widowed">Widowed</option>
-            </TextField>
+            <FormControl fullWidth required>
+              <InputLabel>Marital Status</InputLabel>
+              <Select
+                name="MaritalStatus"
+                value={formData.MaritalStatus || ""}
+                onChange={handleChange}
+              >
+                <MenuItem value="Single">Single</MenuItem>
+                <MenuItem value="Married">Married</MenuItem>
+                <MenuItem value="Divorced">Divorced</MenuItem>
+                <MenuItem value="Widowed">Widowed</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <TextField
-              select
-              label="Gender"
-              name="Gender"
-              fullWidth
-              SelectProps={{ native: true }}
-              onChange={handleChange}
-              required
-            >
-              <option value="">-- Select --</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </TextField>
+            <FormControl fullWidth required>
+              <InputLabel>Gender</InputLabel>
+              <Select
+                name="Gender"
+                value={formData.Gender || ""}
+                onChange={handleChange}
+              >
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
 
         {/* ✅ CONTACT DETAILS */}
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
+        <Typography
+          variant="h6"
+          sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}
+        >
           Contact Details
         </Typography>
         <Grid container spacing={2} sx={{ mb: 4 }}>
           {[
-            "Address","Telephone","AlternatePhone","KRAPin","County","SubCounty",
-            "Email","ContactPerson","ContactPersonPhone"
+            "Address",
+            "Telephone",
+            "AlternatePhone",
+            "KRAPin",
+            "County",
+            "SubCounty",
+            "Email",
+            "ContactPerson",
+            "ContactPersonPhone",
           ].map((field) => (
             <Grid item xs={12} sm={6} key={field}>
               <TextField
@@ -188,46 +251,61 @@ const MemberRegistration = () => {
         </Grid>
 
         {/* ✅ NOMINEE DETAILS */}
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
+        <Typography
+          variant="h6"
+          sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}
+        >
           Nominee Details
         </Typography>
         <Grid container spacing={2} sx={{ mb: 4 }}>
-          {["NomineeName", "NomineeID", "NomineeContact", "NomineeRelation"].map((field) => (
-            <Grid item xs={12} sm={6} key={field}>
-              <TextField
-                label={field.replace(/([A-Z])/g, " $1").trim()}
-                name={field}
-                fullWidth
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-          ))}
+          {["NomineeName", "NomineeID", "NomineeContact", "NomineeRelation"].map(
+            (field) => (
+              <Grid item xs={12} sm={6} key={field}>
+                <TextField
+                  label={field.replace(/([A-Z])/g, " $1").trim()}
+                  name={field}
+                  fullWidth
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+            )
+          )}
         </Grid>
 
         {/* ✅ DOCUMENT UPLOADS */}
-        <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
+        <Typography
+          variant="h6"
+          sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}
+        >
           Document Uploads
         </Typography>
         <Grid container spacing={2} sx={{ mb: 4 }}>
-          {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((fileField) => (
-            <Grid item xs={12} sm={6} key={fileField}>
-              <Button
-                variant="outlined"
-                component="label"
-                fullWidth
-                sx={{
-                  py: 1.5,
-                  fontWeight: "bold",
-                  borderRadius: 2,
-                  "&:hover": { backgroundColor: "primary.light" },
-                }}
-              >
-                Upload {fileField.replace("URL", "")}
-                <input type="file" name={fileField} hidden onChange={handleFileChange} />
-              </Button>
-            </Grid>
-          ))}
+          {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map(
+            (fileField) => (
+              <Grid item xs={12} sm={6} key={fileField}>
+                <Button
+                  variant="outlined"
+                  component="label"
+                  fullWidth
+                  sx={{
+                    py: 1.5,
+                    fontWeight: "bold",
+                    borderRadius: 2,
+                    "&:hover": { backgroundColor: "primary.light" },
+                  }}
+                >
+                  Upload {fileField.replace("URL", "")}
+                  <input
+                    type="file"
+                    name={fileField}
+                    hidden
+                    onChange={handleFileChange}
+                  />
+                </Button>
+              </Grid>
+            )
+          )}
         </Grid>
 
         {/* ✅ REGISTER BUTTON */}
@@ -252,7 +330,7 @@ const MemberRegistration = () => {
         </Box>
       </Paper>
 
-      {/* ✅ Payment Confirmation Popup */}
+      {/* ✅ Payment Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Payment Required</DialogTitle>
         <DialogContent>
@@ -270,7 +348,12 @@ const MemberRegistration = () => {
       </Dialog>
 
       {responseMsg && (
-        <Typography mt={3} color="primary" fontWeight="bold" textAlign="center">
+        <Typography
+          mt={3}
+          color="primary"
+          fontWeight="bold"
+          textAlign="center"
+        >
           {responseMsg}
         </Typography>
       )}
