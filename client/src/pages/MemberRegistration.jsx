@@ -63,6 +63,7 @@ const MemberRegistration = () => {
       const formDataToSend = new FormData();
       Object.keys(formData).forEach((k) => formDataToSend.append(k, formData[k]));
       Object.keys(files).forEach((k) => formDataToSend.append(k, files[k]));
+
       const res = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/membership/register`,
         formDataToSend,
@@ -86,32 +87,94 @@ const MemberRegistration = () => {
           Please fill in all required details to register as a SACCO member.
         </Typography>
 
-        {/* ✅ Bio Data Section */}
+        {/* ✅ BIO DATA SECTION */}
         <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
           Bio Data
         </Typography>
         <Grid container spacing={2} sx={{ mb: 4 }}>
-          {["FullName", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender"].map((field) => (
-            <Grid item xs={12} sm={6} key={field}>
-              <TextField
-                label={field.replace(/([A-Z])/g, " $1").trim()}
-                name={field}
-                fullWidth
-                type={field === "DOB" ? "date" : "text"}
-                InputLabelProps={field === "DOB" ? { shrink: true } : {}}
-                onChange={handleChange}
-                required
-              />
-            </Grid>
-          ))}
+          <Grid item xs={12} sm={6}>
+            <TextField label="Full Name" name="FullName" fullWidth onChange={handleChange} required />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              select
+              label="ID Type"
+              name="IDType"
+              fullWidth
+              SelectProps={{ native: true }}
+              onChange={handleChange}
+              required
+            >
+              <option value="">-- Select ID Type --</option>
+              <option value="ID Card Number">ID Card Number</option>
+              <option value="Passport Number">Passport Number</option>
+              <option value="Certificate of Incorporation">Certificate of Incorporation</option>
+              <option value="Group Reg Cert">Group Reg Cert</option>
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField label="ID Number" name="IDNumber" fullWidth onChange={handleChange} required />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Date of Birth"
+              name="DOB"
+              type="date"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              onChange={handleChange}
+              required
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              select
+              label="Marital Status"
+              name="MaritalStatus"
+              fullWidth
+              SelectProps={{ native: true }}
+              onChange={handleChange}
+              required
+            >
+              <option value="">-- Select --</option>
+              <option value="Single">Single</option>
+              <option value="Married">Married</option>
+              <option value="Divorced">Divorced</option>
+              <option value="Widowed">Widowed</option>
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              select
+              label="Gender"
+              name="Gender"
+              fullWidth
+              SelectProps={{ native: true }}
+              onChange={handleChange}
+              required
+            >
+              <option value="">-- Select --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </TextField>
+          </Grid>
         </Grid>
 
-        {/* ✅ Contact Details Section */}
+        {/* ✅ CONTACT DETAILS */}
         <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
           Contact Details
         </Typography>
         <Grid container spacing={2} sx={{ mb: 4 }}>
-          {["Address","Telephone","AlternatePhone","KRAPin","County","SubCounty","Email","ContactPerson","ContactPersonPhone"].map((field) => (
+          {[
+            "Address","Telephone","AlternatePhone","KRAPin","County","SubCounty",
+            "Email","ContactPerson","ContactPersonPhone"
+          ].map((field) => (
             <Grid item xs={12} sm={6} key={field}>
               <TextField
                 label={field.replace(/([A-Z])/g, " $1").trim()}
@@ -124,7 +187,7 @@ const MemberRegistration = () => {
           ))}
         </Grid>
 
-        {/* ✅ Nominee Details Section */}
+        {/* ✅ NOMINEE DETAILS */}
         <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
           Nominee Details
         </Typography>
@@ -142,7 +205,7 @@ const MemberRegistration = () => {
           ))}
         </Grid>
 
-        {/* ✅ Document Uploads */}
+        {/* ✅ DOCUMENT UPLOADS */}
         <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", color: "primary.main" }}>
           Document Uploads
         </Typography>
@@ -167,6 +230,7 @@ const MemberRegistration = () => {
           ))}
         </Grid>
 
+        {/* ✅ REGISTER BUTTON */}
         <Box textAlign="center">
           <Button
             variant="contained"
@@ -188,7 +252,7 @@ const MemberRegistration = () => {
         </Box>
       </Paper>
 
-      {/* Payment Confirmation Dialog */}
+      {/* ✅ Payment Confirmation Popup */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Payment Required</DialogTitle>
         <DialogContent>
