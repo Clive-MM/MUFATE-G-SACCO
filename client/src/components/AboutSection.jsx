@@ -149,7 +149,7 @@ const AboutSection = () => {
               backgroundImage: `url(${images[currentIndex]})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              transition: 'background-image 0.8s ease-in-out',
+              transition: 'background-image 1.0s ease-in-out',
             }}
           />
         </Paper>
