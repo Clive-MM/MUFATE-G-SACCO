@@ -25,7 +25,7 @@ const AboutSection = () => {
   }, [images.length]);
 
   return (
-    <Box sx={{ backgroundColor: '#f6fef7', px: 0, py: 6 }}>
+    <Box sx={{ backgroundColor: '#f6fef7', px: 0, py: 4 }}>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ const AboutSection = () => {
             overflow: 'hidden',
             width: '100%',
             mx: 'auto',
-            maxWidth: '1300px',
+            maxWidth: '1500px',
             backgroundColor: '#fff',
             border: '2px solid transparent',
             backgroundImage:
