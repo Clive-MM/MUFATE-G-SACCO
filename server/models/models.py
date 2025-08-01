@@ -125,34 +125,57 @@ class Partnership(db.Model):
     is_active = db.relationship('IsActive', backref='partnerships')
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
 
+
 class Membership(db.Model):
     __tablename__ = 'Membership'
 
     MemberID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    # ✅ Basic Info
     FullName = db.Column(db.String(150), nullable=False)
-    IDType = db.Column(db.String(50), nullable=False)
-    IDNumber = db.Column(db.String(50), nullable=False)
+    Salutation = db.Column(db.String(10), nullable=False)  # MR, MRS, MISS, DR, PROF
+
+    # ✅ ID Information
+    IDType = db.Column(db.Enum("ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport", name="id_type_enum"), nullable=False)
+    IDNumber = db.Column(db.String(50), nullable=False, unique=True)
+    KRAPin = db.Column(db.String(20), nullable=True)
+
+    # ✅ Personal Details
     DOB = db.Column(db.Date, nullable=False)
-    MaritalStatus = db.Column(db.String(50), nullable=False)
-    Gender = db.Column(db.String(20), nullable=False)           
-    Address = db.Column(db.String(200), nullable=False)         
-    Telephone = db.Column(db.String(20), nullable=False)
-    AlternatePhone = db.Column(db.String(20), nullable=False)  
-    KRAPin = db.Column(db.String(20), nullable=False)           
+    MaritalStatus = db.Column(db.Enum("Single", "Married", "Divorce", "Separated", name="marital_status_enum"), nullable=False)
+    Gender = db.Column(db.Enum("Male", "Female", "Others", name="gender_enum"), nullable=False)
+
+    # ✅ Location Details
     County = db.Column(db.String(100), nullable=False)
-    SubCounty = db.Column(db.String(100), nullable=False)
-    Email = db.Column(db.String(100), nullable=False)          
-    ContactPerson = db.Column(db.String(100), nullable=False)
-    ContactPersonPhone = db.Column(db.String(20), nullable=False)
-    NomineeName = db.Column(db.String(100), nullable=False)    
-    NomineeID = db.Column(db.String(50), nullable=False)        
-    NomineeContact = db.Column(db.String(20), nullable=False)   
-    NomineeRelation = db.Column(db.String(50), nullable=False)  
+    District = db.Column(db.String(100), nullable=False)
+    Division = db.Column(db.String(100), nullable=True)
+    Address = db.Column(db.String(200), nullable=True)
+    PostalCode = db.Column(db.String(20), nullable=True)
+    PhysicalAddress = db.Column(db.String(200), nullable=True)
+
+    # ✅ Contact Info
+    MobileNumber = db.Column(db.String(20), nullable=False)
+    AlternateMobileNumber = db.Column(db.String(20), nullable=False)
+    Email = db.Column(db.String(100), nullable=True)
+
+    # ✅ Profession Info
+    Profession = db.Column(db.String(100), nullable=True)
+    ProfessionSector = db.Column(db.String(100), nullable=True)
+
+    # ✅ Nominee Info
+    NomineeName = db.Column(db.String(100), nullable=False)
+    NomineeIDNumber = db.Column(db.String(50), nullable=False)
+    NomineePhoneNumber = db.Column(db.String(20), nullable=False)
+    NomineeRelation = db.Column(db.String(50), nullable=False)
+
+    # ✅ File Uploads
     IDBackURL = db.Column(db.String(255), nullable=False)
     IDFrontURL = db.Column(db.String(255), nullable=False)
     SignatureURL = db.Column(db.String(255), nullable=False)
     PASSPORTURL = db.Column(db.String(255), nullable=False)
-    RegisteredAt = db.Column(db.DateTime, default=datetime.utcnow) 
+
+    # ✅ Registration Timestamp
+    RegisteredAt = db.Column(db.DateTime, default=datetime.utcnow)
 
 class FeedbackStatus(db.Model):
     __tablename__ = 'Feedback_Status'
