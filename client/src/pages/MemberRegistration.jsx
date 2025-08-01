@@ -50,19 +50,16 @@ const MemberRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // ✅ Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  // ✅ Handle file uploads
   const handleFileUpload = (name, file) => {
     setFiles((prev) => ({ ...prev, [name]: file }));
     setFilePreviews((prev) => ({ ...prev, [name]: URL.createObjectURL(file) }));
   };
 
-  // ✅ Create Dropzone for uploads
   const createDropzone = (name) => {
     const { getRootProps, getInputProps } = useDropzone({
       onDrop: (acceptedFiles) => handleFileUpload(name, acceptedFiles[0]),
@@ -95,52 +92,27 @@ const MemberRegistration = () => {
     );
   };
 
-  // ✅ Validation per step
   const phonePattern = /^2547\d{8}$/;
 
   const validateStep = () => {
     let stepErrors = {};
 
     if (activeStep === 0) {
-      const required = [
-        "FullName",
-        "Salutation",
-        "IDType",
-        "IDNumber",
-        "DOB",
-        "MaritalStatus",
-        "Gender",
-      ];
-      required.forEach((f) => {
+      ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender"].forEach((f) => {
         if (!formData[f]) stepErrors[f] = "Required";
       });
     }
 
     if (activeStep === 1) {
-      const required = [
-        "County",
-        "District",
-        "MobileNumber",
-        "AlternateMobileNumber",
-      ];
-      required.forEach((f) => {
+      ["County", "District", "MobileNumber", "AlternateMobileNumber"].forEach((f) => {
         if (!formData[f]) stepErrors[f] = "Required";
-        else if (
-          (f === "MobileNumber" || f === "AlternateMobileNumber") &&
-          !phonePattern.test(formData[f])
-        )
+        else if ((f === "MobileNumber" || f === "AlternateMobileNumber") && !phonePattern.test(formData[f]))
           stepErrors[f] = "Must be 2547XXXXXXXX";
       });
     }
 
     if (activeStep === 2) {
-      const required = [
-        "NomineeName",
-        "NomineeIDNumber",
-        "NomineePhoneNumber",
-        "NomineeRelation",
-      ];
-      required.forEach((f) => {
+      ["NomineeName", "NomineeIDNumber", "NomineePhoneNumber", "NomineeRelation"].forEach((f) => {
         if (!formData[f]) stepErrors[f] = "Required";
         else if (f === "NomineePhoneNumber" && !phonePattern.test(formData[f]))
           stepErrors[f] = "Must be 2547XXXXXXXX";
@@ -148,84 +120,48 @@ const MemberRegistration = () => {
     }
 
     if (activeStep === 3) {
-      ["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].forEach(
-        (file) => {
-          if (!files[file]) stepErrors[file] = "Required";
-        }
-      );
+      ["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].forEach((file) => {
+        if (!files[file]) stepErrors[file] = "Required";
+      });
     }
 
     setErrors(stepErrors);
     return Object.keys(stepErrors).length === 0;
   };
 
-  // ✅ Navigation
   const nextStep = () => validateStep() && setActiveStep((prev) => prev + 1);
   const prevStep = () => setActiveStep((prev) => prev - 1);
 
-  // ✅ Final Submission
   const confirmSubmission = async () => {
     setLoading(true);
-
     const formDataToSend = new FormData();
-    Object.keys(formData).forEach((k) =>
-      formDataToSend.append(k, formData[k])
-    );
+    Object.keys(formData).forEach((k) => formDataToSend.append(k, formData[k]));
     Object.keys(files).forEach((k) => formDataToSend.append(k, files[k]));
 
     try {
-      await axios.post(
-        "https://mufate-g-sacco.onrender.com/membership/register",
-        formDataToSend,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      await axios.post("https://mufate-g-sacco.onrender.com/membership/register", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       setSuccess(true);
     } catch (err) {
-      alert(
-        err.response?.data?.message || "❌ Registration failed. Try again."
-      );
+      alert(err.response?.data?.message || "❌ Registration failed. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Render fields per step
   const renderStep = () => {
     const fieldGroups = [
-      // Step 0 - Bio Data
       [
         { label: "Full Name", name: "FullName" },
-        {
-          label: "Salutation",
-          name: "Salutation",
-          select: ["MR", "MRS", "MISS", "DR", "PROF"],
-        },
-        {
-          label: "ID Type",
-          name: "IDType",
-          select: [
-            "ID Card",
-            "Certificate of Incorp",
-            "Group Registration Certificate",
-            "Passport",
-          ],
-        },
+        { label: "Salutation", name: "Salutation", select: ["MR", "MRS", "MISS", "DR", "PROF"] },
+        { label: "ID Type", name: "IDType", select: ["ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport"] },
         { label: "ID Number", name: "IDNumber" },
         { label: "KRA PIN (Optional)", name: "KRAPin" },
         { label: "Date of Birth", name: "DOB", type: "date" },
-        {
-          label: "Marital Status",
-          name: "MaritalStatus",
-          select: ["Single", "Married", "Divorce", "Separated"],
-        },
-        {
-          label: "Gender",
-          name: "Gender",
-          select: ["Male", "Female", "Others"],
-        },
+        { label: "Marital Status", name: "MaritalStatus", select: ["Single", "Married", "Divorce", "Separated"] },
+        { label: "Gender", name: "Gender", select: ["Male", "Female", "Others"] },
       ],
-
-      // Step 1 - Contact
       [
         { label: "County", name: "County" },
         { label: "District", name: "District" },
@@ -239,8 +175,6 @@ const MemberRegistration = () => {
         { label: "Profession (Optional)", name: "Profession" },
         { label: "Profession Sector (Optional)", name: "ProfessionSector" },
       ],
-
-      // Step 2 - Nominee
       [
         { label: "Nominee Name", name: "NomineeName" },
         { label: "Nominee ID Number", name: "NomineeIDNumber" },
@@ -255,12 +189,7 @@ const MemberRegistration = () => {
           {fieldGroups[activeStep].map((field) => (
             <Grid item xs={12} sm={4} key={field.name}>
               {field.select ? (
-                <FormControl
-                  fullWidth
-                  variant="filled"
-                  required
-                  sx={inputStyle}
-                >
+                <FormControl fullWidth variant="filled" required sx={inputStyle}>
                   <InputLabel>{field.label}</InputLabel>
                   <Select
                     name={field.name}
@@ -268,16 +197,10 @@ const MemberRegistration = () => {
                     onChange={handleChange}
                   >
                     {field.select.map((opt) => (
-                      <MenuItem key={opt} value={opt}>
-                        {opt}
-                      </MenuItem>
+                      <MenuItem key={opt} value={opt}>{opt}</MenuItem>
                     ))}
                   </Select>
-                  {errors[field.name] && (
-                    <Typography color="error" variant="caption">
-                      {errors[field.name]}
-                    </Typography>
-                  )}
+                  {errors[field.name] && <Typography color="error" variant="caption">{errors[field.name]}</Typography>}
                 </FormControl>
               ) : (
                 <TextField
@@ -289,9 +212,7 @@ const MemberRegistration = () => {
                   sx={inputStyle}
                   value={formData[field.name] || ""}
                   onChange={handleChange}
-                  InputLabelProps={
-                    field.type === "date" ? { shrink: true } : {}
-                  }
+                  InputLabelProps={field.type === "date" ? { shrink: true } : {}}
                   error={!!errors[field.name]}
                   helperText={errors[field.name]}
                 />
@@ -302,44 +223,26 @@ const MemberRegistration = () => {
       );
     }
 
-    // Step 3 - Uploads
     return (
       <Grid container spacing={2}>
-        {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map(
-          (f) => (
-            <Grid item xs={12} sm={6} key={f}>
-              {createDropzone(f)}
-              {errors[f] && (
-                <Typography color="error" variant="caption">
-                  {errors[f]}
-                </Typography>
-              )}
-            </Grid>
-          )
-        )}
+        {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((f) => (
+          <Grid item xs={12} sm={6} key={f}>
+            {createDropzone(f)}
+            {errors[f] && <Typography color="error" variant="caption">{errors[f]}</Typography>}
+          </Grid>
+        ))}
       </Grid>
     );
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        py: 4,
-        background: "linear-gradient(135deg,#f0fff4,#e6f7ff)",
-      }}
-    >
+    <Box sx={{ minHeight: "100vh", py: 4, background: "linear-gradient(135deg,#f0fff4,#e6f7ff)" }}>
       <Container maxWidth="md">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 4 }}>
             {!success ? (
               <>
-                <Typography
-                  variant="h4"
-                  align="center"
-                  gutterBottom
-                  color="primary"
-                >
+                <Typography variant="h4" align="center" gutterBottom color="primary">
                   Member Registration
                 </Typography>
 
@@ -355,31 +258,25 @@ const MemberRegistration = () => {
 
                 <Box mt={3} textAlign="center">
                   {activeStep > 0 && (
-                    <Button
-                      variant="outlined"
-                      onClick={prevStep}
-                      sx={{ mr: 2 }}
-                    >
+                    <Button variant="outlined" onClick={prevStep} sx={{ mr: 2 }}>
                       Back
                     </Button>
                   )}
 
-                  {activeStep < steps.length ? (
-                    activeStep < steps.length - 1 ? (
-                      <Button variant="contained" onClick={nextStep}>
-                        Next
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        onClick={confirmSubmission}
-                        disabled={loading}
-                      >
-                        {loading ? "Submitting..." : "Submit"}
-                      </Button>
-                    )
-                  ) : null}
+                  {activeStep < steps.length - 1 ? (
+                    <Button variant="contained" onClick={nextStep}>
+                      Next
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={confirmSubmission}
+                      disabled={loading}
+                    >
+                      {loading ? "Submitting..." : "Submit"}
+                    </Button>
+                  )}
                 </Box>
               </>
             ) : (
@@ -389,8 +286,7 @@ const MemberRegistration = () => {
                   🎉 Registration Successful!
                 </Typography>
                 <Typography color="text.secondary">
-                  Please pay KES 1,500 via M-PESA Paybill 506492 to activate
-                  your account.
+                  Please pay KES 1,500 via M-PESA Paybill 506492 to activate your account.
                 </Typography>
               </Box>
             )}
