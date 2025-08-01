@@ -35,9 +35,8 @@ const StyledSection = ({ title, children }) => (
         mb: 3,
         fontWeight: "bold",
         color: "#2e7d32",
-        borderBottom: "3px solid #66bb6a",
-        display: "inline-block",
-        pb: 0.5,
+        pl: 1.5,
+        borderLeft: "6px solid #66bb6a", // ✅ New styling instead of underline
       }}
     >
       {title}
@@ -194,7 +193,10 @@ const MemberRegistration = () => {
             fontWeight="bold"
             gutterBottom
             align="center"
-            color="primary"
+            sx={{
+              color: "#2e7d32",
+              textShadow: "1px 1px 3px rgba(0,0,0,0.1)",
+            }}
           >
             Member Registration
           </Typography>
@@ -210,6 +212,7 @@ const MemberRegistration = () => {
           {/* BIO DATA */}
           <StyledSection title="Bio Data">
             <Grid container spacing={3}>
+              {/* Full Name */}
               <Grid item xs={12} sm={4}>
                 <TextField
                   label="Full Name"
@@ -222,6 +225,7 @@ const MemberRegistration = () => {
                 />
               </Grid>
 
+              {/* ID Type */}
               <Grid item xs={12} sm={4}>
                 <FormControl fullWidth variant="filled" required sx={inputStyle}>
                   <InputLabel>ID Type</InputLabel>
@@ -240,6 +244,7 @@ const MemberRegistration = () => {
                 </FormControl>
               </Grid>
 
+              {/* ID Number */}
               <Grid item xs={12} sm={4}>
                 <TextField
                   label="ID Number"
@@ -252,6 +257,7 @@ const MemberRegistration = () => {
                 />
               </Grid>
 
+              {/* DOB */}
               <Grid item xs={12} sm={4}>
                 <TextField
                   label="Date of Birth"
@@ -266,6 +272,7 @@ const MemberRegistration = () => {
                 />
               </Grid>
 
+              {/* Marital Status */}
               <Grid item xs={12} sm={4}>
                 <FormControl fullWidth variant="filled" required sx={inputStyle}>
                   <InputLabel>Marital Status</InputLabel>
@@ -282,6 +289,7 @@ const MemberRegistration = () => {
                 </FormControl>
               </Grid>
 
+              {/* Gender */}
               <Grid item xs={12} sm={4}>
                 <FormControl fullWidth variant="filled" required sx={inputStyle}>
                   <InputLabel>Gender</InputLabel>
@@ -388,6 +396,13 @@ const MemberRegistration = () => {
 
           {/* FILE UPLOADS */}
           <StyledSection title="Document Uploads">
+            <Typography
+              variant="body2"
+              sx={{ mb: 2, color: "#444", fontStyle: "italic" }}
+            >
+              📄 Please upload original copies of your National ID (front & back), signature, and passport photo.
+            </Typography>
+
             <Grid container spacing={3}>
               {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map(
                 (fileField) => (
@@ -459,8 +474,8 @@ const MemberRegistration = () => {
         <DialogTitle>Payment Required</DialogTitle>
         <DialogContent>
           <Typography>
-            Please pay <b>KES 1,500</b> to complete your registration. <br />
-            After payment, click <b>Confirm</b> to submit your details.
+            Please pay <strong>Kshs 1,500</strong> via M-PESA Paybill{" "}
+            <strong>506492</strong> as the account opening fee to activate your account.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -481,9 +496,8 @@ const MemberRegistration = () => {
           {responseMsg}
         </Typography>
       )}
-    <Footer/>  
+      <Footer />
     </Box>
-    
   );
 };
 
