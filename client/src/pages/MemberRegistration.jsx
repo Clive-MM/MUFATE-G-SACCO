@@ -31,7 +31,6 @@ const steps = [
   { label: "Contact", icon: <ContactPhoneIcon /> },
   { label: "Nominee", icon: <GroupIcon /> },
   { label: "Uploads", icon: <CloudUploadIcon /> },
-  { label: "Submit", icon: <CheckCircleIcon /> },
 ];
 
 const inputStyle = {
@@ -45,19 +44,25 @@ const inputStyle = {
 const MemberRegistration = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState({});
   const [files, setFiles] = useState({});
   const [filePreviews, setFilePreviews] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handleChange = (e) =>
+  // ✅ Handle input changes
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
+  };
 
+  // ✅ Handle file uploads
   const handleFileUpload = (name, file) => {
     setFiles((prev) => ({ ...prev, [name]: file }));
     setFilePreviews((prev) => ({ ...prev, [name]: URL.createObjectURL(file) }));
   };
 
+  // ✅ Create Dropzone for uploads
   const createDropzone = (name) => {
     const { getRootProps, getInputProps } = useDropzone({
       onDrop: (acceptedFiles) => handleFileUpload(name, acceptedFiles[0]),
@@ -90,11 +95,78 @@ const MemberRegistration = () => {
     );
   };
 
-  const nextStep = () => setActiveStep((prev) => prev + 1);
+  // ✅ Validation per step
+  const phonePattern = /^2547\d{8}$/;
+
+  const validateStep = () => {
+    let stepErrors = {};
+
+    if (activeStep === 0) {
+      const required = [
+        "FullName",
+        "Salutation",
+        "IDType",
+        "IDNumber",
+        "DOB",
+        "MaritalStatus",
+        "Gender",
+      ];
+      required.forEach((f) => {
+        if (!formData[f]) stepErrors[f] = "Required";
+      });
+    }
+
+    if (activeStep === 1) {
+      const required = [
+        "County",
+        "District",
+        "MobileNumber",
+        "AlternateMobileNumber",
+      ];
+      required.forEach((f) => {
+        if (!formData[f]) stepErrors[f] = "Required";
+        else if (
+          (f === "MobileNumber" || f === "AlternateMobileNumber") &&
+          !phonePattern.test(formData[f])
+        )
+          stepErrors[f] = "Must be 2547XXXXXXXX";
+      });
+    }
+
+    if (activeStep === 2) {
+      const required = [
+        "NomineeName",
+        "NomineeIDNumber",
+        "NomineePhoneNumber",
+        "NomineeRelation",
+      ];
+      required.forEach((f) => {
+        if (!formData[f]) stepErrors[f] = "Required";
+        else if (f === "NomineePhoneNumber" && !phonePattern.test(formData[f]))
+          stepErrors[f] = "Must be 2547XXXXXXXX";
+      });
+    }
+
+    if (activeStep === 3) {
+      ["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].forEach(
+        (file) => {
+          if (!files[file]) stepErrors[file] = "Required";
+        }
+      );
+    }
+
+    setErrors(stepErrors);
+    return Object.keys(stepErrors).length === 0;
+  };
+
+  // ✅ Navigation
+  const nextStep = () => validateStep() && setActiveStep((prev) => prev + 1);
   const prevStep = () => setActiveStep((prev) => prev - 1);
 
+  // ✅ Final Submission
   const confirmSubmission = async () => {
     setLoading(true);
+
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((k) =>
       formDataToSend.append(k, formData[k])
@@ -105,16 +177,148 @@ const MemberRegistration = () => {
       await axios.post(
         "https://mufate-g-sacco.onrender.com/membership/register",
         formDataToSend,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       setSuccess(true);
     } catch (err) {
-      alert("❌ Registration failed. Try again.");
+      alert(
+        err.response?.data?.message || "❌ Registration failed. Try again."
+      );
     } finally {
       setLoading(false);
     }
+  };
+
+  // ✅ Render fields per step
+  const renderStep = () => {
+    const fieldGroups = [
+      // Step 0 - Bio Data
+      [
+        { label: "Full Name", name: "FullName" },
+        {
+          label: "Salutation",
+          name: "Salutation",
+          select: ["MR", "MRS", "MISS", "DR", "PROF"],
+        },
+        {
+          label: "ID Type",
+          name: "IDType",
+          select: [
+            "ID Card",
+            "Certificate of Incorp",
+            "Group Registration Certificate",
+            "Passport",
+          ],
+        },
+        { label: "ID Number", name: "IDNumber" },
+        { label: "KRA PIN (Optional)", name: "KRAPin" },
+        { label: "Date of Birth", name: "DOB", type: "date" },
+        {
+          label: "Marital Status",
+          name: "MaritalStatus",
+          select: ["Single", "Married", "Divorce", "Separated"],
+        },
+        {
+          label: "Gender",
+          name: "Gender",
+          select: ["Male", "Female", "Others"],
+        },
+      ],
+
+      // Step 1 - Contact
+      [
+        { label: "County", name: "County" },
+        { label: "District", name: "District" },
+        { label: "Division (Optional)", name: "Division" },
+        { label: "Address", name: "Address" },
+        { label: "Postal Code", name: "PostalCode" },
+        { label: "Physical Address", name: "PhysicalAddress" },
+        { label: "Mobile Number", name: "MobileNumber" },
+        { label: "Alternate Mobile Number", name: "AlternateMobileNumber" },
+        { label: "Email (Optional)", name: "Email" },
+        { label: "Profession (Optional)", name: "Profession" },
+        { label: "Profession Sector (Optional)", name: "ProfessionSector" },
+      ],
+
+      // Step 2 - Nominee
+      [
+        { label: "Nominee Name", name: "NomineeName" },
+        { label: "Nominee ID Number", name: "NomineeIDNumber" },
+        { label: "Nominee Phone Number", name: "NomineePhoneNumber" },
+        { label: "Nominee Relation", name: "NomineeRelation" },
+      ],
+    ];
+
+    if (activeStep < 3) {
+      return (
+        <Grid container spacing={2}>
+          {fieldGroups[activeStep].map((field) => (
+            <Grid item xs={12} sm={4} key={field.name}>
+              {field.select ? (
+                <FormControl
+                  fullWidth
+                  variant="filled"
+                  required
+                  sx={inputStyle}
+                >
+                  <InputLabel>{field.label}</InputLabel>
+                  <Select
+                    name={field.name}
+                    value={formData[field.name] || ""}
+                    onChange={handleChange}
+                  >
+                    {field.select.map((opt) => (
+                      <MenuItem key={opt} value={opt}>
+                        {opt}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors[field.name] && (
+                    <Typography color="error" variant="caption">
+                      {errors[field.name]}
+                    </Typography>
+                  )}
+                </FormControl>
+              ) : (
+                <TextField
+                  label={field.label}
+                  name={field.name}
+                  type={field.type || "text"}
+                  variant="filled"
+                  fullWidth
+                  sx={inputStyle}
+                  value={formData[field.name] || ""}
+                  onChange={handleChange}
+                  InputLabelProps={
+                    field.type === "date" ? { shrink: true } : {}
+                  }
+                  error={!!errors[field.name]}
+                  helperText={errors[field.name]}
+                />
+              )}
+            </Grid>
+          ))}
+        </Grid>
+      );
+    }
+
+    // Step 3 - Uploads
+    return (
+      <Grid container spacing={2}>
+        {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map(
+          (f) => (
+            <Grid item xs={12} sm={6} key={f}>
+              {createDropzone(f)}
+              {errors[f] && (
+                <Typography color="error" variant="caption">
+                  {errors[f]}
+                </Typography>
+              )}
+            </Grid>
+          )
+        )}
+      </Grid>
+    );
   };
 
   return (
@@ -147,45 +351,35 @@ const MemberRegistration = () => {
                   ))}
                 </Stepper>
 
-                {activeStep === 3 && (
-                  <Grid container spacing={2}>
-                    {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map(
-                      (f) => (
-                        <Grid item xs={12} sm={6} key={f}>
-                          {createDropzone(f)}
-                        </Grid>
-                      )
-                    )}
-                  </Grid>
-                )}
-
-                {activeStep === 4 && (
-                  <Typography align="center" sx={{ mb: 3 }}>
-                    ✅ Please confirm and submit your registration.
-                  </Typography>
-                )}
+                {renderStep()}
 
                 <Box mt={3} textAlign="center">
                   {activeStep > 0 && (
-                    <Button variant="outlined" onClick={prevStep} sx={{ mr: 2 }}>
+                    <Button
+                      variant="outlined"
+                      onClick={prevStep}
+                      sx={{ mr: 2 }}
+                    >
                       Back
                     </Button>
                   )}
 
-                  {activeStep < steps.length - 1 ? (
-                    <Button variant="contained" onClick={nextStep}>
-                      Next
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={confirmSubmission}
-                      disabled={loading}
-                    >
-                      {loading ? "Submitting..." : "Submit"}
-                    </Button>
-                  )}
+                  {activeStep < steps.length ? (
+                    activeStep < steps.length - 1 ? (
+                      <Button variant="contained" onClick={nextStep}>
+                        Next
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={confirmSubmission}
+                        disabled={loading}
+                      >
+                        {loading ? "Submitting..." : "Submit"}
+                      </Button>
+                    )
+                  ) : null}
                 </Box>
               </>
             ) : (
@@ -195,8 +389,8 @@ const MemberRegistration = () => {
                   🎉 Registration Successful!
                 </Typography>
                 <Typography color="text.secondary">
-                  Please pay KES 1,500 via M-PESA Paybill 506492 to activate your
-                  account.
+                  Please pay KES 1,500 via M-PESA Paybill 506492 to activate
+                  your account.
                 </Typography>
               </Box>
             )}
