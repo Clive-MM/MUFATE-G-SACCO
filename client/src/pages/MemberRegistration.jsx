@@ -400,7 +400,7 @@ const MemberRegistration = () => {
               variant="body2"
               sx={{ mb: 2, color: "#444", fontStyle: "italic" }}
             >
-              📄 Please upload original copies of your National ID (front & back), signature, and passport photo.
+              📄 Please upload original copies of your National ID (front & back).
             </Typography>
 
             <Grid container spacing={3}>
