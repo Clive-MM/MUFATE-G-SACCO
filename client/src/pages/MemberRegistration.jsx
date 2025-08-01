@@ -15,16 +15,8 @@ import {
   Stepper,
   Step,
   StepLabel,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Avatar,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PersonIcon from "@mui/icons-material/Person";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import GroupIcon from "@mui/icons-material/Group";
@@ -39,7 +31,7 @@ const steps = [
   { label: "Contact", icon: <ContactPhoneIcon /> },
   { label: "Nominee", icon: <GroupIcon /> },
   { label: "Uploads", icon: <CloudUploadIcon /> },
-  { label: "Review", icon: <CheckCircleIcon /> },
+  { label: "Submit", icon: <CheckCircleIcon /> },
 ];
 
 const inputStyle = {
@@ -55,11 +47,11 @@ const MemberRegistration = () => {
   const [formData, setFormData] = useState({});
   const [files, setFiles] = useState({});
   const [filePreviews, setFilePreviews] = useState({});
-  const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleFileUpload = (name, file) => {
     setFiles((prev) => ({ ...prev, [name]: file }));
@@ -74,12 +66,25 @@ const MemberRegistration = () => {
     });
 
     return (
-      <Box {...getRootProps()} sx={{ border: "2px dashed #4CAF50", p: 2, textAlign: "center", borderRadius: 2 }}>
+      <Box
+        {...getRootProps()}
+        sx={{
+          border: "2px dashed #4CAF50",
+          p: 2,
+          textAlign: "center",
+          borderRadius: 2,
+          cursor: "pointer",
+        }}
+      >
         <input {...getInputProps()} />
         <CloudUploadIcon sx={{ fontSize: 40, color: "#4CAF50" }} />
         <Typography variant="body2">Drag & Drop or Click to Upload</Typography>
         {filePreviews[name] && (
-          <Avatar src={filePreviews[name]} variant="rounded" sx={{ width: 100, height: 100, mt: 1, mx: "auto" }} />
+          <Avatar
+            src={filePreviews[name]}
+            variant="rounded"
+            sx={{ width: 100, height: 100, mt: 1, mx: "auto" }}
+          />
         )}
       </Box>
     );
@@ -91,13 +96,19 @@ const MemberRegistration = () => {
   const confirmSubmission = async () => {
     setLoading(true);
     const formDataToSend = new FormData();
-    Object.keys(formData).forEach((k) => formDataToSend.append(k, formData[k]));
+    Object.keys(formData).forEach((k) =>
+      formDataToSend.append(k, formData[k])
+    );
     Object.keys(files).forEach((k) => formDataToSend.append(k, files[k]));
 
     try {
-      await axios.post("https://mufate-g-sacco.onrender.com/membership/register", formDataToSend, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axios.post(
+        "https://mufate-g-sacco.onrender.com/membership/register",
+        formDataToSend,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       setSuccess(true);
     } catch (err) {
       alert("❌ Registration failed. Try again.");
@@ -106,47 +117,25 @@ const MemberRegistration = () => {
     }
   };
 
-  const renderReview = () => (
-    <Box>
-      {["Bio Data", "Contact", "Nominee"].map((section, i) => (
-        <Accordion key={i} defaultExpanded>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>{section}</AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="body2">
-              {Object.entries(formData)
-                .slice(i * 5, i * 5 + 5)
-                .map(([key, val]) => (
-                  <div key={key}><strong>{key}:</strong> {val}</div>
-                ))}
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-      ))}
-
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>Uploaded Files</AccordionSummary>
-        <AccordionDetails>
-          <Grid container spacing={2}>
-            {Object.entries(filePreviews).map(([key, src]) => (
-              <Grid item xs={6} sm={3} key={key}>
-                <Typography variant="caption">{key.replace("URL", "")}</Typography>
-                <Avatar src={src} variant="rounded" sx={{ width: 100, height: 100 }} />
-              </Grid>
-            ))}
-          </Grid>
-        </AccordionDetails>
-      </Accordion>
-    </Box>
-  );
-
   return (
-    <Box sx={{ minHeight: "100vh", py: 4, background: "linear-gradient(135deg,#f0fff4,#e6f7ff)" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        py: 4,
+        background: "linear-gradient(135deg,#f0fff4,#e6f7ff)",
+      }}
+    >
       <Container maxWidth="md">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 4 }}>
             {!success ? (
               <>
-                <Typography variant="h4" align="center" gutterBottom color="primary">
+                <Typography
+                  variant="h4"
+                  align="center"
+                  gutterBottom
+                  color="primary"
+                >
                   Member Registration
                 </Typography>
 
@@ -158,25 +147,42 @@ const MemberRegistration = () => {
                   ))}
                 </Stepper>
 
-                {/* STEP CONTENT */}
                 {activeStep === 3 && (
-                  <Grid container spacing={2}>{["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((f) => (
-                    <Grid item xs={12} sm={6} key={f}>{createDropzone(f)}</Grid>
-                  ))}</Grid>
+                  <Grid container spacing={2}>
+                    {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map(
+                      (f) => (
+                        <Grid item xs={12} sm={6} key={f}>
+                          {createDropzone(f)}
+                        </Grid>
+                      )
+                    )}
+                  </Grid>
                 )}
 
-                {activeStep === 4 && renderReview()}
+                {activeStep === 4 && (
+                  <Typography align="center" sx={{ mb: 3 }}>
+                    ✅ Please confirm and submit your registration.
+                  </Typography>
+                )}
 
-                {/* BUTTONS */}
                 <Box mt={3} textAlign="center">
                   {activeStep > 0 && (
-                    <Button variant="outlined" onClick={prevStep} sx={{ mr: 2 }}>Back</Button>
+                    <Button variant="outlined" onClick={prevStep} sx={{ mr: 2 }}>
+                      Back
+                    </Button>
                   )}
 
                   {activeStep < steps.length - 1 ? (
-                    <Button variant="contained" onClick={nextStep}>Next</Button>
+                    <Button variant="contained" onClick={nextStep}>
+                      Next
+                    </Button>
                   ) : (
-                    <Button variant="contained" color="success" onClick={confirmSubmission} disabled={loading}>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={confirmSubmission}
+                      disabled={loading}
+                    >
                       {loading ? "Submitting..." : "Submit"}
                     </Button>
                   )}
@@ -189,7 +195,8 @@ const MemberRegistration = () => {
                   🎉 Registration Successful!
                 </Typography>
                 <Typography color="text.secondary">
-                  Please pay KES 1,500 via M-PESA Paybill 506492 to activate your account.
+                  Please pay KES 1,500 via M-PESA Paybill 506492 to activate your
+                  account.
                 </Typography>
               </Box>
             )}
