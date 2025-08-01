@@ -19,8 +19,28 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Avatar,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PersonIcon from "@mui/icons-material/Person";
+import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import GroupIcon from "@mui/icons-material/Group";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { motion } from "framer-motion";
+import { useDropzone } from "react-dropzone";
 import axios from "axios";
+
+const steps = [
+  { label: "Bio Data", icon: <PersonIcon /> },
+  { label: "Contact", icon: <ContactPhoneIcon /> },
+  { label: "Nominee", icon: <GroupIcon /> },
+  { label: "Uploads", icon: <CloudUploadIcon /> },
+  { label: "Review", icon: <CheckCircleIcon /> },
+];
 
 const inputStyle = {
   borderRadius: 2,
@@ -30,278 +50,152 @@ const inputStyle = {
   },
 };
 
-const steps = ["Bio Data", "Contact Details", "Nominee Info", "Uploads", "Review & Confirm"];
-
 const MemberRegistration = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState({});
   const [files, setFiles] = useState({});
-  const [fileNames, setFileNames] = useState({});
+  const [filePreviews, setFilePreviews] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [responseMsg, setResponseMsg] = useState("");
+  const [success, setSuccess] = useState(false);
 
-  const phonePattern = /^2547\d{8}$/;
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-
-    // Validate field in real-time
-    let errorMsg = "";
-    if (!value && !["KRAPin", "Email", "Profession", "ProfessionSector"].includes(name)) {
-      errorMsg = "Required field";
-    }
-    if (["MobileNumber", "AlternateMobileNumber", "NomineePhoneNumber"].includes(name) && value) {
-      if (!phonePattern.test(value)) errorMsg = "Format must be 2547XXXXXXXX";
-    }
-    setErrors({ ...errors, [name]: errorMsg });
+  const handleFileUpload = (name, file) => {
+    setFiles((prev) => ({ ...prev, [name]: file }));
+    setFilePreviews((prev) => ({ ...prev, [name]: URL.createObjectURL(file) }));
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const name = e.target.name;
-    setFiles({ ...files, [name]: file });
-    setFileNames({ ...fileNames, [name]: file?.name || "" });
-    if (!file) {
-      setErrors({ ...errors, [name]: "Required file" });
-    } else {
-      setErrors({ ...errors, [name]: "" });
-    }
+  const createDropzone = (name) => {
+    const { getRootProps, getInputProps } = useDropzone({
+      onDrop: (acceptedFiles) => handleFileUpload(name, acceptedFiles[0]),
+      multiple: false,
+      accept: "image/*",
+    });
+
+    return (
+      <Box {...getRootProps()} sx={{ border: "2px dashed #4CAF50", p: 2, textAlign: "center", borderRadius: 2 }}>
+        <input {...getInputProps()} />
+        <CloudUploadIcon sx={{ fontSize: 40, color: "#4CAF50" }} />
+        <Typography variant="body2">Drag & Drop or Click to Upload</Typography>
+        {filePreviews[name] && (
+          <Avatar src={filePreviews[name]} variant="rounded" sx={{ width: 100, height: 100, mt: 1, mx: "auto" }} />
+        )}
+      </Box>
+    );
   };
 
-  const validateStep = () => {
-    let stepErrors = {};
-    const requiredSteps = [
-      ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender"],
-      ["County", "District", "MobileNumber", "AlternateMobileNumber"],
-      ["NomineeName", "NomineeIDNumber", "NomineePhoneNumber", "NomineeRelation"],
-    ];
-
-    if (activeStep < 3) {
-      for (let field of requiredSteps[activeStep] || []) {
-        if (!formData[field]) stepErrors[field] = "Required field";
-      }
-    }
-
-    if (activeStep === 1 || activeStep === 2) {
-      ["MobileNumber", "AlternateMobileNumber", "NomineePhoneNumber"].forEach((f) => {
-        if (formData[f] && !phonePattern.test(formData[f]))
-          stepErrors[f] = "Format must be 2547XXXXXXXX";
-      });
-    }
-
-    if (activeStep === 3) {
-      ["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].forEach((f) => {
-        if (!files[f]) stepErrors[f] = "Required file";
-      });
-    }
-
-    setErrors(stepErrors);
-    return Object.keys(stepErrors).length === 0;
-  };
-
-  const nextStep = () => {
-    if (validateStep()) setActiveStep((prev) => prev + 1);
-  };
-
+  const nextStep = () => setActiveStep((prev) => prev + 1);
   const prevStep = () => setActiveStep((prev) => prev - 1);
 
   const confirmSubmission = async () => {
-    setOpenDialog(false);
     setLoading(true);
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach((k) => formDataToSend.append(k, formData[k]));
+    Object.keys(files).forEach((k) => formDataToSend.append(k, files[k]));
+
     try {
-      const formDataToSend = new FormData();
-      Object.keys(formData).forEach((k) => formDataToSend.append(k, formData[k]));
-      Object.keys(files).forEach((k) => formDataToSend.append(k, files[k]));
-
-      const res = await axios.post(
-        "https://mufate-g-sacco.onrender.com/membership/register",
-        formDataToSend,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
-      setResponseMsg(res.data.message);
+      await axios.post("https://mufate-g-sacco.onrender.com/membership/register", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setSuccess(true);
     } catch (err) {
-      setResponseMsg(err.response?.data?.message || "❌ Registration failed");
+      alert("❌ Registration failed. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const renderField = (field) => (
-    <Grid item xs={12} sm={6} md={4} key={field.name}>
-      {field.select ? (
-        <FormControl fullWidth variant="filled" sx={inputStyle} error={!!errors[field.name]}>
-          <InputLabel>{field.label}</InputLabel>
-          <Select name={field.name} value={formData[field.name] || ""} onChange={handleChange}>
-            {field.select.map((opt) => (
-              <MenuItem key={opt} value={opt}>
-                {opt}
-              </MenuItem>
-            ))}
-          </Select>
-          {errors[field.name] && (
-            <Typography variant="caption" color="error">
-              {errors[field.name]}
+  const renderReview = () => (
+    <Box>
+      {["Bio Data", "Contact", "Nominee"].map((section, i) => (
+        <Accordion key={i} defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>{section}</AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2">
+              {Object.entries(formData)
+                .slice(i * 5, i * 5 + 5)
+                .map(([key, val]) => (
+                  <div key={key}><strong>{key}:</strong> {val}</div>
+                ))}
             </Typography>
-          )}
-        </FormControl>
-      ) : (
-        <TextField
-          label={field.label}
-          name={field.name}
-          type={field.type || "text"}
-          variant="filled"
-          fullWidth
-          sx={inputStyle}
-          value={formData[field.name] || ""}
-          onChange={handleChange}
-          InputLabelProps={field.type === "date" ? { shrink: true } : {}}
-          error={!!errors[field.name]}
-          helperText={errors[field.name] || ""}
-        />
-      )}
-    </Grid>
+          </AccordionDetails>
+        </Accordion>
+      ))}
+
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>Uploaded Files</AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={2}>
+            {Object.entries(filePreviews).map(([key, src]) => (
+              <Grid item xs={6} sm={3} key={key}>
+                <Typography variant="caption">{key.replace("URL", "")}</Typography>
+                <Avatar src={src} variant="rounded" sx={{ width: 100, height: 100 }} />
+              </Grid>
+            ))}
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+    </Box>
   );
 
-  const renderStep = () => {
-    const stepFields = [
-      [
-        { label: "Full Name", name: "FullName" },
-        { label: "Salutation", name: "Salutation", select: ["MR", "MRS", "MISS", "DR", "PROF"] },
-        { label: "ID Type", name: "IDType", select: ["ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport"] },
-        { label: "ID Number", name: "IDNumber" },
-        { label: "KRA PIN (Optional)", name: "KRAPin" },
-        { label: "Date of Birth", name: "DOB", type: "date" },
-        { label: "Marital Status", name: "MaritalStatus", select: ["Single", "Married", "Divorce", "Separated"] },
-        { label: "Gender", name: "Gender", select: ["Male", "Female", "Others"] },
-      ],
-      [
-        { label: "County", name: "County" },
-        { label: "District", name: "District" },
-        { label: "Division (Optional)", name: "Division" },
-        { label: "Address", name: "Address" },
-        { label: "Postal Code", name: "PostalCode" },
-        { label: "Physical Address", name: "PhysicalAddress" },
-        { label: "Mobile Number", name: "MobileNumber" },
-        { label: "Alternate Mobile Number", name: "AlternateMobileNumber" },
-        { label: "Email (Optional)", name: "Email" },
-        { label: "Profession (Optional)", name: "Profession" },
-        { label: "Profession Sector (Optional)", name: "ProfessionSector" },
-      ],
-      [
-        { label: "Nominee Name", name: "NomineeName" },
-        { label: "Nominee ID Number", name: "NomineeIDNumber" },
-        { label: "Nominee Phone Number", name: "NomineePhoneNumber" },
-        { label: "Nominee Relation", name: "NomineeRelation" },
-      ],
-    ];
-
-    if (activeStep <= 2) {
-      return <Grid container spacing={3}>{stepFields[activeStep].map(renderField)}</Grid>;
-    }
-
-    if (activeStep === 3) {
-      return (
-        <Grid container spacing={3}>
-          {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((fileField) => (
-            <Grid item xs={12} sm={6} key={fileField}>
-              <Button variant="outlined" component="label" fullWidth sx={{ py: 1.5, fontWeight: "bold" }}>
-                Upload {fileField.replace("URL", "")}
-                <input type="file" name={fileField} hidden onChange={handleFileChange} />
-              </Button>
-              {fileNames[fileField] && (
-                <Typography variant="body2" mt={1} align="center" color="text.secondary">
-                  ✅ {fileNames[fileField]}
-                </Typography>
-              )}
-              {errors[fileField] && (
-                <Typography variant="caption" color="error">
-                  {errors[fileField]}
-                </Typography>
-              )}
-            </Grid>
-          ))}
-        </Grid>
-      );
-    }
-
-    if (activeStep === 4) {
-      return (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Review Your Details:
-          </Typography>
-          {Object.keys(formData).map((key) => (
-            <Typography key={key}>
-              <strong>{key}:</strong> {formData[key] || "N/A"}
-            </Typography>
-          ))}
-        </Box>
-      );
-    }
-  };
-
   return (
-    <Box sx={{ minHeight: "100vh", py: 5, background: "linear-gradient(to bottom right, #c8facc, #eaffea)" }}>
+    <Box sx={{ minHeight: "100vh", py: 4, background: "linear-gradient(135deg,#f0fff4,#e6f7ff)" }}>
       <Container maxWidth="md">
-        <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: 4, boxShadow: 3, backgroundColor: "white" }}>
-          <Typography variant="h4" fontWeight="bold" gutterBottom align="center" color="primary">
-            Member Registration
-          </Typography>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <Paper sx={{ p: 4, borderRadius: 3, boxShadow: 4 }}>
+            {!success ? (
+              <>
+                <Typography variant="h4" align="center" gutterBottom color="primary">
+                  Member Registration
+                </Typography>
 
-          <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
+                <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+                  {steps.map((s) => (
+                    <Step key={s.label}>
+                      <StepLabel icon={s.icon}>{s.label}</StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
 
-          {renderStep()}
+                {/* STEP CONTENT */}
+                {activeStep === 3 && (
+                  <Grid container spacing={2}>{["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((f) => (
+                    <Grid item xs={12} sm={6} key={f}>{createDropzone(f)}</Grid>
+                  ))}</Grid>
+                )}
 
-          <Box mt={3} textAlign="center">
-            {activeStep > 0 && (
-              <Button onClick={prevStep} sx={{ mr: 2 }} variant="outlined">
-                Back
-              </Button>
-            )}
-            {activeStep < steps.length - 1 ? (
-              <Button variant="contained" onClick={nextStep}>
-                Next
-              </Button>
+                {activeStep === 4 && renderReview()}
+
+                {/* BUTTONS */}
+                <Box mt={3} textAlign="center">
+                  {activeStep > 0 && (
+                    <Button variant="outlined" onClick={prevStep} sx={{ mr: 2 }}>Back</Button>
+                  )}
+
+                  {activeStep < steps.length - 1 ? (
+                    <Button variant="contained" onClick={nextStep}>Next</Button>
+                  ) : (
+                    <Button variant="contained" color="success" onClick={confirmSubmission} disabled={loading}>
+                      {loading ? "Submitting..." : "Submit"}
+                    </Button>
+                  )}
+                </Box>
+              </>
             ) : (
-              <Button variant="contained" onClick={() => setOpenDialog(true)}>
-                Submit
-              </Button>
+              <Box textAlign="center" py={5}>
+                <CheckCircleIcon sx={{ fontSize: 80, color: "green" }} />
+                <Typography variant="h5" mt={2}>
+                  🎉 Registration Successful!
+                </Typography>
+                <Typography color="text.secondary">
+                  Please pay KES 1,500 via M-PESA Paybill 506492 to activate your account.
+                </Typography>
+              </Box>
             )}
-          </Box>
-        </Paper>
+          </Paper>
+        </motion.div>
       </Container>
-
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Payment Required</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Please pay <strong>Kshs 1,500</strong> via M-PESA Paybill <strong>506492</strong> to activate your account.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-          <Button variant="contained" onClick={confirmSubmission}>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {responseMsg && (
-        <Typography mt={3} color="primary" fontWeight="bold" textAlign="center">
-          {responseMsg}
-        </Typography>
-      )}
-
       <Footer />
     </Box>
   );
