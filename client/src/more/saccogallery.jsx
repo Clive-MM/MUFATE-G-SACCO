@@ -9,13 +9,13 @@ import {
   Container,
   Typography,
   Grid,
-  Card,
+  
   CardMedia,
   CardContent,
   CircularProgress,
   Box,
   useTheme,
-  useMediaQuery,
+  
   Paper,
 } from "@mui/material";
 import { motion } from "framer-motion";
@@ -24,15 +24,10 @@ const SaccoGallery = () => {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
-  const isSm = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  
+  
 
-  const getCols = () => {
-    if (isXs) return 1;
-    if (isSm) return 2;
-    return 3;
-  };
+  
 
   useEffect(() => {
     axios
