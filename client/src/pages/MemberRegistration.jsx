@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import Footer from "../components/Footer";
 import {
   Box, Button, Container, Grid, TextField, Typography,
-  Paper, Stepper, Step, StepLabel, Avatar,
+  Paper, Stepper, Step, StepLabel, Avatar, Snackbar, Alert,
+  FormControl, InputLabel, Select, MenuItem,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
@@ -66,6 +67,7 @@ const MemberRegistration = () => {
   const [files, setFiles] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -87,46 +89,58 @@ const MemberRegistration = () => {
     try {
       await axios.post("https://mufate-g-sacco.onrender.com/membership/register", data);
       setSuccess(true);
+      setSnackbar({ open: true, message: '✅ Registration successful!', severity: 'success' });
     } catch (error) {
-      alert(error.response?.data?.message || "Registration failed!");
+      setSnackbar({ open: true, message: error.response?.data?.message || "❌ Registration failed!", severity: 'error' });
     } finally {
       setLoading(false);
     }
   };
 
+  const stepFields = [
+    ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender", "KRAPin"],
+    ["County", "District", "Division", "Address", "PostalCode", "PhysicalAddress", "MobileNumber", "AlternateMobileNumber", "Email", "Profession", "ProfessionSector"],
+    ["NomineeName", "NomineeIDNumber", "NomineePhoneNumber", "NomineeRelation"],
+  ];
+
+  const selectOptions = {
+    IDType: ["ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport"],
+    MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
+    Gender: ["Male", "Female", "Others"],
+    Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"]
+  };
+
   const renderStep = () => {
-    const stepFields = [
-      ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender", "KRAPin"],
-      ["County", "District", "Division", "Address", "PostalCode", "PhysicalAddress", "MobileNumber", "AlternateMobileNumber", "Email", "Profession", "ProfessionSector"],
-      ["NomineeName", "NomineeIDNumber", "NomineePhoneNumber", "NomineeRelation"],
-    ];
-
-    const fieldLabels = {
-      FullName: "Full Name", Salutation: "Salutation", IDType: "ID Type", IDNumber: "ID Number",
-      DOB: "Date of Birth", MaritalStatus: "Marital Status", Gender: "Gender", KRAPin: "KRA PIN",
-      County: "County", District: "District", Division: "Division", Address: "Address",
-      PostalCode: "Postal Code", PhysicalAddress: "Physical Address",
-      MobileNumber: "Mobile Number", AlternateMobileNumber: "Alternate Mobile Number",
-      Email: "Email", Profession: "Profession", ProfessionSector: "Profession Sector",
-      NomineeName: "Nominee Name", NomineeIDNumber: "Nominee ID Number",
-      NomineePhoneNumber: "Nominee Phone", NomineeRelation: "Nominee Relation"
-    };
-
     if (activeStep < 3) {
       return (
         <Grid container spacing={2}>
           {stepFields[activeStep].map((field) => (
             <Grid item xs={12} sm={6} key={field}>
-              <TextField
-                required
-                name={field}
-                label={fieldLabels[field]}
-                variant="filled"
-                fullWidth
-                sx={inputStyle}
-                onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
-              />
+              {selectOptions[field] ? (
+                <FormControl variant="filled" fullWidth required sx={inputStyle}>
+                  <InputLabel>{field}</InputLabel>
+                  <Select
+                    name={field}
+                    value={formData[field] || ""}
+                    onChange={handleChange}
+                  >
+                    {selectOptions[field].map((option) => (
+                      <MenuItem key={option} value={option}>{option}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              ) : (
+                <TextField
+                  required={field !== "KRAPin"}
+                  name={field}
+                  label={field}
+                  variant="filled"
+                  fullWidth
+                  sx={inputStyle}
+                  onChange={handleChange}
+                  InputLabelProps={{ shrink: true }}
+                />
+              )}
             </Grid>
           ))}
         </Grid>
@@ -168,14 +182,10 @@ const MemberRegistration = () => {
                 </Stepper>
                 {renderStep()}
                 <Box textAlign="center" mt={3}>
-                  {activeStep > 0 && <Button sx={{ ...neuStyle }} onClick={prevStep}>Back</Button>}
-                  {activeStep < steps.length - 1 ? (
-                    <Button sx={{ ml: 2, ...neuStyle }} onClick={nextStep}>Next</Button>
-                  ) : (
-                    <Button sx={{ ml: 2, ...neuStyle }} onClick={confirmSubmission}>
-                      {loading ? "Submitting..." : "Submit"}
-                    </Button>
-                  )}
+                  {activeStep > 0 && <Button sx={neuStyle} onClick={prevStep}>Back</Button>}
+                  <Button sx={{ ml: 2, ...neuStyle }} onClick={activeStep < steps.length - 1 ? nextStep : confirmSubmission}>
+                    {activeStep < steps.length - 1 ? "Next" : (loading ? "Submitting..." : "Submit")}
+                  </Button>
                 </Box>
               </>
             ) : (
@@ -189,6 +199,9 @@ const MemberRegistration = () => {
           </Paper>
         </motion.div>
       </Container>
+      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
+        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+      </Snackbar>
       <Footer />
     </Box>
   );
