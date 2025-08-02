@@ -1,20 +1,9 @@
 import React, { useState } from "react";
 import Footer from "../components/Footer";
 import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  TextField,
-  Typography,
-  Paper,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Stepper,
-  Step,
-  StepLabel,
+  Box, Button, Container, Grid, TextField, Typography,
+  Paper, FormControl, InputLabel, Select, MenuItem,
+  Stepper, Step, StepLabel, Avatar,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
@@ -54,6 +43,8 @@ const MemberRegistration = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({});
   const [files, setFiles] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -63,9 +54,10 @@ const MemberRegistration = () => {
     setFiles({ ...files, [name]: file });
   };
 
-  const createDropzone = (name) => {
+  const createDropzone = (name, label) => {
     const { getRootProps, getInputProps } = useDropzone({
       onDrop: (acceptedFiles) => handleFileUpload(name, acceptedFiles[0]),
+      multiple: false,
       accept: "image/*",
     });
 
@@ -73,7 +65,8 @@ const MemberRegistration = () => {
       <Box {...getRootProps()} sx={{ p: 2, textAlign: "center", cursor: "pointer", ...neuStyle }}>
         <input {...getInputProps()} />
         <CloudUploadIcon sx={{ fontSize: 40, color: "#2e7d32" }} />
-        <Typography variant="body2">Drag & Drop or Click to Upload</Typography>
+        <Typography>{label}</Typography>
+        {files[name] && <Avatar src={URL.createObjectURL(files[name])} variant="rounded" sx={{ mt: 1, mx: "auto", width: 80, height: 80 }} />}
       </Box>
     );
   };
@@ -82,71 +75,104 @@ const MemberRegistration = () => {
   const prevStep = () => setActiveStep((prev) => prev - 1);
 
   const confirmSubmission = async () => {
+    setLoading(true);
     const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => data.append(key, value));
-    Object.entries(files).forEach(([key, file]) => data.append(key, file));
+    Object.entries(formData).forEach(([k, v]) => data.append(k, v));
+    Object.entries(files).forEach(([k, v]) => data.append(k, v));
 
-    await axios.post("/membership/register", data);
+    try {
+      await axios.post("https://mufate-g-sacco.onrender.com/membership/register", data);
+      setSuccess(true);
+    } catch (error) {
+      alert(error.response.data.message || "Registration failed!");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const renderStep = () => (
-    <Grid container spacing={2}>
-      {activeStep === 3
-        ? ["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((name) => (
-            <Grid item xs={12} sm={6} key={name}>
-              {createDropzone(name)}
-            </Grid>
-          ))
-        : ["FullName", "Salutation", "IDType", "IDNumber"].map((name) => (
-            <Grid item xs={12} sm={6} key={name}>
+  const renderStep = () => {
+    const stepFields = [
+      ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender", "KRAPin"],
+      ["County", "District", "Division", "Address", "PostalCode", "PhysicalAddress", "MobileNumber", "AlternateMobileNumber", "Email", "Profession", "ProfessionSector"],
+      ["NomineeName", "NomineeIDNumber", "NomineePhoneNumber", "NomineeRelation"],
+    ];
+
+    const fieldLabels = {
+      FullName: "Full Name", Salutation: "Salutation", IDType: "ID Type", IDNumber: "ID Number",
+      DOB: "Date of Birth", MaritalStatus: "Marital Status", Gender: "Gender", KRAPin: "KRA PIN",
+      County: "County", District: "District", Division: "Division", Address: "Address",
+      PostalCode: "Postal Code", PhysicalAddress: "Physical Address",
+      MobileNumber: "Mobile Number", AlternateMobileNumber: "Alternate Mobile Number",
+      Email: "Email", Profession: "Profession", ProfessionSector: "Profession Sector",
+      NomineeName: "Nominee Name", NomineeIDNumber: "Nominee ID Number",
+      NomineePhoneNumber: "Nominee Phone", NomineeRelation: "Nominee Relation"
+    };
+
+    if (activeStep < 3) {
+      return (
+        <Grid container spacing={2}>
+          {stepFields[activeStep].map((field) => (
+            <Grid item xs={12} sm={6} key={field}>
               <TextField
-                name={name}
-                label={name}
+                required
+                name={field}
+                label={fieldLabels[field]}
                 variant="filled"
                 fullWidth
                 sx={inputStyle}
                 onChange={handleChange}
+                InputLabelProps={{ shrink: true }}
               />
             </Grid>
           ))}
-    </Grid>
-  );
+        </Grid>
+      );
+    }
+
+    return (
+      <Grid container spacing={2}>
+        {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((file) => (
+          <Grid item xs={12} sm={6} key={file}>
+            {createDropzone(file, file)}
+          </Grid>
+        ))}
+      </Grid>
+    );
+  };
 
   return (
     <Box sx={{ minHeight: "100vh", py: 4, background: "#e3f9e5" }}>
       <Container maxWidth="md">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <Paper sx={{ p: 4, ...neuStyle }}>
-            <Typography variant="h4" align="center" gutterBottom sx={{ color: "#2e7d32" }}>
-              SACCO Member Registration
-            </Typography>
-
-            <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4, p: 2, borderRadius: "16px", ...inputStyle }}>
-              {steps.map((s) => (
-                <Step key={s.label}>
-                  <StepLabel icon={s.icon}>{s.label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-
-            {renderStep()}
-
-            <Box mt={3} textAlign="center">
-              {activeStep > 0 && (
-                <Button variant="outlined" onClick={prevStep} sx={{ px: 4, py: 1, mr: 2, ...neuStyle }}>
-                  Back
-                </Button>
-              )}
-              {activeStep < steps.length - 1 ? (
-                <Button variant="contained" onClick={nextStep} sx={{ px: 4, py: 1, ...neuStyle }}>
-                  Next
-                </Button>
-              ) : (
-                <Button variant="contained" onClick={confirmSubmission} sx={{ px: 4, py: 1, ...neuStyle }}>
-                  Submit
-                </Button>
-              )}
-            </Box>
+            {!success ? (
+              <>
+                <Typography variant="h4" align="center" color="#2e7d32">
+                  SACCO Member Registration
+                </Typography>
+                <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4, p: 2, ...inputStyle }}>
+                  {steps.map((step) => (
+                    <Step key={step.label}>
+                      <StepLabel icon={step.icon}>{step.label}</StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+                {renderStep()}
+                <Box textAlign="center" mt={3}>
+                  {activeStep > 0 && <Button sx={{ ...neuStyle }} onClick={prevStep}>Back</Button>}
+                  {activeStep < steps.length - 1 ? (
+                    <Button sx={{ ml: 2, ...neuStyle }} onClick={nextStep}>Next</Button>
+                  ) : (
+                    <Button sx={{ ml: 2, ...neuStyle }} onClick={confirmSubmission}>{loading ? "Submitting..." : "Submit"}</Button>
+                  )}
+                </Box>
+              </>
+            ) : (
+              <Box textAlign="center">
+                <CheckCircleIcon sx={{ fontSize: 60, color: "green" }} />
+                <Typography>Registration Successful! Pay KES 1,500 via M-PESA Paybill 506492.</Typography>
+              </Box>
+            )}
           </Paper>
         </motion.div>
       </Container>
