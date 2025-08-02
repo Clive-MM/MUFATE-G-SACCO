@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import Footer from "../components/Footer";
 import {
   Box, Button, Container, Grid, TextField, Typography,
-  Paper, FormControl, InputLabel, Select, MenuItem,
-  Stepper, Step, StepLabel, Avatar,
+  Paper, Stepper, Step, StepLabel, Avatar,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
@@ -36,7 +35,29 @@ const inputStyle = {
   background: "#e3f9e5",
   boxShadow: "inset 6px 6px 12px #b8dcb8, inset -6px -6px 12px #ffffff",
   "& .MuiFilledInput-root": { backgroundColor: "transparent" },
-  "& .MuiSelect-filled": { backgroundColor: "transparent" },
+};
+
+const CreateDropzone = ({ name, label, files, handleFileUpload }) => {
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (acceptedFiles) => handleFileUpload(name, acceptedFiles[0]),
+    multiple: false,
+    accept: "image/*",
+  });
+
+  return (
+    <Box {...getRootProps()} sx={{ p: 2, textAlign: "center", cursor: "pointer", ...neuStyle }}>
+      <input {...getInputProps()} />
+      <CloudUploadIcon sx={{ fontSize: 40, color: "#2e7d32" }} />
+      <Typography>{label}</Typography>
+      {files[name] && (
+        <Avatar
+          src={URL.createObjectURL(files[name])}
+          variant="rounded"
+          sx={{ mt: 1, mx: "auto", width: 80, height: 80 }}
+        />
+      )}
+    </Box>
+  );
 };
 
 const MemberRegistration = () => {
@@ -54,23 +75,6 @@ const MemberRegistration = () => {
     setFiles({ ...files, [name]: file });
   };
 
-  const createDropzone = (name, label) => {
-    const { getRootProps, getInputProps } = useDropzone({
-      onDrop: (acceptedFiles) => handleFileUpload(name, acceptedFiles[0]),
-      multiple: false,
-      accept: "image/*",
-    });
-
-    return (
-      <Box {...getRootProps()} sx={{ p: 2, textAlign: "center", cursor: "pointer", ...neuStyle }}>
-        <input {...getInputProps()} />
-        <CloudUploadIcon sx={{ fontSize: 40, color: "#2e7d32" }} />
-        <Typography>{label}</Typography>
-        {files[name] && <Avatar src={URL.createObjectURL(files[name])} variant="rounded" sx={{ mt: 1, mx: "auto", width: 80, height: 80 }} />}
-      </Box>
-    );
-  };
-
   const nextStep = () => setActiveStep((prev) => prev + 1);
   const prevStep = () => setActiveStep((prev) => prev - 1);
 
@@ -84,7 +88,7 @@ const MemberRegistration = () => {
       await axios.post("https://mufate-g-sacco.onrender.com/membership/register", data);
       setSuccess(true);
     } catch (error) {
-      alert(error.response.data.message || "Registration failed!");
+      alert(error.response?.data?.message || "Registration failed!");
     } finally {
       setLoading(false);
     }
@@ -133,7 +137,12 @@ const MemberRegistration = () => {
       <Grid container spacing={2}>
         {["IDFrontURL", "IDBackURL", "SignatureURL", "PASSPORTURL"].map((file) => (
           <Grid item xs={12} sm={6} key={file}>
-            {createDropzone(file, file)}
+            <CreateDropzone
+              name={file}
+              label={file}
+              files={files}
+              handleFileUpload={handleFileUpload}
+            />
           </Grid>
         ))}
       </Grid>
@@ -163,14 +172,18 @@ const MemberRegistration = () => {
                   {activeStep < steps.length - 1 ? (
                     <Button sx={{ ml: 2, ...neuStyle }} onClick={nextStep}>Next</Button>
                   ) : (
-                    <Button sx={{ ml: 2, ...neuStyle }} onClick={confirmSubmission}>{loading ? "Submitting..." : "Submit"}</Button>
+                    <Button sx={{ ml: 2, ...neuStyle }} onClick={confirmSubmission}>
+                      {loading ? "Submitting..." : "Submit"}
+                    </Button>
                   )}
                 </Box>
               </>
             ) : (
               <Box textAlign="center">
                 <CheckCircleIcon sx={{ fontSize: 60, color: "green" }} />
-                <Typography>Registration Successful! Pay KES 1,500 via M-PESA Paybill 506492.</Typography>
+                <Typography>
+                  Registration Successful! Pay KES 1,500 via M-PESA Paybill 506492.
+                </Typography>
               </Box>
             )}
           </Paper>
