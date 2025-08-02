@@ -97,20 +97,21 @@ const MemberRegistration = () => {
     }
   };
 
-  const stepFields = [
-    ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender", "KRAPin"],
-    ["County", "District", "Division", "Address", "PostalCode", "PhysicalAddress", "MobileNumber", "AlternateMobileNumber", "Email", "Profession", "ProfessionSector"],
-    ["NomineeName", "NomineeIDNumber", "NomineePhoneNumber", "NomineeRelation"],
-  ];
-
   const selectOptions = {
     IDType: ["ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport"],
     MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
     Gender: ["Male", "Female", "Others"],
-    Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"]
+    Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
+    NomineeRelation: ["Wife", "Husband","Grandfather", "Grandmother", "Cousin", "Relative", "Friend", "Father","Mother","Daughter", "Son", "Uncle", "Aunt"]
   };
 
   const renderStep = () => {
+    const stepFields = [
+      ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender", "KRAPin"],
+      ["County", "District", "Division", "Address", "PostalCode", "PhysicalAddress", "MobileNumber", "AlternateMobileNumber", "Email", "Profession", "ProfessionSector"],
+      ["NomineeName", "NomineeIDNumber", "NomineePhoneNumber", "NomineeRelation"],
+    ];
+
     if (activeStep < 3) {
       return (
         <Grid container spacing={2}>
@@ -139,6 +140,7 @@ const MemberRegistration = () => {
                   sx={inputStyle}
                   onChange={handleChange}
                   InputLabelProps={{ shrink: true }}
+                  type={field === "DOB" ? "date" : "text"}
                 />
               )}
             </Grid>
@@ -166,38 +168,34 @@ const MemberRegistration = () => {
   return (
     <Box sx={{ minHeight: "100vh", py: 4, background: "#e3f9e5" }}>
       <Container maxWidth="md">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <Paper sx={{ p: 4, ...neuStyle }}>
-            {!success ? (
-              <>
-                <Typography variant="h4" align="center" color="#2e7d32">
-                  SACCO Member Registration
-                </Typography>
-                <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4, p: 2, ...inputStyle }}>
-                  {steps.map((step) => (
-                    <Step key={step.label}>
-                      <StepLabel icon={step.icon}>{step.label}</StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
-                {renderStep()}
-                <Box textAlign="center" mt={3}>
-                  {activeStep > 0 && <Button sx={neuStyle} onClick={prevStep}>Back</Button>}
-                  <Button sx={{ ml: 2, ...neuStyle }} onClick={activeStep < steps.length - 1 ? nextStep : confirmSubmission}>
-                    {activeStep < steps.length - 1 ? "Next" : (loading ? "Submitting..." : "Submit")}
-                  </Button>
-                </Box>
-              </>
-            ) : (
-              <Box textAlign="center">
-                <CheckCircleIcon sx={{ fontSize: 60, color: "green" }} />
-                <Typography>
-                  Registration Successful! Pay KES 1,500 via M-PESA Paybill 506492.
-                </Typography>
+        <Paper sx={{ p: 4, ...neuStyle }}>
+          {!success ? (
+            <>
+              <Typography variant="h4" align="center" color="#2e7d32">
+                SACCO Member Registration
+              </Typography>
+              <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+                {steps.map((step) => (
+                  <Step key={step.label}>
+                    <StepLabel icon={step.icon}>{step.label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+              {renderStep()}
+              <Box textAlign="center" mt={3}>
+                {activeStep > 0 && <Button sx={neuStyle} onClick={prevStep}>Back</Button>}
+                <Button sx={{ ml: 2, ...neuStyle }} onClick={activeStep < steps.length - 1 ? nextStep : confirmSubmission}>
+                  {activeStep < steps.length - 1 ? "Next" : (loading ? "Submitting..." : "Submit")}
+                </Button>
               </Box>
-            )}
-          </Paper>
-        </motion.div>
+            </>
+          ) : (
+            <Box textAlign="center">
+              <CheckCircleIcon sx={{ fontSize: 60, color: "green" }} />
+              <Typography>Registration Successful! Pay KES 1,500 via M-PESA Paybill 506492.</Typography>
+            </Box>
+          )}
+        </Paper>
       </Container>
       <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
         <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
