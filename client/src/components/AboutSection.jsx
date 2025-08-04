@@ -103,7 +103,7 @@ const AboutSection = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary={<strong>Salary Processing</strong>}
-                  secondary="Seamless services for teachers, civil servants & private sector employees"
+                  secondary="Seamless services for tea farmers, teachers, civil servants & private sector employees."
                 />
               </ListItem>
 
@@ -118,7 +118,7 @@ const AboutSection = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary={<strong>Agricultural Support</strong>}
-                  secondary="Tailored solutions for farmers and growers"
+                  secondary="Tailored solutions for farmers and growers."
                 />
               </ListItem>
 
@@ -133,7 +133,7 @@ const AboutSection = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary={<strong>Business Growth</strong>}
-                  secondary="Flexible credit and investment products for entrepreneurs"
+                  secondary="Flexible credit and investment products for entrepreneurs."
                 />
               </ListItem>
 
@@ -148,7 +148,7 @@ const AboutSection = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary={<strong>Smart Savings & Loans</strong>}
-                  secondary="Secure your future with solutions you can trust"
+                  secondary="Secure your future with solutions you can trust."
                 />
               </ListItem>
 
@@ -163,7 +163,7 @@ const AboutSection = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary={<strong>Digital Banking</strong>}
-                  secondary="Access your account anywhere, anytime"
+                  secondary="Access your account anywhere, anytime through mobile banking."
                 />
               </ListItem>
             </List>
