@@ -133,7 +133,7 @@ class Membership(db.Model):
 
     # ✅ Basic Info
     FullName = db.Column(db.String(150), nullable=False)
-    Salutation = db.Column(db.String(10), nullable=False)  # MR, MRS, MISS, DR, PROF
+    Salutation = db.Column(db.String(10), nullable=False)  
 
     # ✅ ID Information
     IDType = db.Column(db.Enum("ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport", name="id_type_enum"), nullable=False)

@@ -102,7 +102,7 @@ const MemberRegistration = () => {
     MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
     Gender: ["Male", "Female", "Others"],
     Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
-    NomineeRelation: ["Wife", "Husband","Grandfather", "Grandmother", "Cousin", "Relative", "Friend", "Father","Mother","Daughter", "Son", "Uncle", "Aunt"]
+    NomineeRelation: ["Wife", "Husband","Grandfather", "Grandmother", "Cousin", "Brother", "Sister", "Friend", "Father","Mother","Daughter", "Son", "Uncle", "Aunt"]
   };
 
   const renderStep = () => {

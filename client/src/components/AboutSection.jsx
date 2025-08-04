@@ -4,7 +4,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const AboutSection = () => {
-  // Array of image URLs
   const images = [
     "https://res.cloudinary.com/djydkcx01/image/upload/v1753423604/IMG_4947_wave6f.jpg",
     "https://res.cloudinary.com/djydkcx01/image/upload/v1753423603/IMG_5049_bwdgmv.jpg",
@@ -15,7 +14,6 @@ const AboutSection = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Auto-change image every 2 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -25,29 +23,29 @@ const AboutSection = () => {
   }, [images.length]);
 
   return (
-    <Box sx={{ backgroundColor: '#f6fef7', px: 0, py: 4 }}>
+    <Box sx={{ backgroundColor: '#f6fef7', px: 1, py: 4 }}>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         <Paper
-          elevation={0}
+          elevation={2}
           sx={{
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
-            borderRadius: 4,
+            borderRadius: 6,
             overflow: 'hidden',
             width: '100%',
             mx: 'auto',
             maxWidth: '1500px',
-            backgroundColor: '#fff',
-            border: '2px solid transparent',
+            p: 0,
+            backgroundColor: '#fefefe',
             backgroundImage:
               'linear-gradient(white, white), linear-gradient(to right, #64dd17, #b2f2bb)',
             backgroundOrigin: 'border-box',
             backgroundClip: 'content-box, border-box',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
+            boxShadow: '10px 10px 20px #d8f5e0, -10px -10px 20px #ffffff',
           }}
         >
           {/* LEFT SIDE CONTENT */}
@@ -82,14 +80,28 @@ const AboutSection = () => {
                 color: '#555',
                 fontSize: '1.05rem',
                 lineHeight: 1.9,
-                mb: 2.5,
+                mb: 2,
                 maxWidth: '95%',
               }}
             >
-              At MUFATE G SACCO, Mudete Factory Tea Growers SACCO LTD, we are committed to empowering our members through reliable,
-              efficient, and transparent financial services. With over a decade of experience
-              serving the tea farming community, our dedicated team ensures every transaction is
-              handled with integrity and precision.
+              At <strong>MUFATE G SACCO – Mudete Factory Tea Growers SACCO LTD</strong>, we empower our members with <strong>reliable, flexible, and transparent financial services</strong> designed for everyone — from tea farmers and salaried workers to business owners and personal account holders.
+            </Typography>
+
+            <Typography
+              variant="body1"
+              sx={{
+                color: '#555',
+                fontSize: '1.05rem',
+                lineHeight: 1.9,
+                mb: 2,
+                maxWidth: '95%',
+              }}
+            >
+              💼 <strong>Salary Processing</strong> – Seamless services for teachers, civil servants & private sector employees<br />
+              🌾 <strong>Agricultural Support</strong> – Tailored solutions for farmers and growers<br />
+              📈 <strong>Business Growth</strong> – Flexible credit and investment products for entrepreneurs<br />
+              🏦 <strong>Smart Savings & Loans</strong> – Secure your future with solutions you can trust<br />
+              📲 <strong>Digital Banking</strong> – Access your account anywhere, anytime
             </Typography>
 
             <Typography
@@ -102,9 +114,9 @@ const AboutSection = () => {
                 maxWidth: '95%',
               }}
             >
-              We provide tailored savings, credit, and investment solutions designed to support
-              your growth and prosperity. Your hard work in the fields deserves a financial partner
-              you can trust—and that’s exactly what we deliver.
+              With over a decade of proven service, we’re more than just a SACCO — we’re your <strong>financial partner for every stage of life</strong>.
+              <br /><br />
+              <em>Join a SACCO that understands you, supports your goals, and grows with you.</em>
             </Typography>
 
             <Button
