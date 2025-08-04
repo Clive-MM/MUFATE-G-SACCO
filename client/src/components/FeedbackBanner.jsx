@@ -8,7 +8,8 @@ import {
   DialogContent,
   IconButton,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
@@ -17,6 +18,7 @@ import './FeedbackBanner.css';
 
 const FeedbackBanner = () => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     Email: '',
     Subject: '',
@@ -25,20 +27,23 @@ const FeedbackBanner = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { enqueueSnackbar } = useSnackbar(); // ✅ Notistack hook
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
-      enqueueSnackbar(res.data.message, { variant: 'success' }); // ✅ Success message
+      enqueueSnackbar(res.data.message, { variant: 'success' });
       setOpen(false);
       setFormData({ Email: '', Subject: '', Message: '' });
     } catch (err) {
-      enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' }); // ✅ Error message
+      enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,16 +159,27 @@ const FeedbackBanner = () => {
             />
             <Button
               onClick={handleSubmit}
+              disabled={loading}
               sx={{
                 backgroundColor: '#003B2F',
                 color: '#fff',
                 fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 '&:hover': {
                   backgroundColor: '#2e7d32'
                 }
               }}
             >
-              SUBMIT
+              {loading ? (
+                <>
+                  <CircularProgress size={20} sx={{ color: '#fff', mr: 1 }} />
+                  Submitting...
+                </>
+              ) : (
+                'SUBMIT'
+              )}
             </Button>
           </Box>
 
