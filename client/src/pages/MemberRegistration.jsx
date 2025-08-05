@@ -19,41 +19,25 @@ const steps = [
 
 const neuStyle = {
   borderRadius: "16px",
-  background: "#e3f9e5",
-  boxShadow: "8px 8px 16px #b8dcb8, -8px -8px 16px #ffffff",
+  background: "#f1faf2",
+  boxShadow: "4px 4px 12px #c3d6c5, -4px -4px 12px #ffffff",
   transition: "box-shadow 0.3s ease",
   "&:hover": {
-    boxShadow: "6px 6px 12px #a5cba5, -6px -6px 12px #ffffff",
+    boxShadow: "2px 2px 8px #b8ccb8, -2px -2px 8px #ffffff",
   },
 };
 
 const inputStyle = {
   borderRadius: "12px",
-  background: "#e3f9e5",
-  boxShadow: "inset 6px 6px 12px #b8dcb8, inset -6px -6px 12px #ffffff",
+  background: "#f1faf2",
+  boxShadow: "inset 3px 3px 6px #cbd7cb, inset -3px -3px 6px #ffffff",
   "& .MuiFilledInput-root": { backgroundColor: "transparent" },
-};
-
-const countiesInKenya = [
-  "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu",
-  "Garissa", "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho",
-  "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui",
-  "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera",
-  "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi",
-  "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua", "Nyeri",
-  "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka-Nithi",
-  "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
-];
-
-const selectOptions = {
-  IDType: ["ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport"],
-  MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
-  Gender: ["Male", "Female", "Others"],
-  Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
-  NomineeRelation: [
-    "Wife", "Husband", "Grandfather", "Grandmother", "Cousin", "Brother", "Sister", "Friend",
-    "Father", "Mother", "Daughter", "Son", "Uncle", "Aunt"
-  ]
+  "& label": {
+    whiteSpace: "normal",
+    overflow: "visible",
+    textOverflow: "unset",
+    lineHeight: "1.2rem",
+  }
 };
 
 const MemberRegistration = () => {
@@ -94,6 +78,17 @@ const MemberRegistration = () => {
     }
   };
 
+  const selectOptions = {
+    IDType: ["ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport"],
+    MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
+    Gender: ["Male", "Female", "Others"],
+    Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
+    NomineeRelation: [
+      "Wife", "Husband", "Grandfather", "Grandmother", "Cousin", "Brother", "Sister", "Friend",
+      "Father", "Mother", "Daughter", "Son", "Uncle", "Aunt"
+    ]
+  };
+
   const renderStep = () => {
     const stepFields = [
       ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender", "KRAPin"],
@@ -105,33 +100,7 @@ const MemberRegistration = () => {
       <Grid container spacing={2}>
         {stepFields[activeStep].map((field) => (
           <Grid item xs={12} sm={6} key={field}>
-            {field === "County" ? (
-              <FormControl variant="filled" fullWidth required sx={inputStyle}>
-                <InputLabel>County</InputLabel>
-                <Select
-                  name="County"
-                  value={formData.County || ""}
-                  onChange={handleChange}
-                  MenuProps={{
-                    PaperProps: {
-                      sx: {
-                        maxHeight: 300,
-                        "& .MuiMenuItem-root": {
-                          "&:hover": {
-                            fontWeight: 600,
-                            color: "#2e7d32"
-                          }
-                        }
-                      }
-                    }
-                  }}
-                >
-                  {countiesInKenya.map((county) => (
-                    <MenuItem key={county} value={county}>{county}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            ) : selectOptions[field] ? (
+            {selectOptions[field] ? (
               <FormControl variant="filled" fullWidth required sx={inputStyle}>
                 <InputLabel>{field}</InputLabel>
                 <Select
@@ -165,7 +134,7 @@ const MemberRegistration = () => {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", py: 4, background: "#e3f9e5" }}>
+    <Box sx={{ minHeight: "100vh", py: 4, background: "#f1faf2" }}>
       <Container maxWidth="md">
         <Paper sx={{ p: 4, ...neuStyle }}>
           {!success ? (
@@ -180,19 +149,10 @@ const MemberRegistration = () => {
                   </Step>
                 ))}
               </Stepper>
-
               {renderStep()}
-
               <Box textAlign="center" mt={3}>
-                {activeStep > 0 && (
-                  <Button sx={neuStyle} onClick={prevStep}>
-                    Back
-                  </Button>
-                )}
-                <Button
-                  sx={{ ml: 2, ...neuStyle }}
-                  onClick={activeStep < steps.length - 1 ? nextStep : confirmSubmission}
-                >
+                {activeStep > 0 && <Button sx={neuStyle} onClick={prevStep}>Back</Button>}
+                <Button sx={{ ml: 2, ...neuStyle }} onClick={activeStep < steps.length - 1 ? nextStep : confirmSubmission}>
                   {activeStep < steps.length - 1 ? "Next" : (loading ? "Submitting..." : "Submit")}
                 </Button>
               </Box>
