@@ -17,6 +17,17 @@ const steps = [
   { label: "Nominee", icon: <GroupIcon /> }
 ];
 
+const countiesInKenya = [
+  "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu",
+  "Garissa", "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho",
+  "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui",
+  "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera",
+  "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi",
+  "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua", "Nyeri",
+  "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka-Nithi",
+  "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+];
+
 const neuStyle = {
   borderRadius: "16px",
   background: "#f1faf2",
@@ -100,7 +111,20 @@ const MemberRegistration = () => {
       <Grid container spacing={2}>
         {stepFields[activeStep].map((field) => (
           <Grid item xs={12} sm={6} key={field}>
-            {selectOptions[field] ? (
+            {field === "County" ? (
+              <FormControl variant="filled" fullWidth required sx={inputStyle}>
+                <InputLabel>County</InputLabel>
+                <Select
+                  name="County"
+                  value={formData.County || ""}
+                  onChange={handleChange}
+                >
+                  {countiesInKenya.map((county) => (
+                    <MenuItem key={county} value={county}>{county}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ) : selectOptions[field] ? (
               <FormControl variant="filled" fullWidth required sx={inputStyle}>
                 <InputLabel>{field}</InputLabel>
                 <Select
