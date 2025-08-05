@@ -34,6 +34,28 @@ const inputStyle = {
   "& .MuiFilledInput-root": { backgroundColor: "transparent" },
 };
 
+const countiesInKenya = [
+  "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu",
+  "Garissa", "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho",
+  "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui",
+  "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera",
+  "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi",
+  "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua", "Nyeri",
+  "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka-Nithi",
+  "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+];
+
+const selectOptions = {
+  IDType: ["ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport"],
+  MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
+  Gender: ["Male", "Female", "Others"],
+  Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
+  NomineeRelation: [
+    "Wife", "Husband", "Grandfather", "Grandmother", "Cousin", "Brother", "Sister", "Friend",
+    "Father", "Mother", "Daughter", "Son", "Uncle", "Aunt"
+  ]
+};
+
 const MemberRegistration = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({});
@@ -72,17 +94,6 @@ const MemberRegistration = () => {
     }
   };
 
-  const selectOptions = {
-    IDType: ["ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport"],
-    MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
-    Gender: ["Male", "Female", "Others"],
-    Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
-    NomineeRelation: [
-      "Wife", "Husband", "Grandfather", "Grandmother", "Cousin", "Brother", "Sister", "Friend",
-      "Father", "Mother", "Daughter", "Son", "Uncle", "Aunt"
-    ]
-  };
-
   const renderStep = () => {
     const stepFields = [
       ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender", "KRAPin"],
@@ -94,7 +105,33 @@ const MemberRegistration = () => {
       <Grid container spacing={2}>
         {stepFields[activeStep].map((field) => (
           <Grid item xs={12} sm={6} key={field}>
-            {selectOptions[field] ? (
+            {field === "County" ? (
+              <FormControl variant="filled" fullWidth required sx={inputStyle}>
+                <InputLabel>County</InputLabel>
+                <Select
+                  name="County"
+                  value={formData.County || ""}
+                  onChange={handleChange}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        maxHeight: 300,
+                        "& .MuiMenuItem-root": {
+                          "&:hover": {
+                            fontWeight: 600,
+                            color: "#2e7d32"
+                          }
+                        }
+                      }
+                    }
+                  }}
+                >
+                  {countiesInKenya.map((county) => (
+                    <MenuItem key={county} value={county}>{county}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ) : selectOptions[field] ? (
               <FormControl variant="filled" fullWidth required sx={inputStyle}>
                 <InputLabel>{field}</InputLabel>
                 <Select
@@ -116,6 +153,7 @@ const MemberRegistration = () => {
                 fullWidth
                 sx={inputStyle}
                 onChange={handleChange}
+                value={formData[field] || ""}
                 InputLabelProps={{ shrink: true }}
                 type={field === "DOB" ? "date" : "text"}
               />
@@ -132,7 +170,7 @@ const MemberRegistration = () => {
         <Paper sx={{ p: 4, ...neuStyle }}>
           {!success ? (
             <>
-              <Typography variant="h4" align="center" color="#2e7d32">
+              <Typography variant="h4" align="center" color="#2e7d32" gutterBottom>
                 SACCO Member Registration
               </Typography>
               <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
@@ -142,10 +180,19 @@ const MemberRegistration = () => {
                   </Step>
                 ))}
               </Stepper>
+
               {renderStep()}
+
               <Box textAlign="center" mt={3}>
-                {activeStep > 0 && <Button sx={neuStyle} onClick={prevStep}>Back</Button>}
-                <Button sx={{ ml: 2, ...neuStyle }} onClick={activeStep < steps.length - 1 ? nextStep : confirmSubmission}>
+                {activeStep > 0 && (
+                  <Button sx={neuStyle} onClick={prevStep}>
+                    Back
+                  </Button>
+                )}
+                <Button
+                  sx={{ ml: 2, ...neuStyle }}
+                  onClick={activeStep < steps.length - 1 ? nextStep : confirmSubmission}
+                >
                   {activeStep < steps.length - 1 ? "Next" : (loading ? "Submitting..." : "Submit")}
                 </Button>
               </Box>
@@ -153,20 +200,25 @@ const MemberRegistration = () => {
           ) : (
             <Box textAlign="center">
               <CheckCircleIcon sx={{ fontSize: 60, color: "green" }} />
-              <Typography sx={{ mt: 2 }}>
+              <Typography sx={{ mt: 2, fontSize: "1.1rem" }}>
                 ✅ Registration successful! An admin will contact you shortly to collect your original ID card (front and back) and passport photo. You will also be guided on how to complete your one-time registration fee of <strong>KES 1,500</strong> via <strong>M-PESA Paybill 506492</strong>.
               </Typography>
             </Box>
           )}
         </Paper>
       </Container>
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+        <Alert severity={snackbar.severity} sx={{ width: "100%" }}>
+          {snackbar.message}
+        </Alert>
       </Snackbar>
+
       <Footer />
     </Box>
   );
