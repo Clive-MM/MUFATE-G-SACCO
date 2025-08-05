@@ -133,17 +133,29 @@ class Membership(db.Model):
 
     # ✅ Basic Info
     FullName = db.Column(db.String(150), nullable=False)
-    Salutation = db.Column(db.String(10), nullable=False)  
+    Salutation = db.Column(db.String(10), nullable=False)
 
     # ✅ ID Information
-    IDType = db.Column(db.Enum("ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport", name="id_type_enum"), nullable=False)
+    IDType = db.Column(db.Enum(
+        "ID Card",
+        "Certificate of Incorp",
+        "Group Registration Certificate",
+        "Passport",
+        name="id_type_enum"
+    ), nullable=False)
     IDNumber = db.Column(db.String(50), nullable=False, unique=True)
     KRAPin = db.Column(db.String(20), nullable=True)
 
     # ✅ Personal Details
     DOB = db.Column(db.Date, nullable=False)
-    MaritalStatus = db.Column(db.Enum("Single", "Married", "Divorce", "Separated", name="marital_status_enum"), nullable=False)
-    Gender = db.Column(db.Enum("Male", "Female", "Others", name="gender_enum"), nullable=False)
+    MaritalStatus = db.Column(db.Enum(
+        "Single", "Married", "Divorce", "Separated",
+        name="marital_status_enum"
+    ), nullable=False)
+    Gender = db.Column(db.Enum(
+        "Male", "Female", "Others",
+        name="gender_enum"
+    ), nullable=False)
 
     # ✅ Location Details
     County = db.Column(db.String(100), nullable=False)
@@ -155,7 +167,7 @@ class Membership(db.Model):
 
     # ✅ Contact Info
     MobileNumber = db.Column(db.String(20), nullable=False)
-    AlternateMobileNumber = db.Column(db.String(20), nullable=False)
+    AlternateMobileNumber = db.Column(db.String(20), nullable=True)  # Now optional
     Email = db.Column(db.String(100), nullable=True)
 
     # ✅ Profession Info
@@ -168,15 +180,8 @@ class Membership(db.Model):
     NomineePhoneNumber = db.Column(db.String(20), nullable=False)
     NomineeRelation = db.Column(db.String(50), nullable=False)
 
-    # ✅ File Uploads
-    IDBackURL = db.Column(db.String(255), nullable=False)
-    IDFrontURL = db.Column(db.String(255), nullable=False)
-    SignatureURL = db.Column(db.String(255), nullable=False)
-    PASSPORTURL = db.Column(db.String(255), nullable=False)
-
     # ✅ Registration Timestamp
     RegisteredAt = db.Column(db.DateTime, default=datetime.utcnow)
-
 class FeedbackStatus(db.Model):
     __tablename__ = 'Feedback_Status'
 
