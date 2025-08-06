@@ -4,9 +4,7 @@ import {
   Typography,
   TextField,
   Button,
-  CircularProgress,
-  useMediaQuery,
-  useTheme
+  CircularProgress
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useSnackbar } from 'notistack';
@@ -14,10 +12,12 @@ import { motion } from 'framer-motion';
 
 const FeedbackForm = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [formData, setFormData] = useState({ Email: '', Subject: '', Message: '' });
+  const [formData, setFormData] = useState({
+    Email: '',
+    Subject: '',
+    Message: '',
+  });
   const [loading, setLoading] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,98 +52,102 @@ const FeedbackForm = () => {
     <Box
       sx={{
         position: 'relative',
-        minHeight: '100vh',
+        background: 'linear-gradient(to bottom, rgb(189, 225, 237), rgb(233, 241, 250))',
+        borderBottomLeftRadius: '16px',
+        borderBottomRightRadius: '16px',
+        px: { xs: 2, md: 8 },
+        pt: { xs: 3, md: 3 },
+        pb: { xs: 3, md: 4 },
+        mt: 0,
+        minHeight: '75vh',
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: 'column',
         justifyContent: 'center',
-        background: 'linear-gradient(to bottom, #cce6f4, #eaf4fb)',
         overflow: 'hidden',
-        px: 2,
       }}
     >
-      {/* Dynamic Animated Bars */}
+      {/* ✅ Vertical Animated Colored Bars */}
       <motion.div
-        initial={{ opacity: 0, x: 200 }}
+        initial={{ opacity: 0, x: 100 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 1 }}
         style={{
           position: 'absolute',
-          right: 0,
           top: 0,
           bottom: 0,
-          display: isMobile ? 'none' : 'flex',
+          right: '80px',
+          display: 'flex',
           flexDirection: 'row',
-          gap: '40px',
+          gap: '50px',
           zIndex: 0,
-          padding: '0 80px',
         }}
       >
-        {['#003B49', '#2E7D32', '#F9A825', '#00695C', '#000'].map((color, i) => (
+        {['#003B49', '#2E7D32', '#F9A825', '#00695C', '#000'].map((color, index) => (
           <motion.div
-            key={i}
+            key={index}
             initial={{ height: 0 }}
             whileInView={{ height: '100%' }}
-            transition={{ duration: 1 + i * 0.2 }}
+            transition={{ duration: 1 + index * 0.2 }}
             style={{
-              width: '70px',
+              width: '90px',
               backgroundColor: color,
-              borderRadius: '12px',
+              borderRadius: '8px',
             }}
           />
         ))}
       </motion.div>
 
-      {/* Feedback Form Container */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        style={{
+      {/* ✅ Glass + Neumorphism Styled Heading */}
+      <Typography
+        variant="h4"
+        sx={{
+          color: '#003B49',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          fontSize: { xs: '1.4rem', md: '2rem' },
+          mb: 3,
           zIndex: 1,
-          maxWidth: '600px',
-          width: '100%',
-          backdropFilter: 'blur(16px)',
-          background: 'rgba(255, 255, 255, 0.45)',
-          borderRadius: '20px',
-          padding: '32px',
-          boxShadow: '0 8px 32px rgba(31, 38, 135, 0.2)',
         }}
       >
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            color: '#003B49',
-            textAlign: 'center',
-            fontSize: { xs: '1.5rem', md: '2rem' }
-          }}
-        >
-          We Value Your Feedback
-        </Typography>
+        We Value Your Feedback
+      </Typography>
 
+      {/* ✅ Feedback Form */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <Box
           component="form"
           onSubmit={handleSubmit}
           sx={{
+            zIndex: 1,
+            maxWidth: { xs: '100%', md: '600px' },
+            width: '100%',
             display: 'flex',
             flexDirection: 'column',
             gap: 2,
+            backdropFilter: 'blur(14px)',
+            background: 'rgba(255, 255, 255, 0.45)',
+            borderRadius: '20px',
+            padding: { xs: 2, md: 4 },
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
           }}
         >
-          {['Email', 'Subject', 'Message'].map((field, idx) => (
+          {['Email', 'Subject', 'Message'].map((field, i) => (
             <TextField
-              key={idx}
+              key={i}
               label={field}
               name={field}
+              type={field === 'Email' ? 'email' : 'text'}
               value={formData[field]}
               onChange={handleChange}
-              required
+              fullWidth
               multiline={field === 'Message'}
               rows={field === 'Message' ? 4 : 1}
-              fullWidth
               variant="outlined"
+              required
               InputProps={{
                 style: {
                   background: 'rgba(255, 255, 255, 0.8)',
@@ -154,27 +158,32 @@ const FeedbackForm = () => {
             />
           ))}
 
+          {/* ✅ Submit Button */}
           <Button
             type="submit"
             variant="contained"
             disabled={loading}
+            startIcon={!loading && <SendIcon />}
             sx={{
               backgroundColor: '#2E7D32',
               color: '#fff',
               fontWeight: 'bold',
-              py: 1.5,
-              px: 3,
-              borderRadius: '12px',
+              px: { xs: 2, sm: 3, md: 4 },
+              py: { xs: 1.5 },
+              fontSize: { xs: '0.85rem', sm: '0.95rem', md: '1rem' },
               textTransform: 'uppercase',
+              borderRadius: '12px',
               boxShadow: '4px 4px 12px #bebebe, -4px -4px 12px #ffffff',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 1,
               '&:hover': {
                 backgroundColor: '#1B5E20',
-                boxShadow: '0 0 15px 4px rgba(255, 215, 0, 0.7)',
+                boxShadow: '0 0 15px 3px rgba(255, 215, 0, 0.8)',
               },
+              alignSelf: 'flex-start',
+              mt: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 1.2,
             }}
           >
             {loading ? (
@@ -183,10 +192,7 @@ const FeedbackForm = () => {
                 Submitting...
               </>
             ) : (
-              <>
-                <SendIcon />
-                Submit
-              </>
+              'Submit'
             )}
           </Button>
         </Box>
