@@ -2,209 +2,192 @@ import React, { useState } from 'react';
 import {
   Box,
   Typography,
-  Button,
   TextField,
-  Dialog,
-  DialogContent,
-  IconButton,
-  useTheme,
-  useMediaQuery,
+  Button,
   CircularProgress
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import axios from 'axios';
+import SendIcon from '@mui/icons-material/Send';
 import { useSnackbar } from 'notistack';
-import './FeedbackBanner.css';
 
-const FeedbackBanner = () => {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+const FeedbackForm = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const [formData, setFormData] = useState({
     Email: '',
     Subject: '',
-    Message: ''
+    Message: '',
   });
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { enqueueSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false); // 🔄 Loading indicator
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async () => {
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // start spinner
+
     try {
-      const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
-      enqueueSnackbar(res.data.message, { variant: 'success' });
-      setOpen(false);
-      setFormData({ Email: '', Subject: '', Message: '' });
-    } catch (err) {
-      enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' });
+      const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.status === 201) {
+        enqueueSnackbar(result.message, { variant: 'success' });
+        setFormData({ Email: '', Subject: '', Message: '' });
+      } else {
+        enqueueSnackbar(result.message || 'Submission failed.', { variant: 'error' });
+      }
+    } catch (error) {
+      enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
     } finally {
-      setLoading(false);
+      setLoading(false); // stop spinner
     }
   };
 
   return (
-    <Box className="feedback-section">
-      <Box className="feedback-wrapper">
-        <Typography className="feedback-title">
-          We Value Your Feedback
-        </Typography>
-        <Typography className="feedback-text">
-          Your opinion matters to us! Help us serve you better by sharing your thoughts, suggestions, or experiences with Mufate "G" Sacco.
-        </Typography>
-        <Button className="feedback-button" onClick={() => setOpen(true)}>
-          Click Here
-        </Button>
-      </Box>
-
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        fullWidth
-        maxWidth="md"
-        PaperProps={{
-          sx: {
-            width: '100%',
-            maxWidth: isMobile ? '95%' : '700px',
-            borderRadius: 3,
-            mx: 'auto',
-            my: 2,
-          }
+    <Box
+      sx={{
+        position: 'relative',
+        background: 'linear-gradient(to bottom, rgb(189, 225, 237), rgb(233, 241, 250))',
+        borderBottomLeftRadius: '16px',
+        borderBottomRightRadius: '16px',
+        px: { xs: 2, md: 8 },
+        pt: { xs: 3, md: 3 },
+        pb: { xs: 3, md: 4 },
+        mt: 0,
+        minHeight: '75vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Vertical Colored Bars */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          right: { md: '80px' },
+          display: { xs: 'none', md: 'flex' },
+          flexDirection: 'row',
+          gap: { md: '50px' },
+          zIndex: 0,
         }}
       >
-        <DialogContent
+        {['#003B49', '#2E7D32', '#F9A825', '#00695C', '#000'].map((color, index) => (
+          <Box
+            key={index}
+            sx={{
+              width: { md: '90px' },
+              backgroundColor: color,
+            }}
+          />
+        ))}
+      </Box>
+
+      {/* Heading */}
+      <Typography
+        variant="h4"
+        sx={{
+          color: '#003B49',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          fontSize: { xs: '1.4rem', md: '2rem' },
+          mb: 3,
+          zIndex: 1,
+        }}
+      >
+        We Value Your Feedback
+      </Typography>
+
+      {/* Feedback Form */}
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          zIndex: 1,
+          maxWidth: { xs: '100%', md: '600px' },
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+        }}
+      >
+        <TextField
+          label="Email"
+          name="Email"
+          type="email"
+          value={formData.Email}
+          onChange={handleChange}
+          fullWidth
+          variant="outlined"
+          required
+        />
+        <TextField
+          label="Subject"
+          name="Subject"
+          value={formData.Subject}
+          onChange={handleChange}
+          fullWidth
+          variant="outlined"
+          required
+        />
+        <TextField
+          label="Message"
+          name="Message"
+          value={formData.Message}
+          onChange={handleChange}
+          fullWidth
+          multiline
+          rows={4}
+          variant="outlined"
+          required
+        />
+
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={loading}
+          startIcon={!loading && <SendIcon />}
           sx={{
+            backgroundColor: '#2E7D32',
+            color: '#fff',
+            fontWeight: 'bold',
+            px: { xs: 2, sm: 3, md: 4 },
+            py: { xs: 1, sm: 1.25 },
+            fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' },
+            textTransform: 'uppercase',
+            borderRadius: '8px',
+            boxShadow: '0 0 10px 2px rgba(255, 215, 0, 0.6)',
+            '&:hover': {
+              backgroundColor: '#1B5E20',
+              boxShadow: '0 0 15px 3px rgba(255, 215, 0, 0.8)',
+            },
+            alignSelf: 'flex-start',
+            mt: 2,
             display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'stretch',
-            gap: isMobile ? 3 : 5,
-            p: isMobile ? 2 : 4,
-            position: 'relative',
-            width: '100%',
-            boxSizing: 'border-box'
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 1.2,
           }}
         >
-          {/* Left Section */}
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: isMobile ? 'center' : 'left'
-            }}
-          >
-            <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
-              <img
-                src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
-                alt="MUFATE G SACCO logo"
-                style={{ height: isMobile ? '80px' : '100px', objectFit: 'contain' }}
-              />
-            </Box>
-
-            <Typography
-              variant={isMobile ? 'h6' : 'h5'}
-              sx={{ mt: 2, fontWeight: 'bold', color: '#003B2F' }}
-            >
-              We’d Love to Hear from You
-            </Typography>
-
-            <Typography
-              sx={{
-                mt: 1,
-                fontSize: isMobile ? '14px' : '15px',
-                color: '#333',
-                lineHeight: 1.7
-              }}
-            >
-              Your feedback helps us improve our services and serve you better. Please take a moment to share your thoughts, experiences, or suggestions with Mufate G Sacco. All responses are confidential and appreciated.
-            </Typography>
-          </Box>
-
-          {/* Right Section - Form */}
-          <Box
-            sx={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2
-            }}
-          >
-            <TextField
-              label="Email"
-              name="Email"
-              value={formData.Email}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-            />
-            <TextField
-              label="Subject"
-              name="Subject"
-              value={formData.Subject}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-            />
-            <TextField
-              label="Message"
-              name="Message"
-              value={formData.Message}
-              onChange={handleChange}
-              multiline
-              rows={4}
-              fullWidth
-              size="small"
-            />
-            <Button
-              onClick={handleSubmit}
-              disabled={loading}
-              sx={{
-                backgroundColor: '#003B2F',
-                color: '#fff',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                '&:hover': {
-                  backgroundColor: '#2e7d32'
-                }
-              }}
-            >
-              {loading ? (
-                <>
-                  <CircularProgress size={20} sx={{ color: '#fff', mr: 1 }} />
-                  Submitting...
-                </>
-              ) : (
-                'SUBMIT'
-              )}
-            </Button>
-          </Box>
-
-          {/* Close Button */}
-          <IconButton
-            onClick={() => setOpen(false)}
-            sx={{
-              position: 'absolute',
-              top: 12,
-              right: 12,
-              backgroundColor: '#fff',
-              border: '1px solid #ccc',
-              width: 32,
-              height: 32,
-              '&:hover': {
-                backgroundColor: '#ffe0b2'
-              }
-            }}
-          >
-            <CloseIcon sx={{ color: '#ef6c00', fontSize: '20px' }} />
-          </IconButton>
-        </DialogContent>
-      </Dialog>
+          {loading ? (
+            <>
+              <CircularProgress size={20} sx={{ color: '#fff' }} />
+              Submitting...
+            </>
+          ) : (
+            'Submit'
+          )}
+        </Button>
+      </Box>
     </Box>
   );
 };
 
-export default FeedbackBanner;
+export default FeedbackForm;
