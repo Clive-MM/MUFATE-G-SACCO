@@ -4,19 +4,20 @@ import {
   Typography,
   TextField,
   Button,
-  CircularProgress
+  CircularProgress,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useSnackbar } from 'notistack';
+import { motion } from 'framer-motion';
 
 const FeedbackForm = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const [formData, setFormData] = useState({
-    Email: '',
-    Subject: '',
-    Message: '',
-  });
-  const [loading, setLoading] = useState(false); // 🔄 Loading indicator
+  const [formData, setFormData] = useState({ Email: '', Subject: '', Message: '' });
+  const [loading, setLoading] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,8 +25,7 @@ const FeedbackForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // start spinner
-
+    setLoading(true);
     try {
       const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
         method: 'POST',
@@ -44,7 +44,7 @@ const FeedbackForm = () => {
     } catch (error) {
       enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
     } finally {
-      setLoading(false); // stop spinner
+      setLoading(false);
     }
   };
 
@@ -52,140 +52,145 @@ const FeedbackForm = () => {
     <Box
       sx={{
         position: 'relative',
-        background: 'linear-gradient(to bottom, rgb(189, 225, 237), rgb(233, 241, 250))',
-        borderBottomLeftRadius: '16px',
-        borderBottomRightRadius: '16px',
-        px: { xs: 2, md: 8 },
-        pt: { xs: 3, md: 3 },
-        pb: { xs: 3, md: 4 },
-        mt: 0,
-        minHeight: '75vh',
+        minHeight: '100vh',
         display: 'flex',
-        flexDirection: 'column',
+        alignItems: 'center',
         justifyContent: 'center',
+        background: 'linear-gradient(to bottom, #cce6f4, #eaf4fb)',
         overflow: 'hidden',
+        px: 2,
       }}
     >
-      {/* Vertical Colored Bars */}
-      <Box
-        sx={{
+      {/* Dynamic Animated Bars */}
+      <motion.div
+        initial={{ opacity: 0, x: 200 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1 }}
+        style={{
           position: 'absolute',
+          right: 0,
           top: 0,
           bottom: 0,
-          right: { md: '80px' },
-          display: { xs: 'none', md: 'flex' },
+          display: isMobile ? 'none' : 'flex',
           flexDirection: 'row',
-          gap: { md: '50px' },
+          gap: '40px',
           zIndex: 0,
+          padding: '0 80px',
         }}
       >
-        {['#003B49', '#2E7D32', '#F9A825', '#00695C', '#000'].map((color, index) => (
-          <Box
-            key={index}
-            sx={{
-              width: { md: '90px' },
+        {['#003B49', '#2E7D32', '#F9A825', '#00695C', '#000'].map((color, i) => (
+          <motion.div
+            key={i}
+            initial={{ height: 0 }}
+            whileInView={{ height: '100%' }}
+            transition={{ duration: 1 + i * 0.2 }}
+            style={{
+              width: '70px',
               backgroundColor: color,
+              borderRadius: '12px',
             }}
           />
         ))}
-      </Box>
+      </motion.div>
 
-      {/* Heading */}
-      <Typography
-        variant="h4"
-        sx={{
-          color: '#003B49',
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          fontSize: { xs: '1.4rem', md: '2rem' },
-          mb: 3,
+      {/* Feedback Form Container */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        style={{
           zIndex: 1,
-        }}
-      >
-        We Value Your Feedback
-      </Typography>
-
-      {/* Feedback Form */}
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
-          zIndex: 1,
-          maxWidth: { xs: '100%', md: '600px' },
+          maxWidth: '600px',
           width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
+          backdropFilter: 'blur(16px)',
+          background: 'rgba(255, 255, 255, 0.45)',
+          borderRadius: '20px',
+          padding: '32px',
+          boxShadow: '0 8px 32px rgba(31, 38, 135, 0.2)',
         }}
       >
-        <TextField
-          label="Email"
-          name="Email"
-          type="email"
-          value={formData.Email}
-          onChange={handleChange}
-          fullWidth
-          variant="outlined"
-          required
-        />
-        <TextField
-          label="Subject"
-          name="Subject"
-          value={formData.Subject}
-          onChange={handleChange}
-          fullWidth
-          variant="outlined"
-          required
-        />
-        <TextField
-          label="Message"
-          name="Message"
-          value={formData.Message}
-          onChange={handleChange}
-          fullWidth
-          multiline
-          rows={4}
-          variant="outlined"
-          required
-        />
-
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={loading}
-          startIcon={!loading && <SendIcon />}
+        <Typography
+          variant="h4"
+          gutterBottom
           sx={{
-            backgroundColor: '#2E7D32',
-            color: '#fff',
-            fontWeight: 'bold',
-            px: { xs: 2, sm: 3, md: 4 },
-            py: { xs: 1, sm: 1.25 },
-            fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' },
+            fontWeight: 700,
             textTransform: 'uppercase',
-            borderRadius: '8px',
-            boxShadow: '0 0 10px 2px rgba(255, 215, 0, 0.6)',
-            '&:hover': {
-              backgroundColor: '#1B5E20',
-              boxShadow: '0 0 15px 3px rgba(255, 215, 0, 0.8)',
-            },
-            alignSelf: 'flex-start',
-            mt: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 1.2,
+            color: '#003B49',
+            textAlign: 'center',
+            fontSize: { xs: '1.5rem', md: '2rem' }
           }}
         >
-          {loading ? (
-            <>
-              <CircularProgress size={20} sx={{ color: '#fff' }} />
-              Submitting...
-            </>
-          ) : (
-            'Submit'
-          )}
-        </Button>
-      </Box>
+          We Value Your Feedback
+        </Typography>
+
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+          }}
+        >
+          {['Email', 'Subject', 'Message'].map((field, idx) => (
+            <TextField
+              key={idx}
+              label={field}
+              name={field}
+              value={formData[field]}
+              onChange={handleChange}
+              required
+              multiline={field === 'Message'}
+              rows={field === 'Message' ? 4 : 1}
+              fullWidth
+              variant="outlined"
+              InputProps={{
+                style: {
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  borderRadius: '12px',
+                  boxShadow: 'inset 4px 4px 10px #bebebe, inset -4px -4px 10px #ffffff',
+                },
+              }}
+            />
+          ))}
+
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={loading}
+            sx={{
+              backgroundColor: '#2E7D32',
+              color: '#fff',
+              fontWeight: 'bold',
+              py: 1.5,
+              px: 3,
+              borderRadius: '12px',
+              textTransform: 'uppercase',
+              boxShadow: '4px 4px 12px #bebebe, -4px -4px 12px #ffffff',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 1,
+              '&:hover': {
+                backgroundColor: '#1B5E20',
+                boxShadow: '0 0 15px 4px rgba(255, 215, 0, 0.7)',
+              },
+            }}
+          >
+            {loading ? (
+              <>
+                <CircularProgress size={20} sx={{ color: '#fff' }} />
+                Submitting...
+              </>
+            ) : (
+              <>
+                <SendIcon />
+                Submit
+              </>
+            )}
+          </Button>
+        </Box>
+      </motion.div>
     </Box>
   );
 };
