@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 import './TestimonialsSection.css';
 
 const TestimonialsSection = () => {
@@ -21,15 +22,22 @@ const TestimonialsSection = () => {
     <Box className="testimonials-section">
       <Typography className="testimonial-title">REVIEWS</Typography>
       <Box className="testimonials-grid">
-        {testimonials.map((client) => (
-          <Box className="testimonial-card" key={client.ClientID}>
+        {testimonials.map((client, index) => (
+          <motion.div
+            key={client.ClientID}
+            className="testimonial-card"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.15 }}
+            whileHover={{ scale: 1.05 }}
+          >
             <Typography className="testimonial-quote">
               {client.ClientStatistic}
             </Typography>
             <Typography className="testimonial-name">
               {client.ClientName}
             </Typography>
-          </Box>
+          </motion.div>
         ))}
       </Box>
     </Box>
