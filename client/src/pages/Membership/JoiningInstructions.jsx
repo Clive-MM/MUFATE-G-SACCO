@@ -7,7 +7,7 @@ const instructions = [
   'Get the membership application form from the office or website.',
   'Fill in the form with your correct details.',
   'Attach a copy of your ID/Passport, and a passport-size photo.',
-  'Pay account opening fees of Kshs 1500.',
+  'Pay account opening fees of Kshs 1500.',  
   'Open a savings account and start making deposits.',
 ];
 
@@ -28,10 +28,9 @@ const JoiningInstructions = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         overflow: 'hidden',
-        boxShadow: 'inset 0 0 20px rgba(255, 255, 255, 0.4), 0 8px 32px rgba(31, 38, 135, 0.25)',
       }}
     >
-      {/* ✅ Animated Vertical Bars */}
+      {/* ✅ Animated Vertical Colored Bars */}
       <motion.div
         initial={{ opacity: 0, x: 100 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -83,28 +82,17 @@ const JoiningInstructions = () => {
         </Typography>
       </motion.div>
 
-      {/* ✅ Glass + Neumorphic Instructions Box */}
+      {/* ✅ Animated Instructions List */}
       <Box
         component={motion.div}
         initial="hidden"
         whileInView="visible"
         transition={{ staggerChildren: 0.15 }}
-        variants={{ hidden: {}, visible: {} }}
-        sx={{
-          zIndex: 1,
-          background: 'rgba(255, 255, 255, 0.35)',
-          borderRadius: '20px',
-          padding: { xs: 2, md: 4 },
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-          backdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255, 255, 255, 0.18)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          maxWidth: { xs: '100%', md: '600px' },
-          width: '100%',
-          mx: 'auto',
+        variants={{
+          hidden: {},
+          visible: {},
         }}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}
       >
         {instructions.map((item, idx) => (
           <motion.div
@@ -117,12 +105,8 @@ const JoiningInstructions = () => {
           >
             <Typography
               sx={{
-                background: 'rgba(255, 255, 255, 0.9)',
-                borderRadius: '14px',
-                boxShadow: 'inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff',
-                padding: '0.75rem 1rem',
-                fontSize: { xs: '1rem', md: '1.1rem' },
                 color: '#003B49',
+                fontSize: { xs: '1rem', md: '1.1rem' },
                 lineHeight: 1.6,
               }}
             >
@@ -132,13 +116,13 @@ const JoiningInstructions = () => {
         ))}
       </Box>
 
-      {/* ✅ Animated Download Button */}
+      {/* ✅ Download Button */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Box sx={{ mt: 4, zIndex: 1 }}>
+        <Box sx={{ mt: 4 }}>
           <Button
             component="a"
             href="https://raw.githubusercontent.com/Clive-MM/Mufate-G-SACCO-DOCUMENTS/main/MEMBER-APPLICATION-DOCUMENT.pdf"
@@ -154,15 +138,11 @@ const JoiningInstructions = () => {
               py: { xs: 1, sm: 1.25 },
               fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' },
               textTransform: 'uppercase',
-              borderRadius: '14px',
-              boxShadow: '6px 6px 12px #bebebe, -6px -6px 12px #ffffff',
-              transition: 'all 0.3s ease-in-out',
+              borderRadius: '8px',
+              boxShadow: '0 0 10px 2px rgba(255, 215, 0, 0.6)',
               '&:hover': {
                 backgroundColor: '#1B5E20',
                 boxShadow: '0 0 15px 3px rgba(255, 215, 0, 0.8)',
-              },
-              '&:active': {
-                boxShadow: 'inset 2px 2px 4px #bebebe, inset -2px -2px 4px #ffffff',
               },
             }}
           >
