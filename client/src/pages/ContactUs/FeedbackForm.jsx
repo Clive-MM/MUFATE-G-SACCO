@@ -64,6 +64,7 @@ const FeedbackForm = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         overflow: 'hidden',
+        boxShadow: 'inset 0 0 20px rgba(255, 255, 255, 0.4), 0 8px 32px rgba(31, 38, 135, 0.25)',
       }}
     >
       {/* ✅ Vertical Animated Colored Bars */}
@@ -97,7 +98,7 @@ const FeedbackForm = () => {
         ))}
       </motion.div>
 
-      {/* ✅ Glass + Neumorphism Styled Heading */}
+      {/* ✅ Heading */}
       <Typography
         variant="h4"
         sx={{
@@ -112,7 +113,7 @@ const FeedbackForm = () => {
         We Value Your Feedback
       </Typography>
 
-      {/* ✅ Feedback Form */}
+      {/* ✅ Feedback Form with Neumorphism + Glassmorphism */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -128,11 +129,12 @@ const FeedbackForm = () => {
             display: 'flex',
             flexDirection: 'column',
             gap: 2,
-            backdropFilter: 'blur(14px)',
-            background: 'rgba(255, 255, 255, 0.45)',
+            backdropFilter: 'blur(16px)',
+            background: 'rgba(255, 255, 255, 0.35)',
             borderRadius: '20px',
             padding: { xs: 2, md: 4 },
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
           }}
         >
           {['Email', 'Subject', 'Message'].map((field, i) => (
@@ -150,15 +152,14 @@ const FeedbackForm = () => {
               required
               InputProps={{
                 style: {
-                  background: 'rgba(255, 255, 255, 0.8)',
-                  borderRadius: '12px',
-                  boxShadow: 'inset 4px 4px 10px #bebebe, inset -4px -4px 10px #ffffff',
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  borderRadius: '14px',
+                  boxShadow: 'inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff',
                 },
               }}
             />
           ))}
 
-          {/* ✅ Submit Button */}
           <Button
             type="submit"
             variant="contained"
@@ -167,16 +168,20 @@ const FeedbackForm = () => {
             sx={{
               backgroundColor: '#2E7D32',
               color: '#fff',
-              fontWeight: 'bold',
-              px: { xs: 2, sm: 3, md: 4 },
-              py: { xs: 1.5 },
-              fontSize: { xs: '0.85rem', sm: '0.95rem', md: '1rem' },
+              fontWeight: 600,
+              px: 4,
+              py: 1.2,
+              borderRadius: '14px',
               textTransform: 'uppercase',
-              borderRadius: '12px',
-              boxShadow: '4px 4px 12px #bebebe, -4px -4px 12px #ffffff',
+              fontSize: { xs: '0.85rem', sm: '0.95rem', md: '1rem' },
+              boxShadow: '6px 6px 12px #bebebe, -6px -6px 12px #ffffff',
+              transition: 'all 0.3s ease-in-out',
               '&:hover': {
                 backgroundColor: '#1B5E20',
-                boxShadow: '0 0 15px 3px rgba(255, 215, 0, 0.8)',
+                boxShadow: '0 0 15px 5px rgba(255, 215, 0, 0.6)',
+              },
+              '&:active': {
+                boxShadow: 'inset 2px 2px 4px #bebebe, inset -2px -2px 4px #ffffff',
               },
               alignSelf: 'flex-start',
               mt: 2,
