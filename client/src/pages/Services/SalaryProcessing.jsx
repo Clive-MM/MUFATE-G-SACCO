@@ -28,7 +28,7 @@ const SalaryProcessing = () => {
                 }}
             >
                 <motion.img
-                    src="https://res.cloudinary.com/djydkcx01/image/upload/v1746211988/Withdraw_Mobile_Money_jwlafv.jpg"
+                    src="https://res.cloudinary.com/djydkcx01/image/upload/v1754911013/ChatGPT_Image_Aug_11_2025_02_02_22_PM_sbscrx.png"
                     alt="Salary Processing"
                     style={{
                         width: '100%',
