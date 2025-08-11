@@ -146,7 +146,7 @@ const JoiningInstructions = () => {
               },
             }}
           >
-            Download
+            APPLICATION FORM
           </Button>
         </Box>
       </motion.div>
