@@ -4,24 +4,16 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import "./TestimonialsSection.css";
 
-const parent = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { staggerChildren: 0.12, duration: 0.5, ease: "easeOut" }
-  }
-};
-const child = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } };
+const API = "https://mufate-g-sacco.onrender.com/clients";
 
-export default function TestimonialsSection() {
+const TestimonialsSection = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     axios
-      .get("https://mufate-g-sacco.onrender.com/clients")
+      .get(API)
       .then((res) => setTestimonials(res.data?.clients ?? []))
       .catch(() => setError("Could not load reviews. Please try again later."))
       .finally(() => setLoading(false));
@@ -34,39 +26,38 @@ export default function TestimonialsSection() {
       </Typography>
 
       {error && (
-        <Alert severity="error" sx={{ maxWidth: 960, mx: "auto", mb: 3 }}>
+        <Alert severity="error" className="testimonial-alert">
           {error}
         </Alert>
       )}
 
-      <motion.div
-        className="testimonials-grid"
-        variants={parent}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-      >
+      <Box className="testimonials-grid">
         {loading
           ? Array.from({ length: 3 }).map((_, i) => (
               <Box key={i} className="testimonial-card">
                 <Skeleton variant="text" height={90} />
-                <Skeleton variant="text" width="40%" />
+                <Skeleton variant="text" width="50%" />
               </Box>
             ))
-          : testimonials.map((client) => (
+          : testimonials.map((client, index) => (
               <motion.article
                 key={client.ClientID}
                 className="testimonial-card"
-                variants={child}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.12 }}
                 whileHover={{ scale: 1.04 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
                 <blockquote className="testimonial-quote">
                   {client.ClientStatistic}
                 </blockquote>
-                <footer className="testimonial-name">— {client.ClientName}</footer>
+                <footer className="testimonial-name">{client.ClientName}</footer>
               </motion.article>
             ))}
-      </motion.div>
+      </Box>
     </Box>
   );
-}
+};
+
+export default TestimonialsSection;
