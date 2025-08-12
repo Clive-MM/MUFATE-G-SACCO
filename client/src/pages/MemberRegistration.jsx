@@ -1,9 +1,10 @@
+// src/pages/MemberRegistration.jsx
 import React, { useState } from "react";
 import Footer from "../components/Footer";
 import {
   Box, Button, Container, Grid, TextField, Typography,
   Paper, Stepper, Step, StepLabel, Snackbar, Alert,
-  FormControl, InputLabel, Select, MenuItem
+  FormControl, InputLabel, Select, MenuItem, FilledInput
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
@@ -27,22 +28,35 @@ const neuStyle = {
   },
 };
 
+/* ---------- Input look: no underline + uniform height + focus ring ---------- */
 const inputStyle = {
   borderRadius: "12px",
   background: "#e3f9e5",
   boxShadow: "inset 6px 6px 12px #b8dcb8, inset -6px -6px 12px #ffffff",
-  "& .MuiFilledInput-root": { backgroundColor: "transparent" },
+  "& .MuiFilledInput-root": {
+    backgroundColor: "transparent",
+    height: 54,
+    borderRadius: 12,
+    paddingLeft: 12,
+    paddingRight: 12,
+    // remove underline for Filled variant (before/after)
+    "&:before, &:after": { display: "none" },
+    "&.Mui-focused": {
+      outline: "2px solid rgba(46,125,50,.35)",
+      outlineOffset: 2,
+    },
+  },
 };
 
 const countiesInKenya = [
-  "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu",
-  "Garissa", "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho",
-  "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui",
-  "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera",
-  "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi",
-  "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua", "Nyeri",
-  "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka-Nithi",
-  "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+  "Baringo","Bomet","Bungoma","Busia","Elgeyo-Marakwet","Embu",
+  "Garissa","Homa Bay","Isiolo","Kajiado","Kakamega","Kericho",
+  "Kiambu","Kilifi","Kirinyaga","Kisii","Kisumu","Kitui",
+  "Kwale","Laikipia","Lamu","Machakos","Makueni","Mandera",
+  "Marsabit","Meru","Migori","Mombasa","Murang'a","Nairobi",
+  "Nakuru","Nandi","Narok","Nyamira","Nyandarua","Nyeri",
+  "Samburu","Siaya","Taita Taveta","Tana River","Tharaka-Nithi",
+  "Trans Nzoia","Turkana","Uasin Gishu","Vihiga","Wajir","West Pokot"
 ];
 
 const selectOptions = {
@@ -51,9 +65,41 @@ const selectOptions = {
   Gender: ["Male", "Female", "Others"],
   Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
   NomineeRelation: [
-    "Wife", "Husband", "Grandfather", "Grandmother", "Cousin", "Brother", "Sister", "Friend",
-    "Father", "Mother", "Daughter", "Son", "Uncle", "Aunt"
-  ]
+    "Wife","Husband","Grandfather","Grandmother","Cousin","Brother","Sister","Friend",
+    "Father","Mother","Daughter","Son","Uncle","Aunt"
+  ],
+};
+
+/* ---------- Column layout map: prevents squeezed/cropped labels ---------- */
+const layout = {
+  // Bio
+  FullName:      { xs: 12, sm: 8,  md: 8 },
+  Salutation:    { xs: 12, sm: 4,  md: 4 },
+  IDType:        { xs: 12, sm: 6,  md: 4 },
+  IDNumber:      { xs: 12, sm: 6,  md: 4 },
+  DOB:           { xs: 12, sm: 6,  md: 4 },
+  MaritalStatus: { xs: 12, sm: 6,  md: 4 },
+  Gender:        { xs: 12, sm: 6,  md: 4 },
+  KRAPin:        { xs: 12, sm: 6,  md: 6 },
+
+  // Contact
+  County:                { xs: 12, sm: 6, md: 6 },
+  District:              { xs: 12, sm: 6, md: 6 },
+  Division:              { xs: 12, sm: 6, md: 6 },
+  Address:               { xs: 12, sm: 6, md: 6 },
+  PostalCode:            { xs: 12, sm: 6, md: 6 },
+  PhysicalAddress:       { xs: 12, sm: 6, md: 6 },
+  MobileNumber:          { xs: 12, sm: 6, md: 6 },
+  AlternateMobileNumber: { xs: 12, sm: 6, md: 6 },
+  Email:                 { xs: 12, sm: 6, md: 6 },
+  Profession:            { xs: 12, sm: 6, md: 6 },
+  ProfessionSector:      { xs: 12, sm: 6, md: 6 },
+
+  // Nominee
+  NomineeName:        { xs: 12, sm: 8, md: 8 },
+  NomineeIDNumber:    { xs: 12, sm: 4, md: 4 },
+  NomineePhoneNumber: { xs: 12, sm: 6, md: 6 },
+  NomineeRelation:    { xs: 12, sm: 6, md: 6 },
 };
 
 const MemberRegistration = () => {
@@ -73,96 +119,105 @@ const MemberRegistration = () => {
   const confirmSubmission = async () => {
     setLoading(true);
     try {
-      const response = await axios.post("https://mufate-g-sacco.onrender.com/membership-register", formData, {
-        headers: { "Content-Type": "application/json" }
-      });
+      const response = await axios.post(
+        "https://mufate-g-sacco.onrender.com/membership-register",
+        formData,
+        { headers: { "Content-Type": "application/json" } }
+      );
 
       setSuccess(true);
       setSnackbar({
         open: true,
         message: response.data.message || "✅ Registration successful!",
-        severity: "success"
+        severity: "success",
       });
     } catch (error) {
       setSnackbar({
         open: true,
         message: error.response?.data?.message || "❌ Registration failed!",
-        severity: "error"
+        severity: "error",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const renderStep = () => {
-    const stepFields = [
-      ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender", "KRAPin"],
-      ["County", "District", "Division", "Address", "PostalCode", "PhysicalAddress", "MobileNumber", "AlternateMobileNumber", "Email", "Profession", "ProfessionSector"],
-      ["NomineeName", "NomineeIDNumber", "NomineePhoneNumber", "NomineeRelation"]
-    ];
+  const stepFields = [
+    // Bio
+    ["FullName","Salutation","IDType","IDNumber","DOB","MaritalStatus","Gender","KRAPin"],
+    // Contact
+    ["County","District","Division","Address","PostalCode","PhysicalAddress","MobileNumber","AlternateMobileNumber","Email","Profession","ProfessionSector"],
+    // Nominee
+    ["NomineeName","NomineeIDNumber","NomineePhoneNumber","NomineeRelation"],
+  ];
 
-    return (
-      <Grid container spacing={2}>
-        {stepFields[activeStep].map((field) => (
-          <Grid item xs={12} sm={6} key={field}>
-            {field === "County" ? (
-              <FormControl variant="filled" fullWidth required sx={inputStyle}>
-                <InputLabel>County</InputLabel>
-                <Select
-                  name="County"
-                  value={formData.County || ""}
-                  onChange={handleChange}
-                  MenuProps={{
-                    PaperProps: {
-                      sx: {
-                        maxHeight: 300,
-                        "& .MuiMenuItem-root": {
-                          "&:hover": {
-                            fontWeight: 600,
-                            color: "#2e7d32"
-                          }
-                        }
-                      }
-                    }
-                  }}
-                >
-                  {countiesInKenya.map((county) => (
-                    <MenuItem key={county} value={county}>{county}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            ) : selectOptions[field] ? (
-              <FormControl variant="filled" fullWidth required sx={inputStyle}>
-                <InputLabel>{field}</InputLabel>
-                <Select
-                  name={field}
-                  value={formData[field] || ""}
-                  onChange={handleChange}
-                >
-                  {selectOptions[field].map((option) => (
-                    <MenuItem key={option} value={option}>{option}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            ) : (
-              <TextField
-                required={field !== "KRAPin"}
-                name={field}
-                label={field}
-                variant="filled"
-                fullWidth
-                sx={inputStyle}
+  const renderStep = () => (
+    <Grid container spacing={{ xs: 1.5, sm: 2 }}>
+      {stepFields[activeStep].map((field) => (
+        <Grid item key={field} {...(layout[field] || { xs: 12, sm: 6 })}>
+          {field === "County" ? (
+            <FormControl variant="filled" fullWidth required sx={inputStyle}>
+              <InputLabel>County</InputLabel>
+              <Select
+                name="County"
+                value={formData.County || ""}
                 onChange={handleChange}
+                input={<FilledInput disableUnderline />}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      maxHeight: 320,
+                      minWidth: 280,
+                      "& .MuiMenuItem-root:hover": { fontWeight: 600, color: "#2e7d32" },
+                    },
+                  },
+                  anchorOrigin: { vertical: "bottom", horizontal: "left" },
+                  transformOrigin: { vertical: "top", horizontal: "left" },
+                }}
+              >
+                {countiesInKenya.map((county) => (
+                  <MenuItem key={county} value={county}>{county}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ) : selectOptions[field] ? (
+            <FormControl variant="filled" fullWidth required sx={inputStyle}>
+              <InputLabel>{field === "NomineeRelation" ? "Relation" : field}</InputLabel>
+              <Select
+                name={field}
                 value={formData[field] || ""}
-                InputLabelProps={{ shrink: true }}
-                type={field === "DOB" ? "date" : "text"}
-              />
-            )}
-          </Grid>
-        ))}
-      </Grid>
-    );
-  };
+                onChange={handleChange}
+                input={<FilledInput disableUnderline />}
+                MenuProps={{
+                  PaperProps: { sx: { maxHeight: 320, minWidth: 260 } },
+                  anchorOrigin: { vertical: "bottom", horizontal: "left" },
+                  transformOrigin: { vertical: "top", horizontal: "left" },
+                }}
+              >
+                {selectOptions[field].map((option) => (
+                  <MenuItem key={option} value={option}>{option}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ) : (
+            <TextField
+              required={field !== "KRAPin"}
+              name={field}
+              label={field}
+              variant="filled"
+              fullWidth
+              sx={inputStyle}
+              InputProps={{ disableUnderline: true }}
+              InputLabelProps={{ shrink: true }}
+              onChange={handleChange}
+              value={formData[field] || ""}
+              type={field === "DOB" ? "date" : "text"}
+            />
+          )}
+        </Grid>
+      ))}
+    </Grid>
+  );
 
   return (
     <Box sx={{ minHeight: "100vh", py: 4, background: "#e3f9e5" }}>
@@ -173,7 +228,17 @@ const MemberRegistration = () => {
               <Typography variant="h4" align="center" color="#2e7d32" gutterBottom>
                 SACCO Member Registration
               </Typography>
-              <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+
+              <Stepper
+                activeStep={activeStep}
+                alternativeLabel
+                sx={{
+                  mb: 4,
+                  "& .MuiStepIcon-root.Mui-active, & .MuiStepIcon-root.Mui-completed": {
+                    color: "#2e7d32",
+                  },
+                }}
+              >
                 {steps.map((step) => (
                   <Step key={step.label}>
                     <StepLabel icon={step.icon}>{step.label}</StepLabel>
