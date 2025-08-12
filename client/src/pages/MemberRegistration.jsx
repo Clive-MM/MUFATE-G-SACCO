@@ -28,7 +28,6 @@ const neuStyle = {
   },
 };
 
-/* ---------- Input look: no underline + uniform height + focus ring ---------- */
 const inputStyle = {
   borderRadius: "12px",
   background: "#e3f9e5",
@@ -39,8 +38,7 @@ const inputStyle = {
     borderRadius: 12,
     paddingLeft: 12,
     paddingRight: 12,
-    // remove underline for Filled variant (before/after)
-    "&:before, &:after": { display: "none" },
+    "&:before, &:after": { display: "none" }, // remove underline
     "&.Mui-focused": {
       outline: "2px solid rgba(46,125,50,.35)",
       outlineOffset: 2,
@@ -70,7 +68,6 @@ const selectOptions = {
   ],
 };
 
-/* ---------- Column layout map: prevents squeezed/cropped labels ---------- */
 const layout = {
   // Bio
   FullName:      { xs: 12, sm: 8,  md: 8 },
@@ -82,7 +79,7 @@ const layout = {
   Gender:        { xs: 12, sm: 6,  md: 4 },
   KRAPin:        { xs: 12, sm: 6,  md: 6 },
 
-  // Contact
+  // Contact (fixed to 2 per row)
   County:                { xs: 12, sm: 6, md: 6 },
   District:              { xs: 12, sm: 6, md: 6 },
   Division:              { xs: 12, sm: 6, md: 6 },
@@ -143,16 +140,13 @@ const MemberRegistration = () => {
   };
 
   const stepFields = [
-    // Bio
     ["FullName","Salutation","IDType","IDNumber","DOB","MaritalStatus","Gender","KRAPin"],
-    // Contact
     ["County","District","Division","Address","PostalCode","PhysicalAddress","MobileNumber","AlternateMobileNumber","Email","Profession","ProfessionSector"],
-    // Nominee
     ["NomineeName","NomineeIDNumber","NomineePhoneNumber","NomineeRelation"],
   ];
 
   const renderStep = () => (
-    <Grid container spacing={{ xs: 1.5, sm: 2 }}>
+    <Grid container spacing={{ xs: 2, sm: 3 }}>
       {stepFields[activeStep].map((field) => (
         <Grid item key={field} {...(layout[field] || { xs: 12, sm: 6 })}>
           {field === "County" ? (
