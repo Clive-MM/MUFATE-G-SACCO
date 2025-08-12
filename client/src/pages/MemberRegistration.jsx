@@ -79,7 +79,7 @@ const layout = {
   Gender:        { xs: 12, sm: 6,  md: 4 },
   KRAPin:        { xs: 12, sm: 6,  md: 6 },
 
-  // Contact (fixed to 2 per row)
+  // Contact (we’ll ignore this map for Contact step and use CSS Grid)
   County:                { xs: 12, sm: 6, md: 6 },
   District:              { xs: 12, sm: 6, md: 6 },
   Division:              { xs: 12, sm: 6, md: 6 },
@@ -145,73 +145,108 @@ const MemberRegistration = () => {
     ["NomineeName","NomineeIDNumber","NomineePhoneNumber","NomineeRelation"],
   ];
 
-  const renderStep = () => (
-    <Grid container spacing={{ xs: 2, sm: 3 }}>
-      {stepFields[activeStep].map((field) => (
-        <Grid item key={field} {...(layout[field] || { xs: 12, sm: 6 })}>
-          {field === "County" ? (
-            <FormControl variant="filled" fullWidth required sx={inputStyle}>
-              <InputLabel>County</InputLabel>
-              <Select
-                name="County"
-                value={formData.County || ""}
-                onChange={handleChange}
-                input={<FilledInput disableUnderline />}
-                MenuProps={{
-                  PaperProps: {
-                    sx: {
-                      maxHeight: 320,
-                      minWidth: 280,
-                      "& .MuiMenuItem-root:hover": { fontWeight: 600, color: "#2e7d32" },
-                    },
-                  },
-                  anchorOrigin: { vertical: "bottom", horizontal: "left" },
-                  transformOrigin: { vertical: "top", horizontal: "left" },
-                }}
-              >
-                {countiesInKenya.map((county) => (
-                  <MenuItem key={county} value={county}>{county}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          ) : selectOptions[field] ? (
-            <FormControl variant="filled" fullWidth required sx={inputStyle}>
-              <InputLabel>{field === "NomineeRelation" ? "Relation" : field}</InputLabel>
-              <Select
-                name={field}
-                value={formData[field] || ""}
-                onChange={handleChange}
-                input={<FilledInput disableUnderline />}
-                MenuProps={{
-                  PaperProps: { sx: { maxHeight: 320, minWidth: 260 } },
-                  anchorOrigin: { vertical: "bottom", horizontal: "left" },
-                  transformOrigin: { vertical: "top", horizontal: "left" },
-                }}
-              >
-                {selectOptions[field].map((option) => (
-                  <MenuItem key={option} value={option}>{option}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          ) : (
-            <TextField
-              required={field !== "KRAPin"}
-              name={field}
-              label={field}
-              variant="filled"
-              fullWidth
-              sx={inputStyle}
-              InputProps={{ disableUnderline: true }}
-              InputLabelProps={{ shrink: true }}
-              onChange={handleChange}
-              value={formData[field] || ""}
-              type={field === "DOB" ? "date" : "text"}
-            />
-          )}
-        </Grid>
-      ))}
-    </Grid>
-  );
+  // ——— Field renderer (shared) ———
+  const renderField = (field) => {
+    if (field === "County") {
+      return (
+        <FormControl variant="filled" fullWidth required sx={inputStyle}>
+          <InputLabel>County</InputLabel>
+          <Select
+            name="County"
+            value={formData.County || ""}
+            onChange={handleChange}
+            input={<FilledInput disableUnderline />}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  maxHeight: 320,
+                  minWidth: 280,
+                  "& .MuiMenuItem-root:hover": { fontWeight: 600, color: "#2e7d32" },
+                },
+              },
+              anchorOrigin: { vertical: "bottom", horizontal: "left" },
+              transformOrigin: { vertical: "top", horizontal: "left" },
+            }}
+          >
+            {countiesInKenya.map((county) => (
+              <MenuItem key={county} value={county}>{county}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    }
+
+    if (selectOptions[field]) {
+      return (
+        <FormControl variant="filled" fullWidth required sx={inputStyle}>
+          <InputLabel>{field === "NomineeRelation" ? "Relation" : field}</InputLabel>
+          <Select
+            name={field}
+            value={formData[field] || ""}
+            onChange={handleChange}
+            input={<FilledInput disableUnderline />}
+            MenuProps={{
+              PaperProps: { sx: { maxHeight: 320, minWidth: 260 } },
+              anchorOrigin: { vertical: "bottom", horizontal: "left" },
+              transformOrigin: { vertical: "top", horizontal: "left" },
+            }}
+          >
+            {selectOptions[field].map((option) => (
+              <MenuItem key={option} value={option}>{option}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    }
+
+    return (
+      <TextField
+        required={field !== "KRAPin"}
+        name={field}
+        label={field}
+        variant="filled"
+        fullWidth
+        sx={inputStyle}
+        InputProps={{ disableUnderline: true }}
+        InputLabelProps={{ shrink: true }}
+        onChange={handleChange}
+        value={formData[field] || ""}
+        type={field === "DOB" ? "date" : "text"}
+      />
+    );
+  };
+
+  // ——— Step renderer ———
+  const renderStep = () => {
+    // CONTACT step: enforce exact 2-up layout via CSS Grid
+    if (activeStep === 1) {
+      return (
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            columnGap: { xs: 2, sm: 3 },
+            rowGap: { xs: 2, sm: 3 },
+          }}
+        >
+          {stepFields[1].map((field) => (
+            <Box key={field}>{renderField(field)}</Box>
+          ))}
+        </Box>
+      );
+    }
+
+    // BIO & NOMINEE: keep your existing Grid layout map
+    return (
+      <Grid container spacing={{ xs: 2, sm: 3 }}>
+        {stepFields[activeStep].map((field) => (
+          <Grid item key={field} {...(layout[field] || { xs: 12, sm: 6 })}>
+            {renderField(field)}
+          </Grid>
+        ))}
+      </Grid>
+    );
+  };
 
   return (
     <Box sx={{ minHeight: "100vh", py: 4, background: "#e3f9e5" }}>
