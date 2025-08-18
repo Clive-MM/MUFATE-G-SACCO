@@ -128,7 +128,7 @@ const FAQs = () => {
             filter: 'grayscale(100%)',
             borderTop: { xs: '1px solid #ccc', md: 'none' },
           }}
-          image="https://res.cloudinary.com/djydkcx01/image/upload/v1748525338/ChatGPT_Image_May_29_2025_04_28_37_PM_ditgts.png"
+          image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
           alt="Support Agent"
         />
       </Card>
