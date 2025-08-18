@@ -14,7 +14,7 @@ const ContactUs = () => {
           height: { xs: '80vh', md: '120vh' },
           position: 'relative',
           backgroundImage:
-            'url(https://res.cloudinary.com/djydkcx01/image/upload/v1748438814/ChatGPT_Image_May_28_2025_04_25_45_PM_vedkd0.png)',
+            'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
           backgroundSize: 'cover',
           backgroundPosition: { xs: '70% center', md: 'center' },
           backgroundRepeat: 'no-repeat',
