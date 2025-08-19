@@ -17,6 +17,7 @@ import ContactUs from './pages/ContactUs/ContactUs';
 import Careers from './pages/Careers/Careers';
 import News from './more/News';
 import MemberRegistration from "./pages/MemberRegistration";
+import LoanCalculator from './pages/Products/LoanCalculator';
 
 
 function App({ toggleTheme, mode }) {
@@ -49,6 +50,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/careers" element={<Careers />} />
           <Route path="/news" element={<News />} />
           <Route path="/customer_registration" element={<MemberRegistration />} />
+          <Route path="/products/loanCalculator" element={<LoanCalculator />} />
         </Routes>
       </BrowserRouter>
     </Box>
