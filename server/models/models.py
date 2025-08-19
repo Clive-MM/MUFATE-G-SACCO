@@ -295,3 +295,48 @@ class GalleryPhoto(db.Model):
     ImageURL = db.Column(db.String(500), nullable=False)
     UploadedAt = db.Column(db.DateTime, default=datetime.utcnow)
     IsActive = db.Column(db.Boolean, default=True)
+
+
+class LoanProduct(db.Model):
+    __tablename__ = 'LoanProduct'
+
+    LoanProductID       = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ProductKey          = db.Column(db.String(50), nullable=False, unique=True)     # e.g. 'development'
+    LoanName            = db.Column(db.String(120), nullable=False)                 # e.g. 'Development Loan'
+
+    # Repayment method (all are reducing-balance styles in your setup)
+    # 'equal_principal' (constant principal), 'emi' (fixed installment), 'interest_only' (balloon)
+    InterestType        = db.Column(db.String(20), nullable=False, default='equal_principal')
+
+    # Monthly nominal rate, e.g. 0.015 for 1.5% per month
+    MonthlyInterestRate = db.Column(db.Numeric(9, 6), nullable=False)
+
+    # Default repayment period (months); UI can allow overrides
+    DefaultTermMonths   = db.Column(db.Integer, nullable=False)
+
+    # Optional bounds for overrides
+    MinTermMonths       = db.Column(db.Integer)
+    MaxTermMonths       = db.Column(db.Integer)
+
+    # Optional principal limits
+    MinPrincipal        = db.Column(db.Numeric(18, 2))
+    MaxPrincipal        = db.Column(db.Numeric(18, 2))
+
+    # Period granularity (you’re using monthly)
+    RepaymentPeriod     = db.Column(db.String(12), nullable=False, default='monthly')
+
+    # Due-date rules
+    FirstDueRule        = db.Column(db.String(40), nullable=False, default='same_day_next_month')
+    HolidayRule         = db.Column(db.String(40), nullable=False, default='next_business_day')
+
+    # Display/rounding unit (KES); usually 1
+    RoundingUnit        = db.Column(db.Numeric(9, 2), nullable=False, default=1)
+
+    MaximumGuarantors   = db.Column(db.Integer)
+
+    IsActive            = db.Column(db.Boolean, nullable=False, default=True)
+    CreatedAt           = db.Column(db.DateTime, default=datetime.utcnow)
+    UpdatedAt           = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<LoanProduct {self.ProductKey} - {self.LoanName}>"

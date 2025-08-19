@@ -4,10 +4,12 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
 from datetime import datetime
-from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto
+from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct
 import cloudinary.uploader
 import re
 import traceback
+from datetime import date, timedelta
+from calendar import monthrange
 
 
 # ✅ Initialize Blueprint and Flask extensions
@@ -1593,3 +1595,250 @@ def get_gallery_photos():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch gallery photos.', 'error': str(e)}), 500
+    
+# =========================
+# LOAN PRODUCTS & SCHEDULE
+# =========================
+
+# ---- helpers (dates, rounding) ----
+def _parse_date(iso):
+    if not iso:
+        return date.today()
+    y, m, d = map(int, iso.split("-"))
+    return date(y, m, d)
+
+def _end_of_month(d):
+    return date(d.year, d.month, monthrange(d.year, d.month)[1])
+
+def _add_months(d, months, first_due_rule="same_day_next_month"):
+    # base add
+    y = d.year + (d.month - 1 + months) // 12
+    m = (d.month - 1 + months) % 12 + 1
+    day = min(d.day, monthrange(y, m)[1])
+    new_d = date(y, m, day)
+    if first_due_rule == "end_of_month":
+        return _end_of_month(new_d)
+    return new_d
+
+def _add_days(d, days):
+    return d + timedelta(days=days)
+
+def _adjust_business_day(d, rule):
+    # weekend handling only; (optional) extend with holiday calendar
+    if rule == "exact":
+        return d
+    wd = d.weekday()  # 0=Mon..6=Sun
+    if rule == "next_business_day":
+        if wd == 5:   # Sat
+            return _add_days(d, 2)
+        if wd == 6:   # Sun
+            return _add_days(d, 1)
+        return d
+    if rule == "previous_business_day":
+        if wd == 5:
+            return _add_days(d, -1)
+        if wd == 6:
+            return _add_days(d, -2)
+        return d
+    return d
+
+def _round_unit(x, unit):
+    try:
+        unit = float(unit or 1)
+    except Exception:
+        unit = 1.0
+    if unit <= 0:
+        return round(float(x), 2)
+    return round(float(x) / unit) * unit
+
+def _product_to_dict(p: LoanProduct):
+    return {
+        "ProductKey": p.ProductKey,
+        "LoanName": p.LoanName,
+        "InterestType": p.InterestType,
+        "MonthlyInterestRate": float(p.MonthlyInterestRate),
+        "DefaultTermMonths": p.DefaultTermMonths,
+        "MinTermMonths": p.MinTermMonths,
+        "MaxTermMonths": p.MaxTermMonths,
+        "MinPrincipal": float(p.MinPrincipal) if p.MinPrincipal is not None else None,
+        "MaxPrincipal": float(p.MaxPrincipal) if p.MaxPrincipal is not None else None,
+        "RepaymentPeriod": p.RepaymentPeriod,
+        "FirstDueRule": p.FirstDueRule,
+        "HolidayRule": p.HolidayRule,
+        "RoundingUnit": float(p.RoundingUnit),
+        "MaximumGuarantors": p.MaximumGuarantors,
+        "IsActive": bool(p.IsActive),
+    }
+
+# ---- schedules (reducing-balance engines) ----
+def _schedule_equal_principal(P, r_m, n, start_date, unit, first_due_rule, holiday_rule):
+    rows = []
+    bal = float(P)
+    fixed_pr = round(P / n, 10)  # high precision; last row will adjust
+    total_i = total_p = 0.0
+
+    for k in range(1, n + 1):
+        due = _add_months(start_date, k, first_due_rule)
+        due = _adjust_business_day(due, holiday_rule)
+
+        interest = bal * r_m
+        principal = fixed_pr if k < n else bal  # last row clears residue
+        payment = principal + interest
+        bal = max(0.0, bal - principal)
+
+        rows.append({
+            "period": k,
+            "date": due.isoformat(),
+            "principal": _round_unit(principal, unit),
+            "interest": _round_unit(interest, unit),
+            "total": _round_unit(payment, unit),
+            "balance": _round_unit(bal, unit),
+        })
+        total_i += interest
+        total_p += principal
+
+    return rows, total_p, total_i
+
+def _schedule_emi(P, r_m, n, start_date, unit, first_due_rule, holiday_rule):
+    rows = []
+    bal = float(P)
+    if r_m == 0:
+        emi = P / n
+    else:
+        emi = P * r_m / (1 - (1 + r_m) ** (-n))
+    total_i = total_p = 0.0
+
+    for k in range(1, n + 1):
+        due = _add_months(start_date, k, first_due_rule)
+        due = _adjust_business_day(due, holiday_rule)
+
+        interest = bal * r_m
+        principal = emi - interest if k < n else bal  # last row clears residue
+        payment = interest + principal
+        bal = max(0.0, bal - principal)
+
+        rows.append({
+            "period": k,
+            "date": due.isoformat(),
+            "principal": _round_unit(principal, unit),
+            "interest": _round_unit(interest, unit),
+            "total": _round_unit(payment, unit),
+            "balance": _round_unit(bal, unit),
+        })
+        total_i += interest
+        total_p += principal
+
+    return rows, total_p, total_i
+
+# =====================
+# PUBLIC LOAN ENDPOINTS
+# =====================
+
+# List active products
+@routes.route('/loan/products', methods=['GET'])
+def loan_list_products():
+    try:
+        items = LoanProduct.query.filter_by(IsActive=True)\
+                                 .order_by(LoanProduct.LoanName.asc())\
+                                 .all()
+        return jsonify({"items": [_product_to_dict(p) for p in items]}), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"message": "❌ Failed to list products.", "error": str(e)}), 500
+
+# Get a single product by ProductKey
+@routes.route('/loan/products/<product_key>', methods=['GET'])
+def loan_get_product(product_key):
+    try:
+        p = LoanProduct.query.filter_by(ProductKey=product_key, IsActive=True).first()
+        if not p:
+            return jsonify({"message": "❌ Product not found or inactive."}), 404
+        return jsonify(_product_to_dict(p)), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"message": "❌ Failed to fetch product.", "error": str(e)}), 500
+
+# Calculate repayment schedule (reducing balance)
+@routes.route('/loan/calc', methods=['POST'])
+def loan_calc_schedule():
+    """
+    Request JSON:
+    {
+      "product_key": "development_loan",
+      "principal": 100000,
+      "start_date": "2025-09-01",
+      "term_months": 36       # optional override; defaults to product.DefaultTermMonths
+    }
+    Response JSON: { "summary": {...}, "schedule": [ ... ] }
+    """
+    try:
+        data = request.get_json(force=True)
+
+        product_key = (data.get("product_key") or "").strip()
+        principal = float(data.get("principal", 0))
+        start = _parse_date(data.get("start_date"))
+        term_override = data.get("term_months")
+
+        if not product_key:
+            return jsonify({"message": "❌ 'product_key' is required."}), 400
+        if principal <= 0:
+            return jsonify({"message": "❌ 'principal' must be > 0."}), 400
+
+        # Load product
+        p = LoanProduct.query.filter_by(ProductKey=product_key, IsActive=True).first()
+        if not p:
+            return jsonify({"message": "❌ Product not found or inactive."}), 404
+
+        # Principal bounds
+        if p.MinPrincipal is not None and principal < float(p.MinPrincipal):
+            return jsonify({"message": f"❌ Principal below minimum ({float(p.MinPrincipal):,.2f})."}), 400
+        if p.MaxPrincipal is not None and principal > float(p.MaxPrincipal):
+            return jsonify({"message": f"❌ Principal exceeds maximum ({float(p.MaxPrincipal):,.2f})."}), 400
+
+        # Term
+        n = int(term_override) if term_override else int(p.DefaultTermMonths or 0)
+        if n <= 0:
+            return jsonify({"message": "❌ 'term_months' must be > 0."}), 400
+        if p.MinTermMonths is not None and n < int(p.MinTermMonths):
+            return jsonify({"message": f"❌ term_months below minimum ({p.MinTermMonths})."}), 400
+        if p.MaxTermMonths is not None and n > int(p.MaxTermMonths):
+            return jsonify({"message": f"❌ term_months exceeds maximum ({p.MaxTermMonths})."}), 400
+
+        # Rate & method
+        r = float(p.MonthlyInterestRate)          # monthly nominal
+        method = (p.InterestType or "equal_principal").lower()
+        unit = float(p.RoundingUnit or 1)
+        first_due_rule = (p.FirstDueRule or "same_day_next_month").lower()
+        holiday_rule = (p.HolidayRule or "next_business_day").lower()
+
+        # Build schedule
+        if method == "emi":
+            rows, total_p, total_i = _schedule_emi(principal, r, n, start, unit, first_due_rule, holiday_rule)
+            emi_value = rows[0]["total"] if rows else 0
+            monthly_principal = None
+        else:
+            # default to constant-principal reducing balance (your CBS style)
+            rows, total_p, total_i = _schedule_equal_principal(principal, r, n, start, unit, first_due_rule, holiday_rule)
+            emi_value = None
+            monthly_principal = _round_unit(principal / n, unit)
+
+        summary = {
+            "ProductKey": p.ProductKey,
+            "LoanName": p.LoanName,
+            "Method": method,
+            "MonthlyInterestRate": r,
+            "TermMonths": n,
+            "Principal": _round_unit(principal, unit),
+            "MonthlyPrincipal": monthly_principal,
+            "EMI": emi_value,
+            "FirstMonthInterest": rows[0]["interest"] if rows else 0,
+            "TotalInterest": _round_unit(total_i, unit),
+            "TotalPrincipal": _round_unit(total_p, unit),
+            "TotalPayable": _round_unit(total_p + total_i, unit)
+        }
+
+        return jsonify({"summary": summary, "schedule": rows}), 200
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"message": "❌ Failed to calculate schedule.", "error": str(e)}), 500
