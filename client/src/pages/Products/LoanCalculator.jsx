@@ -1,6 +1,7 @@
-// Products/LoanCalculator.jsx
+// src/pages/Products/LoanCalculator.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import "./LoanCalculator.css";
+import Footer from "../../components/Footer"; // ✅ add footer
 
 // Point to your backend; allow override via env
 const API_BASE =
@@ -36,7 +37,7 @@ export default function LoanCalculator() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedKey, setSelectedKey] = useState("");
-  const [ratePct, setRatePct] = useState(0);          // display as percentage
+  const [ratePct, setRatePct] = useState(0); // display as percentage
   const [defaultMonths, setDefaultMonths] = useState(0);
   const [months, setMonths] = useState("");
   const [principal, setPrincipal] = useState("");
@@ -142,22 +143,35 @@ export default function LoanCalculator() {
         <div className="card neo">
           <div className="card-title">Inputs</div>
 
-          <label className="field">
-            <span>Loan Type</span>
-            <select
-              className="input"
-              value={selectedKey}
-              onChange={(e) => setSelectedKey(e.target.value)}
-              disabled={!products.length}
-            >
-              {!products.length && <option value="">(No products)</option>}
-              {products.map((p) => (
-                <option key={p.ProductKey} value={p.ProductKey}>
-                  {p.LoanName}
-                </option>
-              ))}
-            </select>
-          </label>
+          {/* compact row for Loan Type + Start Date */}
+          <div className="field-row compact">
+            <label className="field compact-item">
+              <span>Loan Type</span>
+              <select
+                className="input"
+                value={selectedKey}
+                onChange={(e) => setSelectedKey(e.target.value)}
+                disabled={!products.length}
+              >
+                {!products.length && <option value="">(No products)</option>}
+                {products.map((p) => (
+                  <option key={p.ProductKey} value={p.ProductKey}>
+                    {p.LoanName}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="field compact-item">
+              <span>Start Date</span>
+              <input
+                className="input"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </label>
+          </div>
 
           <div className="field-row">
             <label className="field">
@@ -196,16 +210,6 @@ export default function LoanCalculator() {
               />
             </label>
           </div>
-
-          <label className="field">
-            <span>Start Date</span>
-            <input
-              className="input"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </label>
 
           {error && <div className="alert">{error}</div>}
 
@@ -285,7 +289,7 @@ export default function LoanCalculator() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th>Installment Number</th>
                   <th>Date</th>
                   <th>Principal</th>
                   <th>Interest</th>
@@ -313,6 +317,10 @@ export default function LoanCalculator() {
       <div className="note">
         * This is an indicative schedule. Final terms subject to approval by MUFATE G SACCO.
       </div>
+
+      {/* ✅ brand divider + footer */}
+      <div className="footer-divider" />
+      <Footer />
     </div>
   );
 }
