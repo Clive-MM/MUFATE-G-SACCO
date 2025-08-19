@@ -1,7 +1,25 @@
+// Products/LoanCalculator.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import "./LoanCalculator.css";
 
-const API_BASE = "https://mufate-g-sacco.onrender.com"; // same-origin. If different: e.g. "http://localhost:5000"
+// Point to your backend; allow override via env
+const API_BASE =
+  process.env.REACT_APP_API_BASE?.replace(/\/$/, "") ||
+  "https://mufate-g-sacco.onrender.com";
+
+// ---- helpers --------------------------------------------------
+async function getJSON(url, opts) {
+  const r = await fetch(url, opts);
+  const ct = r.headers.get("content-type") || "";
+  const isJSON = ct.includes("application/json");
+  if (!r.ok) {
+    const body = isJSON ? await r.json() : await r.text();
+    const msg = isJSON ? body?.message || JSON.stringify(body) : body.slice(0, 240);
+    throw new Error(`${r.status} ${r.statusText} – ${msg}`);
+  }
+  if (!isJSON) throw new Error("Expected JSON response from server.");
+  return r.json();
+}
 
 const fmtKES = (n) =>
   (n ?? 0).toLocaleString("en-KE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -13,11 +31,12 @@ const todayISO = () => {
   return `${d.getFullYear()}-${mm}-${dd}`;
 };
 
+// ---- component ------------------------------------------------
 export default function LoanCalculator() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedKey, setSelectedKey] = useState("");
-  const [rate, setRate] = useState(0);
+  const [ratePct, setRatePct] = useState(0);          // display as percentage
   const [defaultMonths, setDefaultMonths] = useState(0);
   const [months, setMonths] = useState("");
   const [principal, setPrincipal] = useState("");
@@ -26,28 +45,29 @@ export default function LoanCalculator() {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState("");
 
-  // load products once
+  // Load products
   useEffect(() => {
     (async () => {
       try {
-        const r = await fetch(`${API_BASE}/loan/products`);
-        const js = await r.json();
-        if (!r.ok) throw new Error(js.message || "Failed to load products");
-        setProducts(js.items || []);
-        if (js.items?.length) {
-          const first = js.items[0];
+        setError("");
+        const js = await getJSON(`${API_BASE}/loan/products`);
+        const items = js.items || [];
+        setProducts(items);
+        if (items.length) {
+          const first = items[0];
           setSelectedKey(first.ProductKey);
-          setRate(first.MonthlyInterestRate);
+          setRatePct(Number(first.MonthlyInterestRate) * 100);
           setDefaultMonths(first.DefaultTermMonths);
           setMonths(String(first.DefaultTermMonths));
         }
       } catch (e) {
-        setError(String(e.message || e));
+        setError(e.message);
+        setProducts([]);
       }
     })();
   }, []);
 
-  // when product changes, auto-fill rate and months
+  // Keep UI in sync when product changes
   const currentProduct = useMemo(
     () => products.find((p) => p.ProductKey === selectedKey),
     [products, selectedKey]
@@ -55,22 +75,26 @@ export default function LoanCalculator() {
 
   useEffect(() => {
     if (!currentProduct) return;
-    setRate(currentProduct.MonthlyInterestRate);
+    setRatePct(Number(currentProduct.MonthlyInterestRate) * 100);
     setDefaultMonths(currentProduct.DefaultTermMonths);
     setMonths(String(currentProduct.DefaultTermMonths));
   }, [currentProduct]);
 
+  // Calculate schedule
   const onCalculate = async () => {
     setError("");
-    if (!selectedKey) return setError("Select a product");
+    setSchedule([]);
+    setSummary(null);
+
+    if (!selectedKey) return setError("Select a loan product.");
     const P = Number(principal);
     const n = Number(months);
-    if (!P || P <= 0) return setError("Enter a valid principal");
-    if (!n || n <= 0) return setError("Enter a valid period (months)");
+    if (!P || P <= 0) return setError("Enter a valid principal amount.");
+    if (!n || n <= 0) return setError("Enter a valid period (months).");
 
     setLoading(true);
     try {
-      const r = await fetch(`${API_BASE}/loan/calc`, {
+      const js = await getJSON(`${API_BASE}/loan/calc`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -80,17 +104,16 @@ export default function LoanCalculator() {
           term_months: n
         })
       });
-      const js = await r.json();
-      if (!r.ok) throw new Error(js.message || "Failed to calculate");
       setSchedule(js.schedule || []);
       setSummary(js.summary || null);
     } catch (e) {
-      setError(String(e.message || e));
+      setError(e.message);
     } finally {
       setLoading(false);
     }
   };
 
+  // Export CSV
   const exportCSV = () => {
     if (!schedule?.length) return;
     const header = ["Period,Date,Principal,Interest,Total,Balance"];
@@ -102,7 +125,7 @@ export default function LoanCalculator() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${selectedKey}_schedule.csv`;
+    a.download = `${selectedKey || "loan"}_schedule.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -115,17 +138,19 @@ export default function LoanCalculator() {
       </div>
 
       <div className="lc-grid">
-        {/* form card */}
+        {/* inputs */}
         <div className="card neo">
           <div className="card-title">Inputs</div>
 
           <label className="field">
             <span>Loan Type</span>
             <select
+              className="input"
               value={selectedKey}
               onChange={(e) => setSelectedKey(e.target.value)}
-              className="input"
+              disabled={!products.length}
             >
+              {!products.length && <option value="">(No products)</option>}
               {products.map((p) => (
                 <option key={p.ProductKey} value={p.ProductKey}>
                   {p.LoanName}
@@ -137,7 +162,7 @@ export default function LoanCalculator() {
           <div className="field-row">
             <label className="field">
               <span>Rate (per month)</span>
-              <input className="input" value={rate} readOnly />
+              <input className="input" value={`${ratePct.toFixed(2)} %`} readOnly />
             </label>
             <label className="field">
               <span>Default Months</span>
@@ -154,6 +179,7 @@ export default function LoanCalculator() {
                 min={1}
                 value={months}
                 onChange={(e) => setMonths(e.target.value)}
+                disabled={!products.length}
               />
             </label>
 
@@ -184,20 +210,29 @@ export default function LoanCalculator() {
           {error && <div className="alert">{error}</div>}
 
           <div className="actions">
-            <button className="btn-brand" disabled={loading} onClick={onCalculate}>
+            <button className="btn-brand" disabled={loading || !products.length} onClick={onCalculate}>
               {loading ? "Calculating…" : "Calculate"}
             </button>
-            <button className="btn-ghost" onClick={() => { setSchedule([]); setSummary(null); }}>
+            <button
+              className="btn-ghost"
+              onClick={() => {
+                setSchedule([]);
+                setSummary(null);
+                setError("");
+              }}
+            >
               Reset
             </button>
           </div>
         </div>
 
-        {/* summary card */}
+        {/* summary */}
         <div className="card neo">
           <div className="card-title">Summary</div>
           {!summary ? (
-            <div className="muted">Run a calculation to see totals.</div>
+            <div className="muted">
+              {products.length ? "Run a calculation to see totals." : "No active products found."}
+            </div>
           ) : (
             <div className="chips">
               <div className="chip">
