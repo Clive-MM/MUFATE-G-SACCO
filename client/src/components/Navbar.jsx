@@ -264,6 +264,7 @@ const Navbar = () => {
                           <Link component={RouterLink} to="/products/fosa" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>FOSA Loans</Link>
                           <Link component={RouterLink} to="/products/bosa" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>BOSA Loans</Link>
                           <Link component={RouterLink} to="/products/savings" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>Savings</Link>
+                           <Link component={RouterLink} to="/products/loanCalculator" onClick={() => setDrawerOpen(false)} underline="none" sx={drawerLinkStyle}>Loan Calculator</Link>
                         </Stack>
                       </Box>
                     );
