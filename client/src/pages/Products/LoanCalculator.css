@@ -183,11 +183,43 @@
 .muted{ color:var(--muted); }
 
 .note{
-  max-width:1200px;
-  margin:10px auto 0;
-  color:var(--muted);
-  font-size:.9rem;
+  max-width: 1200px;
+  margin: 16px auto 0;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(135deg, #f4fff6 0%, var(--bg) 70%);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  border: 1px solid #d7ecd7;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(46,125,50,.08),
+              inset 6px 6px 12px var(--inset-a),
+              inset -6px -6px 12px var(--inset-b);
 }
+
+.note-icon{
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: .5px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  box-shadow: 0 4px 12px rgba(46,125,50,.25);
+}
+
+.note-text strong{ color: var(--brand); }
+.note-text b{ color: var(--brand); font-weight: 800; }
+
 
 /* nice focus styles for selects */
 select.input{

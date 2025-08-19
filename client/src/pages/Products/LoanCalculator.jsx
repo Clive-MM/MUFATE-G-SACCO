@@ -328,9 +328,13 @@ export default function LoanCalculator() {
         )}
       </div>
 
-      <div className="note">
-        * This is an indicative schedule. Final terms subject to approval by MUFATE G SACCO.
-      </div>
+      <div className="note" role="note" aria-live="polite">
+  <span className="note-icon">i</span>
+  <span className="note-text">
+    <strong>Important:</strong> This is an indicative schedule. Final terms are subject to approval by <b>MUFATE G SACCO</b>.
+  </span>
+</div>
+
 
       {/* footer only – orange divider removed */}
       <Footer />
