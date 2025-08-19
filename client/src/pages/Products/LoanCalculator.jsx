@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./LoanCalculator.css";
 
-const API_BASE = ""; // same-origin. If different: e.g. "http://localhost:5000"
+const API_BASE = "https://mufate-g-sacco.onrender.com"; // same-origin. If different: e.g. "http://localhost:5000"
 
 const fmtKES = (n) =>
   (n ?? 0).toLocaleString("en-KE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
