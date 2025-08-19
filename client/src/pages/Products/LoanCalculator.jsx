@@ -1,7 +1,7 @@
 // src/pages/Products/LoanCalculator.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import "./LoanCalculator.css";
-import Footer from "../../components/Footer"; // ✅ footer
+import Footer from "../../components/Footer";
 
 // Point to your backend; allow override via env
 const API_BASE =
@@ -114,9 +114,8 @@ export default function LoanCalculator() {
     }
   };
 
-  // ✅ Smart reset (fix)
+  // Smart reset
   const onReset = () => {
-    // Prefer the first product as a clean baseline
     const baseline = products[0];
     if (baseline) {
       setSelectedKey(baseline.ProductKey);
@@ -166,8 +165,8 @@ export default function LoanCalculator() {
           <div className="card-title">Inputs</div>
 
           {/* compact row for Loan Type + Start Date */}
-          <div className="field-row compact">
-            <label className="field compact-item">
+          <div className="compact-row">
+            <label className="field compact">
               <span>Loan Type</span>
               <select
                 className="input"
@@ -184,7 +183,7 @@ export default function LoanCalculator() {
               </select>
             </label>
 
-            <label className="field compact-item">
+            <label className="field compact">
               <span>Start Date</span>
               <input
                 className="input"
@@ -333,8 +332,7 @@ export default function LoanCalculator() {
         * This is an indicative schedule. Final terms subject to approval by MUFATE G SACCO.
       </div>
 
-      {/* brand divider + footer */}
-      <div className="footer-divider" />
+      {/* footer only – orange divider removed */}
       <Footer />
     </div>
   );
