@@ -1,7 +1,7 @@
 // src/pages/Products/LoanCalculator.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import "./LoanCalculator.css";
-import Footer from "../../components/Footer"; // ✅ add footer
+import Footer from "../../components/Footer"; // ✅ footer
 
 // Point to your backend; allow override via env
 const API_BASE =
@@ -114,6 +114,28 @@ export default function LoanCalculator() {
     }
   };
 
+  // ✅ Smart reset (fix)
+  const onReset = () => {
+    // Prefer the first product as a clean baseline
+    const baseline = products[0];
+    if (baseline) {
+      setSelectedKey(baseline.ProductKey);
+      setRatePct(Number(baseline.MonthlyInterestRate) * 100);
+      setDefaultMonths(baseline.DefaultTermMonths);
+      setMonths(String(baseline.DefaultTermMonths));
+    } else {
+      setSelectedKey("");
+      setRatePct(0);
+      setDefaultMonths(0);
+      setMonths("");
+    }
+    setPrincipal("");
+    setStartDate(todayISO());
+    setSchedule([]);
+    setSummary(null);
+    setError("");
+  };
+
   // Export CSV
   const exportCSV = () => {
     if (!schedule?.length) return;
@@ -217,14 +239,7 @@ export default function LoanCalculator() {
             <button className="btn-brand" disabled={loading || !products.length} onClick={onCalculate}>
               {loading ? "Calculating…" : "Calculate"}
             </button>
-            <button
-              className="btn-ghost"
-              onClick={() => {
-                setSchedule([]);
-                setSummary(null);
-                setError("");
-              }}
-            >
+            <button className="btn-ghost" disabled={loading} onClick={onReset}>
               Reset
             </button>
           </div>
@@ -318,7 +333,7 @@ export default function LoanCalculator() {
         * This is an indicative schedule. Final terms subject to approval by MUFATE G SACCO.
       </div>
 
-      {/* ✅ brand divider + footer */}
+      {/* brand divider + footer */}
       <div className="footer-divider" />
       <Footer />
     </div>

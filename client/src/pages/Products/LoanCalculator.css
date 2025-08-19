@@ -204,3 +204,10 @@ select.input{
   background-repeat: no-repeat;
   padding-right: 44px;
 }
+.footer-divider{
+  height:20px;
+  background:var(--gold);
+  max-width:1200px;
+  margin:28px auto 0;
+  border-radius:10px;
+}
