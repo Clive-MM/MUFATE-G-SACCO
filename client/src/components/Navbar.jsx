@@ -184,6 +184,7 @@ const Navbar = () => {
                       <Link component={RouterLink} to="/products/fosa" underline="none" sx={dropdownLinkStyle}>FOSA Loans</Link>
                       <Link component={RouterLink} to="/products/bosa" underline="none" sx={dropdownLinkStyle}>BOSA Loans</Link>
                       <Link component={RouterLink} to="/products/savings" underline="none" sx={dropdownLinkStyle}>Savings</Link>
+                      <Link component={RouterLink} to="/products/loanCalculator" underline="none" sx={dropdownLinkStyle}>Loan Calculator</Link>
                     </Box>
                   </Box>
                 );
