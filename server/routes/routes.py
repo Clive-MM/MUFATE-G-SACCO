@@ -1258,7 +1258,8 @@ def view_homepage_sliders():
     except Exception as e:
         return jsonify({'message': '❌ Failed to fetch sliders.', 'error': str(e)}), 500
 
-# ROUTE FOR REGISTERING A CUSTOMER
+
+# ROUTE FOR REGISTERING A CUSTOMER (with email notifications + contact note)
 @routes.route("/membership-register", methods=["POST"])
 def register_membership():
     try:
@@ -1273,21 +1274,17 @@ def register_membership():
             "MobileNumber", "NomineeName", "NomineeIDNumber",
             "NomineePhoneNumber", "NomineeRelation"
         ]
-        missing = [field for field in required_fields if not data.get(field)]
+        missing = [f for f in required_fields if not data.get(f)]
         if missing:
-            return jsonify({
-                "message": "❌ Missing required fields",
-                "missing_fields": missing
-            }), 400
+            return jsonify({"message": "❌ Missing required fields", "missing_fields": missing}), 400
 
         # ✅ Phone number validation (2547XXXXXXXX)
         phone_pattern = r"^2547\d{8}$"
-        phone_fields = {
+        for label, number in {
             "MobileNumber": data.get("MobileNumber"),
             "AlternateMobileNumber": data.get("AlternateMobileNumber"),
             "NomineePhoneNumber": data.get("NomineePhoneNumber")
-        }
-        for label, number in phone_fields.items():
+        }.items():
             if number and not re.fullmatch(phone_pattern, number):
                 return jsonify({"message": f"❌ {label} must be in 2547XXXXXXXX format"}), 400
 
@@ -1297,7 +1294,8 @@ def register_membership():
         except ValueError:
             return jsonify({"message": "❌ DOB must be in YYYY-MM-DD format"}), 400
 
-        age = datetime.today().year - dob.year - ((datetime .today().month, datetime.today().day) < (dob.month, dob.day))
+        today = datetime.today()
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
         if age < 18:
             return jsonify({"message": "❌ You must be at least 18 years old to register."}), 400
 
@@ -1329,13 +1327,88 @@ def register_membership():
             NomineeName=data.get("NomineeName"),
             NomineeIDNumber=data.get("NomineeIDNumber"),
             NomineePhoneNumber=data.get("NomineePhoneNumber"),
-            NomineeRelation=data.get("NomineeRelation")
+            NomineeRelation=data.get("NomineeRelation"),
         )
+
+        # Optional: set pending status if your model supports it
+        if hasattr(member, "Status") and member.Status is None:
+            member.Status = "PendingPayment"
 
         db.session.add(member)
         db.session.commit()
 
-        return jsonify({"message": "✅ Registration successful!"}), 201
+        # ===== EMAIL NOTIFICATIONS =====
+        email_errors = None
+        try:
+            # Notify admin
+            admin_msg = Message(
+                subject="📥 New Membership Submitted - Pending Payment (KES 1,500)",
+                recipients=["maderumoyia@mudetesacco.co.ke"],
+                body=f"""Hello Admin,
+
+A new membership has been submitted and is ready to finalize after payment.
+
+Name: {member.FullName}
+ID Number: {member.IDNumber}
+Mobile: {member.MobileNumber}
+Email: {member.Email or 'N/A'}
+Submitted At: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+Next step: Await KES 1,500 registration payment confirmation (M-PESA Paybill 506492) to proceed with activation.
+
+-- MUFATE G SACCO Website
+"""
+            )
+            if mail:
+                mail.send(admin_msg)
+
+            # Acknowledge applicant (only if email provided)
+            if member.Email:
+                user_msg = Message(
+                    subject="✅ MUFATE G SACCO Registration Received – Next Step (KES 1,500)",
+                    recipients=[member.Email],
+                    body=f"""Dear {member.FullName},
+
+Thank you for registering with MUFATE G SACCO.
+
+✅ We have received your application.
+
+🧾 NEXT STEP:
+Please complete registration by paying the KES 1,500 registration fee via M-PESA Paybill 506492.
+Once payment is confirmed, our team will contact you to finalize your membership.
+
+If you have any questions, reply to this email or contact us:
+maderumoyia@mudetesacco.co.ke
+
+Warm regards,
+MUFA​TE G SACCO Team
+"""
+                )
+                if mail:
+                    mail.send(user_msg)
+
+        except Exception as e:
+            traceback.print_exc()
+            email_errors = str(e)
+
+        # Frontend-friendly response with the next step
+        resp = {
+            "message": "✅ Registration successful! You will be contacted to complete your registration.",
+            "next_step": "Complete payment of KES 1,500 to finalize registration.",
+            "payment": {
+                "required": True,
+                "amount": 1500,
+                "channel": "M-PESA Paybill",
+                "paybill": "506492",
+                "account_hint": "Your Full Name or Member ID"
+            },
+            "member_id": getattr(member, "MemberID", None) or getattr(member, "id", None)
+        }
+        if email_errors:
+            resp["email_warning"] = "⚠️ Registration saved, but failed to send one or more emails."
+            resp["email_error_detail"] = email_errors
+
+        return jsonify(resp), 201
 
     except Exception as e:
         traceback.print_exc()

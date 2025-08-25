@@ -106,6 +106,14 @@ const MemberRegistration = () => {
   const [success, setSuccess] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
+  // holds backend response extras for the success panel
+  const [regMeta, setRegMeta] = useState({
+    next_step: null,
+    payment: null,
+    member_id: null,
+    email_warning: null,
+  });
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -116,16 +124,24 @@ const MemberRegistration = () => {
   const confirmSubmission = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
+      const { data } = await axios.post(
         "https://mufate-g-sacco.onrender.com/membership-register",
         formData,
         { headers: { "Content-Type": "application/json" } }
       );
 
+      // capture backend-driven instructions for success panel
+      setRegMeta({
+        next_step: data.next_step || null,
+        payment: data.payment || null,
+        member_id: data.member_id || null,
+        email_warning: data.email_warning || null,
+      });
+
       setSuccess(true);
       setSnackbar({
         open: true,
-        message: response.data.message || "✅ Registration successful!",
+        message: data.message || "✅ Registration successful!",
         severity: "success",
       });
     } catch (error) {
@@ -285,6 +301,7 @@ const MemberRegistration = () => {
                 )}
                 <Button
                   sx={{ ml: 2, ...neuStyle }}
+                  disabled={loading}
                   onClick={activeStep < steps.length - 1 ? nextStep : confirmSubmission}
                 >
                   {activeStep < steps.length - 1 ? "Next" : (loading ? "Submitting..." : "Submit")}
@@ -295,8 +312,36 @@ const MemberRegistration = () => {
             <Box textAlign="center">
               <CheckCircleIcon sx={{ fontSize: 60, color: "green" }} />
               <Typography sx={{ mt: 2, fontSize: "1.1rem" }}>
-                ✅ Registration successful! An admin will contact you shortly to collect your original ID card (front and back) and passport photo. You will also be guided on how to complete your one-time registration fee of <strong>KES 1,500</strong> via <strong>M-PESA Paybill 506492</strong>.
+                ✅ Registration successful! <strong>You will be contacted</strong> by MUFATE G SACCO to complete your registration.
               </Typography>
+
+              {/* Backend-driven next step */}
+              {regMeta.next_step && (
+                <Typography sx={{ mt: 1 }}>
+                  🧾 Next step: {regMeta.next_step}
+                </Typography>
+              )}
+
+              {/* Payment details from backend if present */}
+              {regMeta.payment?.required && (
+                <Typography sx={{ mt: 1 }}>
+                  One-time fee: <strong>KES {regMeta.payment.amount}</strong>
+                  {regMeta.payment.channel && regMeta.payment.paybill && (
+                    <> via <strong>{regMeta.payment.channel} {regMeta.payment.paybill}</strong></>
+                  )}
+                  {regMeta.payment.account_hint && (
+                    <> (Account: <em>{regMeta.payment.account_hint}</em>)</>
+                  )}
+                  .
+                </Typography>
+              )}
+
+              {/* Optional email warning from backend */}
+              {regMeta.email_warning && (
+                <Alert severity="warning" sx={{ mt: 2 }}>
+                  {regMeta.email_warning}
+                </Alert>
+              )}
             </Box>
           )}
         </Paper>
