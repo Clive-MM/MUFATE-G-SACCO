@@ -1400,7 +1400,7 @@ MUFA​TE G SACCO Team
                 "amount": 1500,
                 "channel": "M-PESA Paybill",
                 "paybill": "506492",
-                "account_hint": "Your Full Name or Member ID"
+                "account_hint": "SHOULD THE SACCO ASSIGNED ACCOUNT NUMBER"
             },
             "member_id": getattr(member, "MemberID", None) or getattr(member, "id", None)
         }
