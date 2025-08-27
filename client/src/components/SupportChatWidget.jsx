@@ -3,8 +3,9 @@ import React, { useMemo, useState } from "react";
 import {
   Box, Paper, Typography, TextField, Button, IconButton,
   Snackbar, Alert, Divider, CircularProgress, ToggleButton, ToggleButtonGroup,
-  InputAdornment, Chip, Stack, Zoom, Slide, Tooltip
+  InputAdornment, Chip, Stack, Zoom, Slide, Tooltip, useMediaQuery
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import EmailIcon from "@mui/icons-material/Email";
@@ -16,10 +17,22 @@ export default function SupportChatWidget({
 }) {
   const apiBase = process.env.REACT_APP_API_BASE || "https://mufate-g-sacco.onrender.com";
 
+  // Theme + breakpoints
+  const theme = useTheme();
+  const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));   // < 600px
+  const isXs = useMediaQuery("(max-width:420px)");
+
+  // Responsive tokens
+  const launcherSize = isSmDown ? 56 : 64;
+  const panelMaxWidth = isSmDown ? "calc(100vw - 16px)" : "380px";
+  const panelRadius = isSmDown ? 16 : 24;
+  const headerPad = isSmDown ? 1.25 : 2;
+  const bodyPad = isSmDown ? 1.5 : 2;
+
   // state
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1);
-  const [contactMode, setContactMode] = useState("email");
+  const [contactMode, setContactMode] = useState("email"); // "email" | "phone"
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [msg, setMsg] = useState("");
@@ -40,7 +53,7 @@ export default function SupportChatWidget({
 
   const alignStyle = position === "bottom-left" ? { left: offset.x } : { right: offset.x };
 
-  // Neumorphism + brand tokens
+  // Neumorphism + glass tokens
   const neuBg = "#e9faea";
   const neuOut = "12px 12px 24px #bfdcc2, -12px -12px 24px #ffffff";
   const neuIn = "inset 6px 6px 12px #cfe6d2, inset -6px -6px 12px #ffffff";
@@ -88,6 +101,10 @@ export default function SupportChatWidget({
           bottom: `calc(${offset.y}px + env(safe-area-inset-bottom, 0px))`,
           ...alignStyle,
           zIndex: 1300,
+          // Nudge inward a bit more on very small screens
+          ...(isXs && (position === "bottom-left"
+            ? { left: 12 }
+            : { right: 12 })),
         }}
       >
         <Zoom in={!open}>
@@ -97,35 +114,39 @@ export default function SupportChatWidget({
               size="large"
               aria-label="Open MUFATE G SACCO Support"
               sx={{
-                width: 64,
-                height: 64,
+                width: launcherSize,
+                height: launcherSize,
                 borderRadius: "50%",
-                // ✅ Solid green background & white icon
-                background: brand,
-                color: "#fff",
+                background: brand,     // solid green
+                color: "#fff",         // white icon
                 boxShadow: neuOut,
                 border: "1px solid rgba(46,125,50,0.18)",
                 position: "relative",
 
-                // 🔔 Eye-catching alternating light-green ↔ gold glow
+                // Light-green ↔ gold pulsing glow
                 "&:before": {
                   content: '""',
                   position: "absolute",
                   inset: 0,
                   borderRadius: "50%",
-                  boxShadow: "0 0 0 0 rgba(144,238,144,.55)", // light green start
+                  boxShadow: "0 0 0 0 rgba(144,238,144,.55)",
                   animation: "pulse 2.1s infinite",
                 },
                 "@keyframes pulse": {
-                  "0%":   { boxShadow: "0 0 0 0 rgba(144,238,144,.55)" },  // light green
-                  "35%":  { boxShadow: "0 0 0 10px rgba(255,215,0,.45)" }, // gold halo
-                  "70%":  { boxShadow: "0 0 0 20px rgba(144,238,144,0)" }, // fade
-                  "100%": { boxShadow: "0 0 0 0 rgba(255,215,0,0)" },      // reset
+                  "0%":   { boxShadow: "0 0 0 0 rgba(144,238,144,.55)" },
+                  "35%":  { boxShadow: "0 0 0 10px rgba(255,215,0,.45)" },
+                  "70%":  { boxShadow: "0 0 0 20px rgba(144,238,144,0)" },
+                  "100%": { boxShadow: "0 0 0 0 rgba(255,215,0,0)" },
                 },
-                "&:hover": { boxShadow: "8px 8px 18px #bcd9bf, -8px -8px 18px #ffffff" },
+
+                "&:hover": {
+                  boxShadow: "8px 8px 18px #bcd9bf, -8px -8px 18px #ffffff",
+                },
               }}
             >
-              <ChatBubbleOutlineIcon />
+              <ChatBubbleOutlineIcon
+                sx={{ fontSize: isSmDown ? 22 : 24 }}
+              />
             </IconButton>
           </Tooltip>
         </Zoom>
@@ -135,16 +156,18 @@ export default function SupportChatWidget({
           <Paper
             elevation={0}
             sx={{
-              mt: 1.5,
-              width: 380,
-              maxWidth: "calc(100vw - 28px)",
-              borderRadius: 3,
+              mt: 1.25,
+              width: "100%",
+              maxWidth: panelMaxWidth,
+              borderRadius: panelRadius,
               overflow: "hidden",
               background: "rgba(233,250,234,0.9)",
               backdropFilter: "blur(8px)",
               WebkitBackdropFilter: "blur(8px)",
               boxShadow: neuOut,
               border: "1px solid rgba(46,125,50,0.12)",
+              // On tiny devices, anchor the panel a touch away from screen edge
+              mx: isXs ? 0.5 : 0,
             }}
             role="dialog"
             aria-labelledby="mufate-support-title"
@@ -152,7 +175,8 @@ export default function SupportChatWidget({
             {/* Header */}
             <Box
               sx={{
-                p: 2,
+                p: headerPad,
+                px: isSmDown ? 1.25 : 2,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -160,7 +184,11 @@ export default function SupportChatWidget({
                 boxShadow: neuIn,
               }}
             >
-              <Typography id="mufate-support-title" variant="subtitle1" sx={{ fontWeight: 800, color: brand }}>
+              <Typography
+                id="mufate-support-title"
+                variant={isSmDown ? "subtitle2" : "subtitle1"}
+                sx={{ fontWeight: 800, color: brand }}
+              >
                 MUFATE G SACCO Support
               </Typography>
               <IconButton
@@ -174,10 +202,13 @@ export default function SupportChatWidget({
             </Box>
 
             {/* Body */}
-            <Box sx={{ p: 2 }}>
+            <Box sx={{ p: bodyPad, pt: isSmDown ? 1.25 : 2 }}>
               {step === 1 && (
                 <>
-                  <Typography variant="body2" sx={{ mb: 1, color: "#1b5e20" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: isSmDown ? 0.75 : 1, color: "#1b5e20" }}
+                  >
                     Choose how we should contact you
                   </Typography>
 
@@ -186,10 +217,12 @@ export default function SupportChatWidget({
                     value={contactMode}
                     onChange={(_, v) => v && setContactMode(v)}
                     sx={{
-                      mb: 1.5,
+                      mb: isSmDown ? 1 : 1.5,
                       "& .MuiToggleButton-root": {
                         textTransform: "none",
-                        px: 1.5,
+                        px: isSmDown ? 1 : 1.5,
+                        py: isSmDown ? 0.4 : 0.6,
+                        fontSize: isSmDown ? ".8rem" : ".9rem",
                         borderColor: "rgba(46,125,50,.25)",
                       },
                       "& .Mui-selected": {
@@ -210,7 +243,7 @@ export default function SupportChatWidget({
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       fullWidth
-                      size="small"
+                      size={isSmDown ? "small" : "medium"}
                       variant="filled"
                       helperText={email && !emailOk ? "Enter a valid email" : " "}
                       error={!!email && !emailOk}
@@ -218,11 +251,15 @@ export default function SupportChatWidget({
                         disableUnderline: true,
                         startAdornment: (
                           <InputAdornment position="start">
-                            <EmailIcon sx={{ color: brand }} />
+                            <EmailIcon sx={{ color: brand, fontSize: isSmDown ? 18 : 20 }} />
                           </InputAdornment>
                         ),
                       }}
-                      sx={{ borderRadius: 2, background: neuBg, boxShadow: neuIn }}
+                      sx={{
+                        borderRadius: 2,
+                        background: neuBg,
+                        boxShadow: neuIn,
+                      }}
                     />
                   ) : (
                     <TextField
@@ -230,7 +267,7 @@ export default function SupportChatWidget({
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       fullWidth
-                      size="small"
+                      size={isSmDown ? "small" : "medium"}
                       variant="filled"
                       helperText={phone && !phoneOk ? "Use Kenyan mobile format 2547XXXXXXXX" : " "}
                       error={!!phone && !phoneOk}
@@ -238,11 +275,15 @@ export default function SupportChatWidget({
                         disableUnderline: true,
                         startAdornment: (
                           <InputAdornment position="start">
-                            <PhoneIphoneIcon sx={{ color: brand }} />
+                            <PhoneIphoneIcon sx={{ color: brand, fontSize: isSmDown ? 18 : 20 }} />
                           </InputAdornment>
                         ),
                       }}
-                      sx={{ borderRadius: 2, background: neuBg, boxShadow: neuIn }}
+                      sx={{
+                        borderRadius: 2,
+                        background: neuBg,
+                        boxShadow: neuIn,
+                      }}
                     />
                   )}
 
@@ -251,6 +292,8 @@ export default function SupportChatWidget({
                     fullWidth
                     sx={{
                       mt: 1,
+                      py: isSmDown ? 0.6 : 0.8,
+                      fontSize: isSmDown ? ".9rem" : "1rem",
                       background: brand,
                       "&:hover": { background: "#1b5e20" },
                       borderRadius: 2,
@@ -266,7 +309,10 @@ export default function SupportChatWidget({
 
               {step === 2 && (
                 <>
-                  <Typography variant="body2" sx={{ mb: 1, color: "#1b5e20" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ mb: isSmDown ? 0.75 : 1, color: "#1b5e20" }}
+                  >
                     Describe your question or issue
                   </Typography>
 
@@ -284,6 +330,7 @@ export default function SupportChatWidget({
                           background: "#fff",
                           borderWidth: 1,
                           borderStyle: "solid",
+                          mb: 0.75,
                         }}
                       />
                     ))}
@@ -294,13 +341,17 @@ export default function SupportChatWidget({
                     value={msg}
                     onChange={(e) => setMsg(e.target.value.slice(0, msgMax))}
                     fullWidth
-                    minRows={4}
+                    minRows={isSmDown ? 3 : 4}
                     multiline
-                    size="small"
+                    size={isSmDown ? "small" : "medium"}
                     variant="filled"
                     helperText={`${Math.max(0, msgMin - msg.trim().length)} more characters to reach minimum`}
                     InputProps={{ disableUnderline: true }}
-                    sx={{ borderRadius: 2, background: neuBg, boxShadow: neuIn }}
+                    sx={{
+                      borderRadius: 2,
+                      background: neuBg,
+                      boxShadow: neuIn,
+                    }}
                     error={msg.trim().length > 0 && msg.trim().length < msgMin}
                   />
 
@@ -320,6 +371,8 @@ export default function SupportChatWidget({
                       disabled={loading}
                       fullWidth
                       sx={{
+                        py: isSmDown ? 0.55 : 0.75,
+                        fontSize: isSmDown ? ".9rem" : "1rem",
                         borderColor: brand,
                         color: brand,
                         borderRadius: 2,
@@ -334,6 +387,8 @@ export default function SupportChatWidget({
                       disabled={disabled || loading}
                       fullWidth
                       sx={{
+                        py: isSmDown ? 0.55 : 0.75,
+                        fontSize: isSmDown ? ".9rem" : "1rem",
                         background: brand,
                         "&:hover": { background: "#1b5e20" },
                         borderRadius: 2,
@@ -344,16 +399,19 @@ export default function SupportChatWidget({
                     </Button>
                   </Box>
 
-                  <Divider sx={{ my: 1.5, borderColor: "rgba(46,125,50,0.15)" }} />
-                  <Typography variant="caption" color="text.secondary">
+                  <Divider sx={{ my: isSmDown ? 1 : 1.5, borderColor: "rgba(46,125,50,0.15)" }} />
+                  <Typography variant="caption" color="text.secondary" sx={{ display: "block" }}>
                     By submitting, you consent to be contacted via the method you selected above.
                   </Typography>
                 </>
               )}
 
               {step === 3 && (
-                <Box sx={{ textAlign: "center", py: 4 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 800, mb: 1, color: brand }}>
+                <Box sx={{ textAlign: "center", py: isSmDown ? 3 : 4 }}>
+                  <Typography
+                    variant={isSmDown ? "subtitle1" : "h6"}
+                    sx={{ fontWeight: 800, mb: 1, color: brand }}
+                  >
                     🎟️ Ticket received
                   </Typography>
                   <Typography variant="body2">
@@ -362,6 +420,7 @@ export default function SupportChatWidget({
                   <Button
                     sx={{
                       mt: 2,
+                      py: isSmDown ? 0.6 : 0.8,
                       background: brand,
                       "&:hover": { background: "#1b5e20" },
                       borderRadius: 2,
