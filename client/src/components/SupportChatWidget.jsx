@@ -11,7 +11,7 @@ export default function SupportChatWidget({
   position = "bottom-right", // can also pass "bottom-left"
   offset = { x: 20, y: 24 },
 }) {
-  const apiBase = process.env.REACT_APP_API_BASE || "http://localhost:5000";
+  const apiBase = process.env.REACT_APP_API_BASE || "https://mufate-g-sacco.onrender.com";
 
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1); // 1=email, 2=message, 3=done
