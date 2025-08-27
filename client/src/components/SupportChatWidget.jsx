@@ -110,13 +110,15 @@ export default function SupportChatWidget({
                   position: "absolute",
                   inset: 0,
                   borderRadius: "50%",
-                  boxShadow: "0 0 0 0 rgba(46,125,50,.35)",
+                  // 🔔 Eye-catching alternating light-green ↔ gold glow
+                  boxShadow: "0 0 0 0 rgba(144,238,144,.55)", // light green start (LimeGreen-ish)
                   animation: "pulse 2.1s infinite",
                 },
                 "@keyframes pulse": {
-                  "0%": { boxShadow: "0 0 0 0 rgba(46,125,50,.25)" },
-                  "70%": { boxShadow: "0 0 0 14px rgba(46,125,50,0)" },
-                  "100%": { boxShadow: "0 0 0 0 rgba(46,125,50,0)" },
+                  "0%":   { boxShadow: "0 0 0 0 rgba(144,238,144,.55)" },  // light green bright
+                  "35%":  { boxShadow: "0 0 0 10px rgba(255,215,0,.45)" }, // gold halo
+                  "70%":  { boxShadow: "0 0 0 20px rgba(144,238,144,0)" }, // fade out
+                  "100%": { boxShadow: "0 0 0 0 rgba(255,215,0,0)" },      // reset
                 },
                 "&:hover": { boxShadow: "8px 8px 18px #bcd9bf, -8px -8px 18px #ffffff" },
               }}
