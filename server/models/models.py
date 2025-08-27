@@ -340,3 +340,16 @@ class LoanProduct(db.Model):
 
     def __repr__(self):
         return f"<LoanProduct {self.ProductKey} - {self.LoanName}>"
+    
+
+#SupportTicket
+class SupportTicket(db.Model):
+    __tablename__ = "SupportTickets"
+
+    Id = db.Column(db.Integer, primary_key=True)
+    Email = db.Column(db.String(255), nullable=False, index=True)
+    Message = db.Column(db.Text, nullable=False)
+    PageUrl = db.Column(db.String(1024))
+    UserAgent = db.Column(db.String(512))
+    Status = db.Column(db.String(32), default="Open")  # Open, In-Progress, Closed
+    CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)

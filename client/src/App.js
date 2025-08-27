@@ -18,6 +18,7 @@ import Careers from './pages/Careers/Careers';
 import News from './more/News';
 import MemberRegistration from "./pages/MemberRegistration";
 import LoanCalculator from './pages/Products/LoanCalculator';
+import SupportChatWidget from "./components/SupportChatWidget";
 
 
 function App({ toggleTheme, mode }) {
@@ -51,6 +52,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/news" element={<News />} />
           <Route path="/customer_registration" element={<MemberRegistration />} />
           <Route path="/products/loanCalculator" element={<LoanCalculator />} />
+          <Route path="/mufategsaccosupport" element={<SupportChatWidget />} />
         </Routes>
       </BrowserRouter>
     </Box>

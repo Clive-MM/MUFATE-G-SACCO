@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
 from datetime import datetime
-from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct
+from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket
 import cloudinary.uploader
 import re
 import traceback
@@ -23,6 +23,7 @@ mail = None
 
 # ✅ Placeholder for mail - will be assigned later from app.py
 mail = None
+
 
 # ✅ Register mail instance
 def register_mail_instance(mail_instance):
@@ -1915,3 +1916,103 @@ def loan_calc_schedule():
     except Exception as e:
         traceback.print_exc()
         return jsonify({"message": "❌ Failed to calculate schedule.", "error": str(e)}), 500
+
+
+# =========================
+# SUPPORT TICKET ROUTES
+# =========================
+
+@routes.route('/support/ticket', methods=['POST'])
+def submit_support_ticket():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'message': '❌ No JSON data received'}), 400
+
+        # Extract fields from JSON
+        email = (data.get('Email') or '').strip()
+        message = (data.get('Message') or '').strip()
+        page_url = (data.get('PageUrl') or '').strip()
+
+        # Automatically capture UserAgent from request headers
+        user_agent = request.headers.get('User-Agent')
+
+        # ✅ Validation
+        if not email or not message:
+            return jsonify({'message': '❌ Email and Message are required!'}), 400
+        if len(message) < 10:
+            return jsonify({'message': '❌ Message must be at least 10 characters long!'}), 400
+
+        # ✅ Save to DB
+        new_ticket = SupportTicket(
+            Email=email,
+            Message=message,
+            PageUrl=page_url,
+            UserAgent=user_agent,
+            Status="Open",
+            CreatedAt=datetime.utcnow()
+        )
+        db.session.add(new_ticket)
+        db.session.commit()
+
+        # ✅ Prepare email to SACCO admin
+        admin_msg = Message(
+            subject=f"📥 New Support Ticket #{new_ticket.Id}",
+            recipients=["maderumoyia@mudetesacco.co.ke"],  # admin email
+            body=f"""Hello Admin,
+
+You have received a new support ticket.
+
+From: {email}
+Message:
+{message}
+
+Page: {page_url or "N/A"}
+User-Agent: {user_agent or "N/A"}
+Ticket ID: {new_ticket.Id}
+Submitted At: {new_ticket.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')}
+
+-- MUFATE G SACCO Website"""
+        )
+
+        # ✅ Prepare acknowledgment email to user
+        user_msg = Message(
+            subject="✅ MUFATE G SACCO - Ticket Received",
+            recipients=[email],
+            body=f"""Dear Member,
+
+Thank you for contacting MUFATE G SACCO.
+Your support ticket has been created successfully.
+
+🎟️ Ticket ID: {new_ticket.Id}
+
+Our team will review it and respond via this email.
+
+Warm regards,
+MUFATE G SACCO Support Team
+maderumoyia@mudetesacco.co.ke"""
+        )
+
+        # ✅ Try sending emails
+        try:
+            if mail:
+                mail.send(admin_msg)
+                mail.send(user_msg)
+        except Exception as email_error:
+            traceback.print_exc()
+            return jsonify({
+                'message': '⚠️ Ticket saved, but email failed to send.',
+                'ticket_id': new_ticket.Id,
+                'error': str(email_error)
+            }), 500
+
+        # ✅ Successful response
+        return jsonify({
+            'message': '✅ Your ticket has been submitted successfully! We will respond via email.',
+            'ticket_id': new_ticket.Id,
+            'status': new_ticket.Status
+        }), 201
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to submit ticket.', 'error': str(e)}), 500
