@@ -1929,23 +1929,34 @@ def submit_support_ticket():
         if not data:
             return jsonify({'message': '❌ No JSON data received'}), 400
 
-        # Extract fields from JSON
+        # Extract fields
         email = (data.get('Email') or '').strip()
+        phone = (data.get('PhoneNumber') or '').strip()  # NEW: optional alternative
         message = (data.get('Message') or '').strip()
         page_url = (data.get('PageUrl') or '').strip()
 
-        # Automatically capture UserAgent from request headers
+        # Auto-capture from headers
         user_agent = request.headers.get('User-Agent')
 
         # ✅ Validation
-        if not email or not message:
-            return jsonify({'message': '❌ Email and Message are required!'}), 400
+        # Require at least one contact method
+        if not email and not phone:
+            return jsonify({'message': '❌ Provide at least Email or PhoneNumber.'}), 400
+
         if len(message) < 10:
             return jsonify({'message': '❌ Message must be at least 10 characters long!'}), 400
 
+        # Simple KE mobile format check: 2547XXXXXXXX (optional, adjust as needed)
+        if phone:
+            if not phone.isdigit():
+                return jsonify({'message': '❌ PhoneNumber must contain digits only (e.g., 2547XXXXXXXX).'}), 400
+            if not phone.startswith('2547') or len(phone) != 12:
+                return jsonify({'message': '❌ PhoneNumber must be in format 2547XXXXXXXX.'}), 400
+
         # ✅ Save to DB
         new_ticket = SupportTicket(
-            Email=email,
+            Email=email or None,
+            PhoneNumber=phone or None,   # NEW
             Message=message,
             PageUrl=page_url,
             UserAgent=user_agent,
@@ -1955,15 +1966,13 @@ def submit_support_ticket():
         db.session.add(new_ticket)
         db.session.commit()
 
-        # ✅ Prepare email to SACCO admin
-        admin_msg = Message(
-            subject=f"📥 New Support Ticket #{new_ticket.Id}",
-            recipients=["maderumoyia@mudetesacco.co.ke"],  # admin email
-            body=f"""Hello Admin,
+        # ✅ Prepare email to SACCO admin (always send)
+        admin_body = f"""Hello Admin,
 
 You have received a new support ticket.
 
-From: {email}
+From: {email or 'No email provided'}
+Phone: {phone or 'No phone provided'}
 Message:
 {message}
 
@@ -1973,31 +1982,38 @@ Ticket ID: {new_ticket.Id}
 Submitted At: {new_ticket.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')}
 
 -- MUFATE G SACCO Website"""
+        admin_msg = Message(
+            subject=f"📥 New Support Ticket #{new_ticket.Id}",
+            recipients=["maderumoyia@mudetesacco.co.ke"],  # admin email
+            body=admin_body
         )
 
-        # ✅ Prepare acknowledgment email to user
-        user_msg = Message(
-            subject="✅ MUFATE G SACCO - Ticket Received",
-            recipients=[email],
-            body=f"""Dear Member,
+        # ✅ Optional acknowledgment email to user (only if email provided)
+        user_msg = None
+        if email:
+            user_msg = Message(
+                subject="✅ MUFATE G SACCO - Ticket Received",
+                recipients=[email],
+                body=f"""Dear Member,
 
 Thank you for contacting MUFATE G SACCO.
 Your support ticket has been created successfully.
 
 🎟️ Ticket ID: {new_ticket.Id}
 
-Our team will review it and respond via this email.
+Our team will review it and contact you via this email.
 
 Warm regards,
 MUFATE G SACCO Support Team
 maderumoyia@mudetesacco.co.ke"""
-        )
+            )
 
         # ✅ Try sending emails
         try:
             if mail:
                 mail.send(admin_msg)
-                mail.send(user_msg)
+                if user_msg:
+                    mail.send(user_msg)
         except Exception as email_error:
             traceback.print_exc()
             return jsonify({
@@ -2006,9 +2022,9 @@ maderumoyia@mudetesacco.co.ke"""
                 'error': str(email_error)
             }), 500
 
-        # ✅ Successful response
+        # ✅ Success response
         return jsonify({
-            'message': '✅ Your ticket has been submitted successfully! We will respond via email.',
+            'message': '✅ Your ticket has been submitted! We will contact you.',
             'ticket_id': new_ticket.Id,
             'status': new_ticket.Status
         }), 201

@@ -351,5 +351,6 @@ class SupportTicket(db.Model):
     Message = db.Column(db.Text, nullable=False)
     PageUrl = db.Column(db.String(1024))
     UserAgent = db.Column(db.String(512))
+    PhoneNumber = db.Column(db.String(20))
     Status = db.Column(db.String(32), default="Open")  # Open, In-Progress, Closed
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
