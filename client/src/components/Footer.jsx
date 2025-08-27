@@ -10,6 +10,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa'; // ✅ WhatsApp Icon
 import axios from 'axios';
 import './Footer.css';
+import SupportChatWidget from "./SupportChatWidget";
 
 const Footer = () => {
   const [postImages, setPostImages] = useState([]);
@@ -140,6 +141,7 @@ const Footer = () => {
           Mufate G Sacco Society Limited © 2025. All Rights Reserved.
         </Typography>
       </Box>
+      <SupportChatWidget />
     </Box>
   );
 };
