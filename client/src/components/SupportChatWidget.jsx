@@ -4,7 +4,7 @@ import {
   Box, Paper, Typography, TextField, Button, IconButton,
   Snackbar, Alert, Divider, CircularProgress, ToggleButton, ToggleButtonGroup
 } from "@mui/material";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";   // 🤖 chatbot icon
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline"; // ✅ correct icon import
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function SupportChatWidget({
@@ -94,7 +94,7 @@ export default function SupportChatWidget({
               "&:hover": { boxShadow: "6px 6px 12px #a5cba5, -6px -6px 12px #ffffff" },
             }}
           >
-            <ChatBubbleOutline/> {/* 🤖 nicer chatbot icon */}
+            <ChatBubbleOutlineIcon /> {/* ✅ fixed icon usage */}
           </IconButton>
         )}
 
@@ -281,7 +281,7 @@ export default function SupportChatWidget({
                       background: brandGreen,
                       "&:hover": { background: "#1b5e20" },
                       borderRadius: 2,
-                      boxShadow: "0 6px 16px rgba(46,125,50,.25)",
+                      boxShadow: "0 6px 16px rgba(46,125,50,0.25)",
                     }}
                     variant="contained"
                     onClick={() => {
