@@ -347,10 +347,10 @@ class SupportTicket(db.Model):
     __tablename__ = "SupportTickets"
 
     Id = db.Column(db.Integer, primary_key=True)
-    Email = db.Column(db.String(255), nullable=False, index=True)
+    Email = db.Column(db.String(255), nullable=True, index=True)  # <-- change to True
+    PhoneNumber = db.Column(db.String(20))                         # <-- keep optional
     Message = db.Column(db.Text, nullable=False)
     PageUrl = db.Column(db.String(1024))
     UserAgent = db.Column(db.String(512))
-    PhoneNumber = db.Column(db.String(20))
-    Status = db.Column(db.String(32), default="Open")  # Open, In-Progress, Closed
+    Status = db.Column(db.String(32), default="Open")
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
