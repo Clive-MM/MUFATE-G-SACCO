@@ -19,7 +19,7 @@ export default function SupportChatWidget({
   // state
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1);
-  const [contactMode, setContactMode] = useState("email"); // "email" | "phone"
+  const [contactMode, setContactMode] = useState("email");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [msg, setMsg] = useState("");
@@ -40,7 +40,7 @@ export default function SupportChatWidget({
 
   const alignStyle = position === "bottom-left" ? { left: offset.x } : { right: offset.x };
 
-  // Neumorphism + glass tokens
+  // Neumorphism + brand tokens
   const neuBg = "#e9faea";
   const neuOut = "12px 12px 24px #bfdcc2, -12px -12px 24px #ffffff";
   const neuIn = "inset 6px 6px 12px #cfe6d2, inset -6px -6px 12px #ffffff";
@@ -100,24 +100,26 @@ export default function SupportChatWidget({
                 width: 64,
                 height: 64,
                 borderRadius: "50%",
-                background: neuBg,
-                color: brand,
+                // ✅ Solid green background & white icon
+                background: brand,
+                color: "#fff",
                 boxShadow: neuOut,
                 border: "1px solid rgba(46,125,50,0.18)",
                 position: "relative",
+
+                // 🔔 Eye-catching alternating light-green ↔ gold glow
                 "&:before": {
                   content: '""',
                   position: "absolute",
                   inset: 0,
                   borderRadius: "50%",
-                  // 🔔 Eye-catching alternating light-green ↔ gold glow
-                  boxShadow: "0 0 0 0 rgba(144,238,144,.55)", // light green start (LimeGreen-ish)
+                  boxShadow: "0 0 0 0 rgba(144,238,144,.55)", // light green start
                   animation: "pulse 2.1s infinite",
                 },
                 "@keyframes pulse": {
-                  "0%":   { boxShadow: "0 0 0 0 rgba(144,238,144,.55)" },  // light green bright
+                  "0%":   { boxShadow: "0 0 0 0 rgba(144,238,144,.55)" },  // light green
                   "35%":  { boxShadow: "0 0 0 10px rgba(255,215,0,.45)" }, // gold halo
-                  "70%":  { boxShadow: "0 0 0 20px rgba(144,238,144,0)" }, // fade out
+                  "70%":  { boxShadow: "0 0 0 20px rgba(144,238,144,0)" }, // fade
                   "100%": { boxShadow: "0 0 0 0 rgba(255,215,0,0)" },      // reset
                 },
                 "&:hover": { boxShadow: "8px 8px 18px #bcd9bf, -8px -8px 18px #ffffff" },
