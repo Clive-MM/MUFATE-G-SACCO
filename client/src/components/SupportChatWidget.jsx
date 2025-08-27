@@ -4,7 +4,7 @@ import {
   Box, Paper, Typography, TextField, Button, IconButton,
   Snackbar, Alert, Divider, CircularProgress, ToggleButton, ToggleButtonGroup
 } from "@mui/material";
-import SmartToyIcon from "@mui/icons-material/SmartToy";    // 🤖 chatbot icon
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";   // 🤖 chatbot icon
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function SupportChatWidget({
@@ -94,7 +94,7 @@ export default function SupportChatWidget({
               "&:hover": { boxShadow: "6px 6px 12px #a5cba5, -6px -6px 12px #ffffff" },
             }}
           >
-            <SmartToyIcon /> {/* 🤖 nicer chatbot icon */}
+            <ChatBubbleOutline/> {/* 🤖 nicer chatbot icon */}
           </IconButton>
         )}
 
