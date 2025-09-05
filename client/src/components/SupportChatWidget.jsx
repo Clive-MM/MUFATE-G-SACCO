@@ -10,6 +10,7 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
+import CircleIcon from "@mui/icons-material/Circle";
 
 export default function SupportChatWidget({
   position = "bottom-right",
@@ -28,6 +29,20 @@ export default function SupportChatWidget({
   const panelRadius = isSmDown ? 16 : 24;
   const headerPad = isSmDown ? 1.25 : 2;
   const bodyPad = isSmDown ? 1.5 : 2;
+
+  // Design tokens
+  const TOKENS = {
+    brand: "#2e7d32",
+    brandDark: "#1b5e20",
+    panelGlass: "rgba(243, 250, 244, 0.85)",
+    neuBg: "#e9faea",
+    ring: "0 0 0 3px rgba(46,125,50,.22)",
+    radius: { s: 12, m: 16, l: 24 },
+    shadowOut: "0 10px 30px rgba(46,125,50,.18)",
+    shadowHover: "0 12px 36px rgba(46,125,50,.22)",
+    inset: "inset 6px 6px 12px #cfe6d2, inset -6px -6px 12px #ffffff",
+  };
+  const brand = TOKENS.brand;
 
   // state
   const [open, setOpen] = useState(false);
@@ -52,12 +67,6 @@ export default function SupportChatWidget({
   }, [step, contactMode, emailOk, phoneOk, msg]);
 
   const alignStyle = position === "bottom-left" ? { left: offset.x } : { right: offset.x };
-
-  // Neumorphism + glass tokens
-  const neuBg = "#e9faea";
-  const neuOut = "12px 12px 24px #bfdcc2, -12px -12px 24px #ffffff";
-  const neuIn = "inset 6px 6px 12px #cfe6d2, inset -6px -6px 12px #ffffff";
-  const brand = "#2e7d32";
 
   const quickReplies = [
     "I need help with registration",
@@ -101,10 +110,7 @@ export default function SupportChatWidget({
           bottom: `calc(${offset.y}px + env(safe-area-inset-bottom, 0px))`,
           ...alignStyle,
           zIndex: 1300,
-          // Nudge inward a bit more on very small screens
-          ...(isXs && (position === "bottom-left"
-            ? { left: 12 }
-            : { right: 12 })),
+          ...(isXs && (position === "bottom-left" ? { left: 12 } : { right: 12 })),
         }}
       >
         <Zoom in={!open}>
@@ -117,36 +123,30 @@ export default function SupportChatWidget({
                 width: launcherSize,
                 height: launcherSize,
                 borderRadius: "50%",
-                background: brand,     // solid green
-                color: "#fff",         // white icon
-                boxShadow: neuOut,
+                background: brand,
+                color: "#fff",
+                boxShadow: TOKENS.shadowOut,
                 border: "1px solid rgba(46,125,50,0.18)",
                 position: "relative",
-
-                // Light-green ↔ gold pulsing glow
-                "&:before": {
-                  content: '""',
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: "50%",
-                  boxShadow: "0 0 0 0 rgba(144,238,144,.55)",
-                  animation: "pulse 2.1s infinite",
+                transition: "transform .15s ease, box-shadow .15s ease",
+                "&:hover": { transform: "translateY(-1px)", boxShadow: TOKENS.shadowHover },
+                "&:active": { transform: "translateY(0)", boxShadow: TOKENS.shadowOut },
+                "&:focus-visible": { outline: "none", boxShadow: `${TOKENS.shadowOut}, ${TOKENS.ring}` },
+                // Gentle pulse (reduced-motion respected)
+                "&::before": {
+                  content: '""', position: "absolute", inset: 0, borderRadius: "50%",
+                  boxShadow: "0 0 0 0 rgba(144,238,144,.45)",
+                  animation: "pulse 2.2s infinite",
                 },
+                "@media (prefers-reduced-motion: reduce)": { "&::before": { animation: "none" } },
                 "@keyframes pulse": {
-                  "0%":   { boxShadow: "0 0 0 0 rgba(144,238,144,.55)" },
-                  "35%":  { boxShadow: "0 0 0 10px rgba(255,215,0,.45)" },
-                  "70%":  { boxShadow: "0 0 0 20px rgba(144,238,144,0)" },
-                  "100%": { boxShadow: "0 0 0 0 rgba(255,215,0,0)" },
-                },
-
-                "&:hover": {
-                  boxShadow: "8px 8px 18px #bcd9bf, -8px -8px 18px #ffffff",
+                  "0%": { boxShadow: "0 0 0 0 rgba(144,238,144,.45)" },
+                  "60%": { boxShadow: "0 0 0 16px rgba(144,238,144,0)" },
+                  "100%": { boxShadow: "0 0 0 0 rgba(144,238,144,0)" },
                 },
               }}
             >
-              <ChatBubbleOutlineIcon
-                sx={{ fontSize: isSmDown ? 22 : 24 }}
-              />
+              <ChatBubbleOutlineIcon sx={{ fontSize: isSmDown ? 22 : 24 }} />
             </IconButton>
           </Tooltip>
         </Zoom>
@@ -161,16 +161,17 @@ export default function SupportChatWidget({
               maxWidth: panelMaxWidth,
               borderRadius: panelRadius,
               overflow: "hidden",
-              background: "rgba(233,250,234,0.9)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-              boxShadow: neuOut,
+              background: TOKENS.panelGlass,
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               border: "1px solid rgba(46,125,50,0.12)",
-              // On tiny devices, anchor the panel a touch away from screen edge
+              boxShadow: TOKENS.shadowOut,
               mx: isXs ? 0.5 : 0,
+              ...(isSmDown && { maxHeight: "70vh", display: "flex", flexDirection: "column" }),
             }}
             role="dialog"
             aria-labelledby="mufate-support-title"
+            aria-describedby={step === 2 ? "mufate-support-body" : undefined}
           >
             {/* Header */}
             <Box
@@ -180,17 +181,57 @@ export default function SupportChatWidget({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                background: neuBg,
-                boxShadow: neuIn,
+                background: `linear-gradient(180deg, ${TOKENS.neuBg} 0%, #f7fcf7 100%)`,
+                boxShadow: "inset 0 -1px 0 rgba(46,125,50,0.08)",
+                position: isSmDown ? "sticky" : "static",
+                top: 0,
+                zIndex: 1,
               }}
             >
-              <Typography
-                id="mufate-support-title"
-                variant={isSmDown ? "subtitle2" : "subtitle1"}
-                sx={{ fontWeight: 800, color: brand }}
-              >
-                MUFATE G SACCO Support
-              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Typography
+                  id="mufate-support-title"
+                  variant={isSmDown ? "subtitle2" : "subtitle1"}
+                  sx={{ fontWeight: 800, color: brand, letterSpacing: 0.2 }}
+                >
+                  Hello — welcome to MUFATE Support
+                </Typography>
+
+                {/* Online status */}
+                <Box
+                  aria-label="Online now"
+                  role="status"
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    px: 0.75,
+                    py: 0.25,
+                    borderRadius: 999,
+                    background: "#ffffff",
+                    border: "1px solid rgba(46,125,50,.18)",
+                  }}
+                >
+                  <CircleIcon
+                    fontSize="inherit"
+                    sx={{
+                      fontSize: 10,
+                      color: "#19c37d",
+                      filter: "drop-shadow(0 0 4px rgba(25,195,125,.6))",
+                      animation: "blink 2.2s infinite",
+                      "@keyframes blink": {
+                        "0%, 100%": { opacity: 1 },
+                        "50%": { opacity: 0.55 },
+                      },
+                      "@media (prefers-reduced-motion: reduce)": { animation: "none" },
+                    }}
+                  />
+                  <Typography variant="caption" sx={{ color: "#1b5e20", fontWeight: 600 }}>
+                    Online now
+                  </Typography>
+                </Box>
+              </Box>
+
               <IconButton
                 size="small"
                 onClick={() => setOpen(false)}
@@ -202,14 +243,24 @@ export default function SupportChatWidget({
             </Box>
 
             {/* Body */}
-            <Box sx={{ p: bodyPad, pt: isSmDown ? 1.25 : 2 }}>
+            <Box
+              id="mufate-support-body"
+              sx={{
+                p: bodyPad,
+                pt: isSmDown ? 1.25 : 2,
+                ...(isSmDown && {
+                  overflow: "auto",
+                  maxHeight: "inherit",
+                  scrollbarGutter: "stable",
+                  overscrollBehavior: "contain",
+                  paddingBottom: "calc(env(safe-area-inset-bottom,0px) + 8px)",
+                }),
+              }}
+            >
               {step === 1 && (
                 <>
-                  <Typography
-                    variant="body2"
-                    sx={{ mb: isSmDown ? 0.75 : 1, color: "#1b5e20" }}
-                  >
-                    Choose how we should contact you
+                  <Typography variant="body2" sx={{ mb: isSmDown ? 0.75 : 1, color: "#1b5e20" }}>
+                    How should we contact you?
                   </Typography>
 
                   <ToggleButtonGroup
@@ -218,17 +269,25 @@ export default function SupportChatWidget({
                     onChange={(_, v) => v && setContactMode(v)}
                     sx={{
                       mb: isSmDown ? 1 : 1.5,
+                      borderRadius: TOKENS.radius.m,
+                      background: "#fff",
+                      padding: 0.25,
                       "& .MuiToggleButton-root": {
+                        border: 0,
                         textTransform: "none",
                         px: isSmDown ? 1 : 1.5,
-                        py: isSmDown ? 0.4 : 0.6,
-                        fontSize: isSmDown ? ".8rem" : ".9rem",
-                        borderColor: "rgba(46,125,50,.25)",
-                      },
-                      "& .Mui-selected": {
-                        background: brand,
-                        color: "#fff",
-                        "&:hover": { background: "#1b5e20" },
+                        py: isSmDown ? 0.6 : 0.7,
+                        fontSize: isSmDown ? ".85rem" : ".95rem",
+                        borderRadius: TOKENS.radius.s,
+                        color: "#1b5e20",
+                        "&:hover": { backgroundColor: "rgba(46,125,50,.05)" },
+                        "&.Mui-selected": {
+                          background: brand,
+                          color: "#fff",
+                          boxShadow: "0 6px 14px rgba(46,125,50,.22)",
+                          "&:hover": { background: TOKENS.brandDark },
+                        },
+                        "&:focus-visible": { outline: "none", boxShadow: TOKENS.ring },
                       },
                     }}
                   >
@@ -256,9 +315,18 @@ export default function SupportChatWidget({
                         ),
                       }}
                       sx={{
-                        borderRadius: 2,
-                        background: neuBg,
-                        boxShadow: neuIn,
+                        borderRadius: TOKENS.radius.m,
+                        background: TOKENS.neuBg,
+                        boxShadow: TOKENS.inset,
+                        "& .MuiFilledInput-root": {
+                          borderRadius: TOKENS.radius.m,
+                          transition: "box-shadow .15s ease, background-color .15s ease",
+                          "&.Mui-focused": {
+                            background: "#f6fff7",
+                            boxShadow: `${TOKENS.inset}, ${TOKENS.ring}`,
+                          },
+                        },
+                        "& .MuiFormHelperText-root": { mt: 0.5 },
                       }}
                     />
                   ) : (
@@ -280,9 +348,18 @@ export default function SupportChatWidget({
                         ),
                       }}
                       sx={{
-                        borderRadius: 2,
-                        background: neuBg,
-                        boxShadow: neuIn,
+                        borderRadius: TOKENS.radius.m,
+                        background: TOKENS.neuBg,
+                        boxShadow: TOKENS.inset,
+                        "& .MuiFilledInput-root": {
+                          borderRadius: TOKENS.radius.m,
+                          transition: "box-shadow .15s ease, background-color .15s ease",
+                          "&.Mui-focused": {
+                            background: "#f6fff7",
+                            boxShadow: `${TOKENS.inset}, ${TOKENS.ring}`,
+                          },
+                        },
+                        "& .MuiFormHelperText-root": { mt: 0.5 },
                       }}
                     />
                   )}
@@ -293,11 +370,14 @@ export default function SupportChatWidget({
                     sx={{
                       mt: 1,
                       py: isSmDown ? 0.6 : 0.8,
-                      fontSize: isSmDown ? ".9rem" : "1rem",
+                      fontSize: isSmDown ? ".95rem" : "1rem",
                       background: brand,
-                      "&:hover": { background: "#1b5e20" },
-                      borderRadius: 2,
-                      boxShadow: "0 6px 16px rgba(46,125,50,.25)",
+                      borderRadius: TOKENS.radius.m,
+                      boxShadow: TOKENS.shadowOut,
+                      transition: "box-shadow .15s ease, transform .15s ease",
+                      "&:hover": { background: TOKENS.brandDark, boxShadow: TOKENS.shadowHover, transform: "translateY(-1px)" },
+                      "&:active": { transform: "translateY(0)" },
+                      "&:focus-visible": { outline: "none", boxShadow: `${TOKENS.shadowOut}, ${TOKENS.ring}` },
                     }}
                     disabled={disabled}
                     onClick={() => setStep(2)}
@@ -309,11 +389,8 @@ export default function SupportChatWidget({
 
               {step === 2 && (
                 <>
-                  <Typography
-                    variant="body2"
-                    sx={{ mb: isSmDown ? 0.75 : 1, color: "#1b5e20" }}
-                  >
-                    Describe your question or issue
+                  <Typography variant="body2" sx={{ mb: isSmDown ? 0.75 : 1, color: "#1b5e20" }}>
+                    Tell us a bit more about your request
                   </Typography>
 
                   {/* Quick replies */}
@@ -331,6 +408,7 @@ export default function SupportChatWidget({
                           borderWidth: 1,
                           borderStyle: "solid",
                           mb: 0.75,
+                          "&:hover": { background: "rgba(46,125,50,.06)" },
                         }}
                       />
                     ))}
@@ -348,9 +426,17 @@ export default function SupportChatWidget({
                     helperText={`${Math.max(0, msgMin - msg.trim().length)} more characters to reach minimum`}
                     InputProps={{ disableUnderline: true }}
                     sx={{
-                      borderRadius: 2,
-                      background: neuBg,
-                      boxShadow: neuIn,
+                      borderRadius: TOKENS.radius.m,
+                      background: TOKENS.neuBg,
+                      boxShadow: TOKENS.inset,
+                      "& .MuiFilledInput-root": {
+                        borderRadius: TOKENS.radius.m,
+                        transition: "box-shadow .15s ease, background-color .15s ease",
+                        "&.Mui-focused": {
+                          background: "#f6fff7",
+                          boxShadow: `${TOKENS.inset}, ${TOKENS.ring}`,
+                        },
+                      },
                     }}
                     error={msg.trim().length > 0 && msg.trim().length < msgMin}
                   />
@@ -372,11 +458,12 @@ export default function SupportChatWidget({
                       fullWidth
                       sx={{
                         py: isSmDown ? 0.55 : 0.75,
-                        fontSize: isSmDown ? ".9rem" : "1rem",
+                        fontSize: isSmDown ? ".95rem" : "1rem",
+                        borderRadius: TOKENS.radius.m,
                         borderColor: brand,
                         color: brand,
-                        borderRadius: 2,
-                        "&:hover": { borderColor: "#1b5e20", color: "#1b5e20" },
+                        "&:hover": { borderColor: TOKENS.brandDark, color: TOKENS.brandDark, background: "rgba(46,125,50,.04)" },
+                        "&:focus-visible": { outline: "none", boxShadow: TOKENS.ring },
                       }}
                     >
                       Back
@@ -388,11 +475,14 @@ export default function SupportChatWidget({
                       fullWidth
                       sx={{
                         py: isSmDown ? 0.55 : 0.75,
-                        fontSize: isSmDown ? ".9rem" : "1rem",
+                        fontSize: isSmDown ? ".95rem" : "1rem",
                         background: brand,
-                        "&:hover": { background: "#1b5e20" },
-                        borderRadius: 2,
-                        boxShadow: "0 6px 16px rgba(46,125,50,.25)",
+                        borderRadius: TOKENS.radius.m,
+                        boxShadow: TOKENS.shadowOut,
+                        transition: "box-shadow .15s ease, transform .15s ease",
+                        "&:hover": { background: TOKENS.brandDark, boxShadow: TOKENS.shadowHover, transform: "translateY(-1px)" },
+                        "&:active": { transform: "translateY(0)" },
+                        "&:focus-visible": { outline: "none", boxShadow: `${TOKENS.shadowOut}, ${TOKENS.ring}` },
                       }}
                     >
                       {loading ? <CircularProgress size={18} /> : "Submit"}
@@ -401,18 +491,25 @@ export default function SupportChatWidget({
 
                   <Divider sx={{ my: isSmDown ? 1 : 1.5, borderColor: "rgba(46,125,50,0.15)" }} />
                   <Typography variant="caption" color="text.secondary" sx={{ display: "block" }}>
-                    By submitting, you consent to be contacted via the method you selected above.
+                    We may reply via {contactMode === "email" ? "Email" : "SMS or WhatsApp"} using the contact provided above.
                   </Typography>
                 </>
               )}
 
               {step === 3 && (
-                <Box sx={{ textAlign: "center", py: isSmDown ? 3 : 4 }}>
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    py: isSmDown ? 3 : 4,
+                    px: isSmDown ? 1.5 : 2,
+                    background: "linear-gradient(180deg, #f4fbf4 0%, #ffffff 100%)",
+                  }}
+                >
                   <Typography
                     variant={isSmDown ? "subtitle1" : "h6"}
                     sx={{ fontWeight: 800, mb: 1, color: brand }}
                   >
-                    🎟️ Ticket received
+                    Ticket received ✅
                   </Typography>
                   <Typography variant="body2">
                     We’ll contact you via <strong>{contactMode === "email" ? email : phone}</strong>.
@@ -422,9 +519,10 @@ export default function SupportChatWidget({
                       mt: 2,
                       py: isSmDown ? 0.6 : 0.8,
                       background: brand,
-                      "&:hover": { background: "#1b5e20" },
-                      borderRadius: 2,
-                      boxShadow: "0 6px 16px rgba(46,125,50,.25)",
+                      borderRadius: TOKENS.radius.m,
+                      boxShadow: TOKENS.shadowOut,
+                      "&:hover": { background: TOKENS.brandDark, boxShadow: TOKENS.shadowHover },
+                      "&:focus-visible": { outline: "none", boxShadow: `${TOKENS.shadowOut}, ${TOKENS.ring}` },
                     }}
                     variant="contained"
                     onClick={() => {
@@ -454,7 +552,12 @@ export default function SupportChatWidget({
           horizontal: position === "bottom-left" ? "left" : "right",
         }}
       >
-        <Alert onClose={() => setToast((s) => ({ ...s, open: false }))} severity={toast.type} variant="filled">
+        <Alert
+          onClose={() => setToast((s) => ({ ...s, open: false }))}
+          severity={toast.type}
+          variant="filled"
+          sx={{ borderRadius: TOKENS.radius.m, boxShadow: TOKENS.shadowOut }}
+        >
           {toast.text}
         </Alert>
       </Snackbar>
