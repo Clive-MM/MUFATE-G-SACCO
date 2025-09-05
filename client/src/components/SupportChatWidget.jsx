@@ -194,7 +194,7 @@ export default function SupportChatWidget({
                   variant={isSmDown ? "subtitle2" : "subtitle1"}
                   sx={{ fontWeight: 800, color: brand, letterSpacing: 0.2 }}
                 >
-                  welcome to MUFATE Support
+                    welcome to MUFATE Support
                 </Typography>
 
                 {/* Online status */}
