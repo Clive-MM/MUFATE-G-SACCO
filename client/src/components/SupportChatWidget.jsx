@@ -132,8 +132,6 @@ export default function SupportChatWidget({
                 "&:hover": { transform: "translateY(-1px)", boxShadow: TOKENS.shadowHover },
                 "&:active": { transform: "translateY(0)", boxShadow: TOKENS.shadowOut },
                 "&:focus-visible": { outline: "none", boxShadow: `${TOKENS.shadowOut}, ${TOKENS.ring}` },
-
-                // Gentle pulse (reduced-motion respected)
                 "&::before": {
                   content: '""', position: "absolute", inset: 0, borderRadius: "50%",
                   boxShadow: "0 0 0 0 rgba(144,238,144,.45)",
@@ -178,11 +176,9 @@ export default function SupportChatWidget({
             <Box
               sx={{
                 p: headerPad,
-                px: 2,                        // more left/right room to avoid any crop
+                px: 2,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
-                gap: 1,
                 background: `linear-gradient(180deg, ${TOKENS.neuBg} 0%, #f7fcf7 100%)`,
                 boxShadow: "inset 0 -1px 0 rgba(46,125,50,0.08)",
                 position: isSmDown ? "sticky" : "static",
@@ -190,8 +186,18 @@ export default function SupportChatWidget({
                 zIndex: 1,
               }}
             >
-              {/* Title (never cropped, prefers single line, ellipsizes) */}
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1, minWidth: 0, flex: 1 }}>
+              <Box
+                sx={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",   // centers title + dot horizontally
+                  minWidth: 0,
+                  position: "relative",       // for close button alignment
+                  pr: 5,                      // reserve space so title isn't overlapped by the close button
+                }}
+              >
+                {/* Title */}
                 <Typography
                   id="mufate-support-title"
                   variant={isSmDown ? "subtitle2" : "subtitle1"}
@@ -202,19 +208,18 @@ export default function SupportChatWidget({
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
-                    // responsive font size that shrinks a touch on very small screens
                     fontSize: isSmDown ? "0.98rem" : "1.05rem",
-                    pr: 2, // space before the status dot
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
                   }}
                 >
-                  Welcome to MUFATE Support
-                </Typography>
-
-                {/* Glowing online dot */}
-                <Tooltip title="Online" arrow>
+                  MUFATE Support
+                  {/* Glowing dot inline with title */}
                   <Box
-                    aria-label="Online"
+                    component="span"
                     role="status"
+                    aria-label="Online"
                     sx={{
                       width: 10,
                       height: 10,
@@ -224,24 +229,29 @@ export default function SupportChatWidget({
                       flexShrink: 0,
                       animation: "ping 1.9s infinite",
                       "@keyframes ping": {
-                        "0%": { transform: "scale(1)", opacity: 1 },
-                        "50%": { transform: "scale(1.2)", opacity: 0.8 },
-                        "100%": { transform: "scale(1)", opacity: 1 },
+                        "0%":   { transform: "scale(1)",   opacity: 1   },
+                        "50%":  { transform: "scale(1.2)", opacity: 0.8 },
+                        "100%": { transform: "scale(1)",   opacity: 1   },
                       },
                       "@media (prefers-reduced-motion: reduce)": { animation: "none" },
                     }}
                   />
-                </Tooltip>
-              </Box>
+                </Typography>
 
-              <IconButton
-                size="small"
-                onClick={() => setOpen(false)}
-                aria-label="Close support chat"
-                sx={{ color: brand, flexShrink: 0 }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
+                {/* Close button absolutely placed to the right */}
+                <IconButton
+                  size="small"
+                  onClick={() => setOpen(false)}
+                  aria-label="Close support chat"
+                  sx={{
+                    position: "absolute",
+                    right: 0,
+                    color: brand,
+                  }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </Box>
             </Box>
 
             {/* Body */}
