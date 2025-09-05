@@ -214,7 +214,7 @@ export default function SupportChatWidget({
                     gap: 0.5,
                   }}
                 >
-                  MUFATE Support
+                  MUFATE G Support
                   {/* Glowing dot inline with title */}
                   <Box
                     component="span"
