@@ -10,7 +10,6 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
-import CircleIcon from "@mui/icons-material/Circle";
 
 export default function SupportChatWidget({
   position = "bottom-right",
@@ -20,7 +19,7 @@ export default function SupportChatWidget({
 
   // Theme + breakpoints
   const theme = useTheme();
-  const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));   // < 600px
+  const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));
   const isXs = useMediaQuery("(max-width:420px)");
 
   // Responsive tokens
@@ -41,6 +40,7 @@ export default function SupportChatWidget({
     shadowOut: "0 10px 30px rgba(46,125,50,.18)",
     shadowHover: "0 12px 36px rgba(46,125,50,.22)",
     inset: "inset 6px 6px 12px #cfe6d2, inset -6px -6px 12px #ffffff",
+    online: "#19c37d",
   };
   const brand = TOKENS.brand;
 
@@ -132,6 +132,7 @@ export default function SupportChatWidget({
                 "&:hover": { transform: "translateY(-1px)", boxShadow: TOKENS.shadowHover },
                 "&:active": { transform: "translateY(0)", boxShadow: TOKENS.shadowOut },
                 "&:focus-visible": { outline: "none", boxShadow: `${TOKENS.shadowOut}, ${TOKENS.ring}` },
+
                 // Gentle pulse (reduced-motion respected)
                 "&::before": {
                   content: '""', position: "absolute", inset: 0, borderRadius: "50%",
@@ -177,10 +178,11 @@ export default function SupportChatWidget({
             <Box
               sx={{
                 p: headerPad,
-                px: isSmDown ? 1.25 : 2,
+                px: 2,                        // more left/right room to avoid any crop
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
+                gap: 1,
                 background: `linear-gradient(180deg, ${TOKENS.neuBg} 0%, #f7fcf7 100%)`,
                 boxShadow: "inset 0 -1px 0 rgba(46,125,50,0.08)",
                 position: isSmDown ? "sticky" : "static",
@@ -188,55 +190,55 @@ export default function SupportChatWidget({
                 zIndex: 1,
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {/* Title (never cropped, prefers single line, ellipsizes) */}
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, minWidth: 0, flex: 1 }}>
                 <Typography
                   id="mufate-support-title"
                   variant={isSmDown ? "subtitle2" : "subtitle1"}
-                  sx={{ fontWeight: 800, color: brand, letterSpacing: 0.2 }}
-                >
-                    welcome to MUFATE Support
-                </Typography>
-
-                {/* Online status */}
-                <Box
-                  aria-label="Online now"
-                  role="status"
                   sx={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 0.5,
-                    px: 0.75,
-                    py: 0.25,
-                    borderRadius: 999,
-                    background: "#ffffff",
-                    border: "1px solid rgba(46,125,50,.18)",
+                    fontWeight: 800,
+                    color: brand,
+                    letterSpacing: 0.2,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    // responsive font size that shrinks a touch on very small screens
+                    fontSize: isSmDown ? "0.98rem" : "1.05rem",
+                    pr: 2, // space before the status dot
                   }}
                 >
-                  <CircleIcon
-                    fontSize="inherit"
+                  Welcome to MUFATE Support
+                </Typography>
+
+                {/* Glowing online dot */}
+                <Tooltip title="Online" arrow>
+                  <Box
+                    aria-label="Online"
+                    role="status"
                     sx={{
-                      fontSize: 10,
-                      color: "#19c37d",
-                      filter: "drop-shadow(0 0 4px rgba(25,195,125,.6))",
-                      animation: "blink 2.2s infinite",
-                      "@keyframes blink": {
-                        "0%, 100%": { opacity: 1 },
-                        "50%": { opacity: 0.55 },
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      background: TOKENS.online,
+                      boxShadow: "0 0 8px 2px rgba(25,195,125,.6)",
+                      flexShrink: 0,
+                      animation: "ping 1.9s infinite",
+                      "@keyframes ping": {
+                        "0%": { transform: "scale(1)", opacity: 1 },
+                        "50%": { transform: "scale(1.2)", opacity: 0.8 },
+                        "100%": { transform: "scale(1)", opacity: 1 },
                       },
                       "@media (prefers-reduced-motion: reduce)": { animation: "none" },
                     }}
                   />
-                  <Typography variant="caption" sx={{ color: "#1b5e20", fontWeight: 600 }}>
-                    Online now
-                  </Typography>
-                </Box>
+                </Tooltip>
               </Box>
 
               <IconButton
                 size="small"
                 onClick={() => setOpen(false)}
                 aria-label="Close support chat"
-                sx={{ color: brand }}
+                sx={{ color: brand, flexShrink: 0 }}
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
