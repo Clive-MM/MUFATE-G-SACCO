@@ -1456,7 +1456,8 @@ def get_recent_resources():
             "Mobile Banking Application",
             "MUFATE G SACCO Bronchure",
             "Specimen Capture Form",
-            "Benevolent Claim Form"
+            "Benevolent Claim Form",
+            "Benevolent Fund Application Form"
         ]
 
         # Only fetch active and recently added resources
