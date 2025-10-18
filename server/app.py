@@ -1,79 +1,99 @@
-from flask import Flask
+# app.py
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_mail import Mail
 from dotenv import load_dotenv
+from sqlalchemy import text
 import os
 
 from models.models import db, IsActive, FeedbackStatus
 from cloudinary_config import cloudinary
-from routes.routes import routes, bcrypt, jwt, register_mail_instance  # ✅ updated import name
+from routes.routes import routes, bcrypt, jwt, register_mail_instance
 
-# ✅ Load environment variables from .mufate_env
+# -----------------------------
+# Load environment variables
+# -----------------------------
 load_dotenv(dotenv_path=".mufate_env")
 
-# ✅ Initialize Flask app
+# -----------------------------
+# Create Flask app
+# -----------------------------
 app = Flask(__name__)
 CORS(app)
 
-# ✅ Environment configurations
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-app.config['JWT_IDENTITY_CLAIM'] = 'identity'
+# -----------------------------
+# Core config (MySQL via PyMySQL)
+# -----------------------------
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+app.config["JWT_IDENTITY_CLAIM"] = "identity"
 
-# ✅ Mail configuration
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS') == 'True'
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+# Mail config
+app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
+app.config["MAIL_PORT"] = int(os.getenv("MAIL_PORT", "587"))
+app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS", "True") == "True"
+app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 
-# ✅ Initialize extensions
+# -----------------------------
+# Init extensions
+# -----------------------------
 db.init_app(app)
 mail = Mail(app)
 bcrypt.init_app(app)
 jwt.init_app(app)
+register_mail_instance(mail)
 
-# ✅ Register mail instance to routes
-register_mail_instance(mail)  # ✅ key fix
-
-# ✅ Register routes
+# -----------------------------
+# Blueprints
+# -----------------------------
 app.register_blueprint(routes)
 
-# ✅ Create tables and seed
-with app.app_context():
-    db.create_all()
-    print("✅ Tables created successfully from models.py")
+# -----------------------------
+# Optional: One-time create/seed
+# Set RUN_CREATE_ALL=1 in env to run this block on boot (one-off),
+# otherwise it is skipped so the app can start even if DB is down.
+# -----------------------------
+if os.getenv("RUN_CREATE_ALL") == "1":
+    with app.app_context():
+        db.create_all()
+        print("✅ Tables created successfully")
 
-    if not IsActive.query.first():
-        db.session.add_all([
-            IsActive(Status="Active"),
-            IsActive(Status="Inactive")
-        ])
+        if not IsActive.query.first():
+            db.session.add_all([IsActive(Status="Active"), IsActive(Status="Inactive")])
 
-    if not FeedbackStatus.query.first():
-        db.session.add_all([
-            FeedbackStatus(StatusName="Unread"),
-            FeedbackStatus(StatusName="Read")
-        ])
+        if not FeedbackStatus.query.first():
+            db.session.add_all([FeedbackStatus(StatusName="Unread"), FeedbackStatus(StatusName="Read")])
 
-    db.session.commit()
-    print("✅ Seeded IsActive and FeedbackStatus tables!")
+        db.session.commit()
+        print("✅ Seeded IsActive and FeedbackStatus")
 
-# ✅ Test DB connection
-with app.app_context():
+# -----------------------------
+# Health endpoint to confirm DB connectivity
+# -----------------------------
+@app.get("/_health/db")
+def db_health():
     try:
-        db.engine.connect()
-        print("✅ Connection to MUFATE_G_SACCO was successful!")
+        # lightweight ping
+        with db.engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return jsonify(ok=True), 200
     except Exception as e:
-        print("❌ Failed to connect to SQL Server:", e)
+        return jsonify(ok=False, error=str(e)), 500
 
-# ✅ Root test route
-@app.route('/')
+# -----------------------------
+# Root route
+# -----------------------------
+@app.get("/")
 def index():
     return "Hello MUFATE G SACCO"
 
-# ✅ Run server
+# -----------------------------
+# Local dev
+# -----------------------------
 if __name__ == "__main__":
-    app.run()
+    # Useful for local testing
+    print("➡ Using DATABASE_URL:", os.getenv("DATABASE_URL"))
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")))
