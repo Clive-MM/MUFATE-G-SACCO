@@ -97,3 +97,4 @@ if __name__ == "__main__":
     # Useful for local testing
     print("➡ Using DATABASE_URL:", os.getenv("DATABASE_URL"))
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")))
+    
