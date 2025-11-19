@@ -13,13 +13,13 @@ const AboutUs = () => {
   const [coreValues, setCoreValues] = useState([]);
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/branches')
+    axios.get('https://mudetesacco.co.ke/backend/branches')
       .then(res => setBranches(res.data.branches || []))
       .catch(error => console.error("Error fetching branches:", error));
   }, []);
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/corevalues')
+    axios.get('https://mudetesacco.co.ke/backend/corevalues')
       .then(res => setCoreValues(res.data.core_values || []))
       .catch(error => console.error("Error fetching core values:", error));
   }, []);

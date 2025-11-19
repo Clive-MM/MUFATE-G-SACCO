@@ -19,8 +19,8 @@ const SaccoIdentitySection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = axios.get('https://mufate-g-sacco.onrender.com/sacco-profile');
-    const fetchCoreValues = axios.get('https://mufate-g-sacco.onrender.com/corevalues');
+    const fetchProfile = axios.get('https://mudetesacco.co.ke/backend/sacco-profile');
+    const fetchCoreValues = axios.get('https://mudetesacco.co.ke/backend/corevalues');
 
     Promise.all([fetchProfile, fetchCoreValues])
       .then(([profileRes, valuesRes]) => {

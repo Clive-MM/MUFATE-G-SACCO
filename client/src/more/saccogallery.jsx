@@ -31,7 +31,7 @@ const SaccoGallery = () => {
 
   useEffect(() => {
     axios
-      .get("https://mufate-g-sacco.onrender.com/gallery")
+      .get("https://mudetesacco.co.ke/backend/gallery")
       .then((res) => {
         setPhotos(res.data.gallery || []);
         setLoading(false);

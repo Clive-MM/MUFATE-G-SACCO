@@ -36,7 +36,7 @@ const FeedbackBanner = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
+      const res = await axios.post('https://mudetesacco.co.ke/backend/feedback', formData);
       enqueueSnackbar(res.data.message, { variant: 'success' });
       setOpen(false);
       setFormData({ Email: '', Subject: '', Message: '' });
