@@ -19,7 +19,15 @@ load_dotenv(dotenv_path=".mufate_env")
 # Create Flask app
 # -----------------------------
 app = Flask(__name__)
-CORS(app)
+
+# CORS: allow Vercel frontend and main site to call this backend
+CORS(
+    app,
+    resources={r"/*": {"origins": [
+        "https://mufate-g-sacco.vercel.app",
+        "https://mudetesacco.co.ke"
+    ]}}
+)
 
 # -----------------------------
 # Core config (MySQL via PyMySQL)
@@ -65,7 +73,10 @@ if os.getenv("RUN_CREATE_ALL") == "1":
             db.session.add_all([IsActive(Status="Active"), IsActive(Status="Inactive")])
 
         if not FeedbackStatus.query.first():
-            db.session.add_all([FeedbackStatus(StatusName="Unread"), FeedbackStatus(StatusName="Read")])
+            db.session.add_all([
+                FeedbackStatus(StatusName="Unread"),
+                FeedbackStatus(StatusName="Read")
+            ])
 
         db.session.commit()
         print("✅ Seeded IsActive and FeedbackStatus")
@@ -97,4 +108,3 @@ if __name__ == "__main__":
     # Useful for local testing
     print("➡ Using DATABASE_URL:", os.getenv("DATABASE_URL"))
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")))
-    
