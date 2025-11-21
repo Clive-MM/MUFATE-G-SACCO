@@ -1,5 +1,6 @@
 # === Database Configuration ===
-DATABASE_URL=mssql+pyodbc://sa:H%40rd2Cr%40ck%21@SIMBA3\GGDTSACCO/MUFATE_G_SACCO_WEB?driver=ODBC+Driver+17+for+SQL+Server
+DATABASE_URL=mssql+pyodbc://sa:H%40rd2Cr%40ck%21@SIMBA3\GGDTSACCO,1435/MUFATE_G_SACCO_WEB?driver=ODBC+Driver+17+for+SQL+Server
+
 
 
 # === JWT Secret ===
