@@ -1,5 +1,6 @@
 # === Database Configuration ===
-DATABASE_URL=mysql+pymysql://mudetesa_mudetesa:sacco4861%26@host26.safaricombusiness.co.ke:3306/mudetesa_mufate_sacco
+DATABASE_URL=mssql+pyodbc://sa:H%40rd2Cr%40ck%21@SIMBA3\GGDTSACCO/MUFATE_G_SACCO_WEB?driver=ODBC+Driver+17+for+SQL+Server
+
 
 # === JWT Secret ===
 JWT_SECRET_KEY=GYwNuK5IA72w8sH_fVxYcOWtY0RJ9wBrP5B93RvBEG06NC5ETopjLjRSNQJnr2LUXTWfBBKZU-F6Q3K3kKNu8w
