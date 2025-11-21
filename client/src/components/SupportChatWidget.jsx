@@ -15,7 +15,7 @@ export default function SupportChatWidget({
   position = "bottom-right",
   offset = { x: 20, y: 24 },
 }) {
-  const apiBase = process.env.REACT_APP_API_BASE || "https://mudetesacco.co.ke/backend";
+  const apiBase = process.env.REACT_APP_API_BASE || "https://mufate-g-sacco.onrender.com";
 
   // Theme + breakpoints
   const theme = useTheme();

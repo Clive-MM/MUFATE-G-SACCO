@@ -18,7 +18,7 @@ const FAQs = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    axios.get('https://mudetesacco.co.ke/backend/faqs')
+    axios.get('https://mufate-g-sacco.onrender.com/faqs')
       .then((res) => setFaqs(res.data.faqs))
       .catch((err) => console.error('❌ Failed to fetch FAQs:', err));
   }, []);

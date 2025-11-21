@@ -36,7 +36,7 @@ const News = () => {
   const sliderRef = React.useRef(null);
 
   useEffect(() => {
-    axios.get('https://mudetesacco.co.ke/backend/posts')
+    axios.get('https://mufate-g-sacco.onrender.com/posts')
       .then(res => setPosts(res.data.posts))
       .catch(err => console.error('❌ Fetch error:', err));
     AOS.init({ duration: 1000 });

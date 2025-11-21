@@ -16,7 +16,7 @@ const SaccoStatsSection = () => {
 
   useEffect(() => {
     axios
-      .get('https://mudetesacco.co.ke/backend/statistics') 
+      .get('https://mufate-g-sacco.onrender.com/statistics') 
       .then((res) => {
         setStats(res.data.statistics);
         setLoading(false);

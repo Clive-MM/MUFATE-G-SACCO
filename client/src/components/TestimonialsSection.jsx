@@ -4,7 +4,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import "./TestimonialsSection.css";
 
-const API = "https://mudetesacco.co.ke/backend/clients";
+const API = "https://mufate-g-sacco.onrender.com/clients";
 
 const TestimonialsSection = () => {
   const [testimonials, setTestimonials] = useState([]);

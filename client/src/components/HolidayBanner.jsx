@@ -8,7 +8,7 @@ const HolidayBanner = () => {
   const [holiday, setHoliday] = useState(null);
 
   useEffect(() => {
-    axios.get('https://mudetesacco.co.ke/backend/holiday/message')
+    axios.get('https://mufate-g-sacco.onrender.com/holiday/message')
       .then(res => {
         if (res.data.message) {
           setHoliday(res.data);
