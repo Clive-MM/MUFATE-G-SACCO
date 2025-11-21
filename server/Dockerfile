@@ -36,5 +36,8 @@ COPY . .
 
 # ✅ Flask / Gunicorn
 ENV FLASK_APP=app.py
-EXPOSE 5000
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+
+# 🔴 IMPORTANT CHANGE: Let Render decide the port via $PORT
+# Render sets PORT env variable, so bind gunicorn to that.
+# Use shell form so $PORT is expanded.
+CMD gunicorn --bind 0.0.0.0:${PORT:-5000} app:app
