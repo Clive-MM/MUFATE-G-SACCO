@@ -3,7 +3,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_mail import Mail
 from dotenv import load_dotenv
-from sqlalchemy import text, create_engine
+from sqlalchemy import text
 import os
 
 from models.models import db, IsActive, FeedbackStatus
@@ -51,84 +51,50 @@ app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 # -----------------------------
 db.init_app(app)
 mail = Mail(app)
-bcrypt.init_app(app)
+bcrypt.init_app(bcrypt)
 jwt.init_app(app)
 register_mail_instance(mail)
 
 # -----------------------------
-# Helper: ensure DB + tables exist (runs every startup, but idempotent)
+# Helper: lightweight DB check
 # -----------------------------
+_db_checked = False
+
+
 def init_database_once():
     """
-    1. Connect to server-level 'master' DB.
-    2. Create MUFATE_G_SACCO_WEB if it doesn't exist.
-    3. Create all tables from SQLAlchemy models.
-    4. Seed IsActive and FeedbackStatus if empty.
+    On startup, just verify that the configured database is reachable.
+
+    All tables and seed data are assumed to already exist (you created
+    them in SQL Server / SSMS). We DO NOT run db.create_all() or CREATE DATABASE
+    on Render to avoid timeouts and communication link failures.
     """
+    global _db_checked
+
+    if _db_checked:
+        return
 
     if not DATABASE_URL:
-        print("❌ DATABASE_URL is not set. Skipping DB init.")
+        print("❌ DATABASE_URL is not set. Skipping DB check.")
         return
 
-    print("🔄 Initializing database (if needed)...")
+    print("🔄 Checking database connectivity...")
 
-    # Split DATABASE_URL into:
-    # base: mssql+pyodbc://user:pwd@server\instance
-    # rest: MUFATE_G_SACCO_WEB?driver=ODBC+Driver+17+for+SQL+Server
     try:
-        base, rest = DATABASE_URL.rsplit("/", 1)
-    except ValueError:
-        print("❌ DATABASE_URL format unexpected:", DATABASE_URL)
-        return
+        # Use the engine that SQLAlchemy already created for this app
+        engine = db.engine
 
-    if "?" in rest:
-        db_name, query = rest.split("?", 1)
-        query_part = "?" + query
-    else:
-        db_name = rest
-        query_part = ""
+        # Very light ping
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
 
-    # Build server-level URL pointing to master database
-    server_level_url = f"{base}/master{query_part}"
+        print("✅ Database 'MUFATE_G_SACCO_WEB' is present / reachable.")
+        _db_checked = True
 
-    # 1️⃣ Ensure the database exists
-    engine = create_engine(server_level_url)
-
-    with engine.connect() as conn:
-        conn.execute(
-            text(
-                f"IF DB_ID('{db_name}') IS NULL "
-                f"BEGIN "
-                f"    PRINT 'Creating database {db_name}'; "
-                f"    CREATE DATABASE [{db_name}]; "
-                f"END"
-            )
-        )
-        conn.commit()
-
-    print(f"✅ Database '{db_name}' is present / ready.")
-
-    # 2️⃣ Ensure all tables exist
-    db.create_all()
-    print("✅ All tables are created / already present.")
-
-    # 3️⃣ Seed reference data if needed
-    if not IsActive.query.first():
-        db.session.add_all([
-            IsActive(Status="Active"),
-            IsActive(Status="Inactive")
-        ])
-        print("🌱 Seeded IsActive")
-
-    if not FeedbackStatus.query.first():
-        db.session.add_all([
-            FeedbackStatus(StatusName="Unread"),
-            FeedbackStatus(StatusName="Read")
-        ])
-        print("🌱 Seeded FeedbackStatus")
-
-    db.session.commit()
-    print("✅ Seeding completed (if required).")
+    except Exception as e:
+        print("❌ Database connectivity check failed:", e)
+        # Let the error bubble up so Render shows it in logs
+        raise
 
 
 # -----------------------------
@@ -137,12 +103,12 @@ def init_database_once():
 app.register_blueprint(routes)
 
 # -----------------------------
-# Run DB init at startup
+# Run DB check at startup
 # (works for both local `python app.py` and WSGI servers)
 # -----------------------------
 with app.app_context():
     init_database_once()
-    print("✅ DB initialization completed. Backend is ready.")
+    print("✅ DB check completed. Backend is ready.")
 
 
 # -----------------------------
