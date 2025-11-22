@@ -51,12 +51,12 @@ app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
 # -----------------------------
 db.init_app(app)
 mail = Mail(app)
-bcrypt.init_app(app)   # ✅ FIX: pass app, not bcrypt
+bcrypt.init_app(app)   # ✅ correct
 jwt.init_app(app)
 register_mail_instance(mail)
 
 # -----------------------------
-# Helper: ensure DB + tables exist (runs every startup, but idempotent)
+# Helper: ensure DB + tables exist (for LOCAL USE)
 # -----------------------------
 def init_database_once():
     """
@@ -64,6 +64,9 @@ def init_database_once():
     2. Create MUFATE_G_SACCO_WEB if it doesn't exist.
     3. Create all tables from SQLAlchemy models.
     4. Seed IsActive and FeedbackStatus if empty.
+
+    ⚠️ This is meant for local/dev use.
+       DO NOT run on Render at import time (too slow, causes timeouts).
     """
 
     if not DATABASE_URL:
@@ -73,7 +76,7 @@ def init_database_once():
     print("🔄 Initializing database (if needed)...")
 
     # Split DATABASE_URL into:
-    # base: mssql+pyodbc://user:pwd@server\instance
+    # base: mssql+pyodbc://user:pwd@server\instance,port
     # rest: MUFATE_G_SACCO_WEB?driver=ODBC+Driver+18+for+SQL+Server
     try:
         base, rest = DATABASE_URL.rsplit("/", 1)
@@ -108,7 +111,7 @@ def init_database_once():
 
     print(f"✅ Database '{db_name}' is present / ready.")
 
-    # 2️⃣ Ensure all tables exist
+    # 2️⃣ Ensure all tables exist (LOCAL convenience)
     db.create_all()
     print("✅ All tables are created / already present.")
 
@@ -136,12 +139,9 @@ def init_database_once():
 # -----------------------------
 app.register_blueprint(routes)
 
-# -----------------------------
-# Run DB init at startup
-# -----------------------------
-with app.app_context():
-    init_database_once()
-    print("✅ DB initialization completed. Backend is ready.")
+# ❌ IMPORTANT:
+# We NO LONGER call init_database_once() here at import time.
+# That was causing timeouts on Render.
 
 
 # -----------------------------
@@ -171,4 +171,9 @@ def index():
 # -----------------------------
 if __name__ == "__main__":
     print("➡ Using DATABASE_URL:", os.getenv("DATABASE_URL"))
+    with app.app_context():
+        # ✅ Only run heavy DB init when you run locally
+        init_database_once()
+        print("✅ DB initialization completed (local).")
+
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")))
