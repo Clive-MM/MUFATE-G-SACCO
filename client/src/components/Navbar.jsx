@@ -97,7 +97,7 @@ const Navbar = () => {
             }}
           >
             <img
-              src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
+              src="https://res.cloudinary.com/djydkcx01/image/upload/v1764068765/GOLDEN_GENERATION_LOGO_fltkew.png"
               alt="GOLDEN GENERATION DT Sacco Logo"
               style={{ height: isMobile ? '70px' : '100px', objectFit: 'contain' }}
             />
