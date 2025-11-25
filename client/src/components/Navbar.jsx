@@ -101,7 +101,7 @@ const Navbar = () => {
               alt="GOLDEN GENERATION DT Sacco Logo"
               style={{ height: isMobile ? '70px' : '100px', objectFit: 'contain' }}
             />
-            <Typography
+            {/* <Typography
               variant="caption"
               sx={{
                 fontSize: isMobile ? '0.75rem' : '0.95rem',
@@ -114,7 +114,7 @@ const Navbar = () => {
             >
               GOLDEN GENERATION DT SACCO
               Walking With You
-            </Typography>
+            </Typography> */}
           </Link>
         </Box>
 
