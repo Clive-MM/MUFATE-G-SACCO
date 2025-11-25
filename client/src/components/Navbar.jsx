@@ -113,6 +113,7 @@ const Navbar = () => {
               }}
             >
               GOLDEN GENERATION DT SACCO
+              Walking With You
             </Typography>
           </Link>
         </Box>
