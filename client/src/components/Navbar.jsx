@@ -19,7 +19,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import { motion } from 'framer-motion';
 
 const BRAND_GOLD = '#EC9B14';
-const BRAND_DARK = '#02150F'; // deep green/black similar to logo background
+const BRAND_DARK = '#02150F'; // deep green/black like logo background
 const BRAND_TEXT_LIGHT = '#F4F4F4';
 
 const Navbar = () => {
@@ -65,8 +65,8 @@ const Navbar = () => {
   const sharedLinkStyles = (isActive) => ({
     fontWeight: isActive ? 'bold' : 500,
     color: BRAND_GOLD,
-    textShadow: isActive ? '0 0 8px rgba(236, 155, 20, 0.8)' : 'none',
-    transform: isActive ? 'scale(1.05)' : 'scale(1)',
+    textShadow: isActive ? '0 0 5px rgba(236, 155, 20, 0.6)' : 'none',
+    transform: isActive ? 'scale(1.03)' : 'scale(1)',
     textDecoration: 'none',
     transition: 'all 0.3s ease',
     '&:hover': {
@@ -77,18 +77,26 @@ const Navbar = () => {
 
   return (
     <AppBar
-      position="static"
+      position="sticky"
       component={Paper}
-      elevation={3}
+      elevation={6}
       sx={{
-        backgroundColor: BRAND_DARK,
-        borderBottom: '3px solid',
+        backgroundColor: 'rgba(2, 21, 15, 0.92)', // BRAND_DARK with alpha
+        backdropFilter: 'blur(10px)',
+        borderBottom: '2px solid',
         borderColor: BRAND_GOLD,
         color: BRAND_TEXT_LIGHT,
+        zIndex: theme.zIndex.appBar,
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between', py: 1 }}>
-        {/* Logo + stacked text */}
+      <Toolbar
+        sx={{
+          justifyContent: 'space-between',
+          py: { xs: 0.6, md: 1.4 },
+          minHeight: { xs: 60, md: 80 },
+        }}
+      >
+        {/* Logo + brand text */}
         <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
           <Link
             component={RouterLink}
@@ -105,7 +113,7 @@ const Navbar = () => {
             <Box
               component="img"
               src="https://res.cloudinary.com/djydkcx01/image/upload/v1764069591/GOLDEN_GENERATION_LOGO_vwsugk.png"
-              alt="Golden Generation DT Sacco Logo"
+              alt="Golden Generation DT SACCO Logo"
               sx={{
                 height: isMobile ? 50 : 70,
                 width: 'auto',
@@ -113,41 +121,41 @@ const Navbar = () => {
               }}
             />
 
-            {/* Brand text – hidden on very small screens */}
-            <Stack
-              spacing={0.1}
-              sx={{
-                ml: 1.5,
-                display: { xs: 'none', sm: 'flex' },
-              }}
-            >
+            {/* Brand text – responsive */}
+            <Stack spacing={0.1} sx={{ ml: 1.5 }}>
+              {/* Line 1 – Golden Generation */}
               <Typography
                 sx={{
                   fontSize: { xs: '0.8rem', md: '1rem' },
                   fontWeight: 700,
                   color: BRAND_GOLD,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.12em',
+                  letterSpacing: { xs: '0.12em', md: '0.16em' },
                   lineHeight: 1.1,
                 }}
               >
                 Golden Generation
               </Typography>
+
+              {/* Line 2 – DT SACCO */}
               <Typography
                 sx={{
                   fontSize: { xs: '0.75rem', md: '0.95rem' },
                   fontWeight: 700,
                   color: BRAND_GOLD,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.25em',
+                  letterSpacing: { xs: '0.22em', md: '0.28em' },
                   lineHeight: 1.1,
                 }}
               >
-                DT Sacco
+                DT SACCO
               </Typography>
+
+              {/* Line 3 – tagline (hidden on very small screens) */}
               <Typography
                 sx={{
-                  fontSize: { xs: '0.75rem', md: '0.9rem' },
+                  display: { xs: 'none', sm: 'block' },
+                  fontSize: { sm: '0.75rem', md: '0.9rem' },
                   fontWeight: 400,
                   fontStyle: 'italic',
                   color: BRAND_TEXT_LIGHT,
@@ -160,7 +168,7 @@ const Navbar = () => {
           </Link>
         </Box>
 
-        {/* Desktop Navigation */}
+        {/* Desktop navigation */}
         {!isMobile ? (
           <Stack
             direction="row"
@@ -315,14 +323,13 @@ const Navbar = () => {
               );
             })}
 
-            {/* Register Button (desktop) */}
+            {/* Register button (desktop) */}
             <Button
               component={RouterLink}
               to="/customer_registration"
               variant="contained"
               sx={{
-                background:
-                  'linear-gradient(to right, #04522F, #0B8A4A)', // rich green
+                background: 'linear-gradient(to right, #04522F, #0B8A4A)',
                 color: BRAND_GOLD,
                 fontWeight: 'bold',
                 px: 3,
@@ -333,10 +340,10 @@ const Navbar = () => {
                 transition: 'all 0.3s ease',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
                 '&:hover': {
-                  background:
-                    'linear-gradient(to right, #0B8A4A, #04522F)',
+                  background: 'linear-gradient(to right, #0B8A4A, #04522F)',
                   transform: 'scale(1.05)',
                   boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6)',
+                  letterSpacing: '1.5px',
                 },
               }}
             >
@@ -345,12 +352,12 @@ const Navbar = () => {
           </Stack>
         ) : (
           <>
-            {/* Mobile menu button */}
+            {/* Mobile menu icon */}
             <IconButton onClick={() => setDrawerOpen(true)}>
               <MenuIcon sx={{ color: BRAND_GOLD }} />
             </IconButton>
 
-            {/* Mobile Drawer */}
+            {/* Mobile drawer */}
             <Drawer
               anchor="left"
               open={drawerOpen}
@@ -364,7 +371,61 @@ const Navbar = () => {
                 },
               }}
             >
-              <Stack spacing={2}>
+              {/* Small brand header inside drawer */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  mb: 2,
+                  pb: 1,
+                  borderBottom: '1px solid rgba(255,255,255,0.1)',
+                }}
+              >
+                <Box
+                  component="img"
+                  src="https://res.cloudinary.com/djydkcx01/image/upload/v1764069591/GOLDEN_GENERATION_LOGO_vwsugk.png"
+                  alt="Golden Generation DT SACCO Logo"
+                  sx={{
+                    height: 36,
+                    width: 'auto',
+                    objectFit: 'contain',
+                    mr: 1,
+                  }}
+                />
+                <Box>
+                  <Typography
+                    sx={{
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      color: BRAND_GOLD,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.12em',
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    Golden Generation
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      color: BRAND_GOLD,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.2em',
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    DT Sacco
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Stack
+                spacing={2}
+                divider={
+                  <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }} />
+                }
+              >
                 {navLinks.map((item) => {
                   if (item.label === 'About Us') {
                     return (
@@ -490,19 +551,20 @@ const Navbar = () => {
                   onClick={() => setDrawerOpen(false)}
                   variant="contained"
                   sx={{
-                    mt: 2,
-                    background:
-                      'linear-gradient(to right, #04522F, #0B8A4A)',
+                    mt: 1,
+                    background: 'linear-gradient(to right, #04522F, #0B8A4A)',
                     color: BRAND_GOLD,
                     fontWeight: 'bold',
                     px: 2,
                     py: 1,
                     borderRadius: '30px',
                     textTransform: 'uppercase',
+                    letterSpacing: '1px',
                     '&:hover': {
                       background:
                         'linear-gradient(to right, #0B8A4A, #04522F)',
                       transform: 'scale(1.05)',
+                      letterSpacing: '1.4px',
                     },
                   }}
                 >
@@ -517,19 +579,20 @@ const Navbar = () => {
                   startIcon={<PhoneIcon sx={{ color: BRAND_GOLD }} />}
                   variant="contained"
                   sx={{
-                    mt: 3,
-                    background:
-                      'linear-gradient(to right, #04522F, #0B8A4A)',
+                    mt: 1,
+                    background: 'linear-gradient(to right, #04522F, #0B8A4A)',
                     color: BRAND_GOLD,
                     fontWeight: 'bold',
                     px: 2,
                     py: 1,
                     borderRadius: '30px',
                     textTransform: 'uppercase',
+                    letterSpacing: '1px',
                     '&:hover': {
                       background:
                         'linear-gradient(to right, #0B8A4A, #04522F)',
                       transform: 'scale(1.05)',
+                      letterSpacing: '1.4px',
                     },
                   }}
                 >
@@ -540,7 +603,7 @@ const Navbar = () => {
           </>
         )}
 
-        {/* Contact Button (Desktop Only) */}
+        {/* Desktop contact button */}
         {!isMobile && (
           <Box
             sx={{
@@ -557,8 +620,7 @@ const Navbar = () => {
               variant="contained"
               startIcon={<PhoneIcon sx={{ color: BRAND_GOLD }} />}
               sx={{
-                background:
-                  'linear-gradient(to right, #04522F, #0B8A4A)',
+                background: 'linear-gradient(to right, #04522F, #0B8A4A)',
                 color: BRAND_GOLD,
                 fontWeight: 'bold',
                 px: 3,
@@ -573,6 +635,7 @@ const Navbar = () => {
                     'linear-gradient(to right, #0B8A4A, #04522F)',
                   transform: 'scale(1.05)',
                   boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6)',
+                  letterSpacing: '1.5px',
                 },
               }}
             >
