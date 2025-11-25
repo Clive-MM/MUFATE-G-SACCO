@@ -112,7 +112,7 @@ const Navbar = () => {
             {/* Logo icon */}
             <Box
               component="img"
-              src="https://res.cloudinary.com/djydkcx01/image/upload/v1764069591/GOLDEN_GENERATION_LOGO_vwsugk.png"
+              src="https://res.cloudinary.com/djydkcx01/image/upload/v1764079823/logo_oe8qvk.png"
               alt="Golden Generation DT SACCO Logo"
               sx={{
                 height: isMobile ? 50 : 70,
