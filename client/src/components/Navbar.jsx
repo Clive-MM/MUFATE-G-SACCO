@@ -98,7 +98,7 @@ const Navbar = () => {
           >
             <img
               src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
-              alt="MUFATE G SACCO Logo"
+              alt="GOLDEN GENERATION DT Sacco Logo"
               style={{ height: isMobile ? '70px' : '100px', objectFit: 'contain' }}
             />
             <Typography
@@ -112,7 +112,7 @@ const Navbar = () => {
                 letterSpacing: '1px',
               }}
             >
-              MUFATE G SACCO
+              GOLDEN GENERATION DT SACCO
             </Typography>
           </Link>
         </Box>
