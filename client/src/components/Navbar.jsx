@@ -106,7 +106,7 @@ const Navbar = () => {
               sx={{
                 fontSize: isMobile ? '0.75rem' : '0.95rem',
                 fontWeight: 'bold',
-                color: '##EFBF04',
+                color: '#EFBF04',
                 mt: 0.5,
                 textAlign: 'center',
                 letterSpacing: '1px',
