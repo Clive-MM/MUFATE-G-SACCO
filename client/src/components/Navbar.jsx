@@ -93,7 +93,7 @@ const Navbar = () => {
         sx={{
           justifyContent: 'space-between',
           py: { xs: 0.6, md: 1.4 },
-          minHeight: { xs: 60, md: 80 },
+          minHeight: { xs: 90, md: 120 },
         }}
       >
         {/* Logo + brand text */}
