@@ -38,7 +38,7 @@ const HomepageSlider = () => {
   }, []);
 
   const settings = {
-    dots: false, // dots are styled in CSS if you later choose to enable them
+    dots: false,
     infinite: true,
     speed: 800,
     fade: true,
@@ -67,9 +67,7 @@ const HomepageSlider = () => {
     );
   }
 
-  if (!slides.length) {
-    return null;
-  }
+  if (!slides.length) return null;
 
   return (
     <Box sx={{ width: '100%', position: 'relative' }}>
@@ -122,7 +120,6 @@ const HomepageSlider = () => {
                   maxHeight: '80vh',
                   objectFit: 'contain',
                   borderRadius: '16px',
-                  border: `2px solid rgba(255, 215, 0, 0.8)`,
                   boxShadow: '0 0 28px rgba(0,0,0,0.7)',
                 }}
               />
@@ -137,55 +134,60 @@ const HomepageSlider = () => {
                 transform: 'translateX(-50%)',
                 zIndex: 3,
                 textAlign: 'center',
-                color: '#ffffff',
                 px: 2,
                 width: '90%',
+                color: '#fff',
               }}
             >
+              {/* Title */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7 }}
+                initial={{ opacity: 0, y: 40, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.85, ease: 'easeOut' }}
               >
                 <Typography
-                  variant="h4"
+                  variant="h3"
                   sx={{
-                    fontWeight: 700,
-                    mb: 2,
-                    fontSize: { xs: '1.5rem', sm: '2.1rem', md: '2.7rem' },
-                    textShadow: '2px 2px 8px rgba(0,0,0,0.9)',
-                    letterSpacing: '0.04em',
+                    fontWeight: 800,
+                    mb: 1,
                     color: PRIMARY_GOLD,
+                    textShadow: '2px 2px 8px rgba(0,0,0,0.9)',
+                    fontSize: { xs: '1.8rem', sm: '2.3rem', md: '2.8rem' },
+                    letterSpacing: '0.03em',
                   }}
                 >
                   {slide.Title}
                 </Typography>
               </motion.div>
 
+              {/* Description */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.25 }}
+                transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
               >
                 <Typography
-                  variant="body2"
+                  variant="h5"
                   sx={{
-                    maxWidth: 700,
+                    maxWidth: 820,
                     mx: 'auto',
                     mb: 3,
-                    fontSize: { xs: '0.95rem', sm: '1rem' },
-                    textShadow: '1px 1px 5px rgba(0,0,0,0.8)',
-                    color: '#f5f5f5',
+                    fontWeight: 700,
+                    color: PRIMARY_GOLD,
+                    textShadow: '2px 2px 6px rgba(0,0,0,0.85)',
+                    fontSize: { xs: '1.05rem', sm: '1.25rem', md: '1.55rem' },
+                    letterSpacing: '0.02em',
                   }}
                 >
                   {slide.Description}
                 </Typography>
               </motion.div>
 
+              {/* CTA Button */}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.55 }}
+                transition={{ duration: 1, delay: 0.4, ease: 'easeOut' }}
               >
                 <Button
                   component={RouterLink}
@@ -195,18 +197,21 @@ const HomepageSlider = () => {
                   sx={{
                     backgroundColor: PRIMARY_GOLD,
                     color: '#111',
-                    fontWeight: 700,
+                    fontWeight: 800,
                     px: { xs: 3, sm: 4 },
                     py: { xs: 1, sm: 1.2 },
                     borderRadius: '999px',
-                    fontSize: { xs: '0.85rem', sm: '0.95rem' },
-                    letterSpacing: '0.06em',
-                    boxShadow: '0 0 16px rgba(255,215,0,0.75)',
+                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                    letterSpacing: '0.08em',
                     textTransform: 'uppercase',
+                    boxShadow: '0 0 18px rgba(255,215,0,0.8)',
                     '&:hover': {
-                      backgroundColor: '#ffeb7a',
-                      transform: 'scale(1.06)',
-                      boxShadow: '0 0 26px rgba(255,215,0,0.95)',
+                      backgroundImage: `linear-gradient(135deg, ${DEEP_GREEN}, ${PRIMARY_GOLD})`,
+                      backgroundColor: 'transparent',
+                      color: '#fff',
+                      transform: 'scale(1.07)',
+                      boxShadow:
+                        '0 0 32px rgba(255,215,0,0.95), 0 0 16px rgba(0,0,0,0.6)',
                     },
                   }}
                 >
