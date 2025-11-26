@@ -164,8 +164,8 @@ const HomepageSlider = () => {
                     style={{
                       width: '100%',
                       height: 'auto',
-                      maxHeight: '60vh', // reduced image height
-                      objectFit: 'cover',
+                      maxHeight: 'auto', // reduced image height
+                      objectFit: 'contain',
                       display: 'block',
                     }}
                   />
