@@ -1,24 +1,27 @@
+/* If you later enable dots in the slider, this will match GGDT Sacco branding */
+
 .slick-dots.custom-dots li button:before {
   font-size: 14px;
-  color: #64dd17;
+  color: #ffd700; /* golden */
   opacity: 0.5;
   transition: all 0.3s ease;
 }
 
 .slick-dots.custom-dots li.slick-active button:before {
-  color: #a0f27d;
+  color: #ffe066; /* softer light gold */
   opacity: 1;
   font-size: 16px;
 }
 
+/* Default slick arrow icons (if ever used in addition to custom arrows) */
 .slick-prev:before,
 .slick-next:before {
-  color: #ffffff;
-  font-size: 28px;
+  color: #ffd700;
+  font-size: 26px;
   opacity: 0.9;
 }
 
 .slick-prev:hover:before,
 .slick-next:hover:before {
-  color: #76ff03;
+  color: #ffe066;
 }
