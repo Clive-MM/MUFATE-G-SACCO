@@ -20,6 +20,26 @@ const DEEP_GREEN = '#006400';
 const DARK_BG_GRADIENT =
   'linear-gradient(135deg, #050509 0%, #160019 40%, #001a0f 100%)';
 
+// Animation variants
+const titleVariants = {
+  hidden: { opacity: 0, y: 40, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.8, ease: 'easeOut' },
+  },
+};
+
+const descriptionVariants = {
+  hidden: { opacity: 0, y: 25 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: 'easeOut', delay: 0.2 },
+  },
+};
+
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -129,95 +149,120 @@ const HomepageSlider = () => {
             <Box
               sx={{
                 position: 'absolute',
-                bottom: { xs: '4%', sm: '6%', md: '8%' },
+                bottom: { xs: '5%', sm: '6%', md: '8%' },
                 left: '50%',
                 transform: 'translateX(-50%)',
                 zIndex: 3,
-                textAlign: 'center',
+                width: { xs: '95%', sm: '85%', md: '75%' },
                 px: 2,
-                width: '90%',
-                color: '#fff',
               }}
             >
-              {/* Title */}
-              <motion.div
-                initial={{ opacity: 0, y: 40, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.85, ease: 'easeOut' }}
+              <Box
+                sx={{
+                  background:
+                    'linear-gradient(135deg, rgba(0,0,0,0.78), rgba(0,0,0,0.6))',
+                  borderRadius: '20px',
+                  px: { xs: 2, sm: 3.5, md: 4 },
+                  py: { xs: 2, sm: 2.5, md: 3 },
+                  boxShadow: '0 18px 40px rgba(0,0,0,0.7)',
+                  backdropFilter: 'blur(10px)',
+                  textAlign: 'center',
+                  color: '#fff',
+                }}
               >
-                <Typography
-                  variant="h3"
-                  sx={{
-                    fontWeight: 800,
-                    mb: 1,
-                    color: PRIMARY_GOLD,
-                    textShadow: '2px 2px 8px rgba(0,0,0,0.9)',
-                    fontSize: { xs: '1.8rem', sm: '2.3rem', md: '2.8rem' },
-                    letterSpacing: '0.03em',
-                  }}
+                {/* Title */}
+                <motion.div
+                  variants={titleVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover={{ scale: 1.02 }}
                 >
-                  {slide.Title}
-                </Typography>
-              </motion.div>
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontWeight: 800,
+                      mb: 1.5,
+                      color: PRIMARY_GOLD,
+                      textShadow: '2px 2px 8px rgba(0,0,0,0.9)',
+                      fontSize: {
+                        xs: '1.8rem',
+                        sm: '2.3rem',
+                        md: '2.7rem',
+                      },
+                      letterSpacing: '0.03em',
+                      maxWidth: { xs: '100%', md: '80%' },
+                      mx: 'auto',
+                      lineHeight: 1.15,
+                    }}
+                  >
+                    {slide.Title}
+                  </Typography>
+                </motion.div>
 
-              {/* Description */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
-              >
-                <Typography
-                  variant="h5"
-                  sx={{
-                    maxWidth: 820,
-                    mx: 'auto',
-                    mb: 3,
-                    fontWeight: 700,
-                    color: PRIMARY_GOLD,
-                    textShadow: '2px 2px 6px rgba(0,0,0,0.85)',
-                    fontSize: { xs: '1.05rem', sm: '1.25rem', md: '1.55rem' },
-                    letterSpacing: '0.02em',
-                  }}
+                {/* Description */}
+                <motion.div
+                  variants={descriptionVariants}
+                  initial="hidden"
+                  animate="visible"
                 >
-                  {slide.Description}
-                </Typography>
-              </motion.div>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      maxWidth: 900,
+                      mx: 'auto',
+                      mb: 3,
+                      fontWeight: 600,
+                      color: PRIMARY_GOLD,
+                      textShadow: '1px 1px 5px rgba(0,0,0,0.85)',
+                      fontSize: {
+                        xs: '1rem',
+                        sm: '1.15rem',
+                        md: '1.3rem',
+                      },
+                      lineHeight: 1.5,
+                      letterSpacing: '0.01em',
+                    }}
+                  >
+                    {slide.Description}
+                  </Typography>
+                </motion.div>
 
-              {/* CTA Button */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.4, ease: 'easeOut' }}
-              >
-                <Button
-                  component={RouterLink}
-                  to="/membership"
-                  variant="contained"
-                  size="medium"
-                  sx={{
-                    backgroundColor: PRIMARY_GOLD,
-                    color: '#111',
-                    fontWeight: 800,
-                    px: { xs: 3, sm: 4 },
-                    py: { xs: 1, sm: 1.2 },
-                    borderRadius: '999px',
-                    fontSize: { xs: '0.9rem', sm: '1rem' },
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    boxShadow: '0 0 18px rgba(255,215,0,0.8)',
-                    '&:hover': {
-                      backgroundImage: `linear-gradient(135deg, ${DEEP_GREEN}, ${PRIMARY_GOLD})`,
-                      backgroundColor: 'transparent',
-                      color: '#fff',
-                      transform: 'scale(1.07)',
-                      boxShadow:
-                        '0 0 32px rgba(255,215,0,0.95), 0 0 16px rgba(0,0,0,0.6)',
-                    },
-                  }}
+                {/* CTA Button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.9, delay: 0.45, ease: 'easeOut' }}
                 >
-                  Register Here
-                </Button>
-              </motion.div>
+                  <Button
+                    component={RouterLink}
+                    to="/membership"
+                    variant="contained"
+                    size="medium"
+                    sx={{
+                      backgroundColor: PRIMARY_GOLD,
+                      color: '#111',
+                      fontWeight: 800,
+                      px: { xs: 3, sm: 4 },
+                      py: { xs: 1, sm: 1.2 },
+                      borderRadius: '999px',
+                      fontSize: { xs: '0.9rem', sm: '1rem' },
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      boxShadow: '0 0 18px rgba(255,215,0,0.8)',
+                      '&:hover': {
+                        backgroundImage: `linear-gradient(135deg, ${DEEP_GREEN}, ${PRIMARY_GOLD})`,
+                        backgroundColor: 'transparent',
+                        color: '#fff',
+                        transform: 'scale(1.07)',
+                        boxShadow:
+                          '0 0 32px rgba(255,215,0,0.95), 0 0 16px rgba(0,0,0,0.6)',
+                      },
+                    }}
+                  >
+                    Register Here
+                  </Button>
+                </motion.div>
+              </Box>
             </Box>
           </Box>
         ))}
