@@ -21,6 +21,27 @@ const DEEP_GREEN = '#006400';
 const BG_GRADIENT =
   'linear-gradient(135deg, #060606 0%, #12001A 45%, #002010 100%)';
 
+// Framer Motion variants for staggered intro
+const cardVariants = {
+  initial: { opacity: 0, rotateY: -8, y: 20 },
+  animate: { opacity: 1, rotateY: 0, y: 0 },
+};
+
+const titleVariants = {
+  initial: { opacity: 0, y: 18 },
+  animate: { opacity: 1, y: 0 },
+};
+
+const descVariants = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+};
+
+const buttonVariants = {
+  initial: { opacity: 0, y: 10, scale: 0.96 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+};
+
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -76,7 +97,7 @@ const HomepageSlider = () => {
             key={index}
             sx={{
               position: 'relative',
-              height: '90vh',
+              height: '82vh', // slightly shorter than before
               background: BG_GRADIENT,
               overflow: 'hidden',
             }}
@@ -110,9 +131,10 @@ const HomepageSlider = () => {
             >
               <motion.div
                 className="ggdtsacco-3d-card"
-                initial={{ opacity: 0, rotateY: -8, translateY: 20 }}
-                animate={{ opacity: 1, rotateY: 0, translateY: 0 }}
-                transition={{ duration: 0.9, ease: 'easeOut' }}
+                variants={cardVariants}
+                initial="initial"
+                animate="animate"
+                transition={{ duration: 0.85, ease: 'easeOut' }}
                 whileHover={{
                   rotateX: 4,
                   rotateY: -4,
@@ -130,7 +152,7 @@ const HomepageSlider = () => {
                     position: 'relative',
                     borderRadius: '18px',
                     overflow: 'hidden',
-                    boxShadow: '0 28px 60px rgba(0,0,0,0.75)',
+                    boxShadow: '0 24px 50px rgba(0,0,0,0.75)',
                     backgroundColor: '#000',
                   }}
                 >
@@ -142,7 +164,7 @@ const HomepageSlider = () => {
                     style={{
                       width: '100%',
                       height: 'auto',
-                      maxHeight: '70vh',
+                      maxHeight: '60vh', // reduced image height
                       objectFit: 'cover',
                       display: 'block',
                     }}
@@ -153,84 +175,100 @@ const HomepageSlider = () => {
                     sx={{
                       position: 'absolute',
                       left: '50%',
-                      bottom: { xs: '4%', md: '6%' },
+                      bottom: { xs: '6%', md: '8%' },
                       transform: 'translateX(-50%) translateZ(30px)',
-                      width: { xs: '94%', sm: '88%', md: '80%' },
+                      width: { xs: '94%', sm: '86%', md: '78%' },
                     }}
                   >
                     <Box
                       sx={{
-                        background: 'rgba(0,0,0,0.7)',
+                        background: 'rgba(0,0,0,0.72)',
                         backdropFilter: 'blur(12px)',
                         borderRadius: '18px',
-                        px: { xs: 2, md: 3 },
-                        py: { xs: 1.6, md: 2 },
+                        px: { xs: 2, md: 2.5 },
+                        py: { xs: 1.2, md: 1.7 },
                         textAlign: 'center',
                       }}
                     >
-                      <Typography
-                        sx={{
-                          fontWeight: 800,
-                          color: GOLD,
-                          textShadow: '2px 2px 8px rgba(0,0,0,0.9)',
-                          fontSize: {
-                            xs: '1.5rem',
-                            sm: '2rem',
-                            md: '2.3rem',
-                          },
-                          mb: 0.8,
-                          lineHeight: 1.15,
-                        }}
+                      <motion.div
+                        variants={titleVariants}
+                        transition={{ duration: 0.6, ease: 'easeOut' }}
                       >
-                        {slide.Title}
-                      </Typography>
+                        <Typography
+                          sx={{
+                            fontWeight: 800,
+                            color: GOLD,
+                            textShadow: '2px 2px 8px rgba(0,0,0,0.9)',
+                            fontSize: {
+                              xs: '1.35rem',
+                              sm: '1.9rem',
+                              md: '2.1rem',
+                            },
+                            mb: 0.6,
+                            lineHeight: 1.12,
+                          }}
+                        >
+                          {slide.Title}
+                        </Typography>
+                      </motion.div>
 
-                      <Typography
-                        sx={{
-                          color: LIGHT_GOLD,
-                          fontWeight: 600,
-                          fontSize: {
-                            xs: '0.95rem',
-                            sm: '1.05rem',
-                            md: '1.15rem',
-                          },
-                          maxWidth: 750,
-                          mx: 'auto',
-                          lineHeight: 1.35,
-                          mb: 1.5,
-                        }}
+                      <motion.div
+                        variants={descVariants}
+                        transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
                       >
-                        {slide.Description}
-                      </Typography>
+                        <Typography
+                          sx={{
+                            color: LIGHT_GOLD,
+                            fontWeight: 600,
+                            fontSize: {
+                              xs: '0.9rem',
+                              sm: '1rem',
+                              md: '1.05rem',
+                            },
+                            maxWidth: 740,
+                            mx: 'auto',
+                            lineHeight: 1.3,
+                            mb: 1.2,
+                          }}
+                        >
+                          {slide.Description}
+                        </Typography>
+                      </motion.div>
 
-                      <Button
-                        component={RouterLink}
-                        to="/membership"
-                        sx={{
-                          backgroundColor: GOLD,
-                          color: '#111',
-                          fontWeight: 800,
-                          px: { xs: 3, md: 4 },
-                          py: 0.8,
-                          borderRadius: '999px',
-                          fontSize: {
-                            xs: '0.85rem',
-                            md: '0.95rem',
-                          },
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
-                          boxShadow: '0 8px 18px rgba(0,0,0,0.8)',
-                          '&:hover': {
-                            backgroundImage: `linear-gradient(135deg, ${DEEP_GREEN}, ${GOLD})`,
-                            color: '#fff',
-                            transform: 'translateY(-2px)',
-                            boxShadow:
-                              '0 14px 30px rgba(0,0,0,0.9), 0 0 18px rgba(255,215,0,0.9)',
-                          },
-                        }}
+                      <motion.div
+                        variants={buttonVariants}
+                        transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
                       >
-                        Register Here
-                      </Button>
+                        <Button
+                          component={RouterLink}
+                          to="/membership"
+                          className="ggdtsacco-cta"
+                          sx={{
+                            backgroundColor: GOLD,
+                            color: '#111',
+                            fontWeight: 800,
+                            px: { xs: 3, md: 3.8 },
+                            py: 0.7,
+                            borderRadius: '999px',
+                            fontSize: {
+                              xs: '0.82rem',
+                              md: '0.92rem',
+                            },
+                            letterSpacing: '0.08em',
+                            textTransform: 'uppercase',
+                            boxShadow: '0 8px 18px rgba(0,0,0,0.8)',
+                            '&:hover': {
+                              backgroundImage: `linear-gradient(135deg, ${DEEP_GREEN}, ${GOLD})`,
+                              color: '#fff',
+                              transform: 'translateY(-2px)',
+                              boxShadow:
+                                '0 14px 30px rgba(0,0,0,0.9), 0 0 18px rgba(255,215,0,0.9)',
+                            },
+                          }}
+                        >
+                          Register Here
+                        </Button>
+                      </motion.div>
                     </Box>
                   </Box>
                 </Box>
