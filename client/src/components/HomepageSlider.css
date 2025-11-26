@@ -48,3 +48,11 @@
 .slick-slide img {
   user-select: none;
 }
+/* 3D card smoothing */
+.ggdtsacco-3d-card {
+  transform-style: preserve-3d;
+}
+
+.ggdtsacco-3d-card img {
+  backface-visibility: hidden;
+}
