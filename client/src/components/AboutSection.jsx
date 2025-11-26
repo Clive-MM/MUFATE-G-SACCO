@@ -269,10 +269,11 @@ const AboutSection = () => {
                 mb: 2.5,
               }}
             >
-              As <strong>Golden Generation DT SACCO</strong>, our vision is to be
-              the preferred financial partner for households and businesses in
-              Western Kenya – <strong>walking with you</strong> from your first
-              savings to your biggest dreams.
+              As <strong>Golden Generation DT SACCO</strong>, 
+              our vision is to become a leading member-driven financial institution 
+              — providing secure savings, affordable credit 
+              and digital banking solutions to uplift communities 
+              and empower economic growth across the region and beyond.
             </Typography>
 
             <Button
