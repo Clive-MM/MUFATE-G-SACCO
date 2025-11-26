@@ -117,7 +117,7 @@ const AboutSection = () => {
             >
               We provide <strong>safe, transparent and flexible financial solutions</strong> –
               from everyday savings and salary processing to development loans
-              and digital banking – helping you <strong>save, borrow and invest with confidence</strong>. 
+              and digital banking – helping you <strong>save, borrow and invest with confidence</strong>.
               When someone searches for a reliable SACCO in Western Kenya, we want them
               to find a partner that is <strong>walking with them</strong> at every stage of life.
             </Typography>
@@ -269,10 +269,10 @@ const AboutSection = () => {
                 mb: 2.5,
               }}
             >
-              As <strong>Golden Generation DT SACCO</strong>, 
-              our vision is to become a leading member-driven financial institution 
-              — providing secure savings, affordable credit 
-              and digital banking solutions to uplift communities 
+              As <strong>Golden Generation DT SACCO</strong>,
+              our vision is to become a leading member-driven financial institution
+              — providing secure savings, affordable credit
+              and digital banking solutions to uplift communities
               and empower economic growth across the region and beyond.
             </Typography>
 
@@ -309,13 +309,22 @@ const AboutSection = () => {
               variant="subtitle2"
               sx={{
                 mt: 3,
+                fontWeight: 800,
                 fontStyle: 'italic',
                 color: LIGHT_GOLD,
-                letterSpacing: 0.8,
+                letterSpacing: 1.2,
+                textShadow: `
+      0 0 6px rgba(255, 215, 0, 0.8),
+      0 0 12px rgba(255, 215, 0, 0.6),
+      0 0 18px rgba(255, 215, 0, 0.4)
+    `,
+                fontSize: { xs: '1rem', md: '1.15rem' },
+                textAlign: 'left',
               }}
             >
               “Walking With You.”
             </Typography>
+
           </Box>
 
           {/* RIGHT SIDE SLIDESHOW */}
