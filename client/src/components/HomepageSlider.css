@@ -1,27 +1,50 @@
-/* If you later enable dots in the slider, this will match GGDT Sacco branding */
+/* ===============================
+   Golden Generation DT Sacco Slider Styles
+   =============================== */
+
+/* If you later enable dots: dots: true and className="custom-dots" */
+.slick-dots.custom-dots {
+  bottom: 18px;
+}
+
+.slick-dots.custom-dots li {
+  margin: 0 4px;
+}
 
 .slick-dots.custom-dots li button:before {
-  font-size: 14px;
-  color: #ffd700; /* golden */
-  opacity: 0.5;
+  font-size: 12px;
+  color: #ffd700; /* primary gold */
+  opacity: 0.45;
   transition: all 0.3s ease;
 }
 
 .slick-dots.custom-dots li.slick-active button:before {
   color: #ffe066; /* softer light gold */
   opacity: 1;
-  font-size: 16px;
+  font-size: 14px;
 }
 
-/* Default slick arrow icons (if ever used in addition to custom arrows) */
+/* Default slick arrows (only used if react-slick falls back to them) */
 .slick-prev:before,
 .slick-next:before {
-  color: #ffd700;
+  color: #ffd700; /* gold */
   font-size: 26px;
   opacity: 0.9;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .slick-prev:hover:before,
 .slick-next:hover:before {
   color: #ffe066;
+  transform: scale(1.08);
+}
+
+/* Optional: smooth transition on slides */
+.slick-slide {
+  transition: opacity 0.4s ease;
+}
+
+/* Prevent image selection/drag highlighting */
+.slick-slide img {
+  user-select: none;
 }
