@@ -15,12 +15,10 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-// Brand colors
-const GOLD = '#FFD700';
-const LIGHT_GOLD = '#FFE066';
-const DEEP_GREEN = '#006400';
-const BG_GRADIENT =
-  'linear-gradient(145deg, #020806 0%, #02160C 40%, #000000 100%)';
+// Brand colors (matching Navbar)
+const BRAND_DARK = '#02150F';
+const BRAND_GOLD = '#EC9B14';
+const BRAND_GOLD_SOFT = '#F7D27A';
 
 const SaccoStatsSection = () => {
   const [stats, setStats] = useState(null);
@@ -43,33 +41,33 @@ const SaccoStatsSection = () => {
     <CalendarTodayIcon
       sx={{
         fontSize: 40,
-        color: GOLD,
+        color: BRAND_GOLD,
         mb: 1.5,
-        filter: 'drop-shadow(0 0 8px rgba(255,215,0,0.9))',
+        filter: 'drop-shadow(0 0 8px rgba(236,155,20,0.9))',
       }}
     />,
     <GroupsIcon
       sx={{
         fontSize: 40,
-        color: GOLD,
+        color: BRAND_GOLD,
         mb: 1.5,
-        filter: 'drop-shadow(0 0 8px rgba(255,215,0,0.9))',
+        filter: 'drop-shadow(0 0 8px rgba(236,155,20,0.9))',
       }}
     />,
     <PhoneIphoneIcon
       sx={{
         fontSize: 40,
-        color: GOLD,
+        color: BRAND_GOLD,
         mb: 1.5,
-        filter: 'drop-shadow(0 0 8px rgba(255,215,0,0.9))',
+        filter: 'drop-shadow(0 0 8px rgba(236,155,20,0.9))',
       }}
     />,
     <LocationCityIcon
       sx={{
         fontSize: 40,
-        color: GOLD,
+        color: BRAND_GOLD,
         mb: 1.5,
-        filter: 'drop-shadow(0 0 8px rgba(255,215,0,0.9))',
+        filter: 'drop-shadow(0 0 8px rgba(236,155,20,0.9))',
       }}
     />,
   ];
@@ -86,7 +84,7 @@ const SaccoStatsSection = () => {
   return (
     <Box
       sx={{
-        background: BG_GRADIENT,
+        backgroundColor: BRAND_DARK,
         py: 10,
         px: { xs: 2, sm: 4, md: 8 },
       }}
@@ -99,13 +97,12 @@ const SaccoStatsSection = () => {
           textAlign: 'center',
           mb: 1.5,
           fontSize: { xs: '1.9rem', md: '2.5rem' },
-          backgroundImage: 'linear-gradient(to right, #FFF8C5, #FFD700, #FFE066)',
+          backgroundImage: 'linear-gradient(to right, #FFF5CC, #EC9B14, #F7D27A)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           letterSpacing: 1.4,
           textTransform: 'uppercase',
-          textShadow:
-            '0 0 10px rgba(0,0,0,0.8), 0 0 18px rgba(255,215,0,0.65)',
+          textShadow: '0 0 18px rgba(0,0,0,0.7)',
         }}
       >
         Our Impact in Numbers
@@ -116,19 +113,19 @@ const SaccoStatsSection = () => {
         sx={{
           textAlign: 'center',
           mb: 6,
-          color: LIGHT_GOLD,
+          color: BRAND_GOLD_SOFT,
           fontSize: { xs: '0.9rem', md: '1rem' },
           letterSpacing: 0.8,
           opacity: 0.9,
         }}
       >
-        Golden Generation DT SACCO continues to grow with our members — in
-        service, reach and digital convenience.
+        Golden Generation DT SACCO continues to grow with our members —
+        in service, reach and digital convenience.
       </Typography>
 
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress sx={{ color: GOLD }} />
+          <CircularProgress sx={{ color: BRAND_GOLD }} />
         </Box>
       ) : (
         <Grid container spacing={4} justifyContent="center">
@@ -149,28 +146,28 @@ const SaccoStatsSection = () => {
                     textAlign: 'center',
                     borderRadius: 4,
                     backdropFilter: 'blur(10px)',
-                    background:
-                      'radial-gradient(circle at top, rgba(0,60,20,0.9), rgba(0,0,0,0.85))',
-                    border: `1px solid rgba(255,215,0,0.18)`,
+                    background: 'rgba(255,255,255,0.03)',
+                    border: `1px solid rgba(236,155,20,0.3)`,
                     boxShadow:
-                      '0 18px 40px rgba(0,0,0,0.9), 0 0 20px rgba(255,215,0,0.15)',
+                      '0 18px 40px rgba(0,0,0,0.8), 0 0 20px rgba(236,155,20,0.2)',
                     transition: 'all 0.3s ease-in-out',
                     '&:hover': {
                       boxShadow:
-                        '0 22px 50px rgba(0,0,0,0.95), 0 0 30px rgba(255,215,0,0.4)',
-                      borderColor: 'rgba(255,215,0,0.45)',
+                        '0 22px 50px rgba(0,0,0,0.95), 0 0 30px rgba(236,155,20,0.45)',
+                      borderColor: 'rgba(236,155,20,0.45)',
                     },
                   }}
                 >
                   {iconMap[index]}
+
                   <Typography
                     variant="h4"
                     sx={{
                       fontWeight: 900,
-                      color: GOLD,
+                      color: BRAND_GOLD,
                       fontSize: { xs: '2rem', md: '2.6rem' },
                       textShadow:
-                        '0 0 10px rgba(255,215,0,1), 0 0 22px rgba(0,0,0,0.9)',
+                        '0 0 10px rgba(236,155,20,1), 0 0 22px rgba(0,0,0,0.9)',
                       letterSpacing: 1,
                     }}
                   >
@@ -181,10 +178,11 @@ const SaccoStatsSection = () => {
                       suffix="+"
                     />
                   </Typography>
+
                   <Typography
                     variant="subtitle2"
                     sx={{
-                      color: LIGHT_GOLD,
+                      color: BRAND_GOLD_SOFT,
                       mt: 1.5,
                       fontWeight: 600,
                       letterSpacing: 0.9,
