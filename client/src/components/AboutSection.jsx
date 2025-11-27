@@ -66,7 +66,17 @@ const AboutSection = () => {
           }}
         >
           {/* LEFT SIDE CONTENT */}
-          <Box sx={{ flex: 1, p: { xs: 3, md: 5 } }}>
+          <Box
+            sx={{
+              flex: 1,
+              p: { xs: 3, md: 5 },
+              background: DARK_BG, // 🔥 same background treatment as stats section
+              borderRight: {
+                xs: 'none',
+                md: '1px solid rgba(255,215,0,0.18)',
+              },
+            }}
+          >
             <Typography
               variant="h4"
               sx={{
@@ -96,11 +106,11 @@ const AboutSection = () => {
               }}
             >
               <strong>Golden Generation Deposit Taking SACCO</strong>{' '}
-              {/* <span style={{ color: LIGHT_GOLD }}>
-                (formerly MUFATE G SACCO – Mudete Factory Tea Growers SACCO LTD)
-              </span>{' '} */}
               is a trusted, member-owned deposit taking SACCO serving{' '}
-              <strong>tea farmers, salaried workers, teachers, pensioners, county staff and business owners</strong>{' '}
+              <strong>
+                tea farmers, salaried workers, teachers, pensioners, county staff
+                and business owners
+              </strong>{' '}
               across Vihiga and Kakamega counties. Our rebrand reflects a
               broader common bond – opening doors to more members while
               preserving our strong roots in the tea-growing community.
@@ -115,11 +125,14 @@ const AboutSection = () => {
                 mb: 3,
               }}
             >
-              We provide <strong>safe, transparent and flexible financial solutions</strong> –
-              from everyday savings and salary processing to development loans
-              and digital banking – helping you <strong>save, borrow and invest with confidence</strong>.
-              When someone searches for a reliable SACCO in Western Kenya, we want them
-              to find a partner that is <strong>walking with them</strong> at every stage of life.
+              We provide{' '}
+              <strong>safe, transparent and flexible financial solutions</strong>{' '}
+              – from everyday savings and salary processing to development loans
+              and digital banking – helping you{' '}
+              <strong>save, borrow and invest with confidence</strong>. When
+              someone searches for a reliable SACCO in Western Kenya, we want
+              them to find a partner that is <strong>walking with them</strong>{' '}
+              at every stage of life.
             </Typography>
 
             <List dense sx={{ pl: 0 }}>
@@ -269,11 +282,11 @@ const AboutSection = () => {
                 mb: 2.5,
               }}
             >
-              As <strong>Golden Generation DT SACCO</strong>,
-              our vision is to become a leading member-driven financial institution
-              — providing secure savings, affordable credit
-              and digital banking solutions to uplift communities
-              and empower economic growth across the region and beyond.
+              As <strong>Golden Generation DT SACCO</strong>, our vision is to
+              become a leading member-driven financial institution — providing
+              secure savings, affordable credit and digital banking solutions to
+              uplift communities and empower economic growth across the region
+              and beyond.
             </Typography>
 
             <Button
@@ -296,9 +309,9 @@ const AboutSection = () => {
                 '&:hover': {
                   backgroundImage: `linear-gradient(135deg, ${DEEP_GREEN}, ${GOLD})`,
                   color: '#fff',
-                  transform: 'translateY(-2px) scale(1.04)',
+                  transform: 'translateY(-2px) scale(1.04)', // ✅ fixed quotes
                   boxShadow:
-                    '0 18px 32px rgba(0,0,0,0.9), 0 0 22px rgba(255,215,0,0.95)',
+                    '0 18px 32px rgba(0,0,0,0.9), 0 0 22px rgba(255,215,0,0.95)', // ✅ this is fine
                 },
               }}
             >
@@ -314,17 +327,16 @@ const AboutSection = () => {
                 color: LIGHT_GOLD,
                 letterSpacing: 1.2,
                 textShadow: `
-      0 0 6px rgba(255, 215, 0, 0.8),
-      0 0 12px rgba(255, 215, 0, 0.6),
-      0 0 18px rgba(255, 215, 0, 0.4)
-    `,
+                  0 0 6px rgba(255, 215, 0, 0.8),
+                  0 0 12px rgba(255, 215, 0, 0.6),
+                  0 0 18px rgba(255, 215, 0, 0.4)
+                `,
                 fontSize: { xs: '1rem', md: '1.15rem' },
                 textAlign: 'left',
               }}
             >
               “Walking With You.”
             </Typography>
-
           </Box>
 
           {/* RIGHT SIDE SLIDESHOW */}
