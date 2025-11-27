@@ -12,7 +12,7 @@ import StarIcon from '@mui/icons-material/Star';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import axios from 'axios';
 
-// Brand colors – same as AboutSection
+// Brand colors
 const GOLD = '#FFD700';
 const LIGHT_GOLD = '#FFE066';
 const DEEP_GREEN = '#006400';
@@ -61,7 +61,14 @@ const SaccoIdentitySection = () => {
             <li key={i}>
               <Typography
                 variant="body2"
-                sx={{ color: '#e6e6e6', mb: 1, fontSize: '0.95rem' }}
+                sx={{
+                  color: GOLD,
+                  textAlign: 'center',
+                  mb: 1,
+                  fontSize: '0.95rem',
+                  textShadow:
+                    '0 0 8px rgba(255,215,0,0.9), 0 0 14px rgba(255,215,0,0.6)',
+                }}
               >
                 {v}
               </Typography>
@@ -82,10 +89,10 @@ const SaccoIdentitySection = () => {
       sx={{
         py: 8,
         px: { xs: 2, md: 8 },
-        background: DARK_BG, // 🔥 same dark green gradient as AboutSection
+        background: DARK_BG,
       }}
     >
-      {/* Section heading */}
+      {/* SECTION HEADING */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -97,24 +104,19 @@ const SaccoIdentitySection = () => {
             fontWeight: 900,
             fontSize: { xs: '1.9rem', md: '2.4rem' },
             textAlign: 'center',
-            mb: 4,
+            mb: 5,
             textTransform: 'uppercase',
-            letterSpacing: 2,
-            color: 'transparent',
-            backgroundImage: 'linear-gradient(to right, #FFD700, #FFE066)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: `
-              0 0 12px rgba(0, 0, 0, 0.8),
-              0 0 20px rgba(255, 215, 0, 0.45)
-            `,
+            letterSpacing: 3,
+            color: GOLD,
+            textShadow:
+              '0 0 12px rgba(255,215,0,1), 0 0 22px rgba(255,215,0,0.7), 0 0 35px rgba(255,215,0,0.5)',
           }}
         >
           Our Identity
         </Typography>
       </motion.div>
 
+      {/* LOADING */}
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
           <CircularProgress sx={{ color: GOLD }} />
@@ -142,18 +144,19 @@ const SaccoIdentitySection = () => {
                   sx={{
                     height: '100%',
                     borderRadius: 4,
-                    background: 'rgba(0, 0, 0, 0.78)',
-                    border: '1px solid rgba(255, 215, 0, 0.25)',
-                    color: '#f5f5f5',
-                    textAlign: 'left',
+                    background: 'rgba(0, 0, 0, 0.65)',
+                    border: `1px solid rgba(255, 215, 0, 0.3)`,
                     boxShadow:
-                      '0 22px 55px rgba(0,0,0,0.9), 0 0 22px rgba(0,0,0,0.5)',
+                      '0 22px 55px rgba(0,0,0,0.85), 0 0 18px rgba(255,215,0,0.2)',
+                    color: GOLD,
+                    textAlign: 'center',
                     transition: 'all 0.35s ease',
                     '&:hover': {
                       transform: 'translateY(-8px)',
+                      borderColor: LIGHT_GOLD,
                       boxShadow:
-                        '0 28px 70px rgba(0,0,0,0.95), 0 0 28px rgba(255,215,0,0.35)',
-                      borderColor: 'rgba(255, 215, 0, 0.7)',
+                        '0 28px 70px rgba(0,0,0,0.95), 0 0 32px rgba(255,215,0,0.6)',
+                      background: `linear-gradient(145deg, rgba(0,40,20,0.8), rgba(0,25,10,0.7))`,
                     },
                   }}
                 >
@@ -163,53 +166,56 @@ const SaccoIdentitySection = () => {
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        mb: 2.5,
+                        justifyContent: 'center',
+                        mb: 2.8,
                       }}
                     >
                       <Box
                         sx={{
+                          width: 48,
+                          height: 48,
+                          borderRadius: '50%',
+                          background:
+                            'radial-gradient(circle, #FFE066, #806000)',
+                          boxShadow: '0 0 18px rgba(255,215,0,0.7)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          width: 42,
-                          height: 42,
-                          borderRadius: '50%',
-                          background:
-                            'radial-gradient(circle at 30% 0%, #FFE066, #806000)',
-                          boxShadow: '0 0 18px rgba(255,215,0,0.75)',
                           mr: 1.5,
                         }}
                       >
                         <IconComponent
-                          sx={{
-                            color: '#111',
-                            fontSize: 26,
-                          }}
+                          sx={{ color: '#111', fontSize: 26 }}
                         />
                       </Box>
 
                       <Typography
                         variant="h6"
                         sx={{
-                          fontWeight: 800,
-                          color: LIGHT_GOLD,
+                          fontWeight: 900,
+                          color: GOLD,
                           textTransform: 'uppercase',
-                          letterSpacing: 1.3,
-                          fontSize: '1.05rem',
+                          letterSpacing: 1.5,
+                          fontSize: '1.1rem',
+                          textShadow:
+                            '0 0 8px rgba(255,215,0,0.9), 0 0 16px rgba(255,215,0,0.5)',
                         }}
                       >
                         {card.title}
                       </Typography>
                     </Box>
 
-                    {/* Content */}
+                    {/* CONTENT */}
                     {typeof card.content === 'string' ? (
                       <Typography
                         variant="body2"
                         sx={{
                           lineHeight: 1.9,
-                          color: '#e0e0e0',
-                          fontSize: '0.96rem',
+                          fontSize: '1rem',
+                          color: LIGHT_GOLD,
+                          textAlign: 'center',
+                          textShadow:
+                            '0 0 8px rgba(255,215,0,0.75), 0 0 14px rgba(255,215,0,0.4)',
                         }}
                       >
                         {card.content}
