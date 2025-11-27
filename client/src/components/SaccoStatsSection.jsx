@@ -97,7 +97,7 @@ const SaccoStatsSection = () => {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <Typography
+        {/* <Typography
           variant="overline"
           sx={{
             display: 'block',
@@ -110,7 +110,7 @@ const SaccoStatsSection = () => {
           }}
         >
           Golden Generation DT SACCO
-        </Typography>
+        </Typography> */}
 
         <Typography
           variant="h4"
