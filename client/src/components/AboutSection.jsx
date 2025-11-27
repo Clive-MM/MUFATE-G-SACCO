@@ -96,9 +96,9 @@ const AboutSection = () => {
               }}
             >
               <strong>Golden Generation Deposit Taking SACCO</strong>{' '}
-              <span style={{ color: LIGHT_GOLD }}>
+              {/* <span style={{ color: LIGHT_GOLD }}>
                 (formerly MUFATE G SACCO – Mudete Factory Tea Growers SACCO LTD)
-              </span>{' '}
+              </span>{' '} */}
               is a trusted, member-owned deposit taking SACCO serving{' '}
               <strong>tea farmers, salaried workers, teachers, pensioners, county staff and business owners</strong>{' '}
               across Vihiga and Kakamega counties. Our rebrand reflects a
