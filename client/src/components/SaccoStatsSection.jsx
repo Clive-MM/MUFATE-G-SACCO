@@ -97,21 +97,6 @@ const SaccoStatsSection = () => {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        {/* <Typography
-          variant="overline"
-          sx={{
-            display: 'block',
-            textAlign: 'center',
-            letterSpacing: 4,
-            textTransform: 'uppercase',
-            color: LIGHT_GOLD,
-            mb: 1,
-            fontWeight: 600,
-          }}
-        >
-          Golden Generation DT SACCO
-        </Typography> */}
-
         <Typography
           variant="h4"
           sx={{
@@ -146,18 +131,7 @@ const SaccoStatsSection = () => {
           in service, reach and digital convenience.
         </Typography>
 
-        {/* Gold divider line */}
-        <Box
-          sx={{
-            width: 160,
-            height: 3,
-            mx: 'auto',
-            mb: 6,
-            borderRadius: 999,
-            backgroundImage: 'linear-gradient(to right, #FFE066, #FFD700, #FFE066)',
-            boxShadow: '0 0 16px rgba(255,215,0,0.75)',
-          }}
-        />
+        {/* NOTE: gold underline removed as requested */}
       </motion.div>
 
       {/* Content: loader or stats */}
@@ -238,18 +212,7 @@ const SaccoStatsSection = () => {
                     {item.label}
                   </Typography>
 
-                  {/* Subtle base line / accent */}
-                  <Box
-                    sx={{
-                      mt: 2,
-                      width: 70,
-                      height: 2,
-                      mx: 'auto',
-                      backgroundImage:
-                        'linear-gradient(to right, transparent, #FFD700, transparent)',
-                      opacity: 0.9,
-                    }}
-                  />
+                  {/* Subtle base line / accent removed as requested */}
                 </Paper>
               </motion.div>
             </Grid>
