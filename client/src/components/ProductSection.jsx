@@ -1,166 +1,90 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  CardActionArea,
-  Button
-} from '@mui/material';
-
+import { Box, Typography, Card, CardContent, CardActionArea, Button } from '@mui/material';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Link as RouterLink } from 'react-router-dom';
-
 import './ProductsSection.css';
-
-// Brand colors
-const GOLD = '#FFD700';
-const LIGHT_GOLD = '#FFE066';
-const DEEP_GREEN = '#006400';
-const DARK_BG = 'linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)';
 
 const products = [
   {
     id: 1,
     title: 'Loan Products',
-    description: 'Access affordable and flexible financing with our loan solutions.',
-    icon: <SavingsIcon sx={{ fontSize: 55, color: GOLD }} />
+    description:
+      'Access affordable and flexible financing with our loan solutions. Whether for personal needs, business expansion, or emergencies, our loans come with competitive interest rates and member-friendly repayment terms.',
+    icon: <AccountBalanceIcon fontSize="large" />,
+    link: '/products/bosa',
   },
   {
     id: 2,
-    title: 'Savings Solutions',
-    description: 'Grow your wealth with rewarding and secure savings plans.',
-    icon: <AccountBalanceIcon sx={{ fontSize: 55, color: GOLD }} />
+    title: 'Savings Products',
+    description:
+      'Build a strong financial foundation with our flexible savings plans. Mufate Sacco helps you save consistently and securely, offering products designed to support everything from daily expenses to long-term dreams.',
+    icon: <SavingsIcon fontSize="large" />,
+    link: '/products/savings',
   },
   {
     id: 3,
-    title: 'Investment Options',
-    description: 'Build a prosperous future with high-potential investment products.',
-    icon: <TrendingUpIcon sx={{ fontSize: 55, color: GOLD }} />
-  }
+    title: 'Investment Products',
+    description:
+      'Grow your wealth with our secure and high-yield investment options. Whether you’re planning for the future or seeking steady returns, our investment products are tailored to meet your financial goals with confidence.',
+    icon: <TrendingUpIcon fontSize="large" />,
+    link: '/products/savings',
+  },
 ];
 
 const ProductsSection = () => {
+  const [selectedCard, setSelectedCard] = useState(null);
+
   useEffect(() => {
-    AOS.init({ duration: 1200, once: true });
+    AOS.init({ duration: 1000 });
   }, []);
 
   return (
-    <Box
-      id="products"
-      sx={{
-        py: 10,
-        px: { xs: 2, md: 6 },
-        background: DARK_BG,
-      }}
-    >
-      {/* Section Title */}
-      <Typography
-        variant="h4"
-        sx={{
-          textAlign: 'center',
-          fontWeight: 800,
-          mb: 6,
-          color: 'transparent',
-          backgroundImage: `linear-gradient(to right, ${GOLD}, ${LIGHT_GOLD})`,
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          letterSpacing: 1.5,
-          textTransform: 'uppercase'
-        }}
-      >
-        Our Products
-      </Typography>
-
-      {/* Product Grid */}
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 4,
-          gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' },
-        }}
-      >
-        {products.map((product) => (
-          <Card
-            key={product.id}
-            data-aos="fade-up"
-            sx={{
-              background: 'rgba(255, 255, 255, 0.06)',
-              borderRadius: '18px',
-              border: `1.8px solid rgba(255, 215, 0, 0.45)`,
-              backdropFilter: 'blur(7px)',
-              transition: '0.35s ease',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.55)',
-              '&:hover': {
-                transform: 'translateY(-8px) scale(1.02)',
-                boxShadow:
-                  '0 24px 36px rgba(0,0,0,0.7), 0 0 25px rgba(255,215,0,0.9)',
-                border: `1.8px solid ${GOLD}`,
-              },
-            }}
-          >
-            <CardActionArea component={RouterLink} to={`/products/${product.id}`}>
-              <CardContent sx={{ textAlign: 'center', py: 5 }}>
-                {product.icon}
-
-                <Typography
-                  variant="h6"
-                  sx={{
-                    mt: 2,
-                    fontWeight: 700,
-                    color: GOLD,
-                    textShadow: '0 0 12px rgba(255,215,0,0.65)',
-                  }}
-                >
-                  {product.title}
-                </Typography>
-
-                <Typography
-                  variant="body2"
-                  sx={{
-                    mt: 1.5,
-                    color: LIGHT_GOLD,
-                    opacity: 0.85,
-                  }}
-                >
-                  {product.description}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        ))}
+    <Box className="products-section-wrapper">
+      <Box className="section-header-split">
+        <Typography className="split-title-text">OUR PRODUCTS</Typography>
       </Box>
 
-      {/* CTA Button */}
-      <Box textAlign="center" mt={6}>
-        <Button
-          component={RouterLink}
-          to="/products"
-          variant="contained"
-          sx={{
-            py: 1.2,
-            px: 4,
-            borderRadius: '10px',
-            fontWeight: 700,
-            backgroundImage: `linear-gradient(135deg, ${GOLD}, ${LIGHT_GOLD})`,
-            color: DEEP_GREEN,
-            boxShadow: '0 0 18px rgba(255,215,0,0.9)',
-            '&:hover': {
-              backgroundImage: `linear-gradient(135deg, ${LIGHT_GOLD}, ${GOLD})`,
-              boxShadow: '0 0 30px rgba(255,215,0,1)',
-              transform: 'translateY(-2px)',
-            },
-          }}
-        >
-          Explore All Products
-        </Button>
+      <Box className="our-products-section">
+        <Box className="section-wrapper">
+          <Box className="products-grid">
+            {products.map((product, index) => (
+              <Card
+                key={product.id}
+                className="product-card"
+                onClick={() => setSelectedCard(index)}
+                data-active={selectedCard === index ? 'true' : undefined}
+                data-aos="fade-up"
+              >
+                <CardActionArea sx={{ height: '100%' }}>
+                  <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Box className="product-icon">{product.icon}</Box>
+                    <Typography variant="h6" fontWeight="bold" align="center" gutterBottom>
+                      {product.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 2 }}>
+                      {product.description}
+                    </Typography>
+                    <Button
+                      component={RouterLink}
+                      to={product.link}
+                      className="learn-more-btn"
+                      size="small"
+                    >
+                      LEARN MORE
+                    </Button>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            ))}
+          </Box>
+        </Box>
       </Box>
+
+      <Box className="angled-divider-bottom" />
     </Box>
   );
 };
