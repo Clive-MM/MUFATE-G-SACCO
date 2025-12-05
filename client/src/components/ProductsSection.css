@@ -1,145 +1,220 @@
-/* =========================================
-   GOLDEN GENERATION SACCO BRAND THEME
-   ========================================= */
+/* ProductsSection - Branded + preserved clipping header */
 
-:root {
+/* Brand variables */
+:root{
   --gold: #FFD700;
   --light-gold: #FFE066;
-  --deep-green: #006400;
-  --dark-bg: linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%);
+  --deep-green-900: #021409; /* darker stop */
+  --deep-green-700: #013716; /* mid stop */
+  --deep-green: #006400;     /* accent green */
+  --glass-overlay: rgba(0,0,0,0.18);
   --text-light: #fafafa;
 }
 
-/* WRAPPER */
+/* Wrapper (outermost) */
 .products-section-wrapper {
   position: relative;
   overflow: hidden;
-  background: var(--dark-bg);
-  padding: 60px 0;
+  background: linear-gradient(135deg, var(--deep-green-900) 0%, var(--deep-green-700) 45%, #000a06 100%);
+  padding: 40px 0;
 }
 
-/* SECTION HEADER WITH SPLIT LINE */
+/* Keep the "clipping" header style (white box overlapping colored bar) */
 .section-header-split {
+  position: relative;
+  height: 60px;
+  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 2.5rem;
-  position: relative;
-  height: 70px;
+  justify-content: flex-start; /* keeps left-aligned white box position */
 }
 
-.section-header-split::before,
-.section-header-split::after {
-  content: "";
-  flex: 1;
-  height: 2px;
-  background: linear-gradient(to right, transparent, var(--gold));
-  box-shadow: 0 0 10px var(--gold);
-}
-
-.section-header-split::after {
-  background: linear-gradient(to left, transparent, var(--gold));
-}
-
-/* TITLE TEXT */
+/* The white title box that sits above the colored bar (preserved) */
 .split-title-text {
-  background: transparent;
-  padding: 0.5rem 2rem;
-  z-index: 2;
-
-  font-weight: 900;
-  font-size: 1.6rem;
+  background-color: #ffffff;           /* preserves clipped white block look */
+  padding: 0.5rem 1.5rem;
+  z-index: 3;                          /* above the colored bar */
+  color: var(--gold);                  /* golden text to match brand */
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 2px;
-
-  background-image: linear-gradient(to right, var(--gold), var(--light-gold));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  font-size: 1rem;
+  letter-spacing: 1px;
+  /* golden glow for emphasis */
+  text-shadow:
+    0 0 6px rgba(255,215,0,0.95),
+    0 0 14px rgba(255,215,0,0.55);
+  animation: fadeInGlow 1.2s ease forwards;
+  transition: all 0.25s ease-in-out;
+  cursor: default;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
 }
 
-/* GRID WRAPPER */
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 1.8rem;
-  padding: 1rem 2rem;
+.split-title-text:hover {
+  transform: scale(1.03);
+  /* stronger glow on hover */
+  text-shadow:
+    0 0 10px rgba(255,215,0,1),
+    0 0 22px rgba(255,215,0,0.6);
 }
 
-/* CARD BASE */
-.product-card {
-  background: rgba(0, 31, 18, 0.65);
-  backdrop-filter: blur(8px);
-
-  border-radius: 18px;
-  padding: 0;
-  border: 1.5px solid rgba(255, 215, 0, 0.25);
-
-  transition: all 0.35s ease;
-  cursor: pointer;
-  box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
+/* The long colored bar behind the white box (preserves clipping look) */
+.section-header-split::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 180px; /* preserves original offset where white box sits */
+  height: 100%;
+  width: calc(100% - 180px);
+  /* use deep green brand color for the bar */
+  background: linear-gradient(90deg, rgba(1,23,10,1) 0%, rgba(1,55,26,1) 100%);
+  z-index: 1;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.6);
 }
 
-/* CARD HOVER */
-.product-card:hover {
-  transform: translateY(-10px) scale(1.03);
-  border-color: var(--gold);
-  box-shadow: 0 0 25px rgba(255, 215, 0, 0.55),
-              0 0 45px rgba(1, 90, 45, 0.45);
+/* Section area (keeps products positioned the same as before) */
+.our-products-section {
+  /* Use dark / deep-green brand gradient (replaces lime gradient) */
+  background: linear-gradient(180deg, rgba(0,23,12,0.06) 0%, rgba(0,8,5,0.06) 100%);
+  padding: 2rem 1.5rem;
+  color: var(--text-light);
+  position: relative;
+  z-index: 2;
 }
 
-/* CARD CONTENT */
-.product-card-content {
-  padding: 1.8rem;
+/* Container to center and constrain width (unchanged behavior) */
+.section-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
   text-align: center;
 }
 
-.product-card-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+/* Products grid — keep original flex behavior & positions */
+.products-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2rem;
+  justify-content: center;
+  padding: 0 12px;
+}
 
-  background-image: linear-gradient(to right, var(--gold), var(--light-gold));
+@media (min-width: 768px) {
+  .products-grid {
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+  }
+}
+
+/* Product card — keep structure and sizing consistent with previous markup */
+.product-card {
+  background-color: rgba(255,255,255,0.04); /* subtle translucent card on dark bg */
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid rgba(255,215,0,0.12); /* subtle gold rim */
+  backdrop-filter: blur(6px);
+}
+
+/* Hover retains lift but uses gold glow */
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), 0 0 22px rgba(255,215,0,0.14);
+  border-color: rgba(255,215,0,0.28);
+}
+
+/* Active state (keep same position as your old design but brand color) */
+.product-card[data-active='true'] {
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 18px rgba(255,215,0,0.45), 0 12px 28px rgba(0,0,0,0.55);
+}
+
+/* Icon circle (preserve position & size) */
+.product-icon {
+  width: 64px;
+  height: 64px;
+  background-color: var(--gold); /* gold icon circle like original orange */
+  color: white;
+  border-radius: 50%;
+  margin: 0 auto 1rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45), 0 0 14px rgba(255,215,0,0.25);
+}
+
+/* Hover effect on icon (same positioning & scale as before) */
+.product-card:hover .product-icon {
+  box-shadow: 0 0 14px rgba(255,215,0,0.9), 0 0 28px rgba(255,215,0,0.45);
+  transform: scale(1.08);
+}
+
+/* Title — preserve uppercase/position but change color to deep-green for contrast */
+.product-card h6 {
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  color: var(--deep-green); /* gives a natural contrast on gold icon */
+  background: linear-gradient(to right, var(--gold), var(--light-gold));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-
-  margin-bottom: 0.8rem;
-  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(255,215,0,0.5);
 }
 
-.product-card-description {
+/* Description text — keep layout/position but brand color */
+.product-card p {
   font-size: 0.95rem;
-  color: var(--text-light);
-  opacity: 0.85;
-  line-height: 1.55;
+  line-height: 1.5;
+  color: #e6e6e6; /* light text on dark bg */
+  margin-bottom: 1rem;
 }
 
-/* ICON */
-.product-icon {
-  font-size: 60px !important;
-  margin-bottom: 0.8rem;
+/* Learn more button — keep position but use brand green/gold */
+.learn-more-btn {
+  background: linear-gradient(135deg, var(--deep-green), var(--deep-green-700));
   color: var(--gold);
-  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.35));
-}
-
-/* BUTTON */
-.product-btn {
-  margin-top: 1.3rem;
-  padding: 10px 18px;
-  font-weight: 600;
-  font-size: 0.9rem;
-
-  background: linear-gradient(135deg, var(--gold), var(--light-gold));
-  color: #000;
-
-  border-radius: 12px;
-  text-transform: uppercase;
-
+  font-weight: bold;
+  border-radius: 30px;
+  padding: 8px 20px;
+  box-shadow: 0 0 10px rgba(255,215,0,0.12);
   transition: all 0.3s ease;
 }
 
-.product-btn:hover {
-  background: linear-gradient(135deg, var(--light-gold), var(--gold));
-  transform: translateY(-3px);
-  box-shadow: 0 0 18px rgba(255, 215, 0, 0.55);
+.learn-more-btn:hover {
+  background: linear-gradient(135deg, var(--deep-green-700), var(--deep-green));
+  box-shadow: 0 0 20px rgba(255,215,0,0.28);
+  transform: scale(1.05);
+}
+
+/* Divider bottom — keep same placement, use gold */
+.flat-divider-bottom {
+  height: 20px;
+  width: 100%;
+  background-color: var(--gold);
+}
+
+/* Animation keyframes (keeps original fade-in but uses gold shadow in final state) */
+@keyframes fadeInGlow {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+    text-shadow: none;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    text-shadow: 0 0 6px rgba(255,215,0,0.9), 0 0 12px rgba(255,215,0,0.45);
+  }
 }
