@@ -52,7 +52,10 @@ const TestimonialsSection = () => {
                 <blockquote className="testimonial-quote">
                   {client.ClientStatistic}
                 </blockquote>
-                <footer className="testimonial-name">{client.ClientName}</footer>
+
+                <footer className="testimonial-name">
+                  {client.ClientName}
+                </footer>
               </motion.article>
             ))}
       </Box>
