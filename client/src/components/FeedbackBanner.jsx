@@ -93,7 +93,7 @@ const FeedbackBanner = () => {
           <Box sx={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
             <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
               <img
-                src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
+                src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
                 alt="MUFATE G SACCO logo"
                 style={{ height: isMobile ? '80px' : '100px' }}
               />
