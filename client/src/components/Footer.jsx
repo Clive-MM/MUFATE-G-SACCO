@@ -37,7 +37,7 @@ const Footer = () => {
           />
           <Typography className="footer-title">INVEST HERE REAP HERE</Typography>
           <Typography className="footer-description">
-            Mufate ‘G’ Sacco society limited is a Sacco that started in 1987 and provides financial
+           GOLDEN GENERATION DT Sacco society limited is a Sacco that started in 1987 and provides financial
             services to farmers, business community and other institutions.
           </Typography>
           <Box className="footer-icons">
@@ -138,7 +138,7 @@ const Footer = () => {
 
       <Box className="footer-bottom">
         <Typography variant="body2">
-          Mufate G Sacco Society Limited © 2025. All Rights Reserved.
+          GOLDEN GENERATION DT Sacco Society Limited © 2025. All Rights Reserved.
         </Typography>
       </Box>
       <SupportChatWidget />
