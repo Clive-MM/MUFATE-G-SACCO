@@ -31,8 +31,8 @@ const Footer = () => {
         {/* Column 1: Logo + Description + Socials */}
         <Box className="footer-column">
           <img
-            src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
-            alt="Mufate Logo"
+            src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
+            alt="GOLDEN GENERATION DT Logo"
             className="footer-logo"
           />
           <Typography className="footer-title">INVEST HERE REAP HERE</Typography>
