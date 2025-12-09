@@ -114,11 +114,11 @@ export default function SupportChatWidget({
         }}
       >
         <Zoom in={!open}>
-          <Tooltip title="Chat with MUFATE G SACCO" arrow>
+          <Tooltip title="Chat with GOLDEN GENERATION DT SACCO" arrow>
             <IconButton
               onClick={() => setOpen(true)}
               size="large"
-              aria-label="Open MUFATE G SACCO Support"
+              aria-label="Open GOLDEN GENERATION DT SACCO Support"
               sx={{
                 width: launcherSize,
                 height: launcherSize,
@@ -169,8 +169,8 @@ export default function SupportChatWidget({
               ...(isSmDown && { maxHeight: "70vh", display: "flex", flexDirection: "column" }),
             }}
             role="dialog"
-            aria-labelledby="mufate-support-title"
-            aria-describedby={step === 2 ? "mufate-support-body" : undefined}
+            aria-labelledby="Golden-Generation-support-title"
+            aria-describedby={step === 2 ? "Golden-Generation-support-body" : undefined}
           >
             {/* Header */}
             <Box
@@ -199,7 +199,7 @@ export default function SupportChatWidget({
               >
                 {/* Title */}
                 <Typography
-                  id="mufate-support-title"
+                  id="GOLDEN GENERATION DT SACCO-support-title"
                   variant={isSmDown ? "subtitle2" : "subtitle1"}
                   sx={{
                     fontWeight: 800,
@@ -214,7 +214,7 @@ export default function SupportChatWidget({
                     gap: 0.5,
                   }}
                 >
-                  MUFATE G Support
+                  GOLDEN GEENRATION DT Support
                   {/* Glowing dot inline with title */}
                   <Box
                     component="span"
@@ -256,7 +256,7 @@ export default function SupportChatWidget({
 
             {/* Body */}
             <Box
-              id="mufate-support-body"
+              id="GOLDEN GENERATION DT SACCO-support-body"
               sx={{
                 p: bodyPad,
                 pt: isSmDown ? 1.25 : 2,
