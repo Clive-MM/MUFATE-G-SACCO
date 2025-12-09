@@ -37,7 +37,7 @@ const Footer = () => {
           />
           <Typography className="footer-title">WALKING WITH YOU</Typography>
           <Typography className="footer-description">
-            Golden Generation DT Sacco, formerly Mufate G Sacco, has undergone rebranding to expand, modernize, and serve members more effectively. The rights, benefits, and privileges of our farmers remain fully protected and unchanged.
+            Golden Generation DT Sacco, formerly Mufate G Sacco, has undergone rebranding to expand, modernize, and serve more members effectively. The rights, benefits, and privileges of our farmers remain fully protected and unchanged.
           </Typography>
           <Box className="footer-icons">
             <IconButton
