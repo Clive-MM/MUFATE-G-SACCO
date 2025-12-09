@@ -1,13 +1,29 @@
+/* ============================================
+   BRAND COLORS (Golden Generation DT SACCO)
+============================================ */
+:root {
+  --gold: #FFD700;
+  --light-gold: #FFE066;
+  --deep-green: #006400;
+  --deep-green-700: #013716;
+  --deep-green-900: #021409;
+  --white: #ffffff;
+}
+
+/* ============================================
+   MAIN SECTION — DARK GREEN + GOLD SIDEBARS
+============================================ */
 .feedback-section {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4rem 1rem;
+  padding: 5rem 1rem;
   position: relative;
-  background-color: #ffffff;
+  background: linear-gradient(135deg, var(--deep-green-900), var(--deep-green-700));
   overflow: hidden;
 }
 
+/* Gold decorative left/right blocks */
 .feedback-section::before,
 .feedback-section::after {
   content: '';
@@ -15,128 +31,135 @@
   top: 0;
   width: 350px;
   height: 100%;
-  background: linear-gradient(to bottom, #32df06, #50f404);
+  background: linear-gradient(to bottom, var(--gold), var(--light-gold));
   z-index: 1;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15); 
+  filter: brightness(1.05);
 }
 
+/* Left rounded block */
 .feedback-section::before {
   left: 0;
-  border-top-right-radius: 30px;
-  border-bottom-right-radius: 30px;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  box-shadow: 4px 0 25px rgba(0,0,0,0.35);
 }
 
+/* Right rounded block */
 .feedback-section::after {
   right: 0;
-  border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+  border-top-left-radius: 40px;
+  border-bottom-left-radius: 40px;
+  box-shadow: -4px 0 25px rgba(0,0,0,0.35);
 }
 
+/* ============================================
+   CENTER CARD — DARK GREEN GLASS CARD
+============================================ */
 .feedback-wrapper {
-  background-color: #f2a922;
-  padding: 2.5rem 2rem;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 20, 10, 0.55),
+    rgba(0, 8, 5, 0.55)
+  );
+  backdrop-filter: blur(12px);
+  padding: 3rem 2.5rem;
   max-width: 900px;
   width: 100%;
   text-align: center;
-  z-index: 2;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+  border-radius: 18px;
+
+  border: 1.5px solid rgba(255, 215, 0, 0.35);
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.55),
+    0 0 22px rgba(255, 215, 0, 0.25);
   transition: all 0.3s ease;
-  position: relative;
 }
 
 .feedback-wrapper:hover {
-  box-shadow: 0 0 15px #f2a922, 0 0 25px #f2a922aa;
-  border: 2px solid #fff3c4;
+  transform: translateY(-4px);
+  box-shadow:
+    0 25px 65px rgba(0,0,0,0.75),
+    0 0 28px rgba(255,215,0,0.55);
+  border-color: var(--gold);
 }
 
+/* ============================================
+   TITLE — MATCH EXACT STYLE OF "OUR PRODUCTS"
+============================================ */
 .feedback-title {
-  font-size: 1.5rem;
   font-weight: 800;
-  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+
+  background-image: linear-gradient(to right, var(--gold), var(--light-gold));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  font-size: 2.1rem;
   margin-bottom: 1.2rem;
-  letter-spacing: 1.2px;
-  text-shadow: 
-    1px 1px 2px rgba(0, 0, 0, 0.1),    
-    0 0 8px rgba(255, 255, 255, 0.3);  
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
-  transition: all 0.3s ease;
+  text-shadow: 0 0 15px rgba(255,215,0,0.45);
 }
 
-.feedback-title:hover {
-  color: #215732;
-  text-shadow: 
-    1px 1px 3px rgba(0, 0, 0, 0.2), 
-    0 0 10px #64dd17;
-  transform: scale(1.02);
-}
-
+/* ============================================
+   TEXT
+============================================ */
 .feedback-text {
-  font-size: 1.1rem;
-  line-height: 1.9;
-  color: #1a1a1a; 
+  font-size: 1.15rem;
+  line-height: 1.85;
+  color: var(--light-gold);
   margin-bottom: 2rem;
   padding: 0 1rem;
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
-  text-align: center;
-  text-shadow: 
-    0.5px 0.5px 0.5px rgba(0, 0, 0, 0.08),
-    0 0 1px rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  text-shadow: 0 0 6px rgba(255,215,0,0.25);
 }
 
+/* ============================================
+   BUTTON — GOLD OUTLINE, GREEN HOVER
+============================================ */
 .feedback-button {
-  background-color: #ffffff !important;
-  color: #0be00b !important;                  
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 0.65rem 1.8rem;
+  background: var(--white);
+  color: var(--deep-green) !important;
+  font-weight: 800;
   border-radius: 30px;
-  border: 2px solid #215732;
+  padding: 0.7rem 2rem;
+  border: 2px solid var(--gold);
   text-transform: uppercase;
+
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
 }
 
 .feedback-button:hover {
-  background-color: #64dd17;       
-  color: white;                     
+  background: linear-gradient(135deg, var(--gold), var(--light-gold));
+  color: #000 !important;
   transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 25px rgba(255,215,0,0.55);
 }
 
-/* ========================
-   ✅ Mobile Responsiveness
-   ======================== */
+/* ============================================
+   MOBILE RESPONSIVE
+============================================ */
 @media screen and (max-width: 600px) {
-  .feedback-section {
-    padding: 2rem 1rem;
-  }
-
   .feedback-section::before,
   .feedback-section::after {
     width: 150px;
-    border-radius: 20px;
   }
 
   .feedback-wrapper {
-    padding: 1.5rem 1rem;
-    max-width: 95%;
+    padding: 2rem 1rem;
   }
 
   .feedback-title {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
   }
 
   .feedback-text {
     font-size: 0.95rem;
-    line-height: 1.6;
   }
 
   .feedback-button {
     font-size: 0.9rem;
-    padding: 0.5rem 1.4rem;
   }
 }
