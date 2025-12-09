@@ -258,18 +258,29 @@
 }
 
 /* ===========================================================
-      FOOTER BOTTOM BAR — DEEP GOLD
+      FOOTER BOTTOM BAR — BOLD & HIGH VISIBILITY GOLD BRANDING
 =========================================================== */
 .footer-bottom {
   text-align: center;
   margin-top: 2.5rem;
-  padding: 1rem;
-  background: var(--deep-gold);
-  color: #000;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  box-shadow: 0 0 25px rgba(255,215,0,0.4);
+  padding: 1.2rem;
+
+  background: var(--deep-gold);    /* Rich gold block */
+  color: #000;                     /* High contrast text */
+  font-weight: 900;                /* EXTRA BOLD */
+  font-size: 1.05rem;              /* Slightly larger */
+
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  /* GOLD GLOW EFFECT */
+  box-shadow: 
+    0 0 25px rgba(255, 215, 0, 0.6),
+    0 0 40px rgba(255, 215, 0, 0.35);
+
+  border-top: 2px solid var(--gold);
 }
+
 /* ===========================================================
       SCROLL TO TOP BUTTON — GOLD ARROW & GOLD GLOW
 =========================================================== */
