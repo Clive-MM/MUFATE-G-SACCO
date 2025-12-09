@@ -55,15 +55,16 @@ const FeedbackBanner = () => {
         </Typography>
 
         <Typography className="feedback-text">
-          Your opinion matters to us! Help us serve you better by sharing your thoughts, suggestions, or experiences with Mufate "G" Sacco.
+          Your opinion matters to us! Help us serve you better by sharing your thoughts,
+          suggestions, or experiences with Mufate "G" Sacco.
         </Typography>
 
         <Button className="feedback-button" onClick={() => setOpen(true)}>
-          CLICK HERE
+          <strong>CLICK HERE</strong>
         </Button>
       </Box>
 
-      {/* ---------------------- MODAL / POPUP ---------------------- */}
+      {/* ===================== POPUP ===================== */}
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
@@ -71,9 +72,10 @@ const FeedbackBanner = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            width: '100%',
-            maxWidth: isMobile ? '95%' : '700px',
-            borderRadius: 3
+            background: 'linear-gradient(135deg, #011407, #01240F)',
+            color: '#FFD700',
+            borderRadius: 3,
+            boxShadow: "0 0 35px rgba(255,215,0,0.25)"
           }
         }}
       >
@@ -81,21 +83,19 @@ const FeedbackBanner = () => {
           sx={{
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'stretch',
             gap: isMobile ? 3 : 5,
             p: isMobile ? 2 : 4,
-            position: 'relative',
-            width: '100%',
-            boxSizing: 'border-box'
+            position: 'relative'
           }}
         >
-          {/* ------------ LEFT SIDE ------------ */}
+
+          {/* LEFT SIDE — GOLD TEXT */}
           <Box sx={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
             <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
               <img
                 src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
                 alt="MUFATE G SACCO logo"
-                style={{ height: isMobile ? '80px' : '100px', objectFit: 'contain' }}
+                style={{ height: isMobile ? '80px' : '100px' }}
               />
             </Box>
 
@@ -105,13 +105,14 @@ const FeedbackBanner = () => {
 
             <Typography className="feedback-modal-text">
               Your feedback helps us improve our services and serve you better.
-              Please take a moment to share your thoughts, experiences, or suggestions
-              with Mufate G Sacco. All responses are confidential and appreciated.
+              Please share your thoughts or suggestions.  
+              All responses are confidential and appreciated.
             </Typography>
           </Box>
 
-          {/* ------------ RIGHT SIDE (FORM) ------------ */}
+          {/* RIGHT SIDE — FORM */}
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+
             <TextField
               label="Email"
               name="Email"
@@ -119,6 +120,8 @@ const FeedbackBanner = () => {
               onChange={handleChange}
               fullWidth
               size="small"
+              InputLabelProps={{ className: 'gold-label' }}
+              InputProps={{ className: 'gold-input' }}
             />
 
             <TextField
@@ -128,6 +131,8 @@ const FeedbackBanner = () => {
               onChange={handleChange}
               fullWidth
               size="small"
+              InputLabelProps={{ className: 'gold-label' }}
+              InputProps={{ className: 'gold-input' }}
             />
 
             <TextField
@@ -139,6 +144,8 @@ const FeedbackBanner = () => {
               rows={4}
               fullWidth
               size="small"
+              InputLabelProps={{ className: 'gold-label' }}
+              InputProps={{ className: 'gold-input' }}
             />
 
             <Button
@@ -157,7 +164,7 @@ const FeedbackBanner = () => {
             </Button>
           </Box>
 
-          {/* ------------ CLOSE BUTTON ------------ */}
+          {/* CLOSE ICON */}
           <IconButton
             onClick={() => setOpen(false)}
             className="feedback-close-btn"

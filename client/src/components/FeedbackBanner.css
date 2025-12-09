@@ -1,10 +1,10 @@
 /* ============================================
-   BRAND COLORS (Golden Generation DT SACCO)
+      BRAND COLORS (Golden Generation DT SACCO)
 ============================================ */
 :root {
   --gold: #FFD700;
-  --deep-gold: #E6C200;     /* Deep, richer gold */
-  --white-gold: #FFF4B5;    /* Soft gold highlight */
+  --deep-gold: #E6C200;     /* Deep bold gold */
+  --white-gold: #FFF4B5;    /* Soft glowing gold */
   --deep-green: #003018;
   --deep-green-700: #01240F;
   --deep-green-900: #011407;
@@ -12,7 +12,7 @@
 }
 
 /* ============================================
-   MAIN SECTION — DARK GREEN BG + GOLD SIDEBARS
+      MAIN SECTION — DEEP GREEN + GOLD SIDEBARS
 ============================================ */
 .feedback-section {
   display: flex;
@@ -24,7 +24,7 @@
   overflow: hidden;
 }
 
-/* Solid GOLD blocks — NOT gradient */
+/* Solid GOLD left/right panels */
 .feedback-section::before,
 .feedback-section::after {
   content: "";
@@ -32,11 +32,9 @@
   top: 0;
   width: 350px;
   height: 100%;
-  background: var(--deep-gold);   /* Solid deep gold */
-  z-index: 1;
-  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.35),
-              0 0 25px rgba(255, 215, 0, 0.35);
-  filter: brightness(1.05);
+  background: var(--deep-gold);
+  box-shadow: inset 0 0 25px rgba(0,0,0,0.35), 
+              0 0 25px rgba(255,215,0,0.35);
 }
 
 .feedback-section::before {
@@ -52,7 +50,7 @@
 }
 
 /* ============================================
-   CENTER CARD — DARK GREEN GLASS CARD
+      CENTER CARD — DARK GREEN GLASS CARD
 ============================================ */
 .feedback-wrapper {
   background: rgba(0, 20, 10, 0.65);
@@ -76,12 +74,12 @@
   transform: translateY(-4px);
   border-color: var(--gold);
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.75),
-    0 0 32px rgba(255, 215, 0, 0.55);
+    0 25px 70px rgba(0,0,0,0.75),
+    0 0 32px rgba(255,215,0,0.55);
 }
 
 /* ============================================
-   TITLE — EXACT MATCH OF "OUR PRODUCTS"
+      TITLE — GOLD GRADIENT (MATCH Our Products)
 ============================================ */
 .feedback-title {
   font-weight: 900;
@@ -89,18 +87,16 @@
   letter-spacing: 1.6px;
 
   background-image: linear-gradient(to right, var(--gold), var(--white-gold));
-  background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  -webkit-text-fill-color: transparent;
 
   font-size: 2.2rem;
   margin-bottom: 1.4rem;
-  text-shadow: 0 0 14px rgba(255, 215, 0, 0.45);
+  text-shadow: 0 0 14px rgba(255,215,0,0.45);
 }
 
 /* ============================================
-   BODY TEXT — GOLD SHADE
+      MAIN TEXT
 ============================================ */
 .feedback-text {
   font-size: 1.15rem;
@@ -108,53 +104,75 @@
   color: var(--white-gold);
   margin-bottom: 2rem;
   padding: 0 1rem;
-  text-shadow: 0 0 5px rgba(255, 215, 0, 0.25);
+  text-shadow: 0 0 5px rgba(255,215,0,0.25);
 }
 
 /* ============================================
-   CLICK HERE BUTTON — GOLD BUTTON
+      CLICK HERE BUTTON
 ============================================ */
 .feedback-button {
   background: var(--gold) !important;
   color: #000 !important;
-  font-weight: 900;
+  font-weight: 900 !important;
   border-radius: 30px;
-  padding: 0.8rem 2.2rem;
+  padding: 0.85rem 2.3rem;
   border: none;
 
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-size: 1rem;
 
-  box-shadow: 0 6px 18px rgba(255, 215, 0, 0.45);
+  box-shadow: 0 6px 18px rgba(255,215,0,0.45);
   transition: 0.3s ease;
 }
 
 .feedback-button:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
   background: var(--white-gold) !important;
+  box-shadow: 0 0 25px rgba(255,215,0,1);
 }
 
 /* ============================================
-   POPUP — GOLD TEXT STYLING
+      POPUP MODAL TEXT
 ============================================ */
 .feedback-modal-title {
   color: var(--gold);
-  font-weight: 800 !important;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 900;
   margin-top: 1rem;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.45);
+  text-shadow: 0 0 10px rgba(255,215,0,0.45);
 }
 
 .feedback-modal-text {
-  margin-top: 0.5rem;
   color: var(--white-gold);
-  line-height: 1.7;
   font-size: 1rem;
+  line-height: 1.7;
+  margin-top: 0.5rem;
 }
 
 /* ============================================
-   SUBMIT BUTTON — GOLD WITH GLOW
+      INPUTS — GOLD LABEL + GOLD BORDER
+============================================ */
+.gold-label {
+  color: var(--gold) !important;
+  font-weight: 700 !important;
+}
+
+.gold-input fieldset {
+  border-color: var(--gold) !important;
+}
+
+.gold-input:hover fieldset {
+  border-color: var(--white-gold) !important;
+}
+
+.gold-input.Mui-focused fieldset {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 10px rgba(255,215,0,0.5);
+}
+
+/* ============================================
+      SUBMIT BUTTON — GOLD WITH GLOW
 ============================================ */
 .submit-button {
   background: var(--gold) !important;
@@ -165,30 +183,30 @@
   text-transform: uppercase;
   letter-spacing: 1px;
 
-  box-shadow: 0 6px 18px rgba(255, 215, 0, 0.5) !important;
+  box-shadow: 0 6px 18px rgba(255,215,0,0.5) !important;
   transition: 0.3s ease;
 }
 
 .submit-button:hover {
   background: var(--white-gold) !important;
-  box-shadow: 0 0 25px rgba(255, 215, 0, 1) !important;
+  box-shadow: 0 0 25px rgba(255,215,0,1) !important;
   transform: translateY(-3px);
 }
 
 /* ============================================
-   CLOSE ICON — GOLD COLOR
+      CLOSE ICON — GOLD
 ============================================ */
 .feedback-close-btn svg {
   color: var(--gold) !important;
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .feedback-close-btn:hover {
-  background-color: rgba(255, 215, 0, 0.15) !important;
+  background: rgba(255,215,0,0.18) !important;
 }
 
 /* ============================================
-   RESPONSIVE DESIGN
+      MOBILE RESPONSIVE
 ============================================ */
 @media screen and (max-width: 600px) {
   .feedback-section::before,
@@ -210,6 +228,6 @@
 
   .feedback-button {
     font-size: 0.9rem;
-    padding: 0.6rem 1.8rem;
+    padding: 0.7rem 1.8rem;
   }
 }
