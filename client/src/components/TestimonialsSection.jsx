@@ -2,9 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Alert, Skeleton } from "@mui/material";
 import axios from "axios";
 import { motion } from "framer-motion";
+import "aos/dist/aos.css";
+import AOS from "aos";
 import "./TestimonialsSection.css";
 
 const API = "https://mufate-g-sacco.onrender.com/clients";
+
+// brand colors used in Products heading
+const GOLD = "#FFD700";
+const LIGHT_GOLD = "#FFE066";
+const DARK_BG =
+  "linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)";
 
 const TestimonialsSection = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -12,18 +20,43 @@ const TestimonialsSection = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    AOS.init({ duration: 1000 });
     axios
       .get(API)
       .then((res) => setTestimonials(res.data?.clients ?? []))
-      .catch(() => setError("Could not load reviews. Please try again later."))
+      .catch(() =>
+        setError("Could not load reviews. Please try again later.")
+      )
       .finally(() => setLoading(false));
   }, []);
 
   return (
-    <Box className="testimonials-section" role="region" aria-label="Member reviews">
-      
-      {/* SECTION TITLE — matching Our Products styling */}
-      <Typography component="h2" className="testimonial-title">
+    <Box
+      className="testimonials-section"
+      role="region"
+      aria-label="Member reviews"
+      sx={{ background: DARK_BG }}
+    >
+      {/* SECTION TITLE — styled exactly like the Products heading */}
+      <Typography
+        variant="h4"
+        data-aos="fade-up"
+        sx={{
+          fontWeight: 800,
+          textAlign: "center",
+          mb: 6,
+          textTransform: "uppercase",
+          letterSpacing: 1.5,
+          color: "transparent",
+          backgroundImage: `linear-gradient(to right, ${GOLD}, ${LIGHT_GOLD})`,
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          fontSize: { xs: "1.9rem", md: "2.4rem" },
+          textShadow: `0 0 12px ${GOLD}88`,
+          marginTop: "-0.5rem", // small upward nudge if needed to match vertical placement
+        }}
+      >
         REVIEWS
       </Typography>
 
