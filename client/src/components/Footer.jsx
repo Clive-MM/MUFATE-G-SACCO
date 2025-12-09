@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
-  Facebook,  X
+  Facebook, X
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa'; // ✅ WhatsApp Icon
@@ -37,8 +37,7 @@ const Footer = () => {
           />
           <Typography className="footer-title">WALKING WITH YOU</Typography>
           <Typography className="footer-description">
-           GOLDEN GENERATION DT Sacco society limited is a Sacco that started in 1987 and provides financial
-            services to farmers, business community and other institutions.
+            Golden Generation DT Sacco, formerly Mufate G Sacco, has undergone rebranding to expand, modernize, and serve members more effectively. The rights, benefits, and privileges of our farmers remain fully protected and unchanged.
           </Typography>
           <Box className="footer-icons">
             <IconButton
@@ -49,7 +48,7 @@ const Footer = () => {
             >
               <X />
             </IconButton>
-            
+
             <IconButton
               component="a"
               href="https://www.facebook.com/share/1CLhxfKxb2/"
@@ -138,7 +137,7 @@ const Footer = () => {
 
       <Box className="footer-bottom">
         <Typography variant="body2">
-          GOLDEN GENERATION DT Sacco Society Limited © 2025. All Rights Reserved.
+          GOLDEN GENERATION DEPOSIT TAKING SACCO © 2025. All Rights Reserved.
         </Typography>
       </Box>
       <SupportChatWidget />
