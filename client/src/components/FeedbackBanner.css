@@ -3,15 +3,16 @@
 ============================================ */
 :root {
   --gold: #FFD700;
-  --light-gold: #FFE066;
-  --deep-green: #006400;
-  --deep-green-700: #013716;
-  --deep-green-900: #021409;
+  --deep-gold: #E6C200;     /* Deep, richer gold */
+  --white-gold: #FFF4B5;    /* Soft gold highlight */
+  --deep-green: #003018;
+  --deep-green-700: #01240F;
+  --deep-green-900: #011407;
   --white: #ffffff;
 }
 
 /* ============================================
-   MAIN SECTION — DARK GREEN + GOLD SIDEBARS
+   MAIN SECTION — DARK GREEN BG + GOLD SIDEBARS
 ============================================ */
 .feedback-section {
   display: flex;
@@ -23,44 +24,38 @@
   overflow: hidden;
 }
 
-/* Gold decorative left/right blocks */
+/* Solid GOLD blocks — NOT gradient */
 .feedback-section::before,
 .feedback-section::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   width: 350px;
   height: 100%;
-  background: linear-gradient(to bottom, var(--gold), var(--light-gold));
+  background: var(--deep-gold);   /* Solid deep gold */
   z-index: 1;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.35),
+              0 0 25px rgba(255, 215, 0, 0.35);
   filter: brightness(1.05);
 }
 
-/* Left rounded block */
 .feedback-section::before {
   left: 0;
   border-top-right-radius: 40px;
   border-bottom-right-radius: 40px;
-  box-shadow: 4px 0 25px rgba(0,0,0,0.35);
 }
 
-/* Right rounded block */
 .feedback-section::after {
   right: 0;
   border-top-left-radius: 40px;
   border-bottom-left-radius: 40px;
-  box-shadow: -4px 0 25px rgba(0,0,0,0.35);
 }
 
 /* ============================================
    CENTER CARD — DARK GREEN GLASS CARD
 ============================================ */
 .feedback-wrapper {
-  background: linear-gradient(
-    180deg,
-    rgba(0, 20, 10, 0.55),
-    rgba(0, 8, 5, 0.55)
-  );
+  background: rgba(0, 20, 10, 0.65);
   backdrop-filter: blur(12px);
   padding: 3rem 2.5rem;
   max-width: 900px;
@@ -69,77 +64,131 @@
   z-index: 3;
   border-radius: 18px;
 
-  border: 1.5px solid rgba(255, 215, 0, 0.35);
+  border: 1.8px solid rgba(255, 215, 0, 0.45);
   box-shadow:
     0 18px 45px rgba(0, 0, 0, 0.55),
-    0 0 22px rgba(255, 215, 0, 0.25);
+    0 0 25px rgba(255, 215, 0, 0.28);
+
   transition: all 0.3s ease;
 }
 
 .feedback-wrapper:hover {
   transform: translateY(-4px);
-  box-shadow:
-    0 25px 65px rgba(0,0,0,0.75),
-    0 0 28px rgba(255,215,0,0.55);
   border-color: var(--gold);
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.75),
+    0 0 32px rgba(255, 215, 0, 0.55);
 }
 
 /* ============================================
-   TITLE — MATCH EXACT STYLE OF "OUR PRODUCTS"
+   TITLE — EXACT MATCH OF "OUR PRODUCTS"
 ============================================ */
 .feedback-title {
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1.6px;
 
-  background-image: linear-gradient(to right, var(--gold), var(--light-gold));
+  background-image: linear-gradient(to right, var(--gold), var(--white-gold));
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
 
-  font-size: 2.1rem;
-  margin-bottom: 1.2rem;
-  text-shadow: 0 0 15px rgba(255,215,0,0.45);
+  font-size: 2.2rem;
+  margin-bottom: 1.4rem;
+  text-shadow: 0 0 14px rgba(255, 215, 0, 0.45);
 }
 
 /* ============================================
-   TEXT
+   BODY TEXT — GOLD SHADE
 ============================================ */
 .feedback-text {
   font-size: 1.15rem;
-  line-height: 1.85;
-  color: var(--light-gold);
+  line-height: 1.8;
+  color: var(--white-gold);
   margin-bottom: 2rem;
   padding: 0 1rem;
-  text-shadow: 0 0 6px rgba(255,215,0,0.25);
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.25);
 }
 
 /* ============================================
-   BUTTON — GOLD OUTLINE, GREEN HOVER
+   CLICK HERE BUTTON — GOLD BUTTON
 ============================================ */
 .feedback-button {
-  background: var(--white);
-  color: var(--deep-green) !important;
-  font-weight: 800;
+  background: var(--gold) !important;
+  color: #000 !important;
+  font-weight: 900;
   border-radius: 30px;
-  padding: 0.7rem 2rem;
-  border: 2px solid var(--gold);
-  text-transform: uppercase;
+  padding: 0.8rem 2.2rem;
+  border: none;
 
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  box-shadow: 0 6px 18px rgba(255, 215, 0, 0.45);
+  transition: 0.3s ease;
 }
 
 .feedback-button:hover {
-  background: linear-gradient(135deg, var(--gold), var(--light-gold));
-  color: #000 !important;
-  transform: scale(1.08);
-  box-shadow: 0 8px 25px rgba(255,215,0,0.55);
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
+  background: var(--white-gold) !important;
 }
 
 /* ============================================
-   MOBILE RESPONSIVE
+   POPUP — GOLD TEXT STYLING
+============================================ */
+.feedback-modal-title {
+  color: var(--gold);
+  font-weight: 800 !important;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.45);
+}
+
+.feedback-modal-text {
+  margin-top: 0.5rem;
+  color: var(--white-gold);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+/* ============================================
+   SUBMIT BUTTON — GOLD WITH GLOW
+============================================ */
+.submit-button {
+  background: var(--gold) !important;
+  color: #000 !important;
+  font-weight: 900 !important;
+  padding: 0.9rem;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  box-shadow: 0 6px 18px rgba(255, 215, 0, 0.5) !important;
+  transition: 0.3s ease;
+}
+
+.submit-button:hover {
+  background: var(--white-gold) !important;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 1) !important;
+  transform: translateY(-3px);
+}
+
+/* ============================================
+   CLOSE ICON — GOLD COLOR
+============================================ */
+.feedback-close-btn svg {
+  color: var(--gold) !important;
+  font-size: 22px;
+}
+
+.feedback-close-btn:hover {
+  background-color: rgba(255, 215, 0, 0.15) !important;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
 ============================================ */
 @media screen and (max-width: 600px) {
   .feedback-section::before,
@@ -152,14 +201,15 @@
   }
 
   .feedback-title {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
   }
 
   .feedback-text {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .feedback-button {
     font-size: 0.9rem;
+    padding: 0.6rem 1.8rem;
   }
 }

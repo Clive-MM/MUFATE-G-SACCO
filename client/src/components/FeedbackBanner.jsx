@@ -53,14 +53,17 @@ const FeedbackBanner = () => {
         <Typography className="feedback-title">
           We Value Your Feedback
         </Typography>
+
         <Typography className="feedback-text">
           Your opinion matters to us! Help us serve you better by sharing your thoughts, suggestions, or experiences with Mufate "G" Sacco.
         </Typography>
+
         <Button className="feedback-button" onClick={() => setOpen(true)}>
-          Click Here
+          CLICK HERE
         </Button>
       </Box>
 
+      {/* ---------------------- MODAL / POPUP ---------------------- */}
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
@@ -70,9 +73,7 @@ const FeedbackBanner = () => {
           sx: {
             width: '100%',
             maxWidth: isMobile ? '95%' : '700px',
-            borderRadius: 3,
-            mx: 'auto',
-            my: 2,
+            borderRadius: 3
           }
         }}
       >
@@ -88,13 +89,8 @@ const FeedbackBanner = () => {
             boxSizing: 'border-box'
           }}
         >
-          {/* Left Section */}
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: isMobile ? 'center' : 'left'
-            }}
-          >
+          {/* ------------ LEFT SIDE ------------ */}
+          <Box sx={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
             <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
               <img
                 src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
@@ -103,34 +99,19 @@ const FeedbackBanner = () => {
               />
             </Box>
 
-            <Typography
-              variant={isMobile ? 'h6' : 'h5'}
-              sx={{ mt: 2, fontWeight: 'bold', color: '#003B2F' }}
-            >
+            <Typography className="feedback-modal-title">
               We’d Love to Hear from You
             </Typography>
 
-            <Typography
-              sx={{
-                mt: 1,
-                fontSize: isMobile ? '14px' : '15px',
-                color: '#333',
-                lineHeight: 1.7
-              }}
-            >
-              Your feedback helps us improve our services and serve you better. Please take a moment to share your thoughts, experiences, or suggestions with Mufate G Sacco. All responses are confidential and appreciated.
+            <Typography className="feedback-modal-text">
+              Your feedback helps us improve our services and serve you better.
+              Please take a moment to share your thoughts, experiences, or suggestions
+              with Mufate G Sacco. All responses are confidential and appreciated.
             </Typography>
           </Box>
 
-          {/* Right Section - Form */}
-          <Box
-            sx={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2
-            }}
-          >
+          {/* ------------ RIGHT SIDE (FORM) ------------ */}
+          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
               label="Email"
               name="Email"
@@ -139,6 +120,7 @@ const FeedbackBanner = () => {
               fullWidth
               size="small"
             />
+
             <TextField
               label="Subject"
               name="Subject"
@@ -147,6 +129,7 @@ const FeedbackBanner = () => {
               fullWidth
               size="small"
             />
+
             <TextField
               label="Message"
               name="Message"
@@ -157,25 +140,16 @@ const FeedbackBanner = () => {
               fullWidth
               size="small"
             />
+
             <Button
               onClick={handleSubmit}
               disabled={loading}
-              sx={{
-                backgroundColor: '#003B2F',
-                color: '#fff',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                '&:hover': {
-                  backgroundColor: '#2e7d32'
-                }
-              }}
+              className="submit-button"
             >
               {loading ? (
                 <>
-                  <CircularProgress size={20} sx={{ color: '#fff', mr: 1 }} />
-                  Submitting...
+                  <CircularProgress size={20} sx={{ color: '#000', mr: 1 }} />
+                  SUBMITTING...
                 </>
               ) : (
                 'SUBMIT'
@@ -183,23 +157,13 @@ const FeedbackBanner = () => {
             </Button>
           </Box>
 
-          {/* Close Button */}
+          {/* ------------ CLOSE BUTTON ------------ */}
           <IconButton
             onClick={() => setOpen(false)}
-            sx={{
-              position: 'absolute',
-              top: 12,
-              right: 12,
-              backgroundColor: '#fff',
-              border: '1px solid #ccc',
-              width: 32,
-              height: 32,
-              '&:hover': {
-                backgroundColor: '#ffe0b2'
-              }
-            }}
+            className="feedback-close-btn"
+            sx={{ position: 'absolute', top: 12, right: 12 }}
           >
-            <CloseIcon sx={{ color: '#ef6c00', fontSize: '20px' }} />
+            <CloseIcon />
           </IconButton>
         </DialogContent>
       </Dialog>
