@@ -35,7 +35,7 @@ const Footer = () => {
             alt="GOLDEN GENERATION DT Logo"
             className="footer-logo"
           />
-          <Typography className="footer-title">INVEST HERE REAP HERE</Typography>
+          <Typography className="footer-title">WALKING WITH YOU</Typography>
           <Typography className="footer-description">
            GOLDEN GENERATION DT Sacco society limited is a Sacco that started in 1987 and provides financial
             services to farmers, business community and other institutions.
