@@ -1,142 +1,170 @@
+/* ============================================
+   GOLDEN GENERATION DT SACCO - BRAND COLORS
+=============================================== */
+:root {
+  --gold: #FFD700;
+  --light-gold: #FFE066;
+  --deep-green: #006400;
+  --deep-green-700: #013716;
+  --deep-green-900: #021409;
+  --white: #ffffff;
+}
+
+/* ============================================
+   SECTION BACKGROUND — MATCHES REVIEWS + PRODUCTS
+=============================================== */
 .feedback-section {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4rem 1rem;
+  padding: 5rem 1rem;
   position: relative;
-  background-color: #ffffff;
+
+  background: linear-gradient(
+    135deg,
+    var(--deep-green-900),
+    var(--deep-green-700) 45%,
+    #000a06 100%
+  );
   overflow: hidden;
 }
 
+/* Remove old lime-green bars — replace with glowing gold accents */
 .feedback-section::before,
 .feedback-section::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
-  width: 350px;
+  width: 240px;
   height: 100%;
-  background: linear-gradient(to bottom, #32df06, #50f404);
+  background: linear-gradient(
+      135deg,
+      rgba(255, 215, 0, 0.12),
+      rgba(255, 215, 0, 0.06)
+  );
   z-index: 1;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15); 
+  filter: blur(18px);
 }
 
-.feedback-section::before {
-  left: 0;
-  border-top-right-radius: 30px;
-  border-bottom-right-radius: 30px;
-}
+.feedback-section::before { left: 0; }
+.feedback-section::after { right: 0; }
 
-.feedback-section::after {
-  right: 0;
-  border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
-}
-
+/* ============================================
+   FEEDBACK CARD — MODERN GLASS LOOK
+=============================================== */
 .feedback-wrapper {
-  background-color: #f2a922;
-  padding: 2.5rem 2rem;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0.55)
+  );
+  padding: 3rem 2.2rem;
   max-width: 900px;
   width: 100%;
   text-align: center;
   z-index: 2;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  border-radius: 18px;
+
+  backdrop-filter: blur(12px);
+
+  border-top: 3px solid var(--gold);
+  border-left: 1px solid rgba(255,215,0,0.15);
+  border-right: 1px solid rgba(255,215,0,0.15);
+  border-bottom: 1px solid rgba(255,215,0,0.1);
+
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.55),
+    0 0 22px rgba(255,215,0,0.22);
+
   transition: all 0.3s ease;
-  position: relative;
 }
 
 .feedback-wrapper:hover {
-  box-shadow: 0 0 15px #f2a922, 0 0 25px #f2a922aa;
-  border: 2px solid #fff3c4;
+  transform: translateY(-6px);
+  box-shadow:
+    0 28px 65px rgba(0,0,0,0.75),
+    0 0 28px rgba(255,215,0,0.45);
 }
 
+/* ============================================
+   TITLE — SAME STYLE AS "OUR PRODUCTS"
+=============================================== */
 .feedback-title {
-  font-size: 1.5rem;
   font-weight: 800;
-  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  font-size: 2.1rem;
+
+  background-image: linear-gradient(to right, var(--gold), var(--light-gold));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow: 0 0 12px rgba(255,215,0,0.65);
+
   margin-bottom: 1.2rem;
-  letter-spacing: 1.2px;
-  text-shadow: 
-    1px 1px 2px rgba(0, 0, 0, 0.1),    
-    0 0 8px rgba(255, 255, 255, 0.3);  
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .feedback-title:hover {
-  color: #215732;
-  text-shadow: 
-    1px 1px 3px rgba(0, 0, 0, 0.2), 
-    0 0 10px #64dd17;
-  transform: scale(1.02);
+  text-shadow: 0 0 22px rgba(255,215,0,1);
 }
 
+/* ============================================
+   DESCRIPTION TEXT
+=============================================== */
 .feedback-text {
   font-size: 1.1rem;
-  line-height: 1.9;
-  color: #1a1a1a; 
+  color: var(--light-gold);
+  opacity: 0.9;
+  line-height: 1.7;
   margin-bottom: 2rem;
   padding: 0 1rem;
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
-  text-align: center;
-  text-shadow: 
-    0.5px 0.5px 0.5px rgba(0, 0, 0, 0.08),
-    0 0 1px rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
 }
 
+/* ============================================
+   BUTTON — BRAND GOLD/WHITE GREEN
+=============================================== */
 .feedback-button {
-  background-color: #ffffff !important;
-  color: #0be00b !important;                  
+  background-image: linear-gradient(135deg, var(--gold), var(--light-gold)) !important;
+  color: #000 !important;
   font-weight: 700;
+  padding: 0.75rem 2rem;
   font-size: 1rem;
-  padding: 0.65rem 1.8rem;
   border-radius: 30px;
-  border: 2px solid #215732;
   text-transform: uppercase;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  letter-spacing: 1px;
+  border: none;
+
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 12px rgba(255,215,0,0.55);
 }
 
 .feedback-button:hover {
-  background-color: #64dd17;       
-  color: white;                     
-  transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 0 22px rgba(255,215,0,1);
 }
 
-/* ========================
-   ✅ Mobile Responsiveness
-   ======================== */
+/* ============================================
+   RESPONSIVE FIXES
+=============================================== */
 @media screen and (max-width: 600px) {
-  .feedback-section {
-    padding: 2rem 1rem;
-  }
-
-  .feedback-section::before,
-  .feedback-section::after {
-    width: 150px;
-    border-radius: 20px;
-  }
-
   .feedback-wrapper {
-    padding: 1.5rem 1rem;
-    max-width: 95%;
+    padding: 2rem 1.2rem;
   }
 
   .feedback-title {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
   }
 
   .feedback-text {
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 1rem;
   }
 
   .feedback-button {
+    padding: 0.65rem 1.6rem;
     font-size: 0.9rem;
-    padding: 0.5rem 1.4rem;
   }
 }
