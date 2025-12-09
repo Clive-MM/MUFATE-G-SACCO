@@ -1,48 +1,53 @@
-/* ===== BRAND COLORS (Golden Generation DT SACCO) ===== */
-:root{
+/* ===== BRAND COLORS ===== */
+:root {
   --gold: #FFD700;
   --light-gold: #FFE066;
   --deep-green: #006400;
   --deep-green-700: #013716;
   --deep-green-900: #021409;
   --white: #ffffff;
-  --ink: #0C1B1F;
   --radius-xl: 18px;
-  --shadow-soft: 0 10px 28px rgba(0,0,0,.18);
 }
 
 /* ===== SECTION WRAPPER ===== */
 .testimonials-section {
-  background: linear-gradient(135deg, var(--deep-green-900), var(--deep-green-700) 45%, #000a06 100%);
-  padding: 6rem 1.5rem 4rem;  /* Increased top padding to raise space */
+  background: linear-gradient(
+    135deg,
+    var(--deep-green-900),
+    var(--deep-green-700) 45%,
+    #000a06 100%
+  );
+  padding: 8rem 1.5rem 4rem; /* Extra top padding to lift heading */
   text-align: center;
   color: var(--white);
   position: relative;
 }
 
-/* ===== SECTION TITLE (Raised slightly upward) ===== */
+/* ===== SECTION TITLE — EXACT MATCH TO OUR PRODUCTS ===== */
 .testimonial-title {
-  display: inline-block;
-  padding: 1rem 2rem;
-  margin-top: -2rem; /* Lifts badge upward */
-  margin-bottom: 3rem;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(12px);
-  border-radius: 999px;
-  font-size: 1.25rem;
+  margin-top: -3.5rem; /* Raises above the cards */
+  margin-bottom: 3.5rem;
+
   font-weight: 900;
-  letter-spacing: 1.6px;
   text-transform: uppercase;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-  border: 2px solid rgba(255, 215, 0, 0.45);
-  color: var(--gold);
-  text-shadow: 0 0 12px rgba(255,215,0,0.85);
+  letter-spacing: 1.6px;
+
+  /* Gradient Gold Text */
+  background-image: linear-gradient(to right, var(--gold), var(--light-gold));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  font-size: 2.3rem;
+  text-shadow: 0 0 16px rgba(255, 215, 0, 0.65);
+
   transition: all 0.3s ease;
 }
 
 .testimonial-title:hover {
-  transform: translateY(-3px) scale(1.03);
-  text-shadow: 0 0 18px rgba(255,215,0,1);
+  transform: translateY(-3px);
+  text-shadow: 0 0 25px rgba(255, 215, 0, 1);
 }
 
 /* ERROR ALERT */
@@ -60,47 +65,42 @@
   margin: 0 auto;
 }
 
-/* ===== CARD ===== */
+/* ===== TESTIMONIAL CARD ===== */
 .testimonial-card {
   width: 100%;
   max-width: 360px;
   margin: 0 auto;
   padding: 2.3rem 2rem;
-  border-radius: var(--radius-xl);
 
-  /* Improved premium glass-card look */
-  background: linear-gradient(
-    180deg,
-    rgba(0,0,0,0.25),
-    rgba(0,0,0,0.45)
-  );
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45));
   backdrop-filter: blur(14px);
 
-  border-top: 3px solid var(--gold); /* Signature premium top-border */
-  border-left: 1px solid rgba(255,215,0,0.12);
-  border-right: 1px solid rgba(255,215,0,0.12);
-  border-bottom: 1px solid rgba(255,215,0,0.12);
+  border-top: 3px solid var(--gold);
+  border-left: 1px solid rgba(255, 215, 0, 0.12);
+  border-right: 1px solid rgba(255, 215, 0, 0.12);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.12);
 
-  box-shadow:
-    0 18px 45px rgba(0,0,0,0.55),
-    0 0 22px rgba(255,215,0,0.18);
+  box-shadow: 
+      0 18px 45px rgba(0, 0, 0, 0.55),
+      0 0 22px rgba(255, 215, 0, 0.18);
 
   transition: all 0.35s ease;
 }
 
 .testimonial-card:hover {
   transform: translateY(-10px);
-  border-color: rgba(255,215,0,0.55);
+  border-color: rgba(255, 215, 0, 0.55);
   box-shadow:
-    0 28px 70px rgba(0,0,0,0.75),
-    0 0 28px rgba(255,215,0,0.4);
+      0 28px 70px rgba(0,0,0,0.75),
+      0 0 28px rgba(255,215,0,0.4);
 }
 
-/* ===== QUOTE TEXT ===== */
+/* ===== QUOTE ===== */
 .testimonial-quote {
   font-size: 1.15rem;
   font-style: italic;
-  line-height: 1.85;  /* Improved readability */
+  line-height: 1.85;
   margin: 0 0 1.5rem;
   padding: 0 2rem;
   color: var(--light-gold);
@@ -109,7 +109,7 @@
 
 .testimonial-quote::before {
   content: "“";
-  font-size: 3.4rem; /* Larger, premium feel */
+  font-size: 3.4rem;
   color: var(--gold);
   position: absolute;
   left: 8px;
@@ -124,10 +124,4 @@
   font-size: 1.12rem;
   letter-spacing: 0.6px;
   text-shadow: 0 0 8px rgba(255,215,0,0.6);
-}
-
-/* ===== ANIMATION ===== */
-@keyframes fadeInGlow {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
 }

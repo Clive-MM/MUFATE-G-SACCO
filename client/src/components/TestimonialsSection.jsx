@@ -21,7 +21,9 @@ const TestimonialsSection = () => {
 
   return (
     <Box className="testimonials-section" role="region" aria-label="Member reviews">
-      <Typography className="testimonial-title" component="h2">
+      
+      {/* SECTION TITLE — matching Our Products styling */}
+      <Typography component="h2" className="testimonial-title">
         REVIEWS
       </Typography>
 
