@@ -1,78 +1,156 @@
-.footer-container {
-  background-color: #e8e8e8;
-  padding: 3rem 1.5rem 1rem;
-  position: relative;
-  font-family: 'Segoe UI', sans-serif;
+/* ===========================================================
+      BRAND COLORS (Golden Generation DT SACCO)
+=========================================================== */
+:root {
+  --gold: #FFD700;
+  --deep-gold: #E6C200;
+  --soft-gold: #FFF4B5;
+  --deep-green: #003018;
+  --deep-green-700: #01240F;
+  --deep-green-900: #011407;
+  --white: #ffffff;
 }
 
+/* ===========================================================
+      FULL FOOTER WRAPPER WITH GOLD BORDER GLOW
+=========================================================== */
+.footer-container {
+  padding: 4rem 1.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+
+  /* Deep green layered background + glass blur */
+  background: linear-gradient(135deg, var(--deep-green-900), var(--deep-green-700));
+  backdrop-filter: blur(14px);
+
+  /* Gold gradient border */
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--deep-gold), var(--gold), var(--deep-gold)) 1;
+
+  box-shadow: 0 0 35px rgba(255, 215, 0, 0.28);
+}
+
+/* ===========================================================
+      FOOTER LAYOUT WITH GOLD DIVIDERS
+=========================================================== */
 .footer-content {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 2rem;
   max-width: 1300px;
   margin: auto;
+  gap: 2rem;
+  position: relative;
 }
 
+/* Gold vertical dividers between columns */
 .footer-column {
   flex: 1;
-  min-width: 220px;
+  min-width: 250px;
+  padding: 0 1.2rem;
+  position: relative;
 }
 
+.footer-column:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 0;
+  width: 2px;
+  height: 90%;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  opacity: 0.4;
+}
+
+/* ===========================================================
+      LOGO & DESCRIPTION SECTION
+=========================================================== */
 .footer-logo {
-  width: 200px;
+  width: 190px;
   margin-bottom: 1rem;
+  filter: brightness(1.15);
 }
 
 .footer-title {
-  font-weight: bold;
-  color: #215732;
+  font-weight: 900;
+  letter-spacing: 1px;
   margin-bottom: 0.5rem;
+  background: linear-gradient(to right, var(--gold), var(--soft-gold));
+  -webkit-background-clip: text;
+  color: transparent;
+  text-transform: uppercase;
 }
 
 .footer-description {
+  color: var(--soft-gold);
   font-size: 0.95rem;
-  color: #333;
-  margin-bottom: 1rem;
+  line-height: 1.6;
 }
 
+/* ===========================================================
+      SOCIAL ICONS (Gold Circular Buttons)
+=========================================================== */
 .footer-icons {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.7rem;
+  margin-top: 1rem;
 }
 
 .footer-icons .MuiIconButton-root {
-  background-color: #7de606;
-  color: white;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: var(--gold);
+  color: #000;
+  box-shadow: 0 0 15px rgba(255,215,0,0.45);
+  transition: all 0.3s ease;
 }
 
 .footer-icons .MuiIconButton-root:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 12px rgba(33, 87, 50, 0.6);
-  background-color: #1a4b2c;
+  transform: scale(1.15);
+  background: var(--soft-gold);
+  box-shadow: 0 0 25px rgba(255,215,0,0.85);
 }
 
+/* ===========================================================
+      HEADINGS WITH GOLD GLOW ANIMATION
+=========================================================== */
 .footer-heading {
-  font-weight: bold;
-  color: #215732;
+  font-size: 1.15rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 1rem;
+
+  background: linear-gradient(to right, var(--gold), var(--soft-gold));
+  -webkit-background-clip: text;
+  color: transparent;
+
+  transition: all 0.4s ease;
 }
 
+.footer-heading:hover {
+  text-shadow: 0 0 18px rgba(255, 215, 0, 0.9);
+  transform: translateY(-3px);
+}
+
+/* ===========================================================
+      RECENT POST IMAGES
+=========================================================== */
 .footer-images img {
   width: 48%;
   margin: 2px;
   border-radius: 6px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
 .footer-images img:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(100, 221, 23, 0.6); 
+  transform: scale(1.06);
+  box-shadow: 0 0 18px rgba(255,215,0,0.5);
 }
 
-
+/* ===========================================================
+      QUICK LINKS LIST
+=========================================================== */
 .footer-links {
   list-style: none;
   padding: 0;
@@ -80,60 +158,53 @@
 }
 
 .footer-links li {
-  margin-bottom: 0.6rem;
-  position: relative;
-  transition: transform 0.3s ease;
+  margin-bottom: 0.65rem;
 }
-
-.footer-links a:hover {
-  color: #64dd17; 
-  font-weight: 600;
-  text-shadow: 0 0 6px #64dd17;
-}
-
 
 .footer-links a {
   text-decoration: none;
-  color: #333;
+  color: var(--soft-gold);
   font-size: 0.95rem;
-  font-weight: 500;
+  padding-left: 15px;
   position: relative;
-  padding-left: 12px;
-  transition: color 0.3s ease, font-weight 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .footer-links a::before {
-  content: '›';
+  content: "›";
   position: absolute;
   left: 0;
-  color: #215732;
+  color: var(--gold);
+  transition: 0.3s ease;
   font-weight: bold;
-  transition: transform 0.3s ease;
 }
 
 .footer-links a:hover {
-  color: #215732;
-  font-weight: 600;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(255,215,0,0.55);
+  transform: translateX(4px);
 }
 
 .footer-links a:hover::before {
   transform: translateX(4px);
+  color: var(--soft-gold);
 }
 
-
+/* ===========================================================
+      CONTACT INFO – GOLD ICON BADGES
+=========================================================== */
 .contact-info {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  color: #333;
+  gap: 0.9rem;
 }
 
 .contact-item {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 1rem;
-  transition: transform 0.3s ease;
+  gap: 0.7rem;
+  color: var(--soft-gold);
+  transition: 0.3s ease;
 }
 
 .contact-item:hover {
@@ -141,60 +212,61 @@
 }
 
 .icon-wrapper {
-  background-color: #3cef05;
-  padding: 6px;
+  background: var(--deep-gold);
+  padding: 7px;
   border-radius: 50%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 0 transparent;
-}
-
-.contact-item:hover .icon-wrapper {
-  background-color: #64dd17;
-  box-shadow: 0 0 12px rgba(35, 87, 3, 0.5);
-  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255,215,0,0.3);
+  transition: 0.3s ease;
 }
 
 .icon-wrapper svg {
-  color: white;
-  font-size: 1.2rem;
-  transition: transform 0.3s ease;
+  color: #000;
 }
 
+.contact-item:hover .icon-wrapper {
+  background: var(--soft-gold);
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(255,215,0,0.65);
+}
+
+/* ===========================================================
+      SCROLL TO TOP BUTTON — GOLD GLOW
+=========================================================== */
 .scroll-to-top {
   position: fixed;
   bottom: 25px;
   right: 30px;
-  background-color: #64dd17;
-  color: white;
+  background: var(--gold);
+  color: #000;
   border-radius: 50%;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
+  box-shadow: 0 0 25px rgba(255,215,0,0.7);
+  transition: 0.3s ease;
   animation: bounce 2s infinite;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  z-index: 2000;
 }
 
 .scroll-to-top:hover {
   transform: scale(1.15);
-  background-color: #4caf50;
+  background: var(--soft-gold);
+  box-shadow: 0 0 40px rgba(255,215,0,1);
 }
 
 @keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
+/* ===========================================================
+      FOOTER BOTTOM BAR — DEEP GOLD
+=========================================================== */
 .footer-bottom {
   text-align: center;
-  background-color: hwb(121 3% 17%);
-  color: white;
-  font-size: 0.85rem;
-  padding: 0.8rem;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
+  padding: 1rem;
+  background: var(--deep-gold);
+  color: #000;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 25px rgba(255,215,0,0.4);
 }
