@@ -3,8 +3,8 @@
 ============================================ */
 :root {
   --gold: #FFD700;
-  --deep-gold: #E6C200;
-  --white-gold: #FFF4B5;
+  --deep-gold: #E6C200;     /* Deep bold gold */
+  --white-gold: #FFF4B5;    /* Soft glowing gold */
   --deep-green: #003018;
   --deep-green-700: #01240F;
   --deep-green-900: #011407;
@@ -53,7 +53,7 @@
       CENTER CARD — DARK GREEN GLASS CARD
 ============================================ */
 .feedback-wrapper {
-  background: rgba(0, 20, 10, 0.70);
+  background: rgba(0, 20, 10, 0.65);
   backdrop-filter: blur(12px);
   padding: 3rem 2.5rem;
   max-width: 900px;
@@ -79,7 +79,7 @@
 }
 
 /* ============================================
-      TITLE — GOLD GRADIENT (MATCH Our Products)
+      TITLE — GOLD GRADIENT
 ============================================ */
 .feedback-title {
   font-weight: 900;
@@ -108,7 +108,7 @@
 }
 
 /* ============================================
-      CLICK HERE BUTTON — GOLD
+      CLICK HERE BUTTON
 ============================================ */
 .feedback-button {
   background: var(--gold) !important;
@@ -120,7 +120,7 @@
 
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-size: 1.05rem;
+  font-size: 1rem;
 
   box-shadow: 0 6px 18px rgba(255,215,0,0.45);
   transition: 0.3s ease;
@@ -133,39 +133,29 @@
 }
 
 /* ============================================
-      POPUP — DARK GREEN BACKGROUND
-============================================ */
-.MuiPaper-root {
-  background: linear-gradient(135deg, var(--deep-green-900), var(--deep-green-700)) !important;
-  color: var(--white-gold) !important;
-}
-
-/* ============================================
-      POPUP TEXT — GOLD
+      POPUP MODAL TEXT
 ============================================ */
 .feedback-modal-title {
-  color: var(--gold) !important;
-  font-size: 1.7rem !important;
-  font-weight: 900 !important;
+  color: var(--gold);
+  font-size: 1.6rem;
+  font-weight: 900;
   margin-top: 1rem;
-  text-shadow: 0 0 12px rgba(255,215,0,0.5);
+  text-shadow: 0 0 10px rgba(255,215,0,0.45);
 }
 
 .feedback-modal-text {
-  color: var(--white-gold) !important;
-  font-size: 1.05rem;
-  line-height: 1.75;
-  margin-top: 0.7rem;
-  font-weight: 500;
+  color: var(--white-gold);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-top: 0.5rem;
 }
 
 /* ============================================
-      GOLD INPUT LABELS + GOLD BORDERS
+      INPUT LABELS & BORDERS
 ============================================ */
 .gold-label {
   color: var(--gold) !important;
   font-weight: 700 !important;
-  font-size: 0.95rem !important;
 }
 
 .gold-input fieldset {
@@ -178,29 +168,43 @@
 
 .gold-input.Mui-focused fieldset {
   border-color: var(--gold) !important;
-  box-shadow: 0 0 12px rgba(255,215,0,0.45);
+  box-shadow: 0 0 10px rgba(255,215,0,0.5);
 }
 
 /* ============================================
-      GOLD SUBMIT BUTTON
+      MAKE INPUT TEXT VISIBLE (NEW UPDATE)
+============================================ */
+.gold-input input,
+.gold-input textarea {
+  color: var(--white-gold) !important;
+  caret-color: var(--gold) !important;
+}
+
+.gold-input input::placeholder,
+.gold-input textarea::placeholder {
+  color: var(--white-gold) !important;
+  opacity: 0.6;
+}
+
+/* ============================================
+      SUBMIT BUTTON — GOLD WITH GLOW
 ============================================ */
 .submit-button {
   background: var(--gold) !important;
   color: #000 !important;
   font-weight: 900 !important;
   padding: 0.9rem;
-  border-radius: 10px;
-
+  border-radius: 8px;
   text-transform: uppercase;
   letter-spacing: 1px;
 
-  box-shadow: 0 6px 18px rgba(255,215,0,0.55) !important;
+  box-shadow: 0 6px 18px rgba(255,215,0,0.5) !important;
   transition: 0.3s ease;
 }
 
 .submit-button:hover {
   background: var(--white-gold) !important;
-  box-shadow: 0 0 28px rgba(255,215,0,1) !important;
+  box-shadow: 0 0 25px rgba(255,215,0,1) !important;
   transform: translateY(-3px);
 }
 
@@ -209,15 +213,15 @@
 ============================================ */
 .feedback-close-btn svg {
   color: var(--gold) !important;
-  font-size: 26px !important;
+  font-size: 24px;
 }
 
 .feedback-close-btn:hover {
-  background: rgba(255,215,0,0.2) !important;
+  background: rgba(255,215,0,0.18) !important;
 }
 
 /* ============================================
-      RESPONSIVE
+      MOBILE RESPONSIVE
 ============================================ */
 @media screen and (max-width: 600px) {
   .feedback-section::before,
@@ -238,7 +242,7 @@
   }
 
   .feedback-button {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     padding: 0.7rem 1.8rem;
   }
 }
