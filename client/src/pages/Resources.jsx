@@ -18,7 +18,8 @@ const ResourcesPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/resources/recent')
+    axios
+      .get('https://mufate-g-sacco.onrender.com/resources/recent')
       .then(res => {
         setResources(res.data.resources);
         setLoading(false);
@@ -40,8 +41,11 @@ const ResourcesPage = () => {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <Box sx={{ background: 'radial-gradient(circle at top, #e8f5e9, #49ed08ff)' }}>
+      {/* 🌑 Deep Green Background Brand */}
+      <Box sx={{ background: 'linear-gradient(135deg, #011407, #01240F)' }}>
         <Box sx={{ pt: 6, pb: 6, px: { xs: 2, md: 10 } }}>
+          
+          {/* ⭐ Gold Title */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -51,20 +55,24 @@ const ResourcesPage = () => {
               variant="h4"
               align="center"
               sx={{
-                fontWeight: 800,
-                fontSize: { xs: '1.8rem', md: '2.2rem' },
-                color: '#64dd17',
-                letterSpacing: '0.5px',
+                fontWeight: 900,
+                fontSize: { xs: '1.8rem', md: '2.4rem' },
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
                 mb: 5,
               }}
             >
-              Access SACCO Documents.
+              Access SACCO Documents
             </Typography>
           </motion.div>
 
+          {/* LOADING */}
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
-              <CircularProgress />
+              <CircularProgress sx={{ color: '#FFD700' }} />
             </Box>
           ) : (
             <Grid container spacing={4} justifyContent="center">
@@ -74,41 +82,61 @@ const ResourcesPage = () => {
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6, delay: idx * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.03 }}
                   >
+                    {/* 📄 Document Card */}
                     <Card
                       sx={{
-                        borderRadius: 4,
+                        borderRadius: 3,
                         p: 2,
-                        backgroundColor: '#ffffff',
-                        boxShadow: '0 6px 18px rgba(0, 0, 0, 0.1)',
-                        transition: 'transform 0.3s ease',
+                        backgroundColor: '#01240F',
+                        border: '1px solid rgba(255,215,0,0.2)',
+                        boxShadow:
+                          '0 10px 25px rgba(0,0,0,0.45), 0 0 18px rgba(255,215,0,0.25)',
+                        transition:
+                          'transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease',
                         '&:hover': {
-                          transform: 'translateY(-5px)',
-                          boxShadow: '0 8px 25px rgba(255, 215, 0, 0.25)',
+                          transform: 'translateY(-6px)',
+                          border: '1px solid #FFD700',
+                          boxShadow:
+                            '0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(255,215,0,0.4)',
                         },
                       }}
                     >
                       <CardContent sx={{ textAlign: 'center' }}>
+                        {/* Title */}
                         <Typography
                           variant="h6"
-                          sx={{ fontWeight: 700, mb: 2, color: '#2e7d32' }}
+                          sx={{
+                            fontWeight: 800,
+                            mb: 2,
+                            background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            letterSpacing: '0.5px',
+                          }}
                         >
                           {res.Title}
                         </Typography>
+
+                        {/* Download Button */}
                         <Button
                           onClick={() => handleDownload(res.FilePath)}
                           variant="contained"
                           startIcon={<CloudDownload />}
                           sx={{
-                            backgroundColor: '#1b5e20',
-                            color: '#fff',
+                            background:
+                              'linear-gradient(135deg, #FFD700, #E6C200)',
+                            color: '#000',
                             px: 3,
-                            fontWeight: 600,
+                            fontWeight: 700,
+                            borderRadius: '25px',
+                            boxShadow: '0 4px 12px rgba(255,215,0,0.35)',
                             '&:hover': {
-                              backgroundColor: '#33691e',
-                              boxShadow: '0 0 12px #ffd700',
-                              transform: 'scale(1.06)',
+                              background:
+                                'linear-gradient(135deg, #E6C200, #FFD700)',
+                              transform: 'scale(1.07)',
+                              boxShadow: '0 6px 18px rgba(255,215,0,0.55)',
                             },
                             transition: 'all 0.3s ease-in-out',
                           }}
@@ -124,7 +152,7 @@ const ResourcesPage = () => {
           )}
         </Box>
 
-        <Box sx={{ mt: '-24px' }}>
+        <Box sx={{ mt: '-10px' }}>
           <Footer />
         </Box>
       </Box>
