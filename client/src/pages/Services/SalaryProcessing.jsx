@@ -6,7 +6,7 @@ const SalaryProcessing = () => {
     return (
         <Box
             sx={{
-                backgroundColor: '#011407',   // 🌑 Deep green brand background
+                backgroundColor: '#64dd17',
                 display: 'flex',
                 flexDirection: { xs: 'column', md: 'row' },
                 alignItems: 'center',
@@ -19,8 +19,7 @@ const SalaryProcessing = () => {
                 gap: 6,
             }}
         >
-
-            {/* ================= IMAGE SIDE ================= */}
+            
             <Box
                 sx={{
                     position: 'relative',
@@ -36,10 +35,7 @@ const SalaryProcessing = () => {
                         maxWidth: '500px',
                         height: 'auto',
                         borderRadius: '20px',
-
-                        // 🌟 Golden glow + deep shadow for premium branding
-                        boxShadow:
-                            '0 0 35px rgba(255, 215, 0, 0.25), 0 12px 30px rgba(0,0,0,0.35)', 
+                        boxShadow: '0 0 25px rgba(192, 233, 12, 0.25), 0 10px 30px rgba(0,0,0,0.2)',
                         transition: 'transform 0.3s ease',
                         cursor: 'pointer',
                     }}
@@ -51,8 +47,8 @@ const SalaryProcessing = () => {
                 />
             </Box>
 
-            {/* ================= TEXT CONTENT ================= */}
-            <Box sx={{ color: '#FFF4B5', maxWidth: '600px', zIndex: 2 }}>
+        
+            <Box sx={{ color: '#fff', maxWidth: '600px', zIndex: 2 }}>
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -61,16 +57,10 @@ const SalaryProcessing = () => {
                     <Typography
                         variant="h5"
                         sx={{
-                            fontWeight: 900,
+                            fontWeight: 700,
                             textTransform: 'uppercase',
                             letterSpacing: '1px',
                             mb: 3,
-
-                            // 🟡 Gold gradient heading
-                            background: 'linear-gradient(to right, #FFD700, #E6C200)',
-                            WebkitBackgroundClip: 'text',
-                            color: 'transparent',
-                            textShadow: '0 0 12px rgba(255,215,0,0.35)',
                         }}
                     >
                         Salary Processing
@@ -78,19 +68,13 @@ const SalaryProcessing = () => {
 
                     <Typography
                         variant="body1"
-                        sx={{
-                            lineHeight: 1.8,
-                            fontSize: '1.08rem',
-                            color: '#FFF4B5',   // ✨ Soft gold readable text
-                            textShadow: '0 0 8px rgba(0,0,0,0.6)',
-                        }}
+                        sx={{ lineHeight: 1.8, fontSize: '1.05rem' }}
                     >
-                        With GOLDEN GENERATION DT SACCO's salary processing service, members can have 
-                        their salaries channeled directly through the SACCO—ensuring timely payments 
-                        and unlocking a host of benefits. By routing your income through the SACCO, 
-                        you gain seamless access to loan facilities and benefit from faster approvals 
-                        tailored to support your personal needs and development. It’s a secure, smart 
-                        way to manage your income while enjoying the full value of SACCO membership.
+                        With GOLDEN GENERATION DT SACCO's salary processing service, members can have their salaries channeled
+                        directly through the SACCO—ensuring timely payments and unlocking a host of benefits.
+                        By routing your income through Mufate G, you gain seamless access to loan facilities
+                        and benefit from faster approvals tailored to support your personal needs and development.
+                        It’s a smart, secure way to manage your income while enjoying the full value of SACCO membership.
                     </Typography>
                 </motion.div>
             </Box>
