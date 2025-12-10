@@ -214,7 +214,7 @@ export default function SupportChatWidget({
                     gap: 0.5,
                   }}
                 >
-                  GOLDEN GEENRATION DT Support
+                  GOLDEN GEENRATION DT SUPPORT
                   {/* Glowing dot inline with title */}
                   <Box
                     component="span"
