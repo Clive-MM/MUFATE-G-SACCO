@@ -37,7 +37,8 @@ const StrategicPartners = () => {
         }}
       >
         <Box sx={{ px: { xs: 2, md: 10 } }}>
-          {/* 🌟 GOLD TITLE */}
+          
+          {/* 🌟 GOLD TITLE (Underline Removed) */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -54,24 +55,11 @@ const StrategicPartners = () => {
                 background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
                 WebkitBackgroundClip: 'text',
                 color: 'transparent',
-                mb: 1,
+                mb: 6, // adjusted spacing after removing underline
               }}
             >
               Trusted Partners in Growth
             </Typography>
-
-            {/* 🌟 Gold Divider */}
-            <Box
-              sx={{
-                height: '4px',
-                width: '90px',
-                background: 'linear-gradient(to right, #FFD700, #E6C200)',
-                mx: 'auto',
-                borderRadius: '10px',
-                mb: 5,
-                boxShadow: '0 0 12px rgba(255,215,0,0.5)',
-              }}
-            />
           </motion.div>
 
           {/* 💼 PARTNERS GRID */}
@@ -104,7 +92,6 @@ const StrategicPartners = () => {
                     }}
                   >
                     <CardActionArea>
-                      {/* PARTNER LOGO */}
                       {partner.LogoImageURL && (
                         <CardMedia
                           component="img"
@@ -122,9 +109,7 @@ const StrategicPartners = () => {
                         />
                       )}
 
-                      {/* TEXT CONTENT */}
                       <CardContent>
-                        {/* Partner Name */}
                         <Typography
                           variant="h6"
                           sx={{
@@ -141,7 +126,6 @@ const StrategicPartners = () => {
                           {partner.PartnerName}
                         </Typography>
 
-                        {/* Description */}
                         <Typography
                           variant="body2"
                           sx={{
@@ -161,7 +145,6 @@ const StrategicPartners = () => {
           </Grid>
         </Box>
 
-        {/* FOOTER */}
         <Footer />
       </Box>
     </motion.div>
