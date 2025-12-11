@@ -4,7 +4,7 @@ import {
   Typography,
   TextField,
   Button,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useSnackbar } from 'notistack';
@@ -12,11 +12,13 @@ import { motion } from 'framer-motion';
 
 const FeedbackForm = () => {
   const { enqueueSnackbar } = useSnackbar();
+
   const [formData, setFormData] = useState({
     Email: '',
     Subject: '',
     Message: '',
   });
+
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -26,12 +28,16 @@ const FeedbackForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-      const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        'https://mufate-g-sacco.onrender.com/feedback',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const result = await response.json();
 
@@ -39,10 +45,14 @@ const FeedbackForm = () => {
         enqueueSnackbar(result.message, { variant: 'success' });
         setFormData({ Email: '', Subject: '', Message: '' });
       } else {
-        enqueueSnackbar(result.message || 'Submission failed.', { variant: 'error' });
+        enqueueSnackbar(result.message || 'Submission failed.', {
+          variant: 'error',
+        });
       }
     } catch (error) {
-      enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
+      enqueueSnackbar('Something went wrong. Please try again.', {
+        variant: 'error',
+      });
     } finally {
       setLoading(false);
     }
@@ -52,16 +62,14 @@ const FeedbackForm = () => {
     <Box
       sx={{
         position: 'relative',
-
-        /* 🔥 Updated Brand Background (Gold → Dark Green Fade) */
-        background: 'linear-gradient(to bottom, #01240F, #011407)',
+        background: 'linear-gradient(to bottom, #001A0F, #002715)',
         borderBottomLeftRadius: '16px',
         borderBottomRightRadius: '16px',
 
         px: { xs: 2, md: 8 },
         pt: { xs: 3, md: 3 },
         pb: { xs: 3, md: 4 },
-        mt: 0,
+
         minHeight: '75vh',
         display: 'flex',
         flexDirection: 'column',
@@ -69,65 +77,62 @@ const FeedbackForm = () => {
         overflow: 'hidden',
       }}
     >
-      {/* ===================
-          GOLD BARS (BRAND)
-      =================== */}
+      {/* GOLD VERTICAL GLOW STRIPES */}
       <motion.div
-        initial={{ opacity: 0, x: 100 }}
+        initial={{ opacity: 0, x: 120 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 1 }}
         style={{
           position: 'absolute',
           top: 0,
           bottom: 0,
-          right: '80px',
+          right: '40px',
           display: 'flex',
           flexDirection: 'row',
-          gap: '50px',
+          gap: '40px',
           zIndex: 0,
         }}
       >
-        {['#FFD700', '#E6C200', '#FFF4B5', '#FFD700', '#E6C200'].map((color, index) => (
+        {[
+          '#FDD835',
+          '#FFEB3B',
+          '#FBC02D',
+          '#FFF59D',
+          '#FDD835',
+          '#FBC02D',
+        ].map((color, index) => (
           <motion.div
             key={index}
             initial={{ height: 0 }}
             whileInView={{ height: '100%' }}
-            transition={{ duration: 1 + index * 0.2 }}
+            transition={{ duration: 0.9 + index * 0.2 }}
             style={{
               width: '90px',
               backgroundColor: color,
-              borderRadius: '8px',
+              borderRadius: '12px',
+              boxShadow: '0 0 30px rgba(255,215,0,0.5)',
             }}
           />
         ))}
       </motion.div>
 
-      {/* ===========================
-          HEADER — GOLD GRADIENT
-      ============================ */}
+      {/* GOLD GLOWING HEADING */}
       <Typography
         variant="h4"
         sx={{
+          color: '#FFD700',
           fontWeight: 900,
           textTransform: 'uppercase',
-          fontSize: { xs: '1.4rem', md: '2rem' },
-
-          /* GOLD Gradient Title */
-          background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-
-          mb: 3,
+          fontSize: { xs: '1.5rem', md: '2.2rem' },
+          mb: 4,
           zIndex: 2,
-          textShadow: '0 0 12px rgba(0,0,0,0.45)',
+          textShadow: '0 0 12px rgba(255,215,0,0.7)',
         }}
       >
-        We Value Your Feedback
+        WE VALUE YOUR FEEDBACK
       </Typography>
 
-      {/* ===========================
-          FEEDBACK FORM
-      ============================ */}
+      {/* FEEDBACK FORM */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -145,11 +150,16 @@ const FeedbackForm = () => {
             flexDirection: 'column',
             gap: 2,
 
-            backdropFilter: 'blur(14px)',
-            background: 'rgba(255, 255, 255, 0.25)',
-            borderRadius: '20px',
             padding: { xs: 2, md: 4 },
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+
+            /* GLASS NEUMORPHISM GOLD STYLE */
+            backdropFilter: 'blur(18px)',
+            background: 'rgba(0, 0, 0, 0.45)',
+            borderRadius: '20px',
+
+            boxShadow:
+              '0 0 20px rgba(255, 215, 0, 0.4), inset 0 0 12px rgba(0,0,0,0.45)',
+            border: '1px solid rgba(255,215,0,0.4)',
           }}
         >
           {['Email', 'Subject', 'Message'].map((field, i) => (
@@ -160,63 +170,61 @@ const FeedbackForm = () => {
               type={field === 'Email' ? 'email' : 'text'}
               value={formData[field]}
               onChange={handleChange}
-              fullWidth
               required
+              fullWidth
               multiline={field === 'Message'}
               rows={field === 'Message' ? 4 : 1}
               variant="outlined"
               InputLabelProps={{
-                style: { color: '#FFD700', fontWeight: 600 },
+                sx: {
+                  color: '#FFD700 !important',
+                  fontWeight: 600,
+                },
               }}
               InputProps={{
                 style: {
-                  background: 'rgba(255, 255, 255, 0.75)',
+                  background: 'rgba(255,255,255,0.75)',
                   borderRadius: '12px',
-                  color: '#01240F', // Visible text color
                   boxShadow:
-                    'inset 4px 4px 10px #bebebe, inset -4px -4px 10px #ffffff',
+                    'inset 4px 4px 10px rgba(0,0,0,0.4), inset -4px -4px 10px rgba(255,255,255,0.5)',
                 },
               }}
             />
           ))}
 
-          {/* ===========================
-              SUBMIT BUTTON — GOLD
-          ============================ */}
+          {/* SUBMIT BUTTON */}
           <Button
             type="submit"
-            variant="contained"
             disabled={loading}
             startIcon={!loading && <SendIcon />}
             sx={{
+              mt: 2,
+              alignSelf: 'flex-start',
+              px: 4,
+              py: 1.5,
+
+              textTransform: 'uppercase',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+
               backgroundColor: '#FFD700',
               color: '#000',
-              fontWeight: 800,
-
-              px: { xs: 2, sm: 3, md: 4 },
-              py: { xs: 1.5 },
               borderRadius: '12px',
 
               boxShadow: '0 0 12px rgba(255,215,0,0.6)',
-              textTransform: 'uppercase',
-
               '&:hover': {
-                backgroundColor: '#E6C200',
-                boxShadow: '0 0 20px rgba(255,215,0,0.9)',
-                transform: 'scale(1.05)',
+                backgroundColor: '#FFEB3B',
+                boxShadow: '0 0 20px rgba(255,215,0,1)',
               },
-
-              mt: 2,
-              alignSelf: 'flex-start',
             }}
           >
             {loading ? (
               <>
                 <CircularProgress size={20} sx={{ color: '#000' }} />
-                Submitting...
+                &nbsp;Submitting...
               </>
             ) : (
-              'Submit'
+              'SUBMIT'
             )}
           </Button>
         </Box>
