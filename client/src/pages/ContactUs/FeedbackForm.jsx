@@ -52,26 +52,22 @@ const FeedbackForm = () => {
     <Box
       sx={{
         position: 'relative',
-
-        /* 🔥 Updated Brand Background (Gold → Dark Green Fade) */
-        background: 'linear-gradient(to bottom, #01240F, #011407)',
+        background: 'linear-gradient(to bottom, #01240F, #011407)', // DARK GREEN BRAND
         borderBottomLeftRadius: '16px',
         borderBottomRightRadius: '16px',
-
         px: { xs: 2, md: 8 },
-        pt: { xs: 3, md: 3 },
-        pb: { xs: 3, md: 4 },
+        pt: { xs: 3, md: 6 },
+        pb: { xs: 3, md: 6 },
         mt: 0,
-        minHeight: '75vh',
+        minHeight: '90vh',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         overflow: 'hidden',
       }}
     >
-      {/* ===================
-          GOLD BARS (BRAND)
-      =================== */}
+
+      {/* ➤ GOLD GRADIENT ANIMATED BARS */}
       <motion.div
         initial={{ opacity: 0, x: 100 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -80,10 +76,10 @@ const FeedbackForm = () => {
           position: 'absolute',
           top: 0,
           bottom: 0,
-          right: '80px',
+          right: '70px',
           display: 'flex',
           flexDirection: 'row',
-          gap: '50px',
+          gap: '45px',
           zIndex: 0,
         }}
       >
@@ -92,42 +88,36 @@ const FeedbackForm = () => {
             key={index}
             initial={{ height: 0 }}
             whileInView={{ height: '100%' }}
-            transition={{ duration: 1 + index * 0.2 }}
+            transition={{ duration: 1 + index * 0.20 }}
             style={{
-              width: '90px',
+              width: '85px',
               backgroundColor: color,
-              borderRadius: '8px',
+              borderRadius: '10px',
+              boxShadow: '0 0 20px rgba(255, 215, 0, 0.4)',
             }}
           />
         ))}
       </motion.div>
 
-      {/* ===========================
-          HEADER — GOLD GRADIENT
-      ============================ */}
+      {/* ➤ HEADER */}
       <Typography
         variant="h4"
         sx={{
           fontWeight: 900,
           textTransform: 'uppercase',
-          fontSize: { xs: '1.4rem', md: '2rem' },
-
-          /* GOLD Gradient Title */
           background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
           WebkitBackgroundClip: 'text',
           color: 'transparent',
-
+          textShadow: '0 0 12px rgba(255,215,0,0.25)',
+          fontSize: { xs: '1.6rem', md: '2.4rem' },
           mb: 3,
           zIndex: 2,
-          textShadow: '0 0 12px rgba(0,0,0,0.45)',
         }}
       >
         We Value Your Feedback
       </Typography>
 
-      {/* ===========================
-          FEEDBACK FORM
-      ============================ */}
+      {/* ➤ FEEDBACK FORM */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -137,27 +127,28 @@ const FeedbackForm = () => {
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            zIndex: 2,
-            maxWidth: { xs: '100%', md: '600px' },
+            zIndex: 3,
+            maxWidth: { xs: '100%', md: '650px' },
             width: '100%',
 
+            backdropFilter: 'blur(18px)',
+            background: 'rgba(255, 255, 255, 0.08)', // TRANSPARENT GLASS BOX
+            borderRadius: '24px',
+            padding: { xs: 2.5, md: 4 },
+            boxShadow:
+              '0 8px 32px rgba(0,0,0,0.3), inset 0 0 25px rgba(255,215,0,0.08)',
             display: 'flex',
             flexDirection: 'column',
-            gap: 2,
-
-            backdropFilter: 'blur(14px)',
-            background: 'rgba(255, 255, 255, 0.25)',
-            borderRadius: '20px',
-            padding: { xs: 2, md: 4 },
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+            gap: 3,
           }}
         >
+
+          {/* INPUT FIELDS */}
           {['Email', 'Subject', 'Message'].map((field, i) => (
             <TextField
               key={i}
               label={field}
               name={field}
-              type={field === 'Email' ? 'email' : 'text'}
               value={formData[field]}
               onChange={handleChange}
               fullWidth
@@ -166,23 +157,36 @@ const FeedbackForm = () => {
               rows={field === 'Message' ? 4 : 1}
               variant="outlined"
               InputLabelProps={{
-                style: { color: '#FFD700', fontWeight: 600 },
+                sx: {
+                  color: '#FFF4B5', // ⭐ MUCH MORE VISIBLE SOFT GOLD LABEL
+                  fontWeight: 700,
+                  letterSpacing: '0.5px',
+                }
               }}
               InputProps={{
-                style: {
-                  background: 'rgba(255, 255, 255, 0.75)',
-                  borderRadius: '12px',
-                  color: '#01240F', // Visible text color
+                sx: {
+                  background: 'rgba(255,255,255,0.5)',
+                  borderRadius: '14px',
+                  color: '#01240F', // dark green text inside input
+                  fontWeight: 600,
                   boxShadow:
-                    'inset 4px 4px 10px #bebebe, inset -4px -4px 10px #ffffff',
-                },
+                    'inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.8)',
+                  '& fieldset': {
+                    borderColor: 'rgba(255,215,0,0.4)', // subtle gold border
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#FFD700',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#FFD700',
+                    boxShadow: '0 0 12px #FFD700',
+                  }
+                }
               }}
             />
           ))}
 
-          {/* ===========================
-              SUBMIT BUTTON — GOLD
-          ============================ */}
+          {/* ➤ SUBMIT BUTTON */}
           <Button
             type="submit"
             variant="contained"
@@ -191,34 +195,31 @@ const FeedbackForm = () => {
             sx={{
               backgroundColor: '#FFD700',
               color: '#000',
-              fontWeight: 800,
-
-              px: { xs: 2, sm: 3, md: 4 },
-              py: { xs: 1.5 },
-              borderRadius: '12px',
-
-              boxShadow: '0 0 12px rgba(255,215,0,0.6)',
+              fontWeight: 900,
+              px: 4,
+              py: 1.5,
+              borderRadius: '14px',
               textTransform: 'uppercase',
-
+              fontSize: '1rem',
+              boxShadow: '0 0 20px rgba(255,215,0,0.6)',
+              alignSelf: 'flex-start',
               '&:hover': {
                 backgroundColor: '#E6C200',
-                boxShadow: '0 0 20px rgba(255,215,0,0.9)',
                 transform: 'scale(1.05)',
-              },
-
-              mt: 2,
-              alignSelf: 'flex-start',
+                boxShadow: '0 0 25px rgba(255,215,0,0.85)',
+              }
             }}
           >
             {loading ? (
               <>
                 <CircularProgress size={20} sx={{ color: '#000' }} />
-                Submitting...
+                &nbsp;Submitting...
               </>
             ) : (
               'Submit'
             )}
           </Button>
+
         </Box>
       </motion.div>
     </Box>
