@@ -52,21 +52,26 @@ const FeedbackForm = () => {
     <Box
       sx={{
         position: 'relative',
+
+        /* 🔥 Updated Brand Background (Gold → Dark Green Fade) */
         background: 'linear-gradient(to bottom, #01240F, #011407)',
         borderBottomLeftRadius: '16px',
         borderBottomRightRadius: '16px',
-        px: { xs: 2, sm: 4, md: 8 },
-        pt: { xs: 4, md: 6 },
-        pb: { xs: 6, md: 8 },
-        minHeight: { xs: '110vh', sm: '100vh', md: '95vh' },
+
+        px: { xs: 2, md: 8 },
+        pt: { xs: 3, md: 3 },
+        pb: { xs: 3, md: 4 },
+        mt: 0,
+        minHeight: '75vh',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         overflow: 'hidden',
       }}
     >
-
-      {/* GOLD ANIMATED BARS — AUTO-HIDE ON SMALL SCREENS */}
+      {/* ===================
+          GOLD BARS (BRAND)
+      =================== */}
       <motion.div
         initial={{ opacity: 0, x: 100 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -75,12 +80,11 @@ const FeedbackForm = () => {
           position: 'absolute',
           top: 0,
           bottom: 0,
-          right: '5%',
+          right: '80px',
           display: 'flex',
           flexDirection: 'row',
-          gap: '40px',
+          gap: '50px',
           zIndex: 0,
-          opacity: 0.9,
         }}
       >
         {['#FFD700', '#E6C200', '#FFF4B5', '#FFD700', '#E6C200'].map((color, index) => (
@@ -88,108 +92,97 @@ const FeedbackForm = () => {
             key={index}
             initial={{ height: 0 }}
             whileInView={{ height: '100%' }}
-            transition={{ duration: 1 + index * 0.25 }}
+            transition={{ duration: 1 + index * 0.2 }}
             style={{
-              width: '75px',
+              width: '90px',
               backgroundColor: color,
-              borderRadius: '12px',
-              boxShadow: '0 0 25px rgba(255, 215, 0, 0.45)',
-              display: index < 3 ? 'block' : { xs: 'none', sm: 'block' }, // smarter hiding
+              borderRadius: '8px',
             }}
           />
         ))}
       </motion.div>
 
-      {/* HEADER */}
+      {/* ===========================
+          HEADER — GOLD GRADIENT
+      ============================ */}
       <Typography
         variant="h4"
         sx={{
           fontWeight: 900,
           textTransform: 'uppercase',
+          fontSize: { xs: '1.4rem', md: '2rem' },
+
+          /* GOLD Gradient Title */
           background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
           WebkitBackgroundClip: 'text',
           color: 'transparent',
-          textShadow: '0 0 14px rgba(255,215,0,0.4)',
-          fontSize: { xs: '1.7rem', md: '2.4rem' },
-          mb: { xs: 3, md: 4 },
+
+          mb: 3,
           zIndex: 2,
-          textAlign: { xs: 'center', md: 'left' },
+          textShadow: '0 0 12px rgba(0,0,0,0.45)',
         }}
       >
         We Value Your Feedback
       </Typography>
 
-      {/* FEEDBACK FORM */}
+      {/* ===========================
+          FEEDBACK FORM
+      ============================ */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
       >
         <Box
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            zIndex: 3,
+            zIndex: 2,
+            maxWidth: { xs: '100%', md: '600px' },
             width: '100%',
-            maxWidth: { xs: '100%', sm: '90%', md: '650px' },
-            backdropFilter: 'blur(18px)',
-            background: 'rgba(255, 255, 255, 0.12)', // improved frosted glass
-            borderRadius: '24px',
-            padding: { xs: 2.5, sm: 3, md: 4 },
-            boxShadow:
-              '0 8px 32px rgba(0,0,0,0.35), inset 0 0 18px rgba(255,215,0,0.12)',
+
             display: 'flex',
             flexDirection: 'column',
-            gap: 3,
+            gap: 2,
+
+            backdropFilter: 'blur(14px)',
+            background: 'rgba(255, 255, 255, 0.25)',
+            borderRadius: '20px',
+            padding: { xs: 2, md: 4 },
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
           }}
         >
-
-          {/* INPUTS */}
           {['Email', 'Subject', 'Message'].map((field, i) => (
             <TextField
               key={i}
               label={field}
               name={field}
+              type={field === 'Email' ? 'email' : 'text'}
               value={formData[field]}
               onChange={handleChange}
               fullWidth
               required
               multiline={field === 'Message'}
-              rows={field === 'Message' ? 5 : 1}
+              rows={field === 'Message' ? 4 : 1}
               variant="outlined"
               InputLabelProps={{
-                sx: {
-                  color: '#FFEFA8',
-                  fontWeight: 700,
-                  letterSpacing: '0.6px',
-                  fontSize: '1rem',
-                }
+                style: { color: '#FFD700', fontWeight: 600 },
               }}
               InputProps={{
-                sx: {
-                  background: 'rgba(255,255,255,0.75)',
-                  borderRadius: '14px',
-                  color: '#01240F',
-                  fontWeight: 600,
+                style: {
+                  background: 'rgba(255, 255, 255, 0.75)',
+                  borderRadius: '12px',
+                  color: '#01240F', // Visible text color
                   boxShadow:
-                    'inset 4px 4px 10px rgba(0,0,0,0.25), inset -4px -4px 10px rgba(255,255,255,0.9)',
-                  '& fieldset': {
-                    borderColor: 'rgba(255,215,0,0.45)',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: '#FFD700',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#FFD700',
-                    boxShadow: '0 0 12px #FFD700',
-                  }
-                }
+                    'inset 4px 4px 10px #bebebe, inset -4px -4px 10px #ffffff',
+                },
               }}
             />
           ))}
 
-          {/* SUBMIT BUTTON */}
+          {/* ===========================
+              SUBMIT BUTTON — GOLD
+          ============================ */}
           <Button
             type="submit"
             variant="contained"
@@ -198,31 +191,34 @@ const FeedbackForm = () => {
             sx={{
               backgroundColor: '#FFD700',
               color: '#000',
-              fontWeight: 900,
-              px: { xs: 4, sm: 5 },
-              py: 1.5,
-              borderRadius: '14px',
+              fontWeight: 800,
+
+              px: { xs: 2, sm: 3, md: 4 },
+              py: { xs: 1.5 },
+              borderRadius: '12px',
+
+              boxShadow: '0 0 12px rgba(255,215,0,0.6)',
               textTransform: 'uppercase',
-              fontSize: { xs: '0.9rem', sm: '1rem' },
-              boxShadow: '0 0 22px rgba(255,215,0,0.65)',
-              alignSelf: { xs: 'center', md: 'flex-start' },
+
               '&:hover': {
                 backgroundColor: '#E6C200',
-                transform: 'scale(1.07)',
-                boxShadow: '0 0 28px rgba(255,215,0,0.9)',
-              }
+                boxShadow: '0 0 20px rgba(255,215,0,0.9)',
+                transform: 'scale(1.05)',
+              },
+
+              mt: 2,
+              alignSelf: 'flex-start',
             }}
           >
             {loading ? (
               <>
                 <CircularProgress size={20} sx={{ color: '#000' }} />
-                &nbsp;Submitting...
+                Submitting...
               </>
             ) : (
               'Submit'
             )}
           </Button>
-
         </Box>
       </motion.div>
     </Box>
