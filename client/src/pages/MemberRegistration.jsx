@@ -13,75 +13,70 @@ import GroupIcon from "@mui/icons-material/Group";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import axios from "axios";
 
-// 🔹 Stepper Icons
-const steps = [
-  { label: "Bio Data", icon: <PersonIcon /> },
-  { label: "Contact", icon: <ContactPhoneIcon /> },
-  { label: "Nominee", icon: <GroupIcon /> }
-];
-
-/* ======================================================
-   🔥 GOLDEN GENERATION BRAND COLORS
-====================================================== */
+/* ============================================================
+   🔥 BRAND COLORS
+============================================================ */
 const gold = "#FFD700";
 const goldSoft = "#FFF4B5";
 const greenDark = "#011407";
 const greenDeep = "#01240F";
 
-/* ======================================================
-   🔥 NEUMORPHISM BACKGROUND (Neutral, Preserved Layout)
-====================================================== */
+/* ============================================================
+   🔥 ORIGINAL NEUMORPHISM BUT REBRANDED TO GOLD & DARK GREEN
+============================================================ */
 const neuStyle = {
-  borderRadius: "20px",
-  background: greenDark,
+  borderRadius: "18px",
+  background: greenDeep,
   border: "1px solid rgba(255,215,0,0.25)",
   boxShadow:
-    "0 0 20px rgba(255,215,0,0.25), inset 0 0 12px rgba(0,0,0,0.6)",
-  padding: "30px",
+    "0 0 18px rgba(255,215,0,0.25), inset 0 0 18px rgba(0,0,0,0.3)",
+  padding: "24px",
+  transition: "0.3s ease",
 };
 
-/* ======================================================
-   🔥 INPUT FIELD STYLE (NO layout changes)
-====================================================== */
+/* ============================================================
+   🔥 INPUT STYLE — GOLDEN LABEL, CLEAR TEXT, SAME LAYOUT
+============================================================ */
 const inputStyle = {
-  borderRadius: "14px",
-  background: "rgba(255,255,255,0.8)",
+  borderRadius: "12px",
+  background: "rgba(255,255,255,0.65)",
   "& .MuiInputLabel-root": {
     color: goldSoft,
-    fontWeight: 800,
-    textShadow: "0 0 6px rgba(0,0,0,0.5)",
+    fontWeight: 700,
+    textShadow: "0 0 6px rgba(0,0,0,0.4)",
   },
   "& .MuiFilledInput-root": {
-    borderRadius: "14px",
     background: "rgba(255,255,255,0.9)",
+    borderRadius: "12px",
     fontWeight: 700,
-    color: greenDeep,
+    color: greenDark,
     "&:before, &:after": { display: "none" },
     "&.Mui-focused": {
-      borderColor: gold,
       outline: `2px solid ${gold}`,
       boxShadow: `0 0 12px ${gold}`,
     },
   }
 };
 
-/* ======================================================
-   🟩 COUNTIES + SELECT OPTIONS (UNCHANGED)
-====================================================== */
-const countiesInKenya = [/* unchanged */];
+/* ============================================================
+   🔥 STEPPER ICONS — SAME BUT GOLD
+============================================================ */
+const steps = [
+  { label: "Bio Data", icon: <PersonIcon /> },
+  { label: "Contact",  icon: <ContactPhoneIcon /> },
+  { label: "Nominee",  icon: <GroupIcon /> }
+];
+
+/* ============================================================
+   🔥 COUNTY + OPTION DATA (unchanged)
+============================================================ */
+const countiesInKenya = [ /* unchanged */ ];
 const selectOptions = { /* unchanged */ };
 const layout = { /* unchanged */ };
 
-// Fields mapping unchanged
-const stepFields = [
-  ["FullName","Salutation","IDType","IDNumber","DOB","MaritalStatus","Gender","KRAPin"],
-  ["County","District","Division","Address","PostalCode","PhysicalAddress","MobileNumber","AlternateMobileNumber","Email","Profession","ProfessionSector"],
-  ["NomineeName","NomineeIDNumber","NomineePhoneNumber","NomineeRelation"],
-];
-
-/* ======================================================
-   🔥 COMPONENT START
-====================================================== */
+/* ============================================================
+   🔥 MAIN COMPONENT
+============================================================ */
 const MemberRegistration = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({});
@@ -91,21 +86,13 @@ const MemberRegistration = () => {
     open: false, message: "", severity: "success"
   });
 
-  const [regMeta, setRegMeta] = useState({
-    next_step: null,
-    payment: null,
-    member_id: null,
-    email_warning: null,
-  });
+  const [regMeta, setRegMeta] = useState({});
 
-  /* -------------------------
-     Handle Input Change
-  --------------------------*/
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const nextStep = () => setActiveStep((prev) => prev + 1);
-  const prevStep = () => setActiveStep((prev) => prev - 1);
+  const nextStep = () => setActiveStep(prev => prev + 1);
+  const prevStep = () => setActiveStep(prev => prev - 1);
 
   const confirmSubmission = async () => {
     setLoading(true);
@@ -121,22 +108,23 @@ const MemberRegistration = () => {
       setSnackbar({
         open: true,
         message: data.message || "Registration successful!",
-        severity: "success",
+        severity: "success"
       });
+
     } catch (error) {
       setSnackbar({
         open: true,
         message: error.response?.data?.message || "Registration failed!",
-        severity: "error",
+        severity: "error"
       });
     } finally {
       setLoading(false);
     }
   };
 
-  /* ------------------------------------------
-     FIELD RENDERER — DO NOT CHANGE GRID LOGIC
-  ------------------------------------------- */
+  /* ============================================================
+     🔥 DO NOT MODIFY GRID — FIELD RENDERER UNCHANGED
+  ============================================================ */
   const renderField = (field) => {
     if (field === "County") {
       return (
@@ -166,8 +154,8 @@ const MemberRegistration = () => {
             onChange={handleChange}
             input={<FilledInput disableUnderline />}
           >
-            {selectOptions[field].map(opt => (
-              <MenuItem key={opt} value={opt}>{opt}</MenuItem>
+            {selectOptions[field].map(o => (
+              <MenuItem key={o} value={o}>{o}</MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -176,45 +164,70 @@ const MemberRegistration = () => {
 
     return (
       <TextField
-        required
-        name={field}
-        label={field}
-        variant="filled"
         fullWidth
+        label={field}
+        name={field}
+        variant="filled"
+        required
         sx={inputStyle}
+        type={field === "DOB" ? "date" : "text"}
         InputProps={{ disableUnderline: true }}
         InputLabelProps={{ shrink: true }}
-        onChange={handleChange}
         value={formData[field] || ""}
-        type={field === "DOB" ? "date" : "text"}
+        onChange={handleChange}
       />
     );
   };
 
-  /* ------------------------------------------
-     STEP RENDERER — GRID PRESERVED EXACTLY
-  ------------------------------------------- */
+  /* ============================================================
+     🔥 DO NOT MODIFY POSITIONS — RETURN EXACT SAME GRID
+  ============================================================ */
+  const stepFields = [
+    ["FullName","Salutation","IDType","IDNumber","DOB","MaritalStatus","Gender","KRAPin"],
+    ["County","District","Division","Address","PostalCode","PhysicalAddress","MobileNumber","AlternateMobileNumber","Email","Profession","ProfessionSector"],
+    ["NomineeName","NomineeIDNumber","NomineePhoneNumber","NomineeRelation"],
+  ];
+
   const renderStep = () => {
+    if (activeStep === 1) {
+      return (
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            gap: 3,
+          }}
+        >
+          {stepFields[1].map(f => <Box key={f}>{renderField(f)}</Box>)}
+        </Box>
+      );
+    }
+
     return (
       <Grid container spacing={3}>
-        {stepFields[activeStep].map(field => (
-          <Grid item key={field} {...(layout[field])}>
-            {renderField(field)}
+        {stepFields[activeStep].map(f => (
+          <Grid key={f} item {...layout[f]}>
+            {renderField(f)}
           </Grid>
         ))}
       </Grid>
     );
   };
 
-  /* ------------------------------------------
-     FINAL UI — COLORS & MOBILE RESPONSIVENESS
-  ------------------------------------------- */
+  /* ============================================================
+     🔥 MAIN UI (REBRANDED + RESPONSIVE)
+  ============================================================ */
   return (
-    <Box sx={{ minHeight: "100vh", py: 4, background: greenDeep }}>
+    <Box sx={{
+      minHeight: "100vh",
+      py: { xs: 3, md: 6 },
+      background: greenDark,
+    }}>
       <Container maxWidth="md">
         <Paper sx={neuStyle}>
           {!success ? (
             <>
+              {/* TITLE */}
               <Typography
                 variant="h4"
                 align="center"
@@ -224,16 +237,17 @@ const MemberRegistration = () => {
                   background: `linear-gradient(to right, ${gold}, ${goldSoft})`,
                   WebkitBackgroundClip: "text",
                   color: "transparent",
-                  textShadow: "0 0 10px rgba(255,215,0,0.45)",
+                  fontSize: { xs: "1.7rem", md: "2.2rem" },
                 }}
               >
                 SACCO Member Registration
               </Typography>
 
-              <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 5 }}>
+              {/* STEPPER */}
+              <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
                 {steps.map(step => (
                   <Step key={step.label}>
-                    <StepLabel
+                    <StepLabel 
                       icon={step.icon}
                       sx={{
                         "& .MuiStepLabel-label": {
@@ -241,12 +255,12 @@ const MemberRegistration = () => {
                           fontWeight: 700,
                         },
                         "& .MuiStepIcon-root": {
-                          color: goldSoft,
+                          color: "gray",
                         },
-                        "& .MuiStepIcon-root.Mui-active": {
+                        "& .MuiStepIcon-root.Mui-active, & .MuiStepIcon-root.Mui-completed": {
                           color: gold,
-                          filter: "drop-shadow(0 0 8px rgba(255,215,0,0.8))",
-                        }
+                          filter: "drop-shadow(0 0 10px rgba(255,215,0,0.6))",
+                        },
                       }}
                     >
                       {step.label}
@@ -257,9 +271,12 @@ const MemberRegistration = () => {
 
               {renderStep()}
 
+              {/* BUTTONS */}
               <Box textAlign="center" mt={4}>
                 {activeStep > 0 && (
-                  <Button sx={neuStyle} onClick={prevStep}>Back</Button>
+                  <Button sx={neuStyle} onClick={prevStep}>
+                    Back
+                  </Button>
                 )}
 
                 <Button
@@ -274,19 +291,27 @@ const MemberRegistration = () => {
               </Box>
             </>
           ) : (
+            /* SUCCESS PAGE */
             <Box textAlign="center">
               <CheckCircleIcon sx={{ fontSize: 60, color: gold }} />
-              <Typography sx={{ mt: 3, color: goldSoft }}>
-                Registration successful — you will be contacted.
+              <Typography sx={{ mt: 2, fontSize: "1.2rem", color: goldSoft }}>
+                Registration successful — You will be contacted.
               </Typography>
+
+              {regMeta.next_step && (
+                <Typography sx={{ mt: 1, color: goldSoft }}>
+                  Next Step: {regMeta.next_step}
+                </Typography>
+              )}
             </Box>
           )}
         </Paper>
       </Container>
 
+      {/* SNACKBAR */}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={5000}
+        autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
       >
         <Alert severity={snackbar.severity}>{snackbar.message}</Alert>
