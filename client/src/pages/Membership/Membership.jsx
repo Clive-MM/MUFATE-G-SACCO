@@ -26,6 +26,8 @@ const Membership = () => {
           justifyContent: 'center',
           px: { xs: 2, md: 10 },
           textAlign: 'center',
+
+          /* TEXT SHOULD OVERLAY ABOVE EVERYTHING */
           color: '#fff',
 
           /* DARK GREEN OVERLAY + GOLD GLOW */
@@ -37,20 +39,20 @@ const Membership = () => {
             width: '100%',
             height: '100%',
             background:
-              'linear-gradient(to right, rgba(1, 20, 7, 0.75), rgba(1,20,7,0.3), transparent)',
+              'linear-gradient(to right, rgba(1, 20, 7, 0.75), rgba(1,20,7,0.35), transparent)',
             zIndex: 1,
           },
 
-          /* GOLDEN EDGE GLOW ON TOP */
+          /* GOLDEN EDGE GLOW ON BOTTOM */
           '&::after': {
             content: '""',
             position: 'absolute',
             bottom: 0,
             left: 0,
             width: '100%',
-            height: '20%',
+            height: '22%',
             background:
-              'linear-gradient(to top, rgba(232,196,106,0.25), transparent)',
+              'linear-gradient(to top, rgba(255,215,0,0.28), transparent)',
             zIndex: 1,
           },
         }}
@@ -67,7 +69,7 @@ const Membership = () => {
             py: { xs: 4, md: 6 },
           }}
         >
-          {/* GOLDEN HEADING */}
+          {/* ⭐ GOLD REBRANDED HEADING */}
           <Typography
             variant="h3"
             fontWeight={900}
@@ -75,28 +77,34 @@ const Membership = () => {
             sx={{
               fontSize: { xs: '1.8rem', md: '2.8rem' },
               textTransform: 'uppercase',
-              lineHeight: 1.2,
               letterSpacing: '1px',
-              background: 'linear-gradient(to right, #E8C46A, #F9E7C5)',
+              lineHeight: 1.2,
+
+              /* TRUE SACCO GOLD GRADIENT */
+              background: 'linear-gradient(to right, #FFD700, #FFF4B2)',
               WebkitBackgroundClip: 'text',
               color: 'transparent',
-              textShadow: '0px 0px 10px rgba(232,196,106,0.45)',
+
+              /* SOFT GOLD GLOW */
+              textShadow: '0px 0px 12px rgba(255,215,0,0.65)',
             }}
           >
             Join Us Today and Start Your Journey
           </Typography>
 
-          {/* SUBHEADING */}
+          {/* ⭐ REBRANDED SUBHEADING (Warm Soft Gold) */}
           <Typography
             variant="body1"
             sx={{
               mt: 2,
-              color: '#F9E7C5', // warm soft gold text tone
-              fontSize: { xs: '1rem', md: '1.15rem' },
-              lineHeight: 1.6,
+              color: '#FFECA8', // very readable warm gold
+              fontSize: { xs: '1rem', md: '1.2rem' },
+              lineHeight: 1.65,
               maxWidth: '600px',
               mx: 'auto',
-              textShadow: '0px 0px 6px rgba(0,0,0,0.45)',
+
+              /* Subtle shadow for readability */
+              textShadow: '0px 0px 6px rgba(0,0,0,0.55)',
             }}
           >
             Empowering communities through savings, investment, and unity for a better tomorrow.
@@ -104,6 +112,7 @@ const Membership = () => {
         </Box>
       </Box>
 
+      {/* Additional Sections */}
       <MembershipInfo />
       <JoiningInstructions />
       <MembershipBenefits />
