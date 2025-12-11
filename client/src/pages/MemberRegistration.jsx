@@ -12,16 +12,18 @@ import GroupIcon from "@mui/icons-material/Group";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import axios from "axios";
 
+// ======================================================
 // STEP DEFINITIONS
+// ======================================================
 const steps = [
   { label: "Bio Data", icon: <PersonIcon /> },
   { label: "Contact", icon: <ContactPhoneIcon /> },
   { label: "Nominee", icon: <GroupIcon /> }
 ];
 
-// =======================
-// GOLD BRAND NEUMORPHISM
-// =======================
+// ======================================================
+// GOLD BRAND NEUMORPHISM - SAME FOR ALL WIDGETS
+// ======================================================
 const neuStyle = {
   borderRadius: "18px",
   background: "#011407",
@@ -32,9 +34,9 @@ const neuStyle = {
   },
 };
 
-// =======================
-// GOLD INPUT STYLE
-// =======================
+// ======================================================
+// INPUT STYLING (unchanged logic - only new colors)
+// ======================================================
 const inputStyle = {
   borderRadius: "12px",
   background: "rgba(255,255,255,0.08)",
@@ -55,22 +57,22 @@ const inputStyle = {
   },
 };
 
-// =======================
-// KENYA COUNTIES LIST
-// =======================
+// ======================================================
+// COUNTY LIST
+// ======================================================
 const countiesInKenya = [
   "Baringo","Bomet","Bungoma","Busia","Elgeyo-Marakwet","Embu","Garissa",
   "Homa Bay","Isiolo","Kajiado","Kakamega","Kericho","Kiambu","Kilifi",
   "Kirinyaga","Kisii","Kisumu","Kitui","Kwale","Laikipia","Lamu","Machakos",
-  "Makueni","Mandera","Marsabit","Meru","Migori","Mombasa","Murang'a","Nairobi",
-  "Nakuru","Nandi","Narok","Nyamira","Nyandarua","Nyeri","Samburu","Siaya",
-  "Taita Taveta","Tana River","Tharaka-Nithi","Trans Nzoia","Turkana",
-  "Uasin Gishu","Vihiga","Wajir","West Pokot"
+  "Makueni","Mandera","Marsabit","Meru","Migori","Mombasa","Murang'a",
+  "Nairobi","Nakuru","Nandi","Narok","Nyamira","Nyandarua","Nyeri",
+  "Samburu","Siaya","Taita Taveta","Tana River","Tharaka-Nithi","Trans Nzoia",
+  "Turkana","Uasin Gishu","Vihiga","Wajir","West Pokot"
 ];
 
-// =======================
+// ======================================================
 // SELECT OPTIONS
-// =======================
+// ======================================================
 const selectOptions = {
   IDType: ["ID Card", "Certificate of Incorp", "Group Registration Certificate", "Passport"],
   MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
@@ -82,7 +84,9 @@ const selectOptions = {
   ],
 };
 
-// SAME EXACT GRID LAYOUT (UNCHANGED)
+// ======================================================
+// GRID LAYOUT — NEVER CHANGED
+// ======================================================
 const layout = {
   FullName: { xs: 12, sm: 8, md: 8 },
   Salutation: { xs: 12, sm: 4, md: 4 },
@@ -109,6 +113,9 @@ const layout = {
   NomineeRelation: { xs: 12, sm: 6, md: 6 },
 };
 
+// ======================================================
+// MAIN COMPONENT
+// ======================================================
 const MemberRegistration = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({});
@@ -122,7 +129,7 @@ const MemberRegistration = () => {
     next_step: null, payment: null, member_id: null, email_warning: null,
   });
 
-  // INPUT HANDLER
+  // FORM INPUT HANDLER
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -132,6 +139,7 @@ const MemberRegistration = () => {
   // SUBMIT HANDLER
   const confirmSubmission = async () => {
     setLoading(true);
+
     try {
       const { data } = await axios.post(
         "https://mufate-g-sacco.onrender.com/membership-register",
@@ -147,6 +155,7 @@ const MemberRegistration = () => {
 
       setSuccess(true);
       setSnackbar({ open: true, message: data.message, severity: "success" });
+
     } catch (error) {
       setSnackbar({
         open: true,
@@ -154,10 +163,13 @@ const MemberRegistration = () => {
         severity: "error",
       });
     }
+
     setLoading(false);
   };
 
-  // RENDER FIELD (UNCHANGED LOGIC — ONLY COLORS UPDATED)
+  // ======================================================
+  // FIELD RENDERER — LOGIC UNCHANGED
+  // ======================================================
   const renderField = (field) => {
     // COUNTY DROPDOWN
     if (field === "County") {
@@ -180,7 +192,7 @@ const MemberRegistration = () => {
       );
     }
 
-    // OTHER DROPDOWNS
+    // OTHER SELECT FIELDS
     if (selectOptions[field]) {
       return (
         <FormControl variant="filled" fullWidth required sx={inputStyle}>
@@ -201,7 +213,7 @@ const MemberRegistration = () => {
       );
     }
 
-    // TEXT INPUTS
+    // TEXT INPUT FIELDS
     return (
       <TextField
         fullWidth
@@ -219,7 +231,9 @@ const MemberRegistration = () => {
     );
   };
 
-  // RENDER STEP (NO CHANGES)
+  // ======================================================
+  // STEP RENDERER (UNCHANGED GRID LAYOUT)
+  // ======================================================
   const stepFields = [
     ["FullName","Salutation","IDType","IDNumber","DOB","MaritalStatus","Gender","KRAPin"],
     ["County","District","Division","Address","PostalCode","PhysicalAddress","MobileNumber","AlternateMobileNumber","Email","Profession","ProfessionSector"],
@@ -254,13 +268,17 @@ const MemberRegistration = () => {
     );
   };
 
+  // ======================================================
+  // MAIN RETURN
+  // ======================================================
   return (
     <Box sx={{ minHeight: "100vh", py: 4, background: "#011407" }}>
       <Container maxWidth="md">
         <Paper sx={{ p: 4, ...neuStyle }}>
+          
           {!success ? (
             <>
-              {/* HEADER */}
+              {/* ===== PAGE TITLE ===== */}
               <Typography
                 variant="h4"
                 align="center"
@@ -276,28 +294,78 @@ const MemberRegistration = () => {
                 SACCO Member Registration
               </Typography>
 
-              {/* STEPPER */}
-              <Stepper
-                activeStep={activeStep}
-                alternativeLabel
-                sx={{
-                  "& .MuiStepIcon-root": { color: "#555" },
-                  "& .MuiStepIcon-root.Mui-active, & .MuiStepIcon-root.Mui-completed": {
-                    color: "#FFD700",
-                  },
-                }}
-              >
-                {steps.map((s) => (
-                  <Step key={s.label}>
-                    <StepLabel icon={s.icon}>{s.label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
+              {/* ======================================================
+                   GOLD STEPPER + PROGRESS BAR
+                 ====================================================== */}
+              <Box sx={{ mb: 4 }}>
 
-              {/* FORM CONTENT */}
+                {/* PROGRESS BAR */}
+                <Box
+                  sx={{
+                    height: 6,
+                    width: "100%",
+                    background: "rgba(255,215,0,0.15)",
+                    borderRadius: 3,
+                    overflow: "hidden",
+                    mb: 2,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      height: "100%",
+                      width: `${((activeStep + 1) / steps.length) * 100}%`,
+                      background: "linear-gradient(90deg, #FFD700, #FFF4B5)",
+                      transition: "width 0.5s ease",
+                      boxShadow: "0 0 12px rgba(255,215,0,0.6)",
+                    }}
+                  />
+                </Box>
+
+                {/* STEPPER */}
+                <Stepper
+                  activeStep={activeStep}
+                  alternativeLabel
+                  sx={{
+                    "& .MuiStepConnector-line": {
+                      borderColor: "rgba(255,215,0,0.45)",
+                      borderWidth: 2,
+                    },
+                    "& .MuiStepIcon-root": {
+                      color: "rgba(255,215,0,0.25)",
+                      transition: "0.4s ease",
+                    },
+                    "& .MuiStepIcon-root.Mui-active": {
+                      color: "#FFD700",
+                      filter: "drop-shadow(0 0 8px rgba(255,215,0,1))",
+                      transform: "scale(1.25)",
+                    },
+                    "& .MuiStepIcon-root.Mui-completed": {
+                      color: "#FFD700",
+                      filter: "drop-shadow(0 0 6px rgba(255,215,0,0.8))",
+                    },
+                    "& .MuiStepLabel-label": {
+                      color: "#FFF4B5 !important",
+                      fontWeight: 700,
+                    },
+                    "& .MuiStepLabel-label.Mui-active": {
+                      color: "#FFD700 !important",
+                      fontWeight: 900,
+                      textShadow: "0 0 10px rgba(255,215,0,0.9)",
+                    },
+                  }}
+                >
+                  {steps.map((s) => (
+                    <Step key={s.label}>
+                      <StepLabel icon={s.icon}>{s.label}</StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+              </Box>
+
+              {/* ===== FORM FIELDS ===== */}
               {renderStep()}
 
-              {/* BUTTONS */}
+              {/* ===== NAVIGATION BUTTONS ===== */}
               <Box textAlign="center" mt={3}>
                 {activeStep > 0 && (
                   <Button sx={neuStyle} onClick={prevStep}>Back</Button>
@@ -307,29 +375,31 @@ const MemberRegistration = () => {
                   disabled={loading}
                   onClick={activeStep < steps.length - 1 ? nextStep : confirmSubmission}
                 >
-                  {activeStep < steps.length - 1 ? "Next" : (loading ? "Submitting..." : "Submit")}
+                  {activeStep < steps.length - 1
+                    ? "Next"
+                    : loading
+                    ? "Submitting..."
+                    : "Submit"}
                 </Button>
               </Box>
             </>
           ) : (
+
+            /* SUCCESS SCREEN */
             <Box textAlign="center" sx={{ color: "#FFD700" }}>
               <CheckCircleIcon sx={{ fontSize: 60, color: "#FFD700" }} />
+
               <Typography sx={{ mt: 2 }}>
                 Registration successful! <strong>You will be contacted.</strong>
               </Typography>
 
               {regMeta.next_step && (
-                <Typography sx={{ mt: 1 }}>
-                  Next step: {regMeta.next_step}
-                </Typography>
+                <Typography sx={{ mt: 1 }}>Next step: {regMeta.next_step}</Typography>
               )}
 
               {regMeta.payment?.required && (
                 <Typography sx={{ mt: 1 }}>
-                  Pay <strong>KES {regMeta.payment.amount}</strong>
-                  {regMeta.payment.channel && regMeta.payment.paybill && (
-                    <> via {regMeta.payment.channel} {regMeta.payment.paybill}</>
-                  )}
+                  One-time fee: <strong>KES {regMeta.payment.amount}</strong>
                 </Typography>
               )}
 
