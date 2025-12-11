@@ -69,7 +69,7 @@ const FeedbackForm = () => {
       }}
     >
 
-      {/* RIGHT-SIDE WARM GOLD BARS */}
+      {/* RIGHT GOLD BARS */}
       <motion.div
         initial={{ opacity: 0, x: 120 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -92,8 +92,9 @@ const FeedbackForm = () => {
               key={index}
               initial={{ height: 0 }}
               whileInView={{
-                height: window.innerWidth < 600 ? '45%' :
-                        window.innerWidth < 1024 ? '70%' : '100%'
+                height:
+                  window.innerWidth < 600 ? '45%' :
+                  window.innerWidth < 1024 ? '70%' : '100%'
               }}
               transition={{ duration: 0.9 + index * 0.2 }}
               style={{
@@ -106,16 +107,13 @@ const FeedbackForm = () => {
           ))}
       </motion.div>
 
-      {/* HEADING */}
+      {/* HEADER – updated to CONTACT US gold */}
       <Typography
         variant="h4"
         sx={{
-          background: 'linear-gradient(to right, #E8C46A, #F9E7C5)',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
+          color: '#F4D03F',               // ← NEW BRIGHT GOLD
           fontWeight: 900,
           textTransform: 'uppercase',
-          textShadow: '0 0 12px rgba(232,196,106,0.45)',
           mb: 3,
           zIndex: 2,
           fontSize: { xs: '1.7rem', md: '2.3rem' },
@@ -161,30 +159,29 @@ const FeedbackForm = () => {
               fullWidth
               InputLabelProps={{
                 sx: {
-                  color: '#E8C46A',
-                  fontWeight: 700,
-                  letterSpacing: '0.5px',
+                  color: '#000',       // ← BLACK LABELS
+                  fontWeight: 800,     // ← BOLD TEXT
                 },
               }}
               InputProps={{
                 sx: {
-                  background: 'rgba(255,255,255,0.65)',
+                  background: 'rgba(255,255,255,0.85)',
                   borderRadius: '14px',
                   boxShadow:
-                    'inset 4px 4px 10px rgba(0,0,0,0.25), inset -4px -4px 10px rgba(255,255,255,0.9)',
+                    'inset 3px 3px 8px rgba(0,0,0,0.2), inset -3px -3px 8px rgba(255,255,255,0.9)',
                 },
               }}
             />
           ))}
 
-          {/* SUBMIT BUTTON */}
+          {/* SUBMIT BUTTON – Gold + Dark Green Gradient */}
           <Button
             type="submit"
             variant="contained"
             disabled={loading}
             startIcon={!loading && <SendIcon />}
             sx={{
-              backgroundColor: '#E8C46A',
+              background: 'linear-gradient(90deg, #E8C46A, #D8AF56)',
               color: '#000',
               fontWeight: 900,
               px: { xs: 3, md: 4 },
@@ -193,11 +190,13 @@ const FeedbackForm = () => {
               fontSize: '1rem',
               textTransform: 'uppercase',
               alignSelf: { xs: 'center', md: 'flex-start' },
-              boxShadow: '0 0 25px rgba(232,196,106,0.5)',
+              boxShadow: '0 0 18px rgba(232,196,106,0.6)',
+              transition: '0.3s ease',
               '&:hover': {
-                backgroundColor: '#D8AF56',
-                boxShadow: '0 0 35px rgba(232,196,106,0.7)',
-                transform: 'scale(1.04)',
+                background:
+                  'linear-gradient(90deg, #042F1A, #E8C46A)', // ← DARK GREEN → GOLD
+                boxShadow: '0 0 28px rgba(232,196,106,0.9)',
+                transform: 'scale(1.05)',
               },
             }}
           >
