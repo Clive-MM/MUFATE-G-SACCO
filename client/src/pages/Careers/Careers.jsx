@@ -35,10 +35,10 @@ const Careers = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#f5f5f5',
+          background: 'linear-gradient(to bottom, #011B0A, #012A12)',
         }}
       >
-        <CircularProgress />
+        <CircularProgress sx={{ color: '#E8C46A' }} />
       </Box>
     );
   }
@@ -47,12 +47,13 @@ const Careers = () => {
     <Box
       sx={{
         fontFamily: `'Segoe UI', sans-serif`,
-        background: '#f8fff3',
+        background: 'linear-gradient(to bottom, #011B0A, #012A12)',
         m: 0,
         p: 0,
+        color: '#FFF4B2',
       }}
     >
-      {/* Hero Image 1 Section */}
+      {/* HERO IMAGE SECTION */}
       <Box sx={{ position: 'relative', width: '100%' }}>
         <Box
           component="img"
@@ -66,7 +67,7 @@ const Careers = () => {
           }}
         />
 
-        {/* Updated Hero Image 2 Position */}
+        {/* SECONDARY IMAGE FLOATING CARD */}
         {hero2 && (
           <Box
             sx={{
@@ -93,11 +94,11 @@ const Careers = () => {
                 transition={{ duration: 1 }}
                 whileHover={{
                   scale: 1.03,
-                  boxShadow: '0 0 30px rgba(0, 255, 100, 0.8)',
+                  boxShadow: '0 0 35px rgba(255,215,0,0.55)',
                 }}
                 style={{
                   width: '100%',
-                  borderRadius: '16px',
+                  borderRadius: '18px',
                 }}
               />
             </Box>
@@ -105,42 +106,48 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* Spacer below image */}
+      {/* SPACER BELOW IMAGE */}
       <Box sx={{ height: { xs: 100, sm: 120, md: 160 } }} />
 
-      {/* Description Section */}
+      {/* PAGE DESCRIPTION */}
       <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
         <Typography
           variant="h3"
           sx={{
-            fontWeight: 800,
-            fontSize: { xs: '1.6rem', sm: '2rem', md: '2.8rem' },
-            letterSpacing: '0.5px',
-            color: '#64dd17',
+            fontWeight: 900,
+            fontSize: { xs: '1.6rem', sm: '2rem', md: '2.6rem' },
+            letterSpacing: '1px',
             mb: 2,
             textTransform: 'uppercase',
+            background: 'linear-gradient(to right, #FFD700, #FFF4B2)',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            textShadow: '0 0 18px rgba(255,215,0,0.45)',
           }}
         >
           Careers
         </Typography>
+
         <Typography
           variant="body1"
           sx={{
-            maxWidth: '850px',
+            maxWidth: '900px',
             mx: 'auto',
             fontSize: { xs: '1rem', md: '1.15rem' },
-            lineHeight: 1.8,
-            color: '#050c01ff',
+            lineHeight: 1.85,
+            color: '#FFECA8',
             fontWeight: 500,
-            letterSpacing: '0.3px',
+            textShadow: '0 0 6px rgba(0,0,0,0.35)',
           }}
         >
           {hero1?.Description}
         </Typography>
       </Box>
 
-      {/* Career Listings and Footer */}
+      {/* CAREER LISTINGS */}
       <CareerListing />
+
+      {/* FOOTER */}
       <Footer />
     </Box>
   );
