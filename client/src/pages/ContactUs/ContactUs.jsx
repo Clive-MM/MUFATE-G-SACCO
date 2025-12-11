@@ -4,11 +4,12 @@ import ContactDetails from './ContactDetails';
 import FeedbackForm from './FeedbackForm';
 import Footer from '../../components/Footer';
 
-
 const ContactUs = () => {
   return (
     <>
-      {/* Hero Section */}
+      {/* ===========================
+          HERO SECTION — GOLD BRAND
+      ============================ */}
       <Box
         sx={{
           height: { xs: '80vh', md: '120vh' },
@@ -21,48 +22,73 @@ const ContactUs = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
-          // Adjust vertical alignment to start from the top
-          justifyContent: 'flex-start', 
+          justifyContent: 'flex-start',
           px: { xs: 3, md: 8 },
           py: { xs: 4, md: 6 },
           color: '#fff',
+          zIndex: 1,
         }}
       >
+        {/* Dark overlay for readability */}
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.65))',
+            zIndex: 0,
+          }}
+        />
+
+        {/* =======================
+            TITLE — GOLD GRADIENT
+        ======================== */}
         <Typography
           sx={{
-            fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.5rem' },
-            fontWeight: 'bold',
-            textShadow: '2px 2px 8px rgba(0,0,0,0.6)',
-            zIndex: 1,
-            
-            mt: { xs: '55vh', sm: '60vh', md: '65vh' }, 
+            fontSize: { xs: '1.9rem', sm: '2.4rem', md: '2.8rem' },
+            fontWeight: 900,
+            textTransform: 'uppercase',
+            background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            textShadow: '0 0 12px rgba(0,0,0,0.7)',
+            mt: { xs: '55vh', sm: '60vh', md: '65vh' },
+            zIndex: 2,
           }}
         >
           Let’s Get In Touch
         </Typography>
 
+        {/* ============================
+            SUBTEXT — Soft Gold Text
+        ============================= */}
         <Typography
           sx={{
-            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' },
+            fontSize: { xs: '1.05rem', sm: '1.15rem', md: '1.25rem' },
             mt: 2,
             maxWidth: { xs: '100%', sm: '90%', md: '600px' },
-            fontWeight: 'normal',
-            textShadow: '1px 1px 6px rgba(0,0,0,0.4)',
-            lineHeight: 1.6,
+            lineHeight: 1.7,
+            color: '#FFF4B5',
             fontStyle: 'italic',
-            wordWrap: 'break-word',
-            zIndex: 1,
+            textShadow: '0 0 10px rgba(0,0,0,0.6)',
+            zIndex: 2,
           }}
         >
-          Have any questions or need support? Our team is ready to help you with anything you need.
+          Have any questions or need support? Our team is ready to help you with
+          anything you need.
         </Typography>
       </Box>
 
-      {/* Contact Info Section */}
+      {/* ==============================
+          CONTACT DETAILS  (Already rebranded)
+      =============================== */}
       <ContactDetails />
-      <FeedbackForm/>
-      <Footer/>
-      
+
+      {/* FEEDBACK FORM (Already styled with gold/green) */}
+      <FeedbackForm />
+
+      {/* FOOTER */}
+      <Footer />
     </>
   );
 };
