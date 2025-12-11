@@ -11,12 +11,14 @@ const instructions = [
   'Open a savings account and start making deposits.',
 ];
 
-const GOLD_BARS = ['#E8C46A', '#D8AF56', '#F9E7C5', '#E8C46A'];
+// UPDATED bright gold brand colors
+const GOLD_BARS = ['#FFD700', '#E8C46A', '#F9E7C5', '#D8AF56'];
 
 const JoiningInstructions = () => {
-  // Responsive number of bars
-  const barCount =
-    window.innerWidth < 600 ? 1 : window.innerWidth < 960 ? 2 : 4;
+  const width = window.innerWidth;
+
+  // FIXED: mobile now shows ZERO bars (solves drop issue)
+  const barCount = width < 600 ? 0 : width < 960 ? 2 : 4;
 
   return (
     <Box
@@ -35,44 +37,42 @@ const JoiningInstructions = () => {
         overflow: 'hidden',
       }}
     >
-      {/* GOLD VERTICAL BARS */}
-      <motion.div
-        initial={{ opacity: 0, x: 100 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
-        style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          right: '60px',
-          display: 'flex',
-          flexDirection: 'row',
-          gap: '45px',
-          zIndex: 0,
-        }}
-      >
-        {GOLD_BARS.slice(0, barCount).map((color, index) => (
-          <motion.div
-            key={index}
-            initial={{ height: 0 }}
-            whileInView={{
-              height:
-                window.innerWidth < 600
-                  ? '45%'
-                  : window.innerWidth < 960
-                  ? '70%'
-                  : '100%',
-            }}
-            transition={{ duration: 0.9 + index * 0.25 }}
-            style={{
-              width: window.innerWidth < 600 ? '40px' : '70px',
-              backgroundColor: color,
-              borderRadius: '12px',
-              boxShadow: '0 0 25px rgba(232,196,106,0.45)',
-            }}
-          />
-        ))}
-      </motion.div>
+
+      {/* GOLD VERTICAL BARS — HIDDEN ON MOBILE */}
+      {barCount > 0 && (
+        <motion.div
+          initial={{ opacity: 0, x: 100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            right: '60px',
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '45px',
+            zIndex: 0,
+          }}
+        >
+          {GOLD_BARS.slice(0, barCount).map((color, index) => (
+            <motion.div
+              key={index}
+              initial={{ height: 0 }}
+              whileInView={{
+                height: width < 960 ? '70%' : '100%',
+              }}
+              transition={{ duration: 0.9 + index * 0.25 }}
+              style={{
+                width: width < 960 ? '50px' : '70px',
+                backgroundColor: color,          // UPDATED gold
+                borderRadius: '12px',
+                boxShadow: '0 0 25px rgba(255,215,0,0.55)', // brighter
+              }}
+            />
+          ))}
+        </motion.div>
+      )}
 
       {/* HEADING */}
       <motion.div
@@ -98,7 +98,7 @@ const JoiningInstructions = () => {
         </Typography>
       </motion.div>
 
-      {/* INSTRUCTION LIST */}
+      {/* INSTRUCTIONS */}
       <Box
         component={motion.div}
         initial="hidden"
@@ -129,7 +129,7 @@ const JoiningInstructions = () => {
         ))}
       </Box>
 
-      {/* DOWNLOAD BUTTON */}
+      {/* BUTTON */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -154,7 +154,6 @@ const JoiningInstructions = () => {
               textTransform: 'uppercase',
               borderRadius: '12px',
               boxShadow: '0 0 18px rgba(255,215,0,0.45)',
-              transition: '0.25s ease',
               '&:hover': {
                 background: 'linear-gradient(135deg, #014A21, #0C6E30)',
                 transform: 'scale(1.04)',
