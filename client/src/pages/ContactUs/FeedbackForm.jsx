@@ -52,14 +52,13 @@ const FeedbackForm = () => {
     <Box
       sx={{
         position: 'relative',
-        background: 'linear-gradient(to bottom, #01240F, #011407)', // DARK GREEN BRAND
+        background: 'linear-gradient(to bottom, #01240F, #011407)',
         borderBottomLeftRadius: '16px',
         borderBottomRightRadius: '16px',
-        px: { xs: 2, md: 8 },
-        pt: { xs: 3, md: 6 },
-        pb: { xs: 3, md: 6 },
-        mt: 0,
-        minHeight: '90vh',
+        px: { xs: 2, sm: 4, md: 8 },
+        pt: { xs: 4, md: 6 },
+        pb: { xs: 6, md: 8 },
+        minHeight: { xs: '110vh', sm: '100vh', md: '95vh' },
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
@@ -67,7 +66,7 @@ const FeedbackForm = () => {
       }}
     >
 
-      {/* ➤ GOLD GRADIENT ANIMATED BARS */}
+      {/* GOLD ANIMATED BARS — AUTO-HIDE ON SMALL SCREENS */}
       <motion.div
         initial={{ opacity: 0, x: 100 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -76,11 +75,12 @@ const FeedbackForm = () => {
           position: 'absolute',
           top: 0,
           bottom: 0,
-          right: '70px',
+          right: '5%',
           display: 'flex',
           flexDirection: 'row',
-          gap: '45px',
+          gap: '40px',
           zIndex: 0,
+          opacity: 0.9,
         }}
       >
         {['#FFD700', '#E6C200', '#FFF4B5', '#FFD700', '#E6C200'].map((color, index) => (
@@ -88,18 +88,19 @@ const FeedbackForm = () => {
             key={index}
             initial={{ height: 0 }}
             whileInView={{ height: '100%' }}
-            transition={{ duration: 1 + index * 0.20 }}
+            transition={{ duration: 1 + index * 0.25 }}
             style={{
-              width: '85px',
+              width: '75px',
               backgroundColor: color,
-              borderRadius: '10px',
-              boxShadow: '0 0 20px rgba(255, 215, 0, 0.4)',
+              borderRadius: '12px',
+              boxShadow: '0 0 25px rgba(255, 215, 0, 0.45)',
+              display: index < 3 ? 'block' : { xs: 'none', sm: 'block' }, // smarter hiding
             }}
           />
         ))}
       </motion.div>
 
-      {/* ➤ HEADER */}
+      {/* HEADER */}
       <Typography
         variant="h4"
         sx={{
@@ -108,42 +109,43 @@ const FeedbackForm = () => {
           background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
           WebkitBackgroundClip: 'text',
           color: 'transparent',
-          textShadow: '0 0 12px rgba(255,215,0,0.25)',
-          fontSize: { xs: '1.6rem', md: '2.4rem' },
-          mb: 3,
+          textShadow: '0 0 14px rgba(255,215,0,0.4)',
+          fontSize: { xs: '1.7rem', md: '2.4rem' },
+          mb: { xs: 3, md: 4 },
           zIndex: 2,
+          textAlign: { xs: 'center', md: 'left' },
         }}
       >
         We Value Your Feedback
       </Typography>
 
-      {/* ➤ FEEDBACK FORM */}
+      {/* FEEDBACK FORM */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
+        style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
       >
         <Box
           component="form"
           onSubmit={handleSubmit}
           sx={{
             zIndex: 3,
-            maxWidth: { xs: '100%', md: '650px' },
             width: '100%',
-
+            maxWidth: { xs: '100%', sm: '90%', md: '650px' },
             backdropFilter: 'blur(18px)',
-            background: 'rgba(255, 255, 255, 0.08)', // TRANSPARENT GLASS BOX
+            background: 'rgba(255, 255, 255, 0.12)', // improved frosted glass
             borderRadius: '24px',
-            padding: { xs: 2.5, md: 4 },
+            padding: { xs: 2.5, sm: 3, md: 4 },
             boxShadow:
-              '0 8px 32px rgba(0,0,0,0.3), inset 0 0 25px rgba(255,215,0,0.08)',
+              '0 8px 32px rgba(0,0,0,0.35), inset 0 0 18px rgba(255,215,0,0.12)',
             display: 'flex',
             flexDirection: 'column',
             gap: 3,
           }}
         >
 
-          {/* INPUT FIELDS */}
+          {/* INPUTS */}
           {['Email', 'Subject', 'Message'].map((field, i) => (
             <TextField
               key={i}
@@ -154,25 +156,26 @@ const FeedbackForm = () => {
               fullWidth
               required
               multiline={field === 'Message'}
-              rows={field === 'Message' ? 4 : 1}
+              rows={field === 'Message' ? 5 : 1}
               variant="outlined"
               InputLabelProps={{
                 sx: {
-                  color: '#FFF4B5', // ⭐ MUCH MORE VISIBLE SOFT GOLD LABEL
+                  color: '#FFEFA8',
                   fontWeight: 700,
-                  letterSpacing: '0.5px',
+                  letterSpacing: '0.6px',
+                  fontSize: '1rem',
                 }
               }}
               InputProps={{
                 sx: {
-                  background: 'rgba(255,255,255,0.5)',
+                  background: 'rgba(255,255,255,0.75)',
                   borderRadius: '14px',
-                  color: '#01240F', // dark green text inside input
+                  color: '#01240F',
                   fontWeight: 600,
                   boxShadow:
-                    'inset 4px 4px 10px rgba(0,0,0,0.2), inset -4px -4px 10px rgba(255,255,255,0.8)',
+                    'inset 4px 4px 10px rgba(0,0,0,0.25), inset -4px -4px 10px rgba(255,255,255,0.9)',
                   '& fieldset': {
-                    borderColor: 'rgba(255,215,0,0.4)', // subtle gold border
+                    borderColor: 'rgba(255,215,0,0.45)',
                   },
                   '&:hover fieldset': {
                     borderColor: '#FFD700',
@@ -186,7 +189,7 @@ const FeedbackForm = () => {
             />
           ))}
 
-          {/* ➤ SUBMIT BUTTON */}
+          {/* SUBMIT BUTTON */}
           <Button
             type="submit"
             variant="contained"
@@ -196,17 +199,17 @@ const FeedbackForm = () => {
               backgroundColor: '#FFD700',
               color: '#000',
               fontWeight: 900,
-              px: 4,
+              px: { xs: 4, sm: 5 },
               py: 1.5,
               borderRadius: '14px',
               textTransform: 'uppercase',
-              fontSize: '1rem',
-              boxShadow: '0 0 20px rgba(255,215,0,0.6)',
-              alignSelf: 'flex-start',
+              fontSize: { xs: '0.9rem', sm: '1rem' },
+              boxShadow: '0 0 22px rgba(255,215,0,0.65)',
+              alignSelf: { xs: 'center', md: 'flex-start' },
               '&:hover': {
                 backgroundColor: '#E6C200',
-                transform: 'scale(1.05)',
-                boxShadow: '0 0 25px rgba(255,215,0,0.85)',
+                transform: 'scale(1.07)',
+                boxShadow: '0 0 28px rgba(255,215,0,0.9)',
               }
             }}
           >
