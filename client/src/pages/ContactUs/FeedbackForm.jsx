@@ -69,9 +69,7 @@ const FeedbackForm = () => {
       }}
     >
 
-      {/* --------------------------
-          RIGHT-SIDE RESPONSIVE BARS
-      --------------------------- */}
+      {/* RIGHT-SIDE WARM GOLD BARS */}
       <motion.div
         initial={{ opacity: 0, x: 120 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -87,8 +85,7 @@ const FeedbackForm = () => {
           zIndex: 0,
         }}
       >
-        {/** Desktop 5 bars, Tablet 3 bars, Mobile 2 bars */}
-        {['#F5D679', '#E6C86E', '#FFF4DA', '#F5D679', '#E6C86E']
+        {['#E8C46A', '#D8AF56', '#F9E7C5', '#E8C46A', '#D8AF56']
           .slice(0, window.innerWidth < 600 ? 2 : window.innerWidth < 1024 ? 3 : 5)
           .map((color, index) => (
             <motion.div
@@ -103,24 +100,22 @@ const FeedbackForm = () => {
                 width: window.innerWidth < 600 ? '40px' : '70px',
                 backgroundColor: color,
                 borderRadius: '12px',
-                boxShadow: '0 0 25px rgba(245, 214, 121, 0.45)',
+                boxShadow: '0 0 25px rgba(232,196,106,0.45)',
               }}
             />
           ))}
       </motion.div>
 
-      {/* --------------------------
-          HEADING
-      --------------------------- */}
+      {/* HEADING */}
       <Typography
         variant="h4"
         sx={{
-          background: 'linear-gradient(to right, #F5D679, #FFF4DA)',
+          background: 'linear-gradient(to right, #E8C46A, #F9E7C5)',
           WebkitBackgroundClip: 'text',
           color: 'transparent',
           fontWeight: 900,
           textTransform: 'uppercase',
-          textShadow: '0 0 12px rgba(245,214,121,0.45)',
+          textShadow: '0 0 12px rgba(232,196,106,0.45)',
           mb: 3,
           zIndex: 2,
           fontSize: { xs: '1.7rem', md: '2.3rem' },
@@ -130,9 +125,7 @@ const FeedbackForm = () => {
         We Value Your Feedback
       </Typography>
 
-      {/* --------------------------
-          FORM CONTAINER
-      --------------------------- */}
+      {/* FORM */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -168,7 +161,7 @@ const FeedbackForm = () => {
               fullWidth
               InputLabelProps={{
                 sx: {
-                  color: '#F5D679',
+                  color: '#E8C46A',
                   fontWeight: 700,
                   letterSpacing: '0.5px',
                 },
@@ -191,7 +184,7 @@ const FeedbackForm = () => {
             disabled={loading}
             startIcon={!loading && <SendIcon />}
             sx={{
-              backgroundColor: '#F5D679',
+              backgroundColor: '#E8C46A',
               color: '#000',
               fontWeight: 900,
               px: { xs: 3, md: 4 },
@@ -200,10 +193,10 @@ const FeedbackForm = () => {
               fontSize: '1rem',
               textTransform: 'uppercase',
               alignSelf: { xs: 'center', md: 'flex-start' },
-              boxShadow: '0 0 25px rgba(245,214,121,0.5)',
+              boxShadow: '0 0 25px rgba(232,196,106,0.5)',
               '&:hover': {
-                backgroundColor: '#E6C86E',
-                boxShadow: '0 0 35px rgba(245,214,121,0.7)',
+                backgroundColor: '#D8AF56',
+                boxShadow: '0 0 35px rgba(232,196,106,0.7)',
                 transform: 'scale(1.04)',
               },
             }}
