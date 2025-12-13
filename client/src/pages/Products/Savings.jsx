@@ -37,7 +37,7 @@ const SavingsProducts = () => {
   }, []);
 
   useEffect(() => {
-    AOS.init({ duration: 900, once: true });
+    AOS.init({ duration: 1000 });
   }, []);
 
   const handleExpandClick = (index) => {
@@ -64,42 +64,39 @@ const SavingsProducts = () => {
     autoplaySpeed: 4500,
     arrows: true,
     responsive: [
-      { breakpoint: 768, settings: { slidesToShow: 1 } }
+      {
+        breakpoint: 768,
+        settings: { slidesToShow: 1 }
+      }
     ]
   };
 
   return (
-    <Box
-      sx={{
-        background: 'linear-gradient(to bottom, #0B3D2E, #124E3B)',
-        py: 7
-      }}
-    >
-      {/* Title */}
+    <Box sx={{ background: 'linear-gradient(to bottom, #0B3D2E, #124E3B)', py: 6 }}>
       <Typography
         variant="h5"
         align="center"
         sx={{
           color: '#C9A227',
-          fontWeight: 800,
+          fontWeight: 'bold',
           textTransform: 'uppercase',
           mb: 4,
-          letterSpacing: '1.5px',
-          textShadow: '0 0 8px rgba(201,162,39,0.6)'
+          letterSpacing: '1px',
+          textShadow: '0 0 6px rgba(201,162,39,0.6)'
         }}
       >
-        Golden Generation Savings Products
+        Savings Products
       </Typography>
 
-      {/* Search */}
-      <Box sx={{ maxWidth: 420, mx: 'auto', mb: 5 }}>
+      <Box sx={{ maxWidth: 400, mx: 'auto', mb: 4 }}>
         <TextField
           fullWidth
+          variant="outlined"
           placeholder="Search savings product..."
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{
             backgroundColor: '#fff',
-            borderRadius: 3,
+            borderRadius: 2,
             '& fieldset': {
               borderColor: '#C9A227'
             }
@@ -107,131 +104,196 @@ const SavingsProducts = () => {
         />
       </Box>
 
-      {/* Content */}
       <Box sx={{ maxWidth: '1200px', mx: 'auto', px: 2 }}>
         {searchTerm ? (
           uniqueFilteredSavings.map((item, index) => (
             <Box key={item.ProductID} px={2} mb={4}>
-              <SavingsCard
-                item={item}
-                index={index}
-                expanded={expanded}
-                handleExpandClick={handleExpandClick}
-              />
+              <Card
+                data-aos="zoom-in"
+                sx={{
+                  borderRadius: '20px',
+                  backgroundColor: '#fff',
+                  boxShadow: 4,
+                  transition: 'transform 0.4s ease, box-shadow 0.4s ease',
+                  '&:hover': {
+                    transform: 'scale(1.03)',
+                    boxShadow: '0 0 25px rgba(201,162,39,0.6)',
+                    border: '2px solid #C9A227'
+                  },
+                  maxWidth: 500,
+                  mx: 'auto'
+                }}
+              >
+                <CardHeader
+                  avatar={
+                    <Avatar sx={{ bgcolor: '#0B3D2E' }}>
+                      <SavingsIcon sx={{ color: '#C9A227' }} />
+                    </Avatar>
+                  }
+                  title={item.ProductName}
+                />
+
+                {item.ImageURL && (
+                  <CardMedia
+                    component="img"
+                    height="250"
+                    image={item.ImageURL}
+                    alt={item.ProductName}
+                    sx={{ objectFit: 'cover' }}
+                  />
+                )}
+
+                <CardContent>
+                  <Typography variant="body2" sx={{ color: '#555' }}>
+                    {item.Intro}
+                  </Typography>
+                </CardContent>
+
+                <CardActions disableSpacing>
+                  <IconButton
+                    onClick={() => handleExpandClick(index)}
+                    aria-expanded={expanded === index}
+                    sx={{
+                      marginLeft: 'auto',
+                      color: '#0B3D2E',
+                      transform: expanded === index ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.3s ease',
+                      '&:hover': {
+                        color: '#C9A227',
+                        transform: 'scale(1.2) rotate(180deg)'
+                      }
+                    }}
+                  >
+                    <ExpandMoreIcon />
+                  </IconButton>
+                </CardActions>
+
+                <Collapse in={expanded === index} timeout="auto" unmountOnExit>
+                  <CardContent>
+                    {item.Features && (
+                      <Box mb={2}>
+                        <Typography sx={{ fontWeight: 'bold', color: '#1E6F43' }}>
+                          Features
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#444' }}>
+                          {item.Features}
+                        </Typography>
+                      </Box>
+                    )}
+                    {item.Benefits && (
+                      <Box>
+                        <Typography sx={{ fontWeight: 'bold', color: '#1E6F43' }}>
+                          Benefits
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#444' }}>
+                          {item.Benefits}
+                        </Typography>
+                      </Box>
+                    )}
+                  </CardContent>
+                </Collapse>
+              </Card>
             </Box>
           ))
         ) : (
           <Slider {...sliderSettings}>
             {uniqueFilteredSavings.map((item, index) => (
               <Box key={item.ProductID} px={2}>
-                <SavingsCard
-                  item={item}
-                  index={index}
-                  expanded={expanded}
-                  handleExpandClick={handleExpandClick}
-                />
+                <Card
+                  data-aos="zoom-in"
+                  sx={{
+                    borderRadius: '20px',
+                    backgroundColor: '#fff',
+                    boxShadow: 4,
+                    transition: 'transform 0.4s ease, box-shadow 0.4s ease',
+                    '&:hover': {
+                      transform: 'scale(1.03)',
+                      boxShadow: '0 0 25px rgba(201,162,39,0.6)',
+                      border: '2px solid #C9A227'
+                    },
+                    maxWidth: 500,
+                    mx: 'auto'
+                  }}
+                >
+                  <CardHeader
+                    avatar={
+                      <Avatar sx={{ bgcolor: '#0B3D2E' }}>
+                        <SavingsIcon sx={{ color: '#C9A227' }} />
+                      </Avatar>
+                    }
+                    title={item.ProductName}
+                  />
+
+                  {item.ImageURL && (
+                    <CardMedia
+                      component="img"
+                      height="300"
+                      image={item.ImageURL}
+                      alt={item.ProductName}
+                      sx={{ objectFit: 'cover' }}
+                    />
+                  )}
+
+                  <CardContent>
+                    <Typography variant="body2" sx={{ color: '#555' }}>
+                      {item.Intro}
+                    </Typography>
+                  </CardContent>
+
+                  <CardActions disableSpacing>
+                    <IconButton
+                      onClick={() => handleExpandClick(index)}
+                      aria-expanded={expanded === index}
+                      sx={{
+                        marginLeft: 'auto',
+                        color: '#0B3D2E',
+                        transform: expanded === index ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease',
+                        '&:hover': {
+                          color: '#C9A227',
+                          transform: 'scale(1.2) rotate(180deg)'
+                        }
+                      }}
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </CardActions>
+
+                  <Collapse in={expanded === index} timeout="auto" unmountOnExit>
+                    <CardContent>
+                      {item.Features && (
+                        <Box mb={2}>
+                          <Typography sx={{ fontWeight: 'bold', color: '#1E6F43' }}>
+                            Features
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#444' }}>
+                            {item.Features}
+                          </Typography>
+                        </Box>
+                      )}
+                      {item.Benefits && (
+                        <Box>
+                          <Typography sx={{ fontWeight: 'bold', color: '#1E6F43' }}>
+                            Benefits
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#444' }}>
+                            {item.Benefits}
+                          </Typography>
+                        </Box>
+                      )}
+                    </CardContent>
+                  </Collapse>
+                </Card>
               </Box>
             ))}
           </Slider>
         )}
       </Box>
 
-      {/* Gold Divider */}
-      <Box sx={{ height: '22px', backgroundColor: '#C9A227', mt: 7 }} />
-
+      <Box sx={{ height: '20px', backgroundColor: '#C9A227', mt: 6 }} />
       <Footer />
     </Box>
   );
 };
-
-/* ===================== */
-/* Reusable Card Component */
-/* ===================== */
-const SavingsCard = ({ item, index, expanded, handleExpandClick }) => (
-  <Card
-    data-aos="zoom-in"
-    sx={{
-      borderRadius: '22px',
-      backgroundColor: '#F9FAF7',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-      transition: 'all 0.4s ease',
-      '&:hover': {
-        transform: 'translateY(-6px)',
-        boxShadow: '0 0 30px rgba(201,162,39,0.6)',
-        border: '2px solid #C9A227'
-      },
-      maxWidth: 520,
-      mx: 'auto'
-    }}
-  >
-    <CardHeader
-      avatar={
-        <Avatar sx={{ bgcolor: '#0B3D2E' }}>
-          <SavingsIcon sx={{ color: '#C9A227' }} />
-        </Avatar>
-      }
-      title={
-        <Typography sx={{ fontWeight: 700, color: '#0B3D2E' }}>
-          {item.ProductName}
-        </Typography>
-      }
-    />
-
-    {item.ImageURL && (
-      <CardMedia
-        component="img"
-        height="280"
-        image={item.ImageURL}
-        alt={item.ProductName}
-        sx={{ objectFit: 'cover' }}
-      />
-    )}
-
-    <CardContent>
-      <Typography variant="body2" sx={{ color: '#333' }}>
-        {item.Intro}
-      </Typography>
-    </CardContent>
-
-    <CardActions disableSpacing>
-      <IconButton
-        onClick={() => handleExpandClick(index)}
-        sx={{
-          marginLeft: 'auto',
-          color: '#0B3D2E',
-          transform: expanded === index ? 'rotate(180deg)' : 'rotate(0deg)',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            color: '#C9A227',
-            transform: 'scale(1.2) rotate(180deg)'
-          }
-        }}
-      >
-        <ExpandMoreIcon />
-      </IconButton>
-    </CardActions>
-
-    <Collapse in={expanded === index} timeout="auto" unmountOnExit>
-      <CardContent>
-        {item.Features && (
-          <Box mb={2}>
-            <Typography sx={{ fontWeight: 700, color: '#1E6F43' }}>
-              Features
-            </Typography>
-            <Typography variant="body2">{item.Features}</Typography>
-          </Box>
-        )}
-        {item.Benefits && (
-          <Box>
-            <Typography sx={{ fontWeight: 700, color: '#1E6F43' }}>
-              Benefits
-            </Typography>
-            <Typography variant="body2">{item.Benefits}</Typography>
-          </Box>
-        )}
-      </CardContent>
-    </Collapse>
-  </Card>
-);
 
 export default SavingsProducts;
