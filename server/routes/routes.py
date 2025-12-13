@@ -1451,25 +1451,16 @@ def view_management():
     return jsonify(result), 200
 
 
-#view resources
+# view active resources (recent first)
 @routes.route('/resources/recent', methods=['GET'])
 def get_recent_resources():
     try:
-        recent_titles = [
-            "Institutions Loan Application Form",
-            "Member Application Form",
-            "Mobile Banking Application",
-            "MUFATE G SACCO Bronchure",
-            "Specimen Capture Form",
-            "Benevolent Claim Form",
-            "Benevolent Fund Application Form"
-        ]
-
-        # Only fetch active and recently added resources
-        resources = Resources.query.filter(
-            Resources.IsActiveID == 1,
-            Resources.Title.in_(recent_titles)
-        ).order_by(Resources.UploadedAt.desc()).all()
+        resources = (
+            Resources.query
+            .filter(Resources.IsActiveID == 1)
+            .order_by(Resources.UploadedAt.desc())
+            .all()
+        )
 
         resource_list = []
         for resource in resources:
@@ -1477,15 +1468,20 @@ def get_recent_resources():
                 'ResourceID': resource.ResourceID,
                 'Title': resource.Title,
                 'FilePath': resource.FilePath,
-                'UploadedAt': resource.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
+                'UploadedAt': (
+                    resource.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
+                    if resource.UploadedAt else None
+                )
             })
 
         return jsonify({'resources': resource_list}), 200
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': '❌ Failed to fetch recent resources.', 'error': str(e)}), 500
+        return jsonify({
+            'message': '❌ Failed to fetch resources.',
+            'error': str(e)
+        }), 500
+
 
 
 # Route to fetch career hero image
