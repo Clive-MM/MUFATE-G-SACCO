@@ -1457,7 +1457,7 @@ def get_recent_resources():
     try:
         recent_titles = [
             "Institutions Loan Application Form",
-            "Member Application Document",
+            "Member Application Form",
             "Mobile Banking Application",
             "MUFATE G SACCO Bronchure",
             "Specimen Capture Form",
