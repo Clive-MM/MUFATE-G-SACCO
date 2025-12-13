@@ -1,29 +1,33 @@
-// src/pages/Products/LoanCalculator.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import "./LoanCalculator.css";
 import Footer from "../../components/Footer";
 
-// Point to your backend; allow override via env
+/* Backend base URL */
 const API_BASE =
   process.env.REACT_APP_API_BASE?.replace(/\/$/, "") ||
   "https://mufate-g-sacco.onrender.com";
 
-// ---- helpers --------------------------------------------------
+/* ---------------- Helpers ---------------- */
 async function getJSON(url, opts) {
   const r = await fetch(url, opts);
   const ct = r.headers.get("content-type") || "";
   const isJSON = ct.includes("application/json");
+
   if (!r.ok) {
     const body = isJSON ? await r.json() : await r.text();
     const msg = isJSON ? body?.message || JSON.stringify(body) : body.slice(0, 240);
     throw new Error(`${r.status} ${r.statusText} – ${msg}`);
   }
+
   if (!isJSON) throw new Error("Expected JSON response from server.");
   return r.json();
 }
 
 const fmtKES = (n) =>
-  (n ?? 0).toLocaleString("en-KE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  (n ?? 0).toLocaleString("en-KE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
 const todayISO = () => {
   const d = new Date();
@@ -32,12 +36,12 @@ const todayISO = () => {
   return `${d.getFullYear()}-${mm}-${dd}`;
 };
 
-// ---- component ------------------------------------------------
+/* ---------------- Component ---------------- */
 export default function LoanCalculator() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedKey, setSelectedKey] = useState("");
-  const [ratePct, setRatePct] = useState(0); // display as percentage
+  const [ratePct, setRatePct] = useState(0);
   const [defaultMonths, setDefaultMonths] = useState(0);
   const [months, setMonths] = useState("");
   const [principal, setPrincipal] = useState("");
@@ -46,7 +50,7 @@ export default function LoanCalculator() {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState("");
 
-  // Load products
+  /* Load loan products */
   useEffect(() => {
     (async () => {
       try {
@@ -54,6 +58,7 @@ export default function LoanCalculator() {
         const js = await getJSON(`${API_BASE}/loan/products`);
         const items = js.items || [];
         setProducts(items);
+
         if (items.length) {
           const first = items[0];
           setSelectedKey(first.ProductKey);
@@ -68,7 +73,7 @@ export default function LoanCalculator() {
     })();
   }, []);
 
-  // Keep UI in sync when product changes
+  /* Sync UI when product changes */
   const currentProduct = useMemo(
     () => products.find((p) => p.ProductKey === selectedKey),
     [products, selectedKey]
@@ -81,7 +86,7 @@ export default function LoanCalculator() {
     setMonths(String(currentProduct.DefaultTermMonths));
   }, [currentProduct]);
 
-  // Calculate schedule
+  /* Calculate schedule */
   const onCalculate = async () => {
     setError("");
     setSchedule([]);
@@ -90,8 +95,9 @@ export default function LoanCalculator() {
     if (!selectedKey) return setError("Select a loan product.");
     const P = Number(principal);
     const n = Number(months);
+
     if (!P || P <= 0) return setError("Enter a valid principal amount.");
-    if (!n || n <= 0) return setError("Enter a valid period (months).");
+    if (!n || n <= 0) return setError("Enter a valid repayment period.");
 
     setLoading(true);
     try {
@@ -102,9 +108,10 @@ export default function LoanCalculator() {
           product_key: selectedKey,
           principal: P,
           start_date: startDate,
-          term_months: n
-        })
+          term_months: n,
+        }),
       });
+
       setSchedule(js.schedule || []);
       setSummary(js.summary || null);
     } catch (e) {
@@ -114,20 +121,16 @@ export default function LoanCalculator() {
     }
   };
 
-  // Smart reset
+  /* Reset form */
   const onReset = () => {
-    const baseline = products[0];
-    if (baseline) {
-      setSelectedKey(baseline.ProductKey);
-      setRatePct(Number(baseline.MonthlyInterestRate) * 100);
-      setDefaultMonths(baseline.DefaultTermMonths);
-      setMonths(String(baseline.DefaultTermMonths));
-    } else {
-      setSelectedKey("");
-      setRatePct(0);
-      setDefaultMonths(0);
-      setMonths("");
+    const base = products[0];
+    if (base) {
+      setSelectedKey(base.ProductKey);
+      setRatePct(Number(base.MonthlyInterestRate) * 100);
+      setDefaultMonths(base.DefaultTermMonths);
+      setMonths(String(base.DefaultTermMonths));
     }
+
     setPrincipal("");
     setStartDate(todayISO());
     setSchedule([]);
@@ -135,15 +138,19 @@ export default function LoanCalculator() {
     setError("");
   };
 
-  // Export CSV
+  /* Export CSV */
   const exportCSV = () => {
-    if (!schedule?.length) return;
+    if (!schedule.length) return;
+
     const header = ["Period,Date,Principal,Interest,Total,Balance"];
-    const rows = schedule.map((row) =>
-      [row.period, row.date, row.principal, row.interest, row.total, row.balance].join(",")
+    const rows = schedule.map((r) =>
+      [r.period, r.date, r.principal, r.interest, r.total, r.balance].join(",")
     );
-    const csv = [...header, ...rows].join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+
+    const blob = new Blob([header.join("\n"), ...rows].join("\n"), {
+      type: "text/csv;charset=utf-8;",
+    });
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -152,19 +159,21 @@ export default function LoanCalculator() {
     URL.revokeObjectURL(url);
   };
 
+  /* ---------------- UI ---------------- */
   return (
     <div className="lc-page">
       <div className="lc-header">
         <h1>Loan Calculator</h1>
-        <p>Plan your repayments with MUFATE G SACCO</p>
+        <p>
+          Plan your repayments with <b>Golden Generation DT SACCO</b>
+        </p>
       </div>
 
       <div className="lc-grid">
-        {/* inputs */}
+        {/* INPUTS */}
         <div className="card neo">
           <div className="card-title">Inputs</div>
 
-          {/* compact row for Loan Type + Start Date */}
           <div className="compact-row">
             <label className="field compact">
               <span>Loan Type</span>
@@ -174,7 +183,7 @@ export default function LoanCalculator() {
                 onChange={(e) => setSelectedKey(e.target.value)}
                 disabled={!products.length}
               >
-                {!products.length && <option value="">(No products)</option>}
+                {!products.length && <option>(No products)</option>}
                 {products.map((p) => (
                   <option key={p.ProductKey} value={p.ProductKey}>
                     {p.LoanName}
@@ -199,6 +208,7 @@ export default function LoanCalculator() {
               <span>Rate (per month)</span>
               <input className="input" value={`${ratePct.toFixed(2)} %`} readOnly />
             </label>
+
             <label className="field">
               <span>Default Months</span>
               <input className="input" value={defaultMonths} readOnly />
@@ -207,14 +217,13 @@ export default function LoanCalculator() {
 
           <div className="field-row">
             <label className="field">
-              <span>Months (editable)</span>
+              <span>Months</span>
               <input
                 className="input"
                 type="number"
                 min={1}
                 value={months}
                 onChange={(e) => setMonths(e.target.value)}
-                disabled={!products.length}
               />
             </label>
 
@@ -224,7 +233,6 @@ export default function LoanCalculator() {
                 className="input"
                 type="number"
                 min={1}
-                step="1"
                 placeholder="e.g. 100000"
                 value={principal}
                 onChange={(e) => setPrincipal(e.target.value)}
@@ -235,43 +243,26 @@ export default function LoanCalculator() {
           {error && <div className="alert">{error}</div>}
 
           <div className="actions">
-            <button className="btn-brand" disabled={loading || !products.length} onClick={onCalculate}>
+            <button className="btn-brand" onClick={onCalculate} disabled={loading}>
               {loading ? "Calculating…" : "Calculate"}
             </button>
-            <button className="btn-ghost" disabled={loading} onClick={onReset}>
+            <button className="btn-ghost" onClick={onReset} disabled={loading}>
               Reset
             </button>
           </div>
         </div>
 
-        {/* summary */}
+        {/* SUMMARY */}
         <div className="card neo">
           <div className="card-title">Summary</div>
+
           {!summary ? (
-            <div className="muted">
-              {products.length ? "Run a calculation to see totals." : "No active products found."}
-            </div>
+            <div className="muted">Run a calculation to view results.</div>
           ) : (
             <div className="chips">
               <div className="chip">
-                <div className="k">Loan</div>
+                <div className="k">Loan Amount</div>
                 <div className="v">KES {fmtKES(summary.Principal)}</div>
-              </div>
-              {summary.MonthlyPrincipal != null && (
-                <div className="chip">
-                  <div className="k">Monthly Principal</div>
-                  <div className="v">KES {fmtKES(summary.MonthlyPrincipal)}</div>
-                </div>
-              )}
-              {summary.EMI != null && (
-                <div className="chip">
-                  <div className="k">Monthly Installment</div>
-                  <div className="v">KES {fmtKES(summary.EMI)}</div>
-                </div>
-              )}
-              <div className="chip">
-                <div className="k">First Month Interest</div>
-                <div className="v">KES {fmtKES(summary.FirstMonthInterest)}</div>
               </div>
               <div className="chip">
                 <div className="k">Total Interest</div>
@@ -286,24 +277,24 @@ export default function LoanCalculator() {
         </div>
       </div>
 
-      {/* schedule */}
+      {/* SCHEDULE */}
       <div className="card neo">
         <div className="card-title row">
           <span>Repayment Schedule</span>
           <div className="spacer" />
-          <button className="btn-ghost" disabled={!schedule.length} onClick={exportCSV}>
+          <button className="btn-ghost" onClick={exportCSV} disabled={!schedule.length}>
             Export CSV
           </button>
         </div>
 
         {!schedule.length ? (
-          <div className="muted">No schedule yet.</div>
+          <div className="muted">No schedule generated.</div>
         ) : (
           <div className="table-wrap">
             <table className="table">
               <thead>
                 <tr>
-                  <th>Installment Number</th>
+                  <th>#</th>
                   <th>Date</th>
                   <th>Principal</th>
                   <th>Interest</th>
@@ -328,15 +319,14 @@ export default function LoanCalculator() {
         )}
       </div>
 
-      <div className="note" role="note" aria-live="polite">
-  <span className="note-icon">i</span>
-  <span className="note-text">
-    <strong>Important:</strong> This is an indicative schedule. Final terms are subject to approval by <b>MUFATE G SACCO</b>.
-  </span>
-</div>
+      <div className="note">
+        <span className="note-icon">i</span>
+        <span className="note-text">
+          <strong>Important:</strong> This calculator provides indicative values.
+          Final approval rests with <b>Golden Generation DT SACCO</b>.
+        </span>
+      </div>
 
-
-      {/* footer only – orange divider removed */}
       <Footer />
     </div>
   );
