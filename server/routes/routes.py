@@ -281,13 +281,8 @@ def upload_image():
     
 #upload a resource.
 @routes.route('/resources/upload', methods=['POST'])
-@jwt_required()
 def upload_resource():
     try:
-        current_user = get_jwt_identity()
-        if current_user['role'].lower() != 'admin':
-            return jsonify({'message': '❌ Access denied! Only admins can upload resources.'}), 403
-
         title = request.form.get('Title')
         file = request.files.get('file')
         is_active_id = request.form.get('IsActiveID')
@@ -295,24 +290,32 @@ def upload_resource():
         if not title or not file or not is_active_id:
             return jsonify({'message': '❌ Title, file, and IsActiveID are required!'}), 400
 
-        # Extract file extension
         filename = file.filename
-        extension = filename.split('.')[-1]
+        extension = filename.split('.')[-1].lower()
 
-        # Upload to Cloudinary as raw file type
-        upload_result = cloudinary.uploader.upload(file, resource_type='raw')
+        # FIX: Use auto resource type
+        upload_result = cloudinary.uploader.upload(
+            file,
+            resource_type="auto",
+            overwrite=True,
+            use_filename=True,
+            unique_filename=False
+        )
 
-        # Defensive: check if secure_url exists
-        if 'public_id' not in upload_result or 'version' not in upload_result:
-            return jsonify({'message': '❌ Upload failed.', 'cloudinary_response': upload_result}), 500
+        # Defensive check
+        if "public_id" not in upload_result:
+            return jsonify({
+                'message': '❌ Upload failed.',
+                'cloudinary_response': upload_result
+            }), 500
 
-        public_id = upload_result['public_id']
-        version = upload_result['version']
+        public_id = upload_result["public_id"]
+        format = upload_result.get("format", extension)
 
-        # Force download link (fl_attachment adds download prompt)
-        file_url = f"https://res.cloudinary.com/djydkcx01/raw/upload/fl_attachment:{public_id}/v{version}/{public_id}.{extension}"
+        # Force download URL
+        file_url = f"https://res.cloudinary.com/djydkcx01/raw/upload/fl_attachment/{public_id}.{format}"
 
-        # Save to database
+        # Save in DB
         new_resource = Resources(
             Title=title,
             FilePath=file_url,
@@ -321,13 +324,15 @@ def upload_resource():
         db.session.add(new_resource)
         db.session.commit()
 
-        return jsonify({'message': '✅ Resource uploaded successfully!', 'file_url': file_url}), 201
+        return jsonify({
+            'message': '✅ Resource uploaded successfully!',
+            'file_url': file_url
+        }), 201
 
     except Exception as e:
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to upload resource.', 'error': str(e)}), 500
-
 
 # Viewing resources with download links
 @routes.route('/resources', methods=['GET'])

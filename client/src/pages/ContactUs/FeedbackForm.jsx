@@ -10,8 +10,13 @@ import SendIcon from '@mui/icons-material/Send';
 import { useSnackbar } from 'notistack';
 import { motion } from 'framer-motion';
 
+const BRAND_GOLD = '#F4D03F';
+const GOLD_LIGHT = '#F7DC6F';
+const GOLD_SOFT = '#F9E79F';
+
 const FeedbackForm = () => {
   const { enqueueSnackbar } = useSnackbar();
+
   const [formData, setFormData] = useState({
     Email: '',
     Subject: '',
@@ -29,11 +34,14 @@ const FeedbackForm = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        'https://mufate-g-sacco.onrender.com/feedback',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const result = await response.json();
 
@@ -41,10 +49,14 @@ const FeedbackForm = () => {
         enqueueSnackbar(result.message, { variant: 'success' });
         setFormData({ Email: '', Subject: '', Message: '' });
       } else {
-        enqueueSnackbar(result.message || 'Submission failed.', { variant: 'error' });
+        enqueueSnackbar(result.message || 'Submission failed.', {
+          variant: 'error',
+        });
       }
     } catch (error) {
-      enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
+      enqueueSnackbar('Something went wrong. Please try again.', {
+        variant: 'error',
+      });
     } finally {
       setLoading(false);
     }
@@ -54,21 +66,19 @@ const FeedbackForm = () => {
     <Box
       sx={{
         position: 'relative',
+        minHeight: '85vh',
+        px: { xs: 2, md: 8 },
+        pt: { xs: 3, md: 5 },
+        pb: { xs: 5, md: 7 },
         background: 'linear-gradient(to bottom, #0A1F14, #03140D)',
         borderBottomLeftRadius: '18px',
         borderBottomRightRadius: '18px',
-        px: { xs: 2, md: 8 },
-        pt: { xs: 2, md: 5 },
-        pb: { xs: 4, md: 6 },
-        minHeight: '85vh',
+        overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'flex-start',
         alignItems: { xs: 'center', md: 'flex-start' },
-        overflow: 'hidden',
       }}
     >
-
       {/* RIGHT GOLD BARS */}
       <motion.div
         initial={{ opacity: 0, x: 120 }}
@@ -80,38 +90,47 @@ const FeedbackForm = () => {
           bottom: 0,
           right: '4vw',
           display: 'flex',
-          flexDirection: 'row',
           gap: '35px',
           zIndex: 0,
         }}
       >
-        {['#E8C46A', '#D8AF56', '#F9E7C5', '#E8C46A', '#D8AF56']
-          .slice(0, window.innerWidth < 600 ? 2 : window.innerWidth < 1024 ? 3 : 5)
+        {[BRAND_GOLD, GOLD_LIGHT, GOLD_SOFT, GOLD_LIGHT, BRAND_GOLD]
+          .slice(
+            0,
+            window.innerWidth < 600
+              ? 2
+              : window.innerWidth < 1024
+              ? 3
+              : 5
+          )
           .map((color, index) => (
             <motion.div
               key={index}
               initial={{ height: 0 }}
               whileInView={{
                 height:
-                  window.innerWidth < 600 ? '45%' :
-                  window.innerWidth < 1024 ? '70%' : '100%'
+                  window.innerWidth < 600
+                    ? '45%'
+                    : window.innerWidth < 1024
+                    ? '70%'
+                    : '100%',
               }}
               transition={{ duration: 0.9 + index * 0.2 }}
               style={{
                 width: window.innerWidth < 600 ? '40px' : '70px',
                 backgroundColor: color,
                 borderRadius: '12px',
-                boxShadow: '0 0 25px rgba(232,196,106,0.45)',
+                boxShadow: `0 0 30px rgba(244,208,63,0.55)`,
               }}
             />
           ))}
       </motion.div>
 
-      {/* HEADER – updated to CONTACT US gold */}
+      {/* HEADER */}
       <Typography
         variant="h4"
         sx={{
-          color: '#F4D03F',               // ← NEW BRIGHT GOLD
+          color: BRAND_GOLD,
           fontWeight: 900,
           textTransform: 'uppercase',
           mb: 3,
@@ -137,14 +156,13 @@ const FeedbackForm = () => {
             backdropFilter: 'blur(15px)',
             background: 'rgba(255,255,255,0.06)',
             borderRadius: '22px',
-            padding: { xs: 2.5, md: 4 },
+            p: { xs: 2.5, md: 4 },
             boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
             display: 'flex',
             flexDirection: 'column',
             gap: 2.5,
           }}
         >
-
           {['Email', 'Subject', 'Message'].map((field) => (
             <TextField
               key={field}
@@ -159,13 +177,13 @@ const FeedbackForm = () => {
               fullWidth
               InputLabelProps={{
                 sx: {
-                  color: '#000',       // ← BLACK LABELS
-                  fontWeight: 800,     // ← BOLD TEXT
+                  color: '#000',
+                  fontWeight: 800,
                 },
               }}
               InputProps={{
                 sx: {
-                  background: 'rgba(255,255,255,0.85)',
+                  background: 'rgba(255,255,255,0.9)',
                   borderRadius: '14px',
                   boxShadow:
                     'inset 3px 3px 8px rgba(0,0,0,0.2), inset -3px -3px 8px rgba(255,255,255,0.9)',
@@ -174,28 +192,27 @@ const FeedbackForm = () => {
             />
           ))}
 
-          {/* SUBMIT BUTTON – Gold + Dark Green Gradient */}
+          {/* SUBMIT BUTTON */}
           <Button
             type="submit"
             variant="contained"
             disabled={loading}
             startIcon={!loading && <SendIcon />}
             sx={{
-              background: 'linear-gradient(90deg, #E8C46A, #D8AF56)',
-              color: '#000',
-              fontWeight: 900,
+              alignSelf: { xs: 'center', md: 'flex-start' },
               px: { xs: 3, md: 4 },
               py: 1.5,
               borderRadius: '14px',
-              fontSize: '1rem',
+              fontWeight: 900,
               textTransform: 'uppercase',
-              alignSelf: { xs: 'center', md: 'flex-start' },
-              boxShadow: '0 0 18px rgba(232,196,106,0.6)',
+              fontSize: '1rem',
+              color: '#000',
+              background: `linear-gradient(90deg, ${BRAND_GOLD}, ${GOLD_LIGHT})`,
+              boxShadow: '0 0 22px rgba(244,208,63,0.75)',
               transition: '0.3s ease',
               '&:hover': {
-                background:
-                  'linear-gradient(90deg, #042F1A, #E8C46A)', // ← DARK GREEN → GOLD
-                boxShadow: '0 0 28px rgba(232,196,106,0.9)',
+                background: `linear-gradient(90deg, #042F1A, ${BRAND_GOLD})`,
+                boxShadow: '0 0 30px rgba(244,208,63,0.95)',
                 transform: 'scale(1.05)',
               },
             }}
