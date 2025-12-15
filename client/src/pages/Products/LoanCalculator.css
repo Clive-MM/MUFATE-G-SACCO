@@ -203,49 +203,7 @@
   color:var(--green);
 }
 
-/* ================= REPAYMENT TABLE ================= */
-.table-wrap{
-  background:#fff;
-  border-radius:18px;
-  overflow:auto;
-  box-shadow:0 18px 40px rgba(0,0,0,.35);
-}
 
-.card.schedule-card table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:.95rem;
-  text-align:center;
-}
-
-/* Header */
-.card.schedule-card thead th{
-  background:linear-gradient(135deg,var(--green),var(--green-2));
-  color:var(--gold);
-  padding:16px 12px;
-  font-weight:900;
-  letter-spacing:.6px;
-  border-bottom:3px solid var(--gold);
-}
-
-/* Body */
-.card.schedule-card tbody td{
-  padding:14px 12px;
-  font-weight:600;
-  color:#0b1a10;
-  border-bottom:1px solid #e8e8e8;
-  white-space:nowrap;
-}
-
-/* Zebra rows */
-.card.schedule-card tbody tr:nth-child(even){
-  background:#f7f7f7;
-}
-
-/* Hover */
-.card.schedule-card tbody tr:hover{
-  background:linear-gradient(90deg,#fff7d6,#f3e2b1);
-}
 
 /* First installment highlight */
 .card.schedule-card tbody tr.first-row{
@@ -287,4 +245,79 @@
 @keyframes goldShimmer{
   0%{ background-position:0% center }
   100%{ background-position:200% center }
+}
+/* ================= REPAYMENT SCHEDULE TABLE ================= */
+
+/* Card background stays dark green */
+.card.schedule-card{
+  background: linear-gradient(
+    180deg,
+    #011B0A,
+    #012A12
+  );
+}
+
+/* Wrapper */
+.card.schedule-card .table-wrap{
+  overflow-x: auto;
+  border-radius: 16px;
+}
+
+/* Table base */
+.card.schedule-card table{
+  width:100%;
+  border-collapse: collapse;
+  min-width: 720px; /* allows horizontal scroll on mobile */
+  text-align: center;
+}
+
+/* Table header */
+.card.schedule-card thead th{
+  background: #011B0A;
+  color: var(--gold);
+  font-weight: 900;
+  padding: 14px 10px;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  border-bottom: 2px solid var(--gold);
+  white-space: nowrap;
+}
+
+/* Table body cells */
+.card.schedule-card tbody td{
+  padding: 12px 10px;
+  font-weight: 700;
+  color: var(--gold-soft);
+  border-bottom: 1px solid rgba(232,196,106,.18);
+  white-space: nowrap;
+}
+
+/* Zebra rows (subtle, still green) */
+.card.schedule-card tbody tr:nth-child(even){
+  background: rgba(232,196,106,.04);
+}
+
+/* Hover effect */
+.card.schedule-card tbody tr:hover{
+  background: rgba(232,196,106,.12);
+}
+
+/* First installment highlight */
+.card.schedule-card tbody tr.first-row{
+  background: rgba(232,196,106,.18);
+  color: var(--gold);
+  font-weight: 900;
+}
+
+/* Balance column emphasis */
+.card.schedule-card tbody td:last-child{
+  color: var(--gold);
+  font-weight: 900;
+}
+
+/* ================= MOBILE OPTIMIZATION ================= */
+@media (max-width: 768px){
+  .card.schedule-card table{
+    font-size: .85rem;
+  }
 }
