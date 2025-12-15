@@ -186,14 +186,14 @@ export default function LoanCalculator() {
               />
             </label>
             <label className="field">
-              <span>Default Months</span>
+              <span>Default Repayment Months</span>
               <input className="input" value={defaultMonths} readOnly />
             </label>
           </div>
 
           <div className="field-row">
             <label className="field">
-              <span>Months</span>
+              <span>Specify your Repayment Months</span>
               <input
                 className="input"
                 type="number"
