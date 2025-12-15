@@ -40,6 +40,7 @@
   letter-spacing:1px;
   background:linear-gradient(90deg,var(--gold),var(--gold-soft),var(--gold));
   background-size:200% auto;
+  background-clip:text;
   -webkit-background-clip:text;
   color:transparent;
   animation:goldShimmer 4s linear infinite;
@@ -77,6 +78,14 @@
     0 0 26px rgba(232,196,106,.2);
 }
 
+/* ================= SCHEDULE CARD (NEW) ================= */
+.card.schedule-card{
+  border:1px solid rgba(232,196,106,.35);
+  box-shadow:
+    inset 0 0 0 1px rgba(232,196,106,.12),
+    0 0 38px rgba(232,196,106,.28);
+}
+
 /* ================= TITLES ================= */
 .card-title{
   display:flex;
@@ -88,27 +97,9 @@
   letter-spacing:.8px;
   margin-bottom:16px;
 }
-.card-title.row{
-  justify-content:space-between;
-}
-
-/* ================= CURRENCY TOGGLE ================= */
-.currency-toggle{
-  display:flex;
-  gap:8px;
-}
-.currency-toggle button{
-  background:transparent;
-  border:1px solid rgba(232,196,106,.35);
-  color:var(--gold);
-  padding:6px 14px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:700;
-}
-.currency-toggle button.active{
-  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
-  color:#000;
+.card.schedule-card .card-title{
+  padding-bottom:12px;
+  border-bottom:1px solid rgba(232,196,106,.35);
 }
 
 /* ================= FIELDS ================= */
@@ -233,30 +224,53 @@
 
 /* ================= TABLE ================= */
 .table-wrap{ overflow:auto }
-.table{
+
+.card.schedule-card .table{
   width:100%;
   background:rgba(255,255,255,.97);
-  border-radius:16px;
+  border-radius:18px;
   border-collapse:separate;
+  overflow:hidden;
 }
-.table th{
-  background:var(--green);
+
+.card.schedule-card .table th{
+  background:linear-gradient(135deg,var(--green),var(--green-2));
   color:var(--gold);
   padding:14px;
   font-weight:900;
+  letter-spacing:.5px;
+  border-bottom:2px solid rgba(232,196,106,.45);
 }
-.table td{
+
+.card.schedule-card .table td{
   padding:14px;
   color:#111;
+  border-bottom:1px solid rgba(0,0,0,.06);
 }
-.table tbody tr{
+
+.card.schedule-card .table tbody tr{
   transition:background .3s ease;
 }
-.table tbody tr:hover{
-  background:#f7f3e6;
+
+.card.schedule-card .table tbody tr:hover{
+  background:linear-gradient(90deg,#fff9e3,#f3e2b1);
 }
-.table tbody tr.first-row{
-  animation:rowGlow 2s infinite alternate;
+
+.card.schedule-card .table tbody tr.first-row{
+  background:linear-gradient(90deg,#fff6cf,#f1d88b);
+  font-weight:800;
+  box-shadow:inset 4px 0 0 var(--gold);
+}
+
+/* ================= EMPTY STATE ================= */
+.card.schedule-card .muted{
+  padding:22px;
+  text-align:center;
+  font-weight:700;
+  color:var(--gold-soft);
+  background:rgba(255,255,255,0.06);
+  border-radius:16px;
+  border:1px dashed rgba(232,196,106,.35);
 }
 
 /* ================= NOTE ================= */
@@ -292,18 +306,13 @@
   100%{ background-position:200% center }
 }
 
-@keyframes rowGlow{
-  from{ background:#fff9e3 }
-  to{ background:#f3e2b1 }
-}
-
-/* ================= PRINT / PDF ================= */
+/* ================= PRINT ================= */
 @media print{
   body{
     background:#fff;
     color:#000;
   }
-  .btn-brand,.btn-ghost,.currency-toggle,Footer{
+  .btn-brand,.btn-ghost{
     display:none !important;
   }
   .card{
