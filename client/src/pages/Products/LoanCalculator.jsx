@@ -255,14 +255,14 @@ export default function LoanCalculator() {
       </div>
 
       {/* SCHEDULE */}
-      <div className="card neo">
+      <div className="card neo schedule-card">
         <div className="card-title">Repayment Schedule</div>
 
         {!schedule.length ? (
           <div className="muted">No schedule generated.</div>
         ) : (
           <div className="table-wrap">
-            <table className="table">
+            <table className="table-fixed">
               <thead>
                 <tr>
                   <th>Installment</th>
@@ -287,6 +287,7 @@ export default function LoanCalculator() {
               </tbody>
             </table>
           </div>
+
         )}
       </div>
 
