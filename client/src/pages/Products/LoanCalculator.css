@@ -248,76 +248,68 @@
 }
 /* ================= REPAYMENT SCHEDULE TABLE ================= */
 
-/* Card background stays dark green */
-.card.schedule-card{
-  background: linear-gradient(
-    180deg,
-    #011B0A,
-    #012A12
-  );
-}
+/* ================= REPAYMENT SCHEDULE TABLE ================= */
 
-/* Wrapper */
 .card.schedule-card .table-wrap{
-  overflow-x: auto;
-  border-radius: 16px;
+  overflow-x:auto;
+  border-radius:16px;
 }
 
-/* Table base */
-.card.schedule-card table{
+/* Fixed-layout table */
+.card.schedule-card .table-fixed{
   width:100%;
-  border-collapse: collapse;
-  min-width: 720px; /* allows horizontal scroll on mobile */
-  text-align: center;
+  table-layout:fixed;
+  border-collapse:collapse;
+  min-width:900px;
+  text-align:center;
 }
 
-/* Table header */
-.card.schedule-card thead th{
-  background: #011B0A;
-  color: var(--gold);
-  font-weight: 900;
-  padding: 14px 10px;
-  text-transform: uppercase;
-  letter-spacing: .6px;
-  border-bottom: 2px solid var(--gold);
-  white-space: nowrap;
+/* Header */
+.card.schedule-card .table-fixed thead th{
+  background:#011B0A;
+  color:var(--gold);
+  padding:14px 12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  border-bottom:2px solid var(--gold);
 }
 
-/* Table body cells */
-.card.schedule-card tbody td{
-  padding: 12px 10px;
-  font-weight: 700;
-  color: var(--gold-soft);
-  border-bottom: 1px solid rgba(232,196,106,.18);
-  white-space: nowrap;
+/* Body cells */
+.card.schedule-card .table-fixed tbody td{
+  padding:12px;
+  color:var(--gold-soft);
+  font-weight:700;
+  border-bottom:1px solid rgba(232,196,106,.2);
+  white-space:nowrap;
 }
 
-/* Zebra rows (subtle, still green) */
-.card.schedule-card tbody tr:nth-child(even){
-  background: rgba(232,196,106,.04);
+/* Zebra rows */
+.card.schedule-card .table-fixed tbody tr:nth-child(even){
+  background:rgba(232,196,106,.05);
 }
 
-/* Hover effect */
-.card.schedule-card tbody tr:hover{
-  background: rgba(232,196,106,.12);
+/* Hover */
+.card.schedule-card .table-fixed tbody tr:hover{
+  background:rgba(232,196,106,.12);
 }
 
-/* First installment highlight */
-.card.schedule-card tbody tr.first-row{
-  background: rgba(232,196,106,.18);
-  color: var(--gold);
-  font-weight: 900;
+/* First row emphasis */
+.card.schedule-card .table-fixed tbody tr.first-row{
+  background:rgba(232,196,106,.2);
+  color:var(--gold);
+  font-weight:900;
 }
 
-/* Balance column emphasis */
-.card.schedule-card tbody td:last-child{
-  color: var(--gold);
-  font-weight: 900;
+/* Balance column */
+.card.schedule-card .table-fixed td:last-child{
+  font-weight:900;
+  color:var(--gold);
 }
 
-/* ================= MOBILE OPTIMIZATION ================= */
-@media (max-width: 768px){
-  .card.schedule-card table{
-    font-size: .85rem;
+/* Mobile */
+@media (max-width:768px){
+  .card.schedule-card .table-fixed{
+    font-size:.85rem;
   }
 }
