@@ -12,9 +12,6 @@
 
   --text:#F9E7C5;
   --muted:#B7CBBE;
-
-  --inset-a:rgba(0,0,0,0.35);
-  --inset-b:rgba(255,255,255,0.06);
 }
 
 *{ box-sizing:border-box }
@@ -40,6 +37,7 @@
   letter-spacing:1px;
   background:linear-gradient(90deg,var(--gold),var(--gold-soft),var(--gold));
   background-size:200% auto;
+  background-clip:text;
   -webkit-background-clip:text;
   color:transparent;
   animation:goldShimmer 4s linear infinite;
@@ -77,6 +75,19 @@
     0 0 26px rgba(232,196,106,.2);
 }
 
+/* ================= SCHEDULE CARD ================= */
+.card.schedule-card{
+  background:linear-gradient(
+    180deg,
+    rgba(1,27,10,.85),
+    rgba(1,27,10,.95)
+  );
+  border:1px solid rgba(232,196,106,.35);
+  box-shadow:
+    inset 0 0 0 1px rgba(232,196,106,.12),
+    0 0 38px rgba(232,196,106,.28);
+}
+
 /* ================= TITLES ================= */
 .card-title{
   display:flex;
@@ -88,30 +99,12 @@
   letter-spacing:.8px;
   margin-bottom:16px;
 }
-.card-title.row{
-  justify-content:space-between;
+.card.schedule-card .card-title{
+  padding-bottom:12px;
+  border-bottom:1px solid rgba(232,196,106,.35);
 }
 
-/* ================= CURRENCY TOGGLE ================= */
-.currency-toggle{
-  display:flex;
-  gap:8px;
-}
-.currency-toggle button{
-  background:transparent;
-  border:1px solid rgba(232,196,106,.35);
-  color:var(--gold);
-  padding:6px 14px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:700;
-}
-.currency-toggle button.active{
-  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
-  color:#000;
-}
-
-/* ================= FIELDS ================= */
+/* ================= INPUT FIELDS ================= */
 .field{
   display:flex;
   flex-direction:column;
@@ -122,7 +115,6 @@
   font-weight:800;
   color:var(--gold-soft);
 }
-
 .field-row{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -131,8 +123,6 @@
 @media (max-width:720px){
   .field-row{ grid-template-columns:1fr }
 }
-
-/* ================= COMPACT ROW ================= */
 .compact-row{
   display:flex;
   gap:14px;
@@ -153,7 +143,7 @@
   border:none;
   border-radius:16px;
   padding:0 16px;
-  background:rgba(255,255,255,0.92);
+  background:rgba(255,255,255,.92);
   color:#000;
   font-weight:600;
 }
@@ -162,22 +152,11 @@
   outline-offset:2px;
 }
 
-/* ================= ALERT ================= */
-.alert{
-  margin-top:10px;
-  background:#3b0d0d;
-  color:#ffdada;
-  border:1px solid #8a2d2d;
-  border-radius:14px;
-  padding:12px 16px;
-}
-
 /* ================= ACTION BUTTONS ================= */
 .actions{
   display:flex;
   gap:14px;
   margin-top:14px;
-  flex-wrap:wrap;
 }
 .btn-brand{
   background:linear-gradient(135deg,var(--green),var(--green-2));
@@ -192,20 +171,13 @@
 }
 .btn-brand:hover{
   transform:scale(1.06);
-  box-shadow:0 0 38px var(--gold-glow);
 }
-.btn-brand:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-}
-
 .btn-ghost{
   background:transparent;
   color:var(--gold);
   border:1px solid rgba(232,196,106,.35);
   padding:14px 22px;
   border-radius:16px;
-  cursor:pointer;
 }
 
 /* ================= SUMMARY CHIPS ================= */
@@ -216,7 +188,7 @@
 }
 .chip{
   min-width:190px;
-  background:rgba(255,255,255,.92);
+  background:#fff;
   border-radius:18px;
   padding:12px 16px;
 }
@@ -231,32 +203,61 @@
   color:var(--green);
 }
 
-/* ================= TABLE ================= */
-.table-wrap{ overflow:auto }
-.table{
+/* ================= REPAYMENT TABLE ================= */
+.table-wrap{
+  background:#fff;
+  border-radius:18px;
+  overflow:auto;
+  box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
+
+.card.schedule-card table{
   width:100%;
-  background:rgba(255,255,255,.97);
-  border-radius:16px;
-  border-collapse:separate;
+  border-collapse:collapse;
+  font-size:.95rem;
+  text-align:center;
 }
-.table th{
-  background:var(--green);
+
+/* Header */
+.card.schedule-card thead th{
+  background:linear-gradient(135deg,var(--green),var(--green-2));
   color:var(--gold);
-  padding:14px;
+  padding:16px 12px;
   font-weight:900;
+  letter-spacing:.6px;
+  border-bottom:3px solid var(--gold);
 }
-.table td{
-  padding:14px;
-  color:#111;
+
+/* Body */
+.card.schedule-card tbody td{
+  padding:14px 12px;
+  font-weight:600;
+  color:#0b1a10;
+  border-bottom:1px solid #e8e8e8;
+  white-space:nowrap;
 }
-.table tbody tr{
-  transition:background .3s ease;
+
+/* Zebra rows */
+.card.schedule-card tbody tr:nth-child(even){
+  background:#f7f7f7;
 }
-.table tbody tr:hover{
-  background:#f7f3e6;
+
+/* Hover */
+.card.schedule-card tbody tr:hover{
+  background:linear-gradient(90deg,#fff7d6,#f3e2b1);
 }
-.table tbody tr.first-row{
-  animation:rowGlow 2s infinite alternate;
+
+/* First installment highlight */
+.card.schedule-card tbody tr.first-row{
+  background:linear-gradient(90deg,#fff1bf,#f0d27c);
+  font-weight:900;
+  box-shadow:inset 6px 0 0 var(--gold);
+}
+
+/* Balance emphasis */
+.card.schedule-card tbody td:last-child{
+  font-weight:900;
+  color:var(--green);
 }
 
 /* ================= NOTE ================= */
@@ -266,7 +267,7 @@
   padding:16px 18px;
   display:flex;
   gap:12px;
-  background:rgba(255,255,255,0.08);
+  background:rgba(255,255,255,.08);
   border-radius:18px;
   border:1px solid rgba(232,196,106,.25);
 }
@@ -281,33 +282,9 @@
   align-items:center;
   justify-content:center;
 }
-.note-text strong,
-.note-text b{
-  color:var(--gold);
-}
 
 /* ================= ANIMATIONS ================= */
 @keyframes goldShimmer{
   0%{ background-position:0% center }
   100%{ background-position:200% center }
-}
-
-@keyframes rowGlow{
-  from{ background:#fff9e3 }
-  to{ background:#f3e2b1 }
-}
-
-/* ================= PRINT / PDF ================= */
-@media print{
-  body{
-    background:#fff;
-    color:#000;
-  }
-  .btn-brand,.btn-ghost,.currency-toggle,Footer{
-    display:none !important;
-  }
-  .card{
-    box-shadow:none;
-    background:#fff;
-  }
 }
