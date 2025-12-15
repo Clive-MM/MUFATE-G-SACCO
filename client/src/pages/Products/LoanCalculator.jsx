@@ -49,7 +49,9 @@ export default function LoanCalculator() {
   /* Currency formatter */
   const formatMoney = (value) => {
     if (currency === "USD") return `$ ${(value / 145).toFixed(2)}`;
-    return `KES ${value.toLocaleString("en-KE", { minimumFractionDigits: 2 })}`;
+    return `KES ${value.toLocaleString("en-KE", {
+      minimumFractionDigits: 2,
+    })}`;
   };
 
   /* Load loan products */
@@ -134,30 +136,14 @@ export default function LoanCalculator() {
     setError("");
   };
 
-  /* CSV export */
-  const exportCSV = () => {
-    if (!schedule.length) return;
-    const rows = schedule.map((r) =>
-      [r.period, r.date, r.principal, r.interest, r.total, r.balance].join(",")
-    );
-    const blob = new Blob(
-      ["Installment,Date,Principal,Interest,Total,Balance\n", rows.join("\n")],
-      { type: "text/csv;charset=utf-8;" }
-    );
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "loan_schedule.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   /* ---------------- UI ---------------- */
   return (
     <div className="lc-page">
       <div className="lc-header">
         <h1>Loan Calculator</h1>
-        <p>Plan your repayments with <b>Golden Generation DT SACCO</b></p>
+        <p>
+          Plan your repayments with <b>Golden Generation DT SACCO</b>
+        </p>
       </div>
 
       <div className="lc-grid">
@@ -166,31 +152,56 @@ export default function LoanCalculator() {
           <div className="card-title row">
             <span>Inputs</span>
             <div className="currency-toggle">
-              <button className={currency === "KES" ? "active" : ""} onClick={() => setCurrency("KES")}>KES</button>
-              <button className={currency === "USD" ? "active" : ""} onClick={() => setCurrency("USD")}>USD</button>
+              <button
+                className={currency === "KES" ? "active" : ""}
+                onClick={() => setCurrency("KES")}
+              >
+                KES
+              </button>
+              <button
+                className={currency === "USD" ? "active" : ""}
+                onClick={() => setCurrency("USD")}
+              >
+                USD
+              </button>
             </div>
           </div>
 
           <div className="compact-row">
             <label className="field compact">
               <span>Loan Type</span>
-              <select className="input" value={selectedKey} onChange={(e) => setSelectedKey(e.target.value)}>
-                {products.map(p => (
-                  <option key={p.ProductKey} value={p.ProductKey}>{p.LoanName}</option>
+              <select
+                className="input"
+                value={selectedKey}
+                onChange={(e) => setSelectedKey(e.target.value)}
+              >
+                {products.map((p) => (
+                  <option key={p.ProductKey} value={p.ProductKey}>
+                    {p.LoanName}
+                  </option>
                 ))}
               </select>
             </label>
 
             <label className="field compact">
               <span>Start Date</span>
-              <input className="input" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              <input
+                className="input"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
             </label>
           </div>
 
           <div className="field-row">
             <label className="field">
               <span>Rate (per month)</span>
-              <input className="input" value={`${ratePct.toFixed(2)} %`} readOnly />
+              <input
+                className="input"
+                value={`${ratePct.toFixed(2)} %`}
+                readOnly
+              />
             </label>
             <label className="field">
               <span>Default Months</span>
@@ -201,21 +212,37 @@ export default function LoanCalculator() {
           <div className="field-row">
             <label className="field">
               <span>Months</span>
-              <input className="input" type="number" value={months} onChange={(e) => setMonths(e.target.value)} />
+              <input
+                className="input"
+                type="number"
+                value={months}
+                onChange={(e) => setMonths(e.target.value)}
+              />
             </label>
             <label className="field">
               <span>Principal</span>
-              <input className="input" type="number" value={principal} onChange={(e) => setPrincipal(e.target.value)} />
+              <input
+                className="input"
+                type="number"
+                value={principal}
+                onChange={(e) => setPrincipal(e.target.value)}
+              />
             </label>
           </div>
 
           {error && <div className="alert">{error}</div>}
 
           <div className="actions">
-            <button className="btn-brand" onClick={onCalculate} disabled={loading}>
+            <button
+              className="btn-brand"
+              onClick={onCalculate}
+              disabled={loading}
+            >
               {loading ? "Calculating…" : "Calculate"}
             </button>
-            <button className="btn-ghost" onClick={onReset}>Reset</button>
+            <button className="btn-ghost" onClick={onReset}>
+              Reset
+            </button>
           </div>
         </div>
 
@@ -223,12 +250,29 @@ export default function LoanCalculator() {
         <div className="card neo">
           <div className="card-title">Summary</div>
           {!summary ? (
-            <div className="muted">Run a calculation to view results.</div>
+            <div className="muted">
+              Run a calculation to view results.
+            </div>
           ) : (
             <div className="chips">
-              <div className="chip"><div className="k">Loan Amount</div><div className="v">{formatMoney(summary.Principal)}</div></div>
-              <div className="chip"><div className="k">Total Interest</div><div className="v">{formatMoney(summary.TotalInterest)}</div></div>
-              <div className="chip"><div className="k">Total Payable</div><div className="v">{formatMoney(summary.TotalPayable)}</div></div>
+              <div className="chip">
+                <div className="k">Loan Amount</div>
+                <div className="v">
+                  {formatMoney(summary.Principal)}
+                </div>
+              </div>
+              <div className="chip">
+                <div className="k">Total Interest</div>
+                <div className="v">
+                  {formatMoney(summary.TotalInterest)}
+                </div>
+              </div>
+              <div className="chip">
+                <div className="k">Total Payable</div>
+                <div className="v">
+                  {formatMoney(summary.TotalPayable)}
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -236,13 +280,7 @@ export default function LoanCalculator() {
 
       {/* SCHEDULE */}
       <div className="card neo">
-        <div className="card-title row">
-          <span>Repayment Schedule</span>
-          <div className="actions">
-            <button className="btn-ghost" onClick={exportCSV} disabled={!schedule.length}>CSV</button>
-            <button className="btn-ghost" onClick={() => window.print()} disabled={!schedule.length}>PDF</button>
-          </div>
-        </div>
+        <div className="card-title">Repayment Schedule</div>
 
         {!schedule.length ? (
           <div className="muted">No schedule generated.</div>
@@ -279,7 +317,8 @@ export default function LoanCalculator() {
       <div className="note">
         <span className="note-icon">i</span>
         <span className="note-text">
-          <strong>Important:</strong> Indicative figures only. Final approval rests with <b>Golden Generation DT SACCO</b>.
+          <strong>Important:</strong> Indicative figures only. Final approval
+          rests with <b>Golden Generation DT SACCO</b>.
         </span>
       </div>
 
