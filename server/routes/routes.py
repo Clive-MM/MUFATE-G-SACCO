@@ -1838,16 +1838,7 @@ def loan_get_product(product_key):
 # Calculate repayment schedule (reducing balance)
 @routes.route('/loan/calc', methods=['POST'])
 def loan_calc_schedule():
-    """
-    Request JSON:
-    {
-      "product_key": "development_loan",
-      "principal": 100000,
-      "start_date": "2025-09-01",
-      "term_months": 36       # optional override; defaults to product.DefaultTermMonths
-    }
-    Response JSON: { "summary": {...}, "schedule": [ ... ] }
-    """
+    
     try:
         data = request.get_json(force=True)
 
