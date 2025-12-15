@@ -44,15 +44,13 @@ export default function LoanCalculator() {
   const [schedule, setSchedule] = useState([]);
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState("");
-  const [currency, setCurrency] = useState("KES");
 
-  /* Currency formatter */
-  const formatMoney = (value) => {
-    if (currency === "USD") return `$ ${(value / 145).toFixed(2)}`;
-    return `KES ${value.toLocaleString("en-KE", {
+  /* Simple KES formatter */
+  const formatMoney = (value) =>
+    `KES ${Number(value || 0).toLocaleString("en-KE", {
       minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     })}`;
-  };
 
   /* Load loan products */
   useEffect(() => {
@@ -149,23 +147,7 @@ export default function LoanCalculator() {
       <div className="lc-grid">
         {/* INPUTS */}
         <div className="card neo">
-          <div className="card-title row">
-            <span>Inputs</span>
-            <div className="currency-toggle">
-              <button
-                className={currency === "KES" ? "active" : ""}
-                onClick={() => setCurrency("KES")}
-              >
-                KES
-              </button>
-              <button
-                className={currency === "USD" ? "active" : ""}
-                onClick={() => setCurrency("USD")}
-              >
-                USD
-              </button>
-            </div>
-          </div>
+          <div className="card-title">Inputs</div>
 
           <div className="compact-row">
             <label className="field compact">
@@ -220,7 +202,7 @@ export default function LoanCalculator() {
               />
             </label>
             <label className="field">
-              <span>Principal</span>
+              <span>Principal (KES)</span>
               <input
                 className="input"
                 type="number"
@@ -257,21 +239,15 @@ export default function LoanCalculator() {
             <div className="chips">
               <div className="chip">
                 <div className="k">Loan Amount</div>
-                <div className="v">
-                  {formatMoney(summary.Principal)}
-                </div>
+                <div className="v">{formatMoney(summary.Principal)}</div>
               </div>
               <div className="chip">
                 <div className="k">Total Interest</div>
-                <div className="v">
-                  {formatMoney(summary.TotalInterest)}
-                </div>
+                <div className="v">{formatMoney(summary.TotalInterest)}</div>
               </div>
               <div className="chip">
                 <div className="k">Total Payable</div>
-                <div className="v">
-                  {formatMoney(summary.TotalPayable)}
-                </div>
+                <div className="v">{formatMoney(summary.TotalPayable)}</div>
               </div>
             </div>
           )}
@@ -317,7 +293,7 @@ export default function LoanCalculator() {
       <div className="note">
         <span className="note-icon">i</span>
         <span className="note-text">
-          <strong>Important:</strong> These are indicative figures only. Final approval
+          <strong>Important:</strong> Indicative figures only. Final approval
           rests with <b>Golden Generation DT SACCO</b>.
         </span>
       </div>
