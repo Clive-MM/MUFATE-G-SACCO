@@ -317,7 +317,7 @@ export default function LoanCalculator() {
       <div className="note">
         <span className="note-icon">i</span>
         <span className="note-text">
-          <strong>Important:</strong> Indicative figures only. Final approval
+          <strong>Important:</strong> These are indicative figures only. Final approval
           rests with <b>Golden Generation DT SACCO</b>.
         </span>
       </div>
