@@ -147,7 +147,7 @@ export default function LoanCalculator() {
       <div className="lc-grid">
         {/* INPUTS */}
         <div className="card neo">
-          <div className="card-title">Inputs</div>
+          <div className="card-title">Specify your loan</div>
 
           <div className="compact-row">
             <label className="field compact">
