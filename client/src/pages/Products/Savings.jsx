@@ -194,7 +194,7 @@ const SavingsCard = ({ item, index, expanded, handleExpandClick }) => (
     {item.ImageURL && (
       <CardMedia
         component="img"
-        height="250"
+        height="320"
         image={item.ImageURL}
         alt={item.ProductName}
         sx={{ objectFit: 'cover' }}
