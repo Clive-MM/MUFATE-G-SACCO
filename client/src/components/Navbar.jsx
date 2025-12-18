@@ -219,7 +219,7 @@ const Navbar = () => {
                         underline="none"
                         sx={dropdownLinkStyle}
                       >
-                        Who We Are
+                        Profile
                       </Link>
                       <Link
                         component={RouterLink}
