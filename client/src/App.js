@@ -54,7 +54,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/media/gallery" element={<Gallery />} />
           <Route path="/media/videos" element={<Videos />} />
           <Route path="/media/blogs" element={<Blogs />} />
-
+          <Route path="/news" element={<News />} />
           <Route path="/customer_registration" element={<MemberRegistration />} />
           <Route path="/products/loanCalculator" element={<LoanCalculator />} />
           <Route path="/mufategsaccosupport" element={<SupportChatWidget />} />
