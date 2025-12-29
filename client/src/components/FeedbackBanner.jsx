@@ -56,7 +56,7 @@ const FeedbackBanner = () => {
 
         <Typography className="feedback-text">
           Your opinion matters to us! Help us serve you better by sharing your thoughts,
-          suggestions, or experiences with Mufate "G" Sacco.
+          suggestions, or experiences with GOLDEN GENERATION DT Sacco.
         </Typography>
 
         <Button className="feedback-button" onClick={() => setOpen(true)}>
