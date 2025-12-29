@@ -37,7 +37,7 @@ const Navbar = () => {
     { to: '/careers', label: 'Careers' },
     { to: '/membership', label: 'Membership' },
     { to: '/faqs', label: 'FAQs' },
-    { to: '/news', label: 'News' },
+    { to: '/news', label: 'Media' },
   ];
 
   const drawerLinkStyle = {
