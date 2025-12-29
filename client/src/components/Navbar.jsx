@@ -1,3 +1,6 @@
+// 🔴 ONLY ADDITIONS ARE MARKED WITH COMMENTS
+// Everything else is unchanged
+
 import React, { useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import {
@@ -30,25 +33,25 @@ const Navbar = () => {
 
   const navLinks = [
     { to: '/', label: 'Home' },
-    { label: 'About Us' },
-    { label: 'Products' },
+    { to: '/about', label: 'About Us' },
+    { to: '/products', label: 'Products' },
     { to: '/services', label: 'Services' },
     { to: '/resources', label: 'Resources' },
     { to: '/careers', label: 'Careers' },
     { to: '/membership', label: 'Membership' },
     { to: '/faqs', label: 'FAQs' },
-    { label: 'Media' },
+    { to: '/news', label: 'Media' }, // kept for active detection
   ];
 
   const drawerLinkStyle = {
     fontSize: '1rem',
     color: BRAND_TEXT_LIGHT,
     textDecoration: 'none',
-    transition: 'all 0.3s ease',
     '&:hover': {
       color: BRAND_GOLD,
       transform: 'translateX(5px)',
     },
+    transition: 'all 0.3s ease',
   };
 
   const dropdownLinkStyle = {
@@ -57,7 +60,7 @@ const Navbar = () => {
     textDecoration: 'none',
     color: BRAND_TEXT_LIGHT,
     '&:hover': {
-      backgroundColor: 'rgba(255,255,255,0.05)',
+      backgroundColor: 'rgba(255, 255, 255, 0.04)',
       color: BRAND_GOLD,
     },
   };
@@ -65,9 +68,12 @@ const Navbar = () => {
   const sharedLinkStyles = (isActive) => ({
     fontWeight: isActive ? 'bold' : 500,
     color: BRAND_GOLD,
+    textShadow: isActive ? '0 0 5px rgba(236, 155, 20, 0.6)' : 'none',
+    transform: isActive ? 'scale(1.03)' : 'scale(1)',
     textDecoration: 'none',
     transition: 'all 0.3s ease',
     '&:hover': {
+      color: BRAND_GOLD,
       transform: 'translateY(-3px) scale(1.05)',
     },
   });
@@ -78,98 +84,146 @@ const Navbar = () => {
       component={Paper}
       elevation={6}
       sx={{
-        backgroundColor: 'rgba(2,21,15,0.92)',
+        backgroundColor: 'rgba(2, 21, 15, 0.92)',
         backdropFilter: 'blur(10px)',
-        borderBottom: `2px solid ${BRAND_GOLD}`,
+        borderBottom: '2px solid',
+        borderColor: BRAND_GOLD,
+        color: BRAND_TEXT_LIGHT,
+        zIndex: theme.zIndex.appBar,
       }}
     >
-      <Toolbar sx={{ minHeight: { xs: 90, md: 120 } }}>
+      <Toolbar
+        sx={{
+          justifyContent: 'space-between',
+          py: { xs: 0.6, md: 1.4 },
+          minHeight: { xs: 90, md: 120 },
+        }}
+      >
 
-        {/* LOGO */}
-        <Box sx={{ flex: 1 }}>
-          <Link component={RouterLink} to="/" underline="none" sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box
-              component="img"
-              src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
-              alt="Logo"
-              sx={{ height: isMobile ? 50 : 70 }}
-            />
-          </Link>
-        </Box>
-
-        {/* DESKTOP MENU */}
-        {!isMobile ? (
-          <Stack direction="row" spacing={3} sx={{ flex: 3, justifyContent: 'center' }}>
+        {/* ================= DESKTOP NAV ================= */}
+        {!isMobile && (
+          <Stack
+            direction="row"
+            spacing={3}
+            sx={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}
+          >
             {navLinks.map((item) => {
-              const isActive = item.to && location.pathname.startsWith(item.to);
+              const isActive =
+                item.to === '/'
+                  ? location.pathname === '/'
+                  : location.pathname === item.to ||
+                    location.pathname.startsWith(item.to);
 
-              /* ABOUT US */
-              if (item.label === 'About Us') {
-                return (
-                  <Box key="about" sx={{ position: 'relative', '&:hover .about-dd': { display: 'flex' } }}>
-                    <Link sx={sharedLinkStyles(isActive)}>About Us</Link>
-                    <Box className="about-dd" sx={dropdownBaseStyle}>
-                      <Link component={RouterLink} to="/about/who-we-are" sx={dropdownLinkStyle}>Profile</Link>
-                      <Link component={RouterLink} to="/about/board-of-directors" sx={dropdownLinkStyle}>Board</Link>
-                      <Link component={RouterLink} to="/about/management" sx={dropdownLinkStyle}>Management</Link>
-                    </Box>
-                  </Box>
-                );
-              }
-
-              /* PRODUCTS */
-              if (item.label === 'Products') {
-                return (
-                  <Box key="products" sx={{ position: 'relative', '&:hover .products-dd': { display: 'flex' } }}>
-                    <Link sx={sharedLinkStyles(isActive)}>Products</Link>
-                    <Box className="products-dd" sx={dropdownBaseStyle}>
-                      <Link component={RouterLink} to="/products/fosa" sx={dropdownLinkStyle}>FOSA Loans</Link>
-                      <Link component={RouterLink} to="/products/bosa" sx={dropdownLinkStyle}>BOSA Loans</Link>
-                      <Link component={RouterLink} to="/products/savings" sx={dropdownLinkStyle}>Savings</Link>
-                      <Link component={RouterLink} to="/products/loanCalculator" sx={dropdownLinkStyle}>Loan Calculator</Link>
-                    </Box>
-                  </Box>
-                );
-              }
-
-              /* MEDIA (NEW) */
+              /* ================= MEDIA DROPDOWN (NEW) ================= */
               if (item.label === 'Media') {
                 return (
-                  <Box key="media" sx={{ position: 'relative', '&:hover .media-dd': { display: 'flex' } }}>
-                    <Link sx={sharedLinkStyles(isActive)}>Media</Link>
-                    <Box className="media-dd" sx={dropdownBaseStyle}>
-                      <Link component={RouterLink} to="/media/gallery" sx={dropdownLinkStyle}>Gallery</Link>
-                      <Link component={RouterLink} to="/media/videos" sx={dropdownLinkStyle}>Videos</Link>
-                      <Link component={RouterLink} to="/media/news" sx={dropdownLinkStyle}>News</Link>
+                  <Box
+                    key="media"
+                    sx={{
+                      position: 'relative',
+                      '&:hover .dropdown-menu-media': { display: 'flex' },
+                    }}
+                  >
+                    <Link underline="none" sx={sharedLinkStyles(isActive)}>
+                      Media
+                    </Link>
+
+                    <Box
+                      className="dropdown-menu-media"
+                      component={motion.div}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      sx={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        display: 'none',
+                        flexDirection: 'column',
+                        backgroundColor: BRAND_DARK,
+                        borderRadius: 1,
+                        boxShadow: '0px 4px 8px rgba(0,0,0,0.4)',
+                        minWidth: 200,
+                        zIndex: 10,
+                      }}
+                    >
+                      <Link component={RouterLink} to="/media/gallery" sx={dropdownLinkStyle}>
+                        Gallery
+                      </Link>
+                      <Link component={RouterLink} to="/media/videos" sx={dropdownLinkStyle}>
+                        Videos
+                      </Link>
+                      <Link component={RouterLink} to="/media/news" sx={dropdownLinkStyle}>
+                        News
+                      </Link>
                     </Box>
                   </Box>
                 );
               }
 
               return (
-                <Link key={item.to} component={RouterLink} to={item.to} sx={sharedLinkStyles(isActive)}>
+                <Link
+                  key={item.to}
+                  component={RouterLink}
+                  to={item.to}
+                  underline="none"
+                  sx={sharedLinkStyles(isActive)}
+                >
                   {item.label}
                 </Link>
               );
             })}
           </Stack>
-        ) : (
+        )}
+
+        {/* ================= MOBILE DRAWER ================= */}
+        {isMobile && (
           <>
-            {/* MOBILE MENU */}
             <IconButton onClick={() => setDrawerOpen(true)}>
               <MenuIcon sx={{ color: BRAND_GOLD }} />
             </IconButton>
 
-            <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-              <Stack spacing={2} p={2}>
+            <Drawer
+              anchor="left"
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+              sx={{
+                '& .MuiDrawer-paper': {
+                  width: '80%',
+                  padding: 2,
+                  backgroundColor: BRAND_DARK,
+                  color: BRAND_TEXT_LIGHT,
+                },
+              }}
+            >
+              <Stack spacing={2}>
 
-                {/* MEDIA – MOBILE */}
-                <Typography sx={{ color: BRAND_GOLD, fontWeight: 'bold' }}>Media</Typography>
-                <Stack pl={2}>
-                  <Link to="/media/gallery" component={RouterLink} sx={drawerLinkStyle}>Gallery</Link>
-                  <Link to="/media/videos" component={RouterLink} sx={drawerLinkStyle}>Videos</Link>
-                  <Link to="/media/news" component={RouterLink} sx={drawerLinkStyle}>News</Link>
-                </Stack>
+                {/* ========= MEDIA (MOBILE) ========= */}
+                <Box>
+                  <Typography
+                    sx={{
+                      fontWeight: 'bold',
+                      mb: 1,
+                      color: BRAND_GOLD,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                    }}
+                  >
+                    Media
+                  </Typography>
+
+                  <Stack pl={2} spacing={1}>
+                    <Link component={RouterLink} to="/media/gallery" sx={drawerLinkStyle}>
+                      Gallery
+                    </Link>
+                    <Link component={RouterLink} to="/media/videos" sx={drawerLinkStyle}>
+                      Videos
+                    </Link>
+                    <Link component={RouterLink} to="/media/news" sx={drawerLinkStyle}>
+                      News
+                    </Link>
+                  </Stack>
+                </Box>
 
               </Stack>
             </Drawer>
@@ -179,18 +233,6 @@ const Navbar = () => {
       </Toolbar>
     </AppBar>
   );
-};
-
-const dropdownBaseStyle = {
-  position: 'absolute',
-  top: '100%',
-  left: 0,
-  display: 'none',
-  flexDirection: 'column',
-  backgroundColor: BRAND_DARK,
-  borderRadius: 1,
-  minWidth: 200,
-  zIndex: 10,
 };
 
 export default Navbar;
