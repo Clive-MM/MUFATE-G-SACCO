@@ -19,6 +19,8 @@ import News from './more/News';
 import MemberRegistration from "./pages/MemberRegistration";
 import LoanCalculator from './pages/Products/LoanCalculator';
 import SupportChatWidget from "./components/SupportChatWidget";
+import Gallery from './components/Gallery';
+import News from './components/News';
 
 
 function App({ toggleTheme, mode }) {
