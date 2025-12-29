@@ -22,6 +22,7 @@ import SupportChatWidget from "./components/SupportChatWidget";
 import Gallery from './components/Gallery';
 import Blogs from './components/Blogs';
 import Videos from './components/Videos';
+import SaccoGallery from './more/saccogallery';
 
 function App({ toggleTheme, mode }) {
   return (
@@ -51,9 +52,9 @@ function App({ toggleTheme, mode }) {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/careers" element={<Careers />} />
-          <Route path="/media/gallery" element={<Gallery />} />
+          <Route path="/media/gallery" element={<SaccoGallery />} />
           <Route path="/media/videos" element={<Videos />} />
-          <Route path="/media/blogs" element={<Blogs />} />
+          <Route path="/media/blogs" element={<News />} />
           <Route path="/news" element={<News />} />
           <Route path="/customer_registration" element={<MemberRegistration />} />
           <Route path="/products/loanCalculator" element={<LoanCalculator />} />
