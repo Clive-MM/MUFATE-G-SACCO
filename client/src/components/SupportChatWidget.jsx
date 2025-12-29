@@ -15,39 +15,15 @@ export default function SupportChatWidget({
   offset = { x: 20, y: 24 },
 }) {
   const apiBase = process.env.REACT_APP_API_BASE || "https://mufate-g-sacco.onrender.com";
-
-  // Theme + breakpoints
   const theme = useTheme();
   const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));
-  const isXs = useMediaQuery("(max-width:420px)");
 
-  // BRAND COLOR TOKENS
+  // BRAND COLORS
   const BRAND_GOLD = "#EC9B14";
   const BRAND_DARK = "#02150F";
-  const BRAND_DARK_ACCENT = "#042b1f"; // Slightly lighter green for contrast
+  const BRAND_DARK_SOFT = "#05291E"; 
+  const LOGO_URL = "https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png";
 
-  // Responsive tokens
-  const launcherSize = isSmDown ? 56 : 64;
-  const panelMaxWidth = isSmDown ? "calc(100vw - 16px)" : "380px";
-  const panelRadius = isSmDown ? 16 : 24;
-  const headerPad = isSmDown ? 1.25 : 2;
-  const bodyPad = isSmDown ? 1.5 : 2;
-
-  // Design tokens
-  const TOKENS = {
-    brand: BRAND_DARK,
-    brandGold: BRAND_GOLD,
-    panelGlass: BRAND_DARK, 
-    neuBg: BRAND_DARK_ACCENT,
-    ring: `0 0 0 3px rgba(236, 155, 20, 0.22)`,
-    radius: { s: 12, m: 16, l: 24 },
-    shadowOut: "0 10px 30px rgba(0,0,0,0.5)",
-    shadowHover: "0 12px 36px rgba(0,0,0,0.7)",
-    inset: "inset 2px 2px 5px rgba(0,0,0,0.4), inset -1px -1px 2px rgba(255,255,255,0.05)",
-    online: "#19c37d",
-  };
-
-  // state
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [contactMode, setContactMode] = useState("email");
@@ -57,26 +33,16 @@ export default function SupportChatWidget({
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({ open: false, type: "success", text: "" });
 
-  // validators
   const emailOk = /^\S+@\S+\.\S+$/.test(email);
   const phoneOk = /^2547\d{8}$/.test(phone);
-  const msgMin = 10;
-  const msgMax = 1000;
-
+  
   const disabled = useMemo(() => {
     if (step === 1) return contactMode === "email" ? !emailOk : !phoneOk;
-    if (step === 2) return msg.trim().length < msgMin || msg.trim().length > msgMax;
+    if (step === 2) return msg.trim().length < 10;
     return false;
   }, [step, contactMode, emailOk, phoneOk, msg]);
 
   const alignStyle = position === "bottom-left" ? { left: offset.x } : { right: offset.x };
-
-  const quickReplies = [
-    "I need help with registration",
-    "Loan application guidance",
-    "Mobile banking issue",
-    "Branch contact & hours",
-  ];
 
   async function handleSubmit() {
     try {
@@ -92,11 +58,9 @@ export default function SupportChatWidget({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || "Failed to submit ticket");
+      if (!res.ok) throw new Error("Submission failed");
       setStep(3);
-      setToast({ open: true, type: "success", text: data?.message || "Ticket received." });
-      setMsg("");
+      setToast({ open: true, type: "success", text: "Support ticket sent!" });
     } catch (err) {
       setToast({ open: true, type: "error", text: err.message });
     } finally {
@@ -107,47 +71,19 @@ export default function SupportChatWidget({
   return (
     <>
       {/* Launcher */}
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: `calc(${offset.y}px + env(safe-area-inset-bottom, 0px))`,
-          ...alignStyle,
-          zIndex: 1300,
-          ...(isXs && (position === "bottom-left" ? { left: 12 } : { right: 12 })),
-        }}
-      >
+      <Box sx={{ position: "fixed", bottom: offset.y, ...alignStyle, zIndex: 1300 }}>
         <Zoom in={!open}>
-          <Tooltip title="Chat with GOLDEN GENERATION DT SACCO" arrow>
-            <IconButton
-              onClick={() => setOpen(true)}
-              size="large"
-              aria-label="Open GOLDEN GENERATION DT SACCO Support"
-              sx={{
-                width: launcherSize,
-                height: launcherSize,
-                borderRadius: "50%",
-                background: BRAND_GOLD,
-                color: BRAND_DARK,
-                boxShadow: TOKENS.shadowOut,
-                border: `2px solid ${BRAND_GOLD}`,
-                position: "relative",
-                transition: "transform .15s ease, box-shadow .15s ease",
-                "&:hover": { transform: "translateY(-1px)", boxShadow: TOKENS.shadowHover },
-                "&::before": {
-                  content: '""', position: "absolute", inset: 0, borderRadius: "50%",
-                  boxShadow: `0 0 0 0 ${BRAND_GOLD}77`,
-                  animation: "pulse 2.2s infinite",
-                },
-                "@keyframes pulse": {
-                  "0%": { boxShadow: `0 0 0 0 ${BRAND_GOLD}77` },
-                  "60%": { boxShadow: `0 0 0 16px ${BRAND_GOLD}00` },
-                  "100%": { boxShadow: `0 0 0 0 ${BRAND_GOLD}00` },
-                },
-              }}
-            >
-              <ChatBubbleOutlineIcon sx={{ fontSize: isSmDown ? 22 : 24, fontWeight: 'bold' }} />
-            </IconButton>
-          </Tooltip>
+          <IconButton
+            onClick={() => setOpen(true)}
+            sx={{
+              width: 64, height: 64, background: BRAND_GOLD, color: BRAND_DARK,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.5)", 
+              border: `2px solid ${BRAND_DARK}`,
+              "&:hover": { background: BRAND_GOLD, transform: "scale(1.1)" }
+            }}
+          >
+            <ChatBubbleOutlineIcon fontSize="large" />
+          </IconButton>
         </Zoom>
 
         {/* Panel */}
@@ -155,298 +91,151 @@ export default function SupportChatWidget({
           <Paper
             elevation={24}
             sx={{
-              mt: 1.25,
-              width: "100%",
-              maxWidth: panelMaxWidth,
-              borderRadius: panelRadius,
+              width: isSmDown ? "calc(100vw - 24px)" : "400px", // Width increased for full title
+              borderRadius: "24px",
               overflow: "hidden",
               background: BRAND_DARK,
-              border: `1px solid ${BRAND_GOLD}44`,
-              boxShadow: TOKENS.shadowOut,
-              mx: isXs ? 0.5 : 0,
-              ...(isSmDown && { maxHeight: "70vh", display: "flex", flexDirection: "column" }),
+              border: `1px solid ${BRAND_GOLD}55`,
+              boxShadow: "0 20px 50px rgba(0,0,0,0.8)",
             }}
           >
-            {/* Header */}
-            <Box
-              sx={{
-                p: headerPad,
-                px: 2,
-                display: "flex",
-                alignItems: "center",
-                background: `linear-gradient(180deg, ${BRAND_DARK} 0%, ${BRAND_DARK_ACCENT} 100%)`,
-                boxShadow: `inset 0 -1px 0 ${BRAND_GOLD}33`,
-                position: isSmDown ? "sticky" : "static",
-                top: 0,
-                zIndex: 1,
-              }}
-            >
-              <Box sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0, position: "relative", pr: 5 }}>
-                <Typography
-                  variant={isSmDown ? "subtitle2" : "subtitle1"}
-                  sx={{
-                    fontWeight: 800,
-                    color: BRAND_GOLD,
-                    letterSpacing: 0.2,
-                    fontSize: isSmDown ? "0.9rem" : "1rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                  }}
-                >
-                  GOLDEN GENERATION SUPPORT
-                  <Box
-                    component="span"
-                    sx={{
-                      width: 10, height: 10, borderRadius: "50%",
-                      background: TOKENS.online,
-                      boxShadow: "0 0 8px 2px rgba(25,195,125,.6)",
-                      animation: "ping 1.9s infinite",
-                      "@keyframes ping": {
-                        "0%": { transform: "scale(1)", opacity: 1 },
-                        "50%": { transform: "scale(1.2)", opacity: 0.8 },
-                        "100%": { transform: "scale(1)", opacity: 1 },
-                      },
-                    }}
-                  />
+            {/* Header with Logo and Full Title */}
+            <Box sx={{ 
+              p: 2, 
+              display: "flex", 
+              alignItems: "center", 
+              background: `linear-gradient(to bottom, ${BRAND_DARK_SOFT}, ${BRAND_DARK})`,
+              borderBottom: `1px solid ${BRAND_GOLD}33` 
+            }}>
+              <Box component="img" src={LOGO_URL} sx={{ height: 35, mr: 1.5, objectFit: 'contain' }} />
+              <Box sx={{ flex: 1 }}>
+                <Typography sx={{ 
+                  fontWeight: 800, 
+                  color: BRAND_GOLD, 
+                  fontSize: "0.85rem", 
+                  lineHeight: 1.2,
+                  letterSpacing: "0.5px",
+                  textTransform: "uppercase"
+                }}>
+                  Golden Generation <br/> DT Sacco Support
                 </Typography>
-                <IconButton
-                  size="small"
-                  onClick={() => setOpen(false)}
-                  sx={{ position: "absolute", right: 0, color: BRAND_GOLD }}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                 <Box sx={{ width: 8, height: 8, borderRadius: "50%", background: "#19c37d", boxShadow: "0 0 8px #19c37d" }} />
+                 <IconButton onClick={() => setOpen(false)} sx={{ color: BRAND_GOLD, p: 0.5 }}><CloseIcon fontSize="small" /></IconButton>
               </Box>
             </Box>
 
             {/* Body */}
-            <Box
-              sx={{
-                p: bodyPad,
-                pt: isSmDown ? 1.25 : 2,
-                backgroundColor: BRAND_DARK,
-                ...(isSmDown && { overflow: "auto", maxHeight: "inherit" }),
-              }}
-            >
+            <Box sx={{ p: 3 }}>
               {step === 1 && (
-                <>
-                  <Typography variant="body2" sx={{ mb: 1, color: BRAND_GOLD, opacity: 0.9 }}>
+                <Stack spacing={2.5}>
+                  <Typography variant="body2" sx={{ color: BRAND_GOLD, fontWeight: 500 }}>
                     How should we contact you?
                   </Typography>
-
+                  
                   <ToggleButtonGroup
                     exclusive
                     value={contactMode}
                     onChange={(_, v) => v && setContactMode(v)}
                     sx={{
-                      mb: 2,
-                      width: '100%',
-                      background: BRAND_DARK_ACCENT,
-                      padding: 0.5,
-                      borderRadius: TOKENS.radius.m,
+                      width: '100%', background: BRAND_DARK_SOFT, p: 0.5, borderRadius: "12px",
                       "& .MuiToggleButton-root": {
-                        flex: 1,
-                        border: 0,
-                        color: BRAND_GOLD,
-                        textTransform: "none",
-                        borderRadius: `${TOKENS.radius.s}px !important`,
-                        "&.Mui-selected": {
-                          background: BRAND_GOLD,
-                          color: BRAND_DARK,
-                          fontWeight: 'bold',
-                          "&:hover": { background: BRAND_GOLD, opacity: 0.9 },
+                        flex: 1, border: 0, color: BRAND_GOLD, borderRadius: "10px !important",
+                        textTransform: "none", fontWeight: 700,
+                        "&.Mui-selected": { 
+                          background: BRAND_GOLD, 
+                          color: BRAND_DARK, 
+                          "&:hover": { background: BRAND_GOLD } 
                         },
-                      },
+                        "&:hover": { background: `${BRAND_GOLD}22` }
+                      }
                     }}
                   >
                     <ToggleButton value="email">Email</ToggleButton>
                     <ToggleButton value="phone">Phone / WhatsApp</ToggleButton>
                   </ToggleButtonGroup>
 
-                  {contactMode === "email" ? (
-                    <TextField
-                      label="Email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      fullWidth
-                      variant="filled"
-                      error={!!email && !emailOk}
-                      InputProps={{
-                        disableUnderline: true,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <EmailIcon sx={{ color: BRAND_GOLD, fontSize: 20 }} />
-                          </InputAdornment>
-                        ),
-                        sx: { color: "#FFF" }
-                      }}
-                      InputLabelProps={{ sx: { color: `${BRAND_GOLD}aa` } }}
-                      sx={{
-                        background: BRAND_DARK_ACCENT,
-                        borderRadius: TOKENS.radius.m,
-                        boxShadow: TOKENS.inset,
-                      }}
-                    />
-                  ) : (
-                    <TextField
-                      label="Phone (2547XXXXXXXX)"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      fullWidth
-                      variant="filled"
-                      error={!!phone && !phoneOk}
-                      InputProps={{
-                        disableUnderline: true,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <PhoneIphoneIcon sx={{ color: BRAND_GOLD, fontSize: 20 }} />
-                          </InputAdornment>
-                        ),
-                        sx: { color: "#FFF" }
-                      }}
-                      InputLabelProps={{ sx: { color: `${BRAND_GOLD}aa` } }}
-                      sx={{
-                        background: BRAND_DARK_ACCENT,
-                        borderRadius: TOKENS.radius.m,
-                        boxShadow: TOKENS.inset,
-                      }}
-                    />
-                  )}
+                  <TextField
+                    fullWidth
+                    label={contactMode === "email" ? "Email Address" : "Phone (e.g. 2547...)"}
+                    variant="filled"
+                    value={contactMode === "email" ? email : phone}
+                    onChange={(e) => contactMode === "email" ? setEmail(e.target.value) : setPhone(e.target.value)}
+                    InputProps={{
+                      disableUnderline: true,
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {contactMode === "email" ? <EmailIcon sx={{ color: BRAND_GOLD }} /> : <PhoneIphoneIcon sx={{ color: BRAND_GOLD }} />}
+                        </InputAdornment>
+                      ),
+                      sx: { color: "#FFF", fontSize: '0.95rem' }
+                    }}
+                    InputLabelProps={{ sx: { color: `${BRAND_GOLD}88` } }}
+                    sx={{ 
+                        background: BRAND_DARK_SOFT, 
+                        borderRadius: "12px", 
+                        border: `1px solid ${BRAND_GOLD}22`,
+                        "& .MuiFilledInput-root": { borderRadius: "12px" }
+                    }}
+                  />
 
                   <Button
-                    variant="contained"
                     fullWidth
-                    disabled={disabled}
+                    variant="contained"
                     onClick={() => setStep(2)}
+                    disabled={disabled}
                     sx={{
-                      mt: 3, py: 1.2,
-                      background: BRAND_GOLD,
-                      color: BRAND_DARK,
-                      fontWeight: 'bold',
-                      borderRadius: TOKENS.radius.m,
-                      "&:hover": { background: BRAND_GOLD, opacity: 0.85 },
+                      py: 1.5, borderRadius: "12px", background: BRAND_GOLD, color: BRAND_DARK, 
+                      fontWeight: 900, fontSize: "1rem", 
+                      "&:hover": { background: BRAND_GOLD, transform: 'translateY(-2px)', boxShadow: `0 4px 15px ${BRAND_GOLD}44` },
+                      "&.Mui-disabled": { background: `${BRAND_GOLD}33`, color: `${BRAND_GOLD}66` }
                     }}
                   >
-                    Continue
+                    CONTINUE
                   </Button>
-                </>
+                </Stack>
               )}
 
               {step === 2 && (
-                <>
-                  <Typography variant="body2" sx={{ mb: 1, color: BRAND_GOLD }}>
-                    Tell us a bit more about your request
-                  </Typography>
-
-                  <Stack direction="row" spacing={1} sx={{ mb: 2, flexWrap: "wrap", gap: 1 }}>
-                    {quickReplies.map((q) => (
-                      <Chip
-                        key={q}
-                        label={q}
-                        size="small"
-                        onClick={() => setMsg((m) => (m ? `${m} ${q}` : q))}
-                        sx={{
-                          borderColor: BRAND_GOLD,
-                          color: BRAND_GOLD,
-                          background: "transparent",
-                          borderWidth: 1,
-                          mb: 0.5,
-                          "&:hover": { background: `${BRAND_GOLD}22` },
-                        }}
-                      />
-                    ))}
-                  </Stack>
-
+                <Stack spacing={2}>
+                  <Typography variant="body2" sx={{ color: BRAND_GOLD, fontWeight: 500 }}>Describe your request</Typography>
                   <TextField
-                    label="Your message"
+                    fullWidth multiline rows={4} variant="filled"
+                    placeholder="Type your message here..."
                     value={msg}
-                    onChange={(e) => setMsg(e.target.value.slice(0, msgMax))}
-                    fullWidth
-                    multiline
-                    rows={4}
-                    variant="filled"
-                    InputProps={{ disableUnderline: true, sx: { color: "#FFF" } }}
-                    InputLabelProps={{ sx: { color: `${BRAND_GOLD}aa` } }}
-                    sx={{
-                      background: BRAND_DARK_ACCENT,
-                      borderRadius: TOKENS.radius.m,
-                      boxShadow: TOKENS.inset,
+                    onChange={(e) => setMsg(e.target.value)}
+                    InputProps={{ disableUnderline: true, sx: { color: "#FFF", borderRadius: '12px' } }}
+                    sx={{ 
+                        background: BRAND_DARK_SOFT, 
+                        borderRadius: "12px", 
+                        border: `1px solid ${BRAND_GOLD}22`,
+                        "& .MuiFilledInput-root": { borderRadius: "12px" }
                     }}
-                    error={msg.trim().length > 0 && msg.trim().length < msgMin}
                   />
-
-                  <Box sx={{ display: "flex", justifyContent: "space-between", mt: 0.5 }}>
-                    <Typography variant="caption" sx={{ color: BRAND_GOLD, opacity: 0.7 }}>
-                      Min {msgMin} characters
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: BRAND_GOLD, opacity: 0.7 }}>
-                      {msg.trim().length}/{msgMax}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: "flex", gap: 1, mt: 3 }}>
+                  <Box sx={{ display: "flex", gap: 1.5, pt: 1 }}>
+                    <Button fullWidth onClick={() => setStep(1)} sx={{ color: BRAND_GOLD, fontWeight: 700 }}>Back</Button>
                     <Button
-                      variant="outlined"
-                      onClick={() => setStep(1)}
-                      disabled={loading}
-                      fullWidth
-                      sx={{
-                        borderRadius: TOKENS.radius.m,
-                        borderColor: BRAND_GOLD,
-                        color: BRAND_GOLD,
-                        "&:hover": { borderColor: BRAND_GOLD, background: `${BRAND_GOLD}11` },
+                      fullWidth variant="contained" onClick={handleSubmit} disabled={disabled || loading}
+                      sx={{ 
+                        background: BRAND_GOLD, color: BRAND_DARK, fontWeight: 900, borderRadius: "12px",
+                        "&:hover": { background: BRAND_GOLD, opacity: 0.9 }
                       }}
                     >
-                      Back
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={handleSubmit}
-                      disabled={disabled || loading}
-                      fullWidth
-                      sx={{
-                        background: BRAND_GOLD,
-                        color: BRAND_DARK,
-                        fontWeight: 'bold',
-                        borderRadius: TOKENS.radius.m,
-                        "&:hover": { background: BRAND_GOLD, opacity: 0.85 },
-                      }}
-                    >
-                      {loading ? <CircularProgress size={18} sx={{ color: BRAND_DARK }} /> : "Submit"}
+                      {loading ? <CircularProgress size={24} sx={{ color: BRAND_DARK }} /> : "SUBMIT"}
                     </Button>
                   </Box>
-                </>
+                </Stack>
               )}
 
               {step === 3 && (
                 <Box sx={{ textAlign: "center", py: 4 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 800, mb: 1, color: BRAND_GOLD }}>
-                    Ticket received ✅
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "#FFF", opacity: 0.8, mb: 3 }}>
-                    We’ll contact you via <strong>{contactMode === "email" ? email : phone}</strong>.
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    onClick={() => {
-                      setStep(1);
-                      setOpen(false);
-                      setEmail("");
-                      setPhone("");
-                      setMsg("");
-                    }}
-                    sx={{
-                      background: BRAND_GOLD,
-                      color: BRAND_DARK,
-                      fontWeight: 'bold',
-                      borderRadius: TOKENS.radius.m,
-                    }}
-                  >
-                    Close
-                  </Button>
+                   <Box sx={{ width: 60, height: 60, borderRadius: '50%', background: BRAND_GOLD, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                        <Typography sx={{ fontSize: '2rem' }}>✅</Typography>
+                   </Box>
+                  <Typography variant="h6" sx={{ color: BRAND_GOLD, fontWeight: 800, mb: 1 }}>Ticket Received</Typography>
+                  <Typography variant="body2" sx={{ color: "#FFF", opacity: 0.8, mb: 4 }}>We have received your message and will reach out to you via {contactMode} shortly.</Typography>
+                  <Button fullWidth variant="contained" onClick={() => {setOpen(false); setStep(1); setEmail(""); setPhone(""); setMsg("");}} sx={{ background: BRAND_GOLD, color: BRAND_DARK, fontWeight: 900, borderRadius: "12px" }}>Close Chat</Button>
                 </Box>
               )}
             </Box>
@@ -454,23 +243,9 @@ export default function SupportChatWidget({
         </Slide>
       </Box>
 
-      {/* Toast */}
-      <Snackbar
-        open={toast.open}
-        autoHideDuration={3800}
-        onClose={() => setToast((s) => ({ ...s, open: false }))}
-        anchorOrigin={{ vertical: "bottom", horizontal: position === "bottom-left" ? "left" : "right" }}
-      >
-        <Alert
-          severity={toast.type}
-          variant="filled"
-          sx={{ 
-            borderRadius: TOKENS.radius.m, 
-            background: BRAND_GOLD, 
-            color: BRAND_DARK,
-            "& .MuiAlert-icon": { color: BRAND_DARK }
-          }}
-        >
+      {/* Snackbar Styling */}
+      <Snackbar open={toast.open} autoHideDuration={4000} onClose={() => setToast({ ...toast, open: false })}>
+        <Alert severity={toast.type} variant="filled" sx={{ background: BRAND_GOLD, color: BRAND_DARK, fontWeight: 'bold' }}>
           {toast.text}
         </Alert>
       </Snackbar>
