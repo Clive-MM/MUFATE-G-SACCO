@@ -32,24 +32,27 @@ function App({ toggleTheme, mode }) {
       }}
     >
       <BrowserRouter>
-        <Navbar  />
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
 
           {/* ✅ NEW ROUTE ) */}
           <Route path="/about/who-we-are" element={<AboutUs />} />
           <Route path="/about/board-of-directors" element={<BoardOfDirectors />} />
-           <Route path="/about/management" element={<ManagementTeam />} />
-           <Route path="/products/fosa" element={<FosaProducts />} />
-           <Route path="/products/bosa" element={<BosaProducts />} />
-           <Route path="/products/savings" element={<Savings />} />
-           <Route path="/services" element={<Services />} />
+          <Route path="/about/management" element={<ManagementTeam />} />
+          <Route path="/products/fosa" element={<FosaProducts />} />
+          <Route path="/products/bosa" element={<BosaProducts />} />
+          <Route path="/products/savings" element={<Savings />} />
+          <Route path="/services" element={<Services />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/careers" element={<Careers />} />
-          <Route path="/news" element={<News />} />
+          <Route path="/media/gallery" element={<Gallery />} />
+          <Route path="/media/videos" element={<Videos />} />
+          <Route path="/media/news" element={<News />} />
+
           <Route path="/customer_registration" element={<MemberRegistration />} />
           <Route path="/products/loanCalculator" element={<LoanCalculator />} />
           <Route path="/mufategsaccosupport" element={<SupportChatWidget />} />
