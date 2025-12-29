@@ -21,7 +21,7 @@ import LoanCalculator from './pages/Products/LoanCalculator';
 import SupportChatWidget from "./components/SupportChatWidget";
 
 
-import Videos from './components/Videos';
+import Videos from './more/Videos'
 import SaccoGallery from './more/saccogallery';
 
 function App({ toggleTheme, mode }) {
