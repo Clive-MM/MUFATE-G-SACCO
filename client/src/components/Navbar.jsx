@@ -214,7 +214,7 @@ const Navbar = () => {
                     >
                       <Link component={RouterLink} to="/media/gallery" sx={dropdownLinkStyle}>Gallery</Link>
                       <Link component={RouterLink} to="/media/videos" sx={dropdownLinkStyle}>Videos</Link>
-                      <Link component={RouterLink} to="/media/news" sx={dropdownLinkStyle}>News</Link>
+                      <Link component={RouterLink} to="/media/blogs" sx={dropdownLinkStyle}>Blogs</Link>
                     </Box>
                   </Box>
                 );

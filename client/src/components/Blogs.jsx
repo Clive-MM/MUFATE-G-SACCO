@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Stack, Paper } from '@mui/material';
 
-const News = () => {
+const Blogs = () => {
   return (
     <Box sx={{ px: { xs: 2, md: 6 }, py: 6 }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
@@ -20,7 +20,8 @@ const News = () => {
             sx={{ p: 3, borderRadius: 2 }}
           >
             <Typography variant="h6" fontWeight="bold">
-              News Title {item}
+              Blogs
+               Title {item}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               This is a brief summary of the news article. More details will
@@ -33,4 +34,4 @@ const News = () => {
   );
 };
 
-export default News;
+export default Blogs;

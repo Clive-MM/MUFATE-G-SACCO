@@ -20,7 +20,7 @@ import MemberRegistration from "./pages/MemberRegistration";
 import LoanCalculator from './pages/Products/LoanCalculator';
 import SupportChatWidget from "./components/SupportChatWidget";
 import Gallery from './components/Gallery';
-import News from './components/News';
+import Blogs from './components/Blogs';
 
 
 function App({ toggleTheme, mode }) {
@@ -53,7 +53,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/careers" element={<Careers />} />
           <Route path="/media/gallery" element={<Gallery />} />
           <Route path="/media/videos" element={<Videos />} />
-          <Route path="/media/news" element={<News />} />
+          <Route path="/media/blogs" element={<Blogs />} />
 
           <Route path="/customer_registration" element={<MemberRegistration />} />
           <Route path="/products/loanCalculator" element={<LoanCalculator />} />
