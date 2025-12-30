@@ -1,101 +1,186 @@
-import React from 'react';
-import { Box, Typography, Link } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  IconButton,
+  CircularProgress,
+} from '@mui/material';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+
+const BRAND_GOLD = '#EC9B14';
+const BRAND_DARK = '#02150F';
+const TEXT_LIGHT = '#F4F4F4';
 
 const ContactDetails = () => {
+  const [branches, setBranches] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('https://mufate-g-sacco.onrender.com/branches')
+      .then((res) => res.json())
+      .then((data) => {
+        setBranches(data.branches || []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   return (
     <Box
       sx={{
-        background: 'linear-gradient(135deg, #011407, #01240F)', // Deep green brand background
-        borderBottomLeftRadius: '18px',
-        borderBottomRightRadius: '18px',
-        px: { xs: 2, sm: 3, md: 8 },
-        pt: { xs: 2, sm: 3, md: 4 },
-        pb: { xs: 4, sm: 5, md: 6 },
-        minHeight: { xs: '32vh', sm: '28vh', md: '26vh' }, // Adjust height for all devices
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        boxShadow: '0 0 22px rgba(255,215,0,0.25)', // Gold glow
+        background: `linear-gradient(180deg, ${BRAND_DARK}, #03140D)`,
+        px: { xs: 2, md: 8 },
+        py: { xs: 5, md: 8 },
       }}
     >
+      <Grid container spacing={4}>
+        {/* ================= LEFT SIDE — BRANCH CARDS ================= */}
+        <Grid item xs={12} md={8}>
+          {loading ? (
+            <CircularProgress sx={{ color: BRAND_GOLD }} />
+          ) : (
+            <Grid container spacing={3}>
+              {branches.map((branch) => (
+                <Grid item xs={12} key={branch.BranchID}>
+                  <Card
+                    sx={{
+                      background: 'rgba(255,255,255,0.04)',
+                      borderRadius: '18px',
+                      border: `1px solid ${BRAND_GOLD}40`,
+                      boxShadow: '0 0 25px rgba(236,155,20,0.25)',
+                    }}
+                  >
+                    <CardContent>
+                      <Typography
+                        sx={{
+                          fontWeight: 800,
+                          color: BRAND_GOLD,
+                          mb: 1,
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {branch.BranchName}
+                      </Typography>
 
-      {/* 🌟 GOLD HEADING */}
-      <Typography
-        variant="h4"
-        sx={{
-          fontWeight: 900,
-          textTransform: 'uppercase',
-          fontSize: { xs: '1.5rem', sm: '1.7rem', md: '2.1rem' },
-          mb: 2,
-          background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          textShadow: '0 0 10px rgba(255,215,0,0.35)',
-          textAlign: { xs: 'center', md: 'left' },
-        }}
-      >
-        Contact Us
-      </Typography>
+                      {/* MAP */}
+                      <Box
+                        component="iframe"
+                        src={branch.GoogleMapURL}
+                        sx={{
+                          width: '100%',
+                          height: 200,
+                          borderRadius: '12px',
+                          border: 0,
+                          mb: 2,
+                        }}
+                        loading="lazy"
+                      />
 
-      {/* 🌟 Paragraph Text */}
-      <Typography
-        variant="body1"
-        sx={{
-          color: '#FFF4B5',
-          fontSize: { xs: '0.95rem', sm: '1rem', md: '1.15rem' },
-          lineHeight: 1.8,
-          textShadow: '0 0 8px rgba(0,0,0,0.6)',
-          textAlign: { xs: 'center', md: 'left' },
-          px: { xs: 1, md: 0 },
-        }}
-      >
-        Have a question, suggestion, or need support?
-        Our team is ready to assist you with answers, guidance, and solutions.
-        Call us on{' '}
+                      <Typography sx={{ color: TEXT_LIGHT, mb: 1 }}>
+                        <LocationOnIcon
+                          sx={{ fontSize: 18, mr: 1, color: BRAND_GOLD }}
+                        />
+                        {branch.Location}
+                      </Typography>
 
-        
-        <Box
-          component="span"
-          sx={{
-            fontWeight: 'bold',
-            color: '#FFD700',
-            mx: 0.5,
-          }}
-        >
-          +254791331932
-        </Box>
-        /
-        <Box
-          component="span"
-          sx={{
-            fontWeight: 'bold',
-            color: '#FFD700',
-            mx: 0.5,
-          }}
-        >
-          +254794515407
-        </Box>
+                      <Typography sx={{ color: TEXT_LIGHT }}>
+                        <PhoneIcon
+                          sx={{ fontSize: 18, mr: 1, color: BRAND_GOLD }}
+                        />
+                        {branch.ContactNumber}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Grid>
 
-        {/* Email */}
-        or write us an email at{' '}
-        <Link
-          href="mailto:info@mudetesacco.co.ke"
-          underline="hover"
-          sx={{
-            fontWeight: 'bold',
-            background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            textShadow: '0 0 8px rgba(255,215,0,0.35)',
-          }}
-        >
-          info@mudetesacco.co.ke
-        </Link>{' '}
-        or interact with us on all social platforms.
-      </Typography>
+        {/* ================= RIGHT SIDE — 3 STACKED INFO CARDS ================= */}
+        <Grid item xs={12} md={4}>
+          <Grid container spacing={3} direction="column">
+            {/* CALL US */}
+            <Grid item>
+              <Card sx={infoCardStyle}>
+                <CardContent>
+                  <Typography sx={infoTitle}>
+                    <PhoneIcon sx={infoIcon} /> Call Us
+                  </Typography>
+                  <Typography sx={infoText}>+254 791 331 932</Typography>
+                  <Typography sx={infoText}>+254 794 515 407</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* EMAIL */}
+            <Grid item>
+              <Card sx={infoCardStyle}>
+                <CardContent>
+                  <Typography sx={infoTitle}>
+                    <EmailIcon sx={infoIcon} /> Email Us
+                  </Typography>
+                  <Typography sx={infoText}>
+                    info@mudetesacco.co.ke
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* OFFICE HOURS */}
+            <Grid item>
+              <Card sx={infoCardStyle}>
+                <CardContent>
+                  <Typography sx={infoTitle}>
+                    <AccessTimeIcon sx={infoIcon} /> Office Hours
+                  </Typography>
+                  <Typography sx={infoText}>
+                    Mon – Fri: 8:30 AM – 4:30 PM
+                  </Typography>
+                  <Typography sx={infoText}>
+                    Saturday: 8:30 AM – 12:30 PM
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </Box>
   );
+};
+
+/* ================= SHARED STYLES ================= */
+
+const infoCardStyle = {
+  background: 'rgba(255,255,255,0.05)',
+  borderRadius: '18px',
+  border: `1px solid ${BRAND_GOLD}40`,
+  boxShadow: '0 0 22px rgba(236,155,20,0.25)',
+};
+
+const infoTitle = {
+  fontWeight: 800,
+  color: BRAND_GOLD,
+  display: 'flex',
+  alignItems: 'center',
+  mb: 1,
+};
+
+const infoIcon = {
+  mr: 1,
+  color: BRAND_GOLD,
+};
+
+const infoText = {
+  color: TEXT_LIGHT,
+  fontSize: '0.95rem',
 };
 
 export default ContactDetails;
