@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import ContactDetails from './ContactDetails';
 import FeedbackForm from './FeedbackForm';
-import Footer from '../../components/Footer';
+// import Footer from '../../components/Footer';
 
 const ContactUs = () => {
   return (
@@ -96,7 +96,7 @@ const ContactUs = () => {
       <FeedbackForm />
 
   
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

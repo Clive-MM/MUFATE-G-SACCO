@@ -76,7 +76,7 @@ const SaccoGallery = () => {
             mb: 4,
           }}
         >
-          📸 MUFATE G SACCO GALLERY
+          📸 GOLDEN GENERATION DT SACCO GALLERY
         </Typography>
 
         {loading ? (
