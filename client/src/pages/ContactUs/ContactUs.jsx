@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import { motion } from 'framer-motion';
 import ContactDetails from './ContactDetails';
 import FeedbackForm from './FeedbackForm';
 
@@ -16,9 +17,9 @@ const ContactUs = () => {
         sx={{
           position: 'relative',
           height: {
-            xs: '45vh',   // compact on mobile
+            xs: '45vh',
             sm: '50vh',
-            md: '55vh',   // wide & short on desktop (as per design)
+            md: '55vh',
           },
           backgroundImage:
             'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
@@ -30,25 +31,36 @@ const ContactUs = () => {
           justifyContent: 'center',
           px: { xs: 2, sm: 4, md: 8 },
           textAlign: 'center',
+          overflow: 'hidden',
         }}
       >
-        {/* DARK OVERLAY */}
+        {/* DARK OVERLAY WITH DEPTH */}
         <Box
           sx={{
             position: 'absolute',
             inset: 0,
-            background:
-              'linear-gradient(to bottom, rgba(2,21,15,0.65), rgba(2,21,15,0.85))',
+            background: `
+              linear-gradient(
+                to bottom,
+                rgba(2,21,15,0.55),
+                rgba(2,21,15,0.78),
+                rgba(2,21,15,0.92)
+              )
+            `,
             zIndex: 0,
           }}
         />
 
-        {/* CONTENT */}
+        {/* HERO CONTENT (ANIMATED) */}
         <Box
+          component={motion.div}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
           sx={{
             position: 'relative',
             zIndex: 1,
-            maxWidth: '900px',
+            maxWidth: '820px',
           }}
         >
           <Typography
@@ -60,10 +72,13 @@ const ContactUs = () => {
                 sm: '2.1rem',
                 md: '2.6rem',
               },
-              letterSpacing: '0.06em',
+              letterSpacing: {
+                xs: '0.08em',
+                md: '0.05em',
+              },
               color: BRAND_GOLD,
               mb: 1.5,
-              textShadow: '0 4px 12px rgba(0,0,0,0.6)',
+              textShadow: '0 4px 14px rgba(0,0,0,0.65)',
             }}
           >
             Let’s Get In Touch
@@ -78,9 +93,9 @@ const ContactUs = () => {
               },
               lineHeight: 1.7,
               color: BRAND_TEXT_LIGHT,
-              maxWidth: '720px',
+              maxWidth: '700px',
               mx: 'auto',
-              textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+              textShadow: '0 2px 10px rgba(0,0,0,0.6)',
             }}
           >
             Have any questions or need support? Our team is ready to help you
@@ -88,14 +103,17 @@ const ContactUs = () => {
           </Typography>
         </Box>
 
-        {/* SOFT BOTTOM FADE (TRANSITION TO NEXT SECTION) */}
+        {/* SOFT BOTTOM TRANSITION */}
         <Box
           sx={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
-            height: '80px',
+            height: {
+              xs: '90px',
+              md: '120px',
+            },
             background:
               'linear-gradient(to bottom, rgba(2,21,15,0), rgba(2,21,15,1))',
           }}
@@ -103,7 +121,7 @@ const ContactUs = () => {
       </Box>
 
       {/* ===================== */}
-      {/* NEXT SECTIONS (UNCHANGED FOR NOW) */}
+      {/* NEXT SECTIONS (TO BE REPLACED NEXT) */}
       {/* ===================== */}
       <ContactDetails />
       <FeedbackForm />
