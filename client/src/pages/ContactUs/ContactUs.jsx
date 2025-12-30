@@ -2,101 +2,111 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import ContactDetails from './ContactDetails';
 import FeedbackForm from './FeedbackForm';
-// import Footer from '../../components/Footer';
+
+const BRAND_GOLD = '#EC9B14';
+const BRAND_TEXT_LIGHT = '#F4F4F4';
 
 const ContactUs = () => {
   return (
     <>
-     
+      {/* ===================== */}
+      {/* HERO SECTION */}
+      {/* ===================== */}
       <Box
         sx={{
-          height: {
-            xs: '75vh',     // Perfect for small phones
-            sm: '85vh',     // Slightly taller tablets
-            md: '110vh',    // Desktop
-            lg: '120vh'
-          },
           position: 'relative',
+          height: {
+            xs: '45vh',   // compact on mobile
+            sm: '50vh',
+            md: '55vh',   // wide & short on desktop (as per design)
+          },
           backgroundImage:
             'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
           backgroundSize: 'cover',
-          backgroundPosition: {
-            xs: 'center top',
-            sm: 'center 20%',
-            md: 'center'
-          },
+          backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: { xs: 'center', md: 'flex-start' },
-          justifyContent: 'flex-end',
-          px: { xs: 2, sm: 3, md: 8 },
-          pb: { xs: 6, sm: 8, md: 10 },
-          color: '#fff',
-          textAlign: { xs: 'center', md: 'left' },
+          alignItems: 'center',
+          justifyContent: 'center',
+          px: { xs: 2, sm: 4, md: 8 },
+          textAlign: 'center',
         }}
       >
-        {/* Dark overlay for readability */}
+        {/* DARK OVERLAY */}
         <Box
           sx={{
             position: 'absolute',
             inset: 0,
             background:
-              'linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.65))',
+              'linear-gradient(to bottom, rgba(2,21,15,0.65), rgba(2,21,15,0.85))',
             zIndex: 0,
           }}
         />
 
-        
-        <Typography
+        {/* CONTENT */}
+        <Box
           sx={{
-            fontSize: {
-              xs: '1.9rem',
-              sm: '2.3rem',
-              md: '2.7rem',
-              lg: '3rem'
-            },
-            fontWeight: 900,
-            textTransform: 'uppercase',
-            background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            textShadow: '0 0 12px rgba(0,0,0,0.7)',
+            position: 'relative',
             zIndex: 1,
-            mb: 1,
+            maxWidth: '900px',
           }}
         >
-          Let’s Get In Touch
-        </Typography>
+          <Typography
+            sx={{
+              fontWeight: 900,
+              textTransform: 'uppercase',
+              fontSize: {
+                xs: '1.7rem',
+                sm: '2.1rem',
+                md: '2.6rem',
+              },
+              letterSpacing: '0.06em',
+              color: BRAND_GOLD,
+              mb: 1.5,
+              textShadow: '0 4px 12px rgba(0,0,0,0.6)',
+            }}
+          >
+            Let’s Get In Touch
+          </Typography>
 
-        
-        <Typography
+          <Typography
+            sx={{
+              fontSize: {
+                xs: '0.95rem',
+                sm: '1.05rem',
+                md: '1.15rem',
+              },
+              lineHeight: 1.7,
+              color: BRAND_TEXT_LIGHT,
+              maxWidth: '720px',
+              mx: 'auto',
+              textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+            }}
+          >
+            Have any questions or need support? Our team is ready to help you
+            with anything you need.
+          </Typography>
+        </Box>
+
+        {/* SOFT BOTTOM FADE (TRANSITION TO NEXT SECTION) */}
+        <Box
           sx={{
-            fontSize: {
-              xs: '1rem',
-              sm: '1.1rem',
-              md: '1.2rem'
-            },
-            maxWidth: { xs: '95%', sm: '85%', md: '620px' },
-            lineHeight: 1.6,
-            color: '#FFF4B5',
-            fontStyle: 'italic',
-            textShadow: '0 0 10px rgba(0,0,0,0.6)',
-            zIndex: 1,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: '80px',
+            background:
+              'linear-gradient(to bottom, rgba(2,21,15,0), rgba(2,21,15,1))',
           }}
-        >
-          Have any questions or need support? Our team is ready to help you with
-          anything you need.
-        </Typography>
+        />
       </Box>
 
+      {/* ===================== */}
+      {/* NEXT SECTIONS (UNCHANGED FOR NOW) */}
+      {/* ===================== */}
       <ContactDetails />
-
-      
       <FeedbackForm />
-
-  
-      {/* <Footer /> */}
     </>
   );
 };
