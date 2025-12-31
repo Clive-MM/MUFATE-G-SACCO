@@ -41,13 +41,14 @@ const ContactDetails = () => {
   return (
     <Box
       sx={{
-        background: `linear-gradient(180deg, ${BRAND_DARK}, #03140D)`,
+        background: `radial-gradient(circle at top, rgba(236,155,20,0.15), transparent 45%), 
+                     linear-gradient(180deg, ${BRAND_DARK}, #03140D)`,
         px: { xs: 2, md: 8 },
         py: { xs: 6, md: 10 },
       }}
     >
       <Grid container spacing={4} alignItems="stretch">
-        {/* ================= LEFT: BRANCHES ================= */}
+        {/* ================= LEFT COLUMN ================= */}
         <Grid item xs={12} md={8}>
           {loading ? (
             <CircularProgress sx={{ color: BRAND_GOLD }} />
@@ -55,7 +56,7 @@ const ContactDetails = () => {
             <Grid container spacing={4}>
               {branches.slice(0, 2).map((branch) => (
                 <Grid item xs={12} md={6} key={branch.BranchID}>
-                  <Card sx={branchCard}>
+                  <Card sx={glassCard}>
                     <CardContent sx={{ height: '100%' }}>
                       <Typography sx={branchTitle}>
                         {branch.BranchName}
@@ -85,19 +86,12 @@ const ContactDetails = () => {
           )}
         </Grid>
 
-        {/* ================= RIGHT: INFO STACK ================= */}
+        {/* ================= RIGHT COLUMN ================= */}
         <Grid item xs={12} md={4}>
-          <Grid
-            container
-            spacing={4}
-            sx={{
-              height: '100%',
-              gridAutoRows: '1fr',
-            }}
-          >
+          <Grid container spacing={4} sx={{ height: '100%' }}>
             {/* CALL US */}
             <Grid item xs={12}>
-              <Card sx={infoCard}>
+              <Card sx={glassCard}>
                 <CardContent>
                   <Typography sx={infoTitle}>
                     <PhoneIcon sx={iconStyle} /> Call Us
@@ -110,7 +104,7 @@ const ContactDetails = () => {
 
             {/* SOCIAL */}
             <Grid item xs={12}>
-              <Card sx={infoCard}>
+              <Card sx={glassCard}>
                 <CardContent>
                   <Typography sx={infoTitle}>
                     Connect With Us
@@ -120,7 +114,7 @@ const ContactDetails = () => {
                     <IconButton
                       href="https://x.com/GMufate"
                       target="_blank"
-                      sx={{ color: BRAND_GOLD }}
+                      sx={socialIcon}
                     >
                       <X />
                     </IconButton>
@@ -128,7 +122,7 @@ const ContactDetails = () => {
                     <IconButton
                       href="https://www.facebook.com/share/1CLhxfKxb2/"
                       target="_blank"
-                      sx={{ color: BRAND_GOLD }}
+                      sx={socialIcon}
                     >
                       <Facebook />
                     </IconButton>
@@ -136,9 +130,13 @@ const ContactDetails = () => {
                     <IconButton
                       href="https://wa.me/254791331932"
                       target="_blank"
-                      sx={{ color: '#25D366' }}
+                      sx={{
+                        ...socialIcon,
+                        color: '#25D366',
+                        borderColor: '#25D36655',
+                      }}
                     >
-                      <FaWhatsapp size={22} />
+                      <FaWhatsapp size={20} />
                     </IconButton>
                   </Box>
                 </CardContent>
@@ -147,7 +145,7 @@ const ContactDetails = () => {
 
             {/* HOURS */}
             <Grid item xs={12}>
-              <Card sx={infoCard}>
+              <Card sx={glassCard}>
                 <CardContent>
                   <Typography sx={infoTitle}>
                     <AccessTimeIcon sx={iconStyle} /> Office Hours
@@ -168,21 +166,26 @@ const ContactDetails = () => {
   );
 };
 
-/* ================= STYLES ================= */
+/* ================= GLASS STYLES ================= */
 
-const branchCard = {
+const glassCard = {
   height: '100%',
-  background: 'rgba(255,255,255,0.04)',
-  borderRadius: '22px',
-  border: `1px solid ${BRAND_GOLD}40`,
-  boxShadow: '0 0 30px rgba(236,155,20,0.25)',
+  borderRadius: '24px',
+  background: 'rgba(255,255,255,0.08)',
+  backdropFilter: 'blur(14px)',
+  WebkitBackdropFilter: 'blur(14px)',
+  border: `1px solid ${BRAND_GOLD}55`,
+  boxShadow: `
+    inset 0 0 20px rgba(255,255,255,0.05),
+    0 8px 30px rgba(236,155,20,0.25)
+  `,
 };
 
 const mapStyle = {
   width: '100%',
-  height: 200,
-  borderRadius: '14px',
-  border: 0,
+  height: 190,
+  borderRadius: '16px',
+  border: '1px solid rgba(255,255,255,0.15)',
   mb: 2,
 };
 
@@ -190,6 +193,7 @@ const branchTitle = {
   fontWeight: 900,
   color: BRAND_GOLD,
   mb: 1.5,
+  letterSpacing: 1,
   textTransform: 'uppercase',
 };
 
@@ -198,14 +202,7 @@ const branchText = {
   display: 'flex',
   alignItems: 'center',
   mb: 1,
-};
-
-const infoCard = {
-  height: '100%',
-  background: 'rgba(255,255,255,0.05)',
-  borderRadius: '22px',
-  border: `1px solid ${BRAND_GOLD}40`,
-  boxShadow: '0 0 22px rgba(236,155,20,0.25)',
+  fontSize: 14,
 };
 
 const infoTitle = {
@@ -213,17 +210,25 @@ const infoTitle = {
   color: BRAND_GOLD,
   display: 'flex',
   alignItems: 'center',
+  mb: 1,
 };
 
 const infoText = {
   color: TEXT_LIGHT,
-  mt: 1,
+  fontSize: 14,
+  mt: 0.8,
 };
 
 const iconStyle = {
   fontSize: 18,
   mr: 1,
   color: BRAND_GOLD,
+};
+
+const socialIcon = {
+  color: BRAND_GOLD,
+  border: `1px solid ${BRAND_GOLD}55`,
+  backdropFilter: 'blur(6px)',
 };
 
 export default ContactDetails;
