@@ -7,10 +7,12 @@ import {
   CardContent,
   IconButton,
   CircularProgress,
+  Link,
 } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import EmailIcon from '@mui/icons-material/Email';
 import { Facebook, X } from '@mui/icons-material';
 import { FaWhatsapp } from 'react-icons/fa';
 
@@ -18,11 +20,10 @@ const BRAND_GOLD = '#EC9B14';
 const BRAND_DARK = '#02150F';
 const TEXT_LIGHT = '#F4F4F4';
 
-/* Map helper */
 const toEmbedMap = (url) =>
   url?.includes('embed')
     ? url
-    : `https://www.google.com/maps?q=${encodeURIComponent(url)}&output=embed`;
+    : `https://maps.google.com/maps?q=${encodeURIComponent(url)}&output=embed`;
 
 const ContactDetails = () => {
   const [branches, setBranches] = useState([]);
@@ -43,180 +44,155 @@ const ContactDetails = () => {
       sx={{
         background: `radial-gradient(circle at top, rgba(236,155,20,0.15), transparent 45%), 
                      linear-gradient(180deg, ${BRAND_DARK}, #03140D)`,
-        px: { xs: 2, md: 8 },
+        px: { xs: 2, md: 4 },
         py: { xs: 6, md: 10 },
       }}
     >
-      <Grid container spacing={4} alignItems="stretch">
-        {/* ================= LEFT COLUMN ================= */}
-        <Grid item xs={12} md={8}>
-          {loading ? (
+      <Grid container spacing={2} alignItems="stretch">
+        {/* 1. BRANCH CARDS (Dynamic from API) */}
+        {loading ? (
+          <Grid item xs={12} sx={{ textAlign: 'center' }}>
             <CircularProgress sx={{ color: BRAND_GOLD }} />
-          ) : (
-            <Grid container spacing={4}>
-              {branches.slice(0, 2).map((branch) => (
-                <Grid item xs={12} md={6} key={branch.BranchID}>
-                  <Card sx={glassCard}>
-                    <CardContent sx={{ height: '100%' }}>
-                      <Typography sx={branchTitle}>
-                        {branch.BranchName}
-                      </Typography>
-
-                      <Box
-                        component="iframe"
-                        src={toEmbedMap(branch.GoogleMapURL)}
-                        sx={mapStyle}
-                        loading="lazy"
-                      />
-
-                      <Typography sx={branchText}>
-                        <LocationOnIcon sx={iconStyle} />
-                        {branch.Location}
-                      </Typography>
-
-                      <Typography sx={branchText}>
-                        <PhoneIcon sx={iconStyle} />
-                        {branch.ContactNumber}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
+          </Grid>
+        ) : (
+          branches.slice(0, 2).map((branch) => (
+            <Grid item xs={12} sm={6} md={2.4} key={branch.BranchID}>
+              <Card sx={glassCard}>
+                <CardContent>
+                  <Typography sx={branchTitle}>{branch.BranchName}</Typography>
+                  <Box
+                    component="iframe"
+                    src={toEmbedMap(branch.Location)}
+                    sx={mapStyle}
+                    loading="lazy"
+                  />
+                  <Typography sx={branchText}>
+                    <LocationOnIcon sx={iconStyle} /> {branch.Location}
+                  </Typography>
+                  <Typography sx={branchText}>
+                    <PhoneIcon sx={iconStyle} /> {branch.ContactNumber}
+                  </Typography>
+                </CardContent>
+              </Card>
             </Grid>
-          )}
+          ))
+        )}
+
+        {/* 2. CALL US CARD */}
+        <Grid item xs={12} sm={6} md={2.4}>
+          <Card sx={glassCard}>
+            <CardContent>
+              <Typography sx={infoTitle}>
+                <PhoneIcon sx={iconStyle} /> Call Us
+              </Typography>
+              <Typography sx={infoText}>+254 791 331 932</Typography>
+              <Typography sx={infoText}>+254 794 515 407</Typography>
+            </CardContent>
+          </Card>
         </Grid>
 
-        {/* ================= RIGHT COLUMN ================= */}
-        <Grid item xs={12} md={4}>
-          <Grid container spacing={4} sx={{ height: '100%' }}>
-            {/* CALL US */}
-            <Grid item xs={12}>
-              <Card sx={glassCard}>
-                <CardContent>
-                  <Typography sx={infoTitle}>
-                    <PhoneIcon sx={iconStyle} /> Call Us
-                  </Typography>
-                  <Typography sx={infoText}>+254 791 331 932</Typography>
-                  <Typography sx={infoText}>+254 794 515 407</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+        {/* 3. EMAIL US CARD */}
+        <Grid item xs={12} sm={6} md={2.4}>
+          <Card sx={glassCard}>
+            <CardContent>
+              <Typography sx={infoTitle}>
+                <EmailIcon sx={iconStyle} /> Email Us
+              </Typography>
+              <Typography sx={infoText}>
+                <Link href="mailto:info@mudetesacco.co.ke" sx={{ color: 'inherit', textDecoration: 'none' }}>
+                  info@mudetesacco.co.ke
+                </Link>
+              </Typography>
+              <Typography sx={{ ...infoText, opacity: 0.7, fontSize: '12px', mt: 2 }}>
+                Send us an email anytime.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
 
-            {/* SOCIAL */}
-            <Grid item xs={12}>
-              <Card sx={glassCard}>
-                <CardContent>
-                  <Typography sx={infoTitle}>
-                    Connect With Us
-                  </Typography>
+        {/* 4. CONNECT & HOURS CARD (Combined or Separate) */}
+        {/* Based on Image 1, let's keep Connect and Hours as separate cards to fill the 5-column layout */}
+        
+        <Grid item xs={12} sm={6} md={2.4}>
+          <Card sx={glassCard}>
+            <CardContent>
+              <Typography sx={infoTitle}>Connect With Us</Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 2 }}>
+                <IconButton href="https://x.com/GMufate" target="_blank" sx={socialIcon}><X /></IconButton>
+                <IconButton href="https://facebook.com" target="_blank" sx={socialIcon}><Facebook /></IconButton>
+                <IconButton href="https://wa.me/254791331932" target="_blank" sx={{ ...socialIcon, color: '#25D366' }}><FaWhatsapp size={20} /></IconButton>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
 
-                  <Box sx={{ display: 'flex', gap: 3, mt: 2 }}>
-                    <IconButton
-                      href="https://x.com/GMufate"
-                      target="_blank"
-                      sx={socialIcon}
-                    >
-                      <X />
-                    </IconButton>
-
-                    <IconButton
-                      href="https://www.facebook.com/share/1CLhxfKxb2/"
-                      target="_blank"
-                      sx={socialIcon}
-                    >
-                      <Facebook />
-                    </IconButton>
-
-                    <IconButton
-                      href="https://wa.me/254791331932"
-                      target="_blank"
-                      sx={{
-                        ...socialIcon,
-                        color: '#25D366',
-                        borderColor: '#25D36655',
-                      }}
-                    >
-                      <FaWhatsapp size={20} />
-                    </IconButton>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* HOURS */}
-            <Grid item xs={12}>
-              <Card sx={glassCard}>
-                <CardContent>
-                  <Typography sx={infoTitle}>
-                    <AccessTimeIcon sx={iconStyle} /> Office Hours
-                  </Typography>
-                  <Typography sx={infoText}>
-                    Monday – Friday: 8:30 AM – 4:30 PM
-                  </Typography>
-                  <Typography sx={infoText}>
-                    Saturday: 8:30 AM – 12:30 PM
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+        <Grid item xs={12} sm={6} md={2.4}>
+          <Card sx={glassCard}>
+            <CardContent>
+              <Typography sx={infoTitle}>
+                <AccessTimeIcon sx={iconStyle} /> Office Hours
+              </Typography>
+              <Typography sx={infoText}>Mon – Fri: 8:30 AM – 4:30 PM</Typography>
+              <Typography sx={infoText}>Sat: 8:30 AM – 12:30 PM</Typography>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </Box>
   );
 };
 
-/* ================= GLASS STYLES ================= */
+/* ================= STYLES ================= */
 
 const glassCard = {
   height: '100%',
-  borderRadius: '24px',
-  background: 'rgba(255,255,255,0.08)',
-  backdropFilter: 'blur(14px)',
-  WebkitBackdropFilter: 'blur(14px)',
-  border: `1px solid ${BRAND_GOLD}55`,
-  boxShadow: `
-    inset 0 0 20px rgba(255,255,255,0.05),
-    0 8px 30px rgba(236,155,20,0.25)
-  `,
+  borderRadius: '20px',
+  background: 'rgba(2, 21, 15, 0.8)', // Darker background like Image 1
+  border: `1px solid ${BRAND_GOLD}44`,
+  transition: 'transform 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    borderColor: BRAND_GOLD,
+  },
 };
 
 const mapStyle = {
   width: '100%',
-  height: 190,
-  borderRadius: '16px',
-  border: '1px solid rgba(255,255,255,0.15)',
+  height: 140, // Slightly shorter for the 5-column look
+  borderRadius: '12px',
+  border: 'none',
   mb: 2,
 };
 
 const branchTitle = {
-  fontWeight: 900,
+  fontWeight: 800,
   color: BRAND_GOLD,
-  mb: 1.5,
-  letterSpacing: 1,
+  mb: 2,
+  fontSize: '0.9rem',
   textTransform: 'uppercase',
 };
 
 const branchText = {
   color: TEXT_LIGHT,
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   mb: 1,
-  fontSize: 14,
+  fontSize: '13px',
 };
 
 const infoTitle = {
-  fontWeight: 900,
+  fontWeight: 700,
   color: BRAND_GOLD,
   display: 'flex',
   alignItems: 'center',
-  mb: 1,
+  mb: 2,
+  fontSize: '1rem',
 };
 
 const infoText = {
   color: TEXT_LIGHT,
-  fontSize: 14,
-  mt: 0.8,
+  fontSize: '14px',
+  mb: 0.5,
 };
 
 const iconStyle = {
@@ -228,7 +204,10 @@ const iconStyle = {
 const socialIcon = {
   color: BRAND_GOLD,
   border: `1px solid ${BRAND_GOLD}55`,
-  backdropFilter: 'blur(6px)',
+  padding: '8px',
+  '&:hover': {
+    background: `${BRAND_GOLD}22`,
+  }
 };
 
 export default ContactDetails;
