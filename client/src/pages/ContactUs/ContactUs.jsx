@@ -6,6 +6,7 @@ import FeedbackForm from './FeedbackForm';
 
 const BRAND_GOLD = '#EC9B14';
 const BRAND_TEXT_LIGHT = '#F4F4F4';
+const BRAND_DARK = '#02150F';
 
 const ContactUs = () => {
   return (
@@ -34,7 +35,7 @@ const ContactUs = () => {
           overflow: 'hidden',
         }}
       >
-        {/* DARK OVERLAY WITH DEPTH */}
+        {/* DARK OVERLAY */}
         <Box
           sx={{
             position: 'absolute',
@@ -51,7 +52,7 @@ const ContactUs = () => {
           }}
         />
 
-        {/* HERO CONTENT (ANIMATED) */}
+        {/* HERO CONTENT */}
         <Box
           component={motion.div}
           initial={{ opacity: 0, y: 18 }}
@@ -103,17 +104,14 @@ const ContactUs = () => {
           </Typography>
         </Box>
 
-        {/* SOFT BOTTOM TRANSITION */}
+        {/* HERO BOTTOM FADE (ENDS HERO CLEANLY) */}
         <Box
           sx={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
-            height: {
-              xs: '90px',
-              md: '120px',
-            },
+            height: { xs: '90px', md: '120px' },
             background:
               'linear-gradient(to bottom, rgba(2,21,15,0), rgba(2,21,15,1))',
           }}
@@ -121,9 +119,32 @@ const ContactUs = () => {
       </Box>
 
       {/* ===================== */}
-      {/* NEXT SECTIONS (TO BE REPLACED NEXT) */}
+      {/* VISUAL RESET BUFFER */}
       {/* ===================== */}
-      <ContactDetails />
+      <Box
+        sx={{
+          height: { xs: '60px', md: '90px' },
+          background: BRAND_DARK,
+        }}
+      />
+
+      {/* ===================== */}
+      {/* CONTACT DETAILS SECTION */}
+      {/* ===================== */}
+      <Box
+        sx={{
+          background: `
+            radial-gradient(circle at top, rgba(236,155,20,0.18), transparent 55%),
+            linear-gradient(180deg, #02150F, #03140D)
+          `,
+        }}
+      >
+        <ContactDetails />
+      </Box>
+
+      {/* ===================== */}
+      {/* FEEDBACK SECTION */}
+      {/* ===================== */}
       <FeedbackForm />
     </>
   );
