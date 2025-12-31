@@ -10,7 +10,7 @@ const BRAND_DARK = '#02150F';
 
 const ContactUs = () => {
   return (
-    <>
+    <Box sx={{ backgroundColor: BRAND_DARK, minHeight: '100vh' }}>
       {/* ===================== */}
       {/* HERO SECTION */}
       {/* ===================== */}
@@ -26,117 +26,68 @@ const ContactUs = () => {
             'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          px: { xs: 2, sm: 4, md: 8 },
           textAlign: 'center',
           overflow: 'hidden',
         }}
       >
-        {/* DARK OVERLAY */}
+        {/* DARK OVERLAY - Blends the image into the dark background */}
         <Box
           sx={{
             position: 'absolute',
             inset: 0,
-            background: `
-              linear-gradient(
-                to bottom,
-                rgba(2,21,15,0.55),
-                rgba(2,21,15,0.78),
-                rgba(2,21,15,0.92)
-              )
-            `,
-            zIndex: 0,
+            background: `linear-gradient(to bottom, rgba(2,21,15,0.4), rgba(2,21,15,0.8), ${BRAND_DARK})`,
+            zIndex: 1,
           }}
         />
 
         {/* HERO CONTENT */}
         <Box
           component={motion.div}
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          sx={{
-            position: 'relative',
-            zIndex: 1,
-            maxWidth: '820px',
-          }}
+          transition={{ duration: 0.8 }}
+          sx={{ position: 'relative', zIndex: 2, px: 2 }}
         >
           <Typography
             sx={{
               fontWeight: 900,
               textTransform: 'uppercase',
-              fontSize: {
-                xs: '1.7rem',
-                sm: '2.1rem',
-                md: '2.6rem',
-              },
-              letterSpacing: {
-                xs: '0.08em',
-                md: '0.05em',
-              },
+              fontSize: { xs: '2rem', md: '3.5rem' },
               color: BRAND_GOLD,
-              mb: 1.5,
-              textShadow: '0 4px 14px rgba(0,0,0,0.65)',
+              letterSpacing: '0.1em',
+              mb: 1,
+              textShadow: '0 10px 30px rgba(0,0,0,0.5)',
             }}
           >
-            Let’s Get In Touch
+            Contact Us
           </Typography>
-
           <Typography
             sx={{
-              fontSize: {
-                xs: '0.95rem',
-                sm: '1.05rem',
-                md: '1.15rem',
-              },
-              lineHeight: 1.7,
+              fontSize: { xs: '1rem', md: '1.2rem' },
               color: BRAND_TEXT_LIGHT,
-              maxWidth: '700px',
+              maxWidth: '600px',
               mx: 'auto',
-              textShadow: '0 2px 10px rgba(0,0,0,0.6)',
+              opacity: 0.9,
             }}
           >
-            Have any questions or need support? Our team is ready to help you
-            with anything you need.
+            We are here to help. Reach out to our team at any of our branches
+            or connect with us online.
           </Typography>
         </Box>
-
-        {/* HERO BOTTOM FADE (ENDS HERO CLEANLY) */}
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: { xs: '90px', md: '120px' },
-            background:
-              'linear-gradient(to bottom, rgba(2,21,15,0), rgba(2,21,15,1))',
-          }}
-        />
       </Box>
-
-      {/* ===================== */}
-      {/* VISUAL RESET BUFFER */}
-      {/* ===================== */}
-      <Box
-        sx={{
-          height: { xs: '60px', md: '90px' },
-          background: BRAND_DARK,
-        }}
-      />
 
       {/* ===================== */}
       {/* CONTACT DETAILS SECTION */}
       {/* ===================== */}
-      <Box
-        sx={{
-          background: `
-            radial-gradient(circle at top, rgba(236,155,20,0.18), transparent 55%),
-            linear-gradient(180deg, #02150F, #03140D)
-          `,
+      <Box 
+        sx={{ 
+          position: 'relative',
+          zIndex: 3,
+          mt: -8, // Pulls the cards slightly into the hero fade for a modern look
+          pb: 8
         }}
       >
         <ContactDetails />
@@ -145,8 +96,10 @@ const ContactUs = () => {
       {/* ===================== */}
       {/* FEEDBACK SECTION */}
       {/* ===================== */}
-      <FeedbackForm />
-    </>
+      <Box sx={{ py: 10, background: 'rgba(255,255,255,0.02)' }}>
+        <FeedbackForm />
+      </Box>
+    </Box>
   );
 };
 
