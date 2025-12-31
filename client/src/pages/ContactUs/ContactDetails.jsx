@@ -169,7 +169,7 @@ const ContactDetails = () => {
                             {formLoading ? <CircularProgress size={24} color="inherit" /> : 'SEND MESSAGE'}
                           </Button>
                         </Box>
-                        <Typography sx={{ textAlign: 'center', color: TEXT_LIGHT, opacity: 0.4, fontSize: '0.8rem' }}>Kindly ensure your contact information is accurate</Typography>
+                        <Typography sx={{ textAlign: 'center', color: TEXT_LIGHT, opacity: 0.4, fontSize: '0.8rem' }}>Kindly ensure your contact information is accurate.</Typography>
                       </Stack>
                     </CardContent>
                   </motion.div>
