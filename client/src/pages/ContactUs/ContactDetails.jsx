@@ -109,7 +109,7 @@ const ContactDetails = () => {
                 <Typography sx={hugeInfoText}>+254 794 515 407</Typography>
                 
                 <Box sx={{ mt: 6 }}>
-                  <Typography sx={megaInfoTitle}><EmailIcon sx={megaIconStyle} /> Email Support</Typography>
+                  <Typography sx={megaInfoTitle}><EmailIcon sx={megaIconStyle} /> Email Us</Typography>
                   <Box sx={megaGoldDivider} />
                   <Typography sx={hugeInfoText}>info@mudetesacco.co.ke</Typography>
                   <Typography sx={{ color: TEXT_LIGHT, opacity: 0.5, fontSize: '1.1rem', mt: 1 }}>Available 24/7 for inquiries</Typography>
@@ -125,7 +125,7 @@ const ContactDetails = () => {
                 <Typography sx={hugeInfoText}>Saturday: <b>8:30 AM – 12:30 PM</b></Typography>
                 
                 <Box sx={{ mt: 6 }}>
-                  <Typography sx={megaInfoTitle}>Connect Socially</Typography>
+                  <Typography sx={megaInfoTitle}>Send Us a Message</Typography>
                   <Box sx={{ display: 'flex', gap: 3, mt: 3 }}>
                     <IconButton sx={megaSocialIcon}><X sx={{ fontSize: 32 }} /></IconButton>
                     <IconButton sx={megaSocialIcon}><Facebook sx={{ fontSize: 32 }} /></IconButton>
