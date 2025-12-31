@@ -43,93 +43,101 @@ const ContactDetails = () => {
 
   return (
     <Box sx={{ px: { xs: 2, md: 8 }, py: { xs: 4, md: 6 } }}>
-      <Grid container spacing={3}>
-        {/* LEFT COLUMN: BRANCHES */}
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={3}>
+      <Grid container spacing={4}>
+        
+        {/* LEFT COLUMN: BRANCH CARDS (Stacked Vertically) */}
+        <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {loading ? (
-              <Grid item xs={12} sx={{ textAlign: 'center', py: 5 }}>
+              <Box sx={{ textAlign: 'center', py: 5 }}>
                 <CircularProgress sx={{ color: BRAND_GOLD }} />
-              </Grid>
+              </Box>
             ) : (
               branches.slice(0, 2).map((branch) => (
-                <Grid item xs={12} key={branch.BranchID}>
-                  <Card sx={glassCard}>
-                    <CardContent>
-                      <Typography sx={branchTitle}>
-                        {branch.BranchName.includes('HQ') ? 'Head Office' : 'Branch Office'}: {branch.BranchName}
-                      </Typography>
+                <Card sx={glassCard} key={branch.BranchID}>
+                  <CardContent>
+                    <Typography sx={branchTitle}>
+                      {branch.BranchName.includes('HQ') ? 'Head Office' : 'Branch Office'}: {branch.BranchName}
+                    </Typography>
+                    
+                    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
+                      <Box 
+                        component="iframe" 
+                        src={toEmbedMap(branch.Location)} 
+                        sx={mapStyle} 
+                        loading="lazy" 
+                      />
                       
-                      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
-                        <Box component="iframe" src={toEmbedMap(branch.Location)} sx={mapStyle} loading="lazy" />
-                        
-                        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                          <Box>
-                            <Typography sx={branchText}>
-                              <PhoneIcon sx={iconStyle} /> {branch.ContactNumber}
-                            </Typography>
-                            <Typography sx={branchText}>
-                              <LocationOnIcon sx={iconStyle} /> {branch.Location}
-                            </Typography>
-                          </Box>
-                          
-                          <Button 
-                            variant="outlined" 
-                            endIcon={<ChevronRightIcon />}
-                            sx={directionsBtn}
-                          >
-                            Get Directions
-                          </Button>
-                        </Box>
+                      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <Typography sx={branchText}>
+                          <PhoneIcon sx={iconStyle} /> {branch.ContactNumber}
+                        </Typography>
+                        <Typography sx={branchText}>
+                          <LocationOnIcon sx={iconStyle} /> {branch.Location}
+                        </Typography>
+                        <Button 
+                          variant="outlined" 
+                          endIcon={<ChevronRightIcon />}
+                          sx={directionsBtn}
+                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.Location)}`}
+                          target="_blank"
+                        >
+                          Get Directions
+                        </Button>
                       </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                    </Box>
+                  </CardContent>
+                </Card>
               ))
             )}
-          </Grid>
+          </Box>
         </Grid>
 
-        {/* RIGHT COLUMN: QUICK CONTACT */}
-        <Grid item xs={12} md={5}>
-          <Card sx={{ ...glassCard, height: '100%' }}>
-            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {/* CALL US */}
-              <Box>
-                <Typography sx={infoTitle}><PhoneIcon sx={iconStyle} /> Call Us</Typography>
-                <Box sx={{ borderBottom: `1px solid ${BRAND_GOLD}33`, width: '100%', mb: 2 }} />
-                <Typography sx={infoText}>+254 791 331 932</Typography>
-                <Typography sx={infoText}>+254 794 515 407</Typography>
-              </Box>
+        {/* RIGHT COLUMN: CONTACT INFO CARDS (Stacked Vertically) */}
+        <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            
+            {/* CALL & EMAIL COMBINED CARD */}
+            <Card sx={glassCard}>
+              <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box>
+                  <Typography sx={infoTitle}><PhoneIcon sx={iconStyle} /> Call Us</Typography>
+                  <Typography sx={infoText}>+254 791 331 932</Typography>
+                  <Typography sx={infoText}>+254 794 515 407</Typography>
+                </Box>
+                <Box sx={{ borderBottom: `1px solid ${BRAND_GOLD}22` }} />
+                <Box>
+                  <Typography sx={infoTitle}><EmailIcon sx={iconStyle} /> Email Us</Typography>
+                  <Typography sx={infoText}>info@mudetesacco.co.ke</Typography>
+                  <Typography sx={{ ...infoText, opacity: 0.6, fontSize: '12px' }}>Send us an email anytime.</Typography>
+                </Box>
+              </CardContent>
+            </Card>
 
-              {/* EMAIL US */}
-              <Box>
-                <Typography sx={infoTitle}><EmailIcon sx={iconStyle} /> Email Us</Typography>
-                <Box sx={{ borderBottom: `1px solid ${BRAND_GOLD}33`, width: '100%', mb: 2 }} />
-                <Typography sx={infoText}>info@mudetesacco.co.ke</Typography>
-                <Typography sx={{ ...infoText, opacity: 0.6, fontSize: '12px' }}>Send us an email anytime.</Typography>
-              </Box>
-
-              {/* HOURS */}
-              <Box>
+            {/* OFFICE HOURS CARD */}
+            <Card sx={glassCard}>
+              <CardContent>
                 <Typography sx={infoTitle}><AccessTimeIcon sx={iconStyle} /> Office Hours</Typography>
-                <Box sx={{ borderBottom: `1px solid ${BRAND_GOLD}33`, width: '100%', mb: 2 }} />
                 <Typography sx={infoText}>Monday – Friday: <b>8:30 AM – 4:30 PM</b></Typography>
                 <Typography sx={infoText}>Saturday: <b>8:30 AM – 12:30 PM</b></Typography>
-              </Box>
+              </CardContent>
+            </Card>
 
-              {/* SOCIALS */}
-              <Box>
-                <Typography sx={infoTitle}>Send Us a Message</Typography>
-                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+            {/* SOCIALS CARD */}
+            <Card sx={glassCard}>
+              <CardContent>
+                <Typography sx={infoTitle}>Connect With Us</Typography>
+                <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
                   <IconButton sx={socialIcon}><X /></IconButton>
                   <IconButton sx={socialIcon}><Facebook /></IconButton>
                   <IconButton sx={socialIcon}><FaWhatsapp /></IconButton>
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+          </Box>
         </Grid>
+
       </Grid>
     </Box>
   );
@@ -138,11 +146,12 @@ const ContactDetails = () => {
 /* ================= STYLES ================= */
 
 const glassCard = {
-  background: 'rgba(2, 21, 15, 0.7)',
-  backdropFilter: 'blur(10px)',
+  background: 'rgba(2, 21, 15, 0.8)',
+  backdropFilter: 'blur(12px)',
   borderRadius: '15px',
   border: `1px solid rgba(236, 155, 20, 0.3)`,
-  boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.8)',
+  boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.6)',
+  width: '100%'
 };
 
 const directionsBtn = {
@@ -150,14 +159,15 @@ const directionsBtn = {
   borderColor: `${BRAND_GOLD}66`,
   textTransform: 'none',
   borderRadius: '8px',
-  fontSize: '0.8rem',
-  mt: 2,
+  fontSize: '0.75rem',
+  mt: 1,
+  width: 'fit-content',
   '&:hover': { borderColor: BRAND_GOLD, background: `${BRAND_GOLD}11` }
 };
 
 const mapStyle = {
-  width: { xs: '100%', sm: '200px' },
-  height: '120px',
+  width: { xs: '100%', sm: '180px' },
+  height: '110px',
   borderRadius: '10px',
   border: `1px solid ${BRAND_GOLD}22`,
 };
@@ -166,15 +176,17 @@ const branchTitle = {
   fontWeight: 600,
   color: BRAND_GOLD,
   mb: 2,
-  fontSize: '1.1rem',
+  fontSize: '1rem',
+  textTransform: 'uppercase',
+  letterSpacing: '1px'
 };
 
 const branchText = {
   color: TEXT_LIGHT,
   display: 'flex',
   alignItems: 'center',
-  mb: 1.5,
-  fontSize: '0.9rem',
+  mb: 1,
+  fontSize: '0.85rem',
 };
 
 const infoTitle = {
@@ -182,18 +194,18 @@ const infoTitle = {
   color: BRAND_GOLD,
   display: 'flex',
   alignItems: 'center',
-  fontSize: '1.1rem',
+  fontSize: '1rem',
   mb: 1
 };
 
 const infoText = {
   color: TEXT_LIGHT,
-  fontSize: '0.95rem',
+  fontSize: '0.9rem',
   mb: 0.5,
 };
 
 const iconStyle = {
-  fontSize: 20,
+  fontSize: 18,
   mr: 1.5,
   color: BRAND_GOLD,
 };
@@ -201,7 +213,7 @@ const iconStyle = {
 const socialIcon = {
   color: BRAND_GOLD,
   border: `1px solid ${BRAND_GOLD}44`,
-  background: 'rgba(0,0,0,0.3)',
+  background: 'rgba(255,255,255,0.05)',
   '&:hover': { background: BRAND_GOLD, color: BRAND_DARK }
 };
 
