@@ -96,9 +96,9 @@ const ContactUs = () => {
       {/* ===================== */}
       {/* FEEDBACK SECTION */}
       {/* ===================== */}
-      <Box sx={{ py: 10, background: 'rgba(255,255,255,0.02)' }}>
+      {/* <Box sx={{ py: 10, background: 'rgba(255,255,255,0.02)' }}>
         <FeedbackForm />
-      </Box>
+      </Box> */}
     </Box>
   );
 };
