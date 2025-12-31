@@ -19,15 +19,17 @@ const TEXT_LIGHT = '#F4F4F4';
 
 const toEmbedMap = (location) => {
   const encoded = encodeURIComponent(location);
-  return `https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=${encoded}`;
+  return `https://www.google.com/maps?q=${encoded}&output=embed`;
 };
 
 const ContactDetails = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [formLoading, setFormLoading] = useState(false);
+
+  // Feedback Form State
   const [formData, setFormData] = useState({ Email: '', Subject: '', Message: '' });
+  const [formLoading, setFormLoading] = useState(false);
 
   useEffect(() => {
     fetch('https://mufate-g-sacco.onrender.com/branches')
@@ -51,24 +53,24 @@ const ContactDetails = () => {
         body: JSON.stringify(formData),
       });
       if (response.status === 201) {
-        enqueueSnackbar('Feedback sent successfully!', { variant: 'success' });
+        enqueueSnackbar('Feedback sent!', { variant: 'success' });
         setFormData({ Email: '', Subject: '', Message: '' });
       } else {
-        enqueueSnackbar('Submission failed.', { variant: 'error' });
+        enqueueSnackbar('Error sending feedback', { variant: 'error' });
       }
     } catch (error) {
-      enqueueSnackbar('Error sending feedback.', { variant: 'error' });
+      enqueueSnackbar('Submission failed', { variant: 'error' });
     } finally {
       setFormLoading(false);
     }
   };
 
   return (
-    <Box sx={{ px: { xs: 2, md: 8 }, py: { xs: 4, md: 6 } }}>
-      <Grid container spacing={4} alignItems="stretch">
+    <Box sx={{ px: { xs: 2, md: 4 }, py: { xs: 4, md: 6 } }}>
+      <Grid container spacing={3} alignItems="stretch">
         
-        {/* LEFT COLUMN: BRANCHES */}
-        <Grid item xs={12} md={6}>
+        {/* COLUMN 1: Vertical Branches */}
+        <Grid item xs={12} md={4}>
           <Stack spacing={3} sx={{ height: '100%' }}>
             {loading ? (
               <CircularProgress sx={{ color: BRAND_GOLD, mx: 'auto' }} />
@@ -76,13 +78,18 @@ const ContactDetails = () => {
               branches.slice(0, 2).map((branch) => (
                 <Card sx={glassCard} key={branch.BranchID}>
                   <CardContent>
-                    <Typography sx={branchTitle}>{branch.BranchName}</Typography>
-                    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
-                      <Box component="iframe" src={toEmbedMap(branch.Location)} sx={mapStyle} />
-                      <Box sx={{ flex: 1 }}>
+                    <Typography sx={branchTitle}>
+                      {branch.BranchName.includes('HQ') ? 'Head Office' : 'Branch Office'}: {branch.BranchName}
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Box component="iframe" src={toEmbedMap(branch.Location)} sx={mapStyle} title={branch.BranchName} />
+                      <Box>
                         <Typography sx={branchText}><PhoneIcon sx={iconStyle} /> {branch.ContactNumber}</Typography>
                         <Typography sx={branchText}><LocationOnIcon sx={iconStyle} /> {branch.Location}</Typography>
-                        <Button variant="outlined" endIcon={<ChevronRightIcon />} sx={directionsBtn}>
+                        <Button 
+                          variant="outlined" endIcon={<ChevronRightIcon />} sx={directionsBtn}
+                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.Location)}`} target="_blank"
+                        >
                           Get Directions
                         </Button>
                       </Box>
@@ -91,84 +98,76 @@ const ContactDetails = () => {
                 </Card>
               ))
             )}
-            
-            {/* QUICK CONTACTS (Moved below branches to balance height) */}
+          </Stack>
+        </Grid>
+
+        {/* COLUMN 2: Vertical Contact Info (The Original Middle Content) */}
+        <Grid item xs={12} md={4}>
+          <Stack spacing={3} sx={{ height: '100%' }}>
             <Card sx={glassCard}>
-              <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
-                <Box>
-                  <Typography sx={infoTitle}><PhoneIcon sx={iconStyle} /> Call Us</Typography>
-                  <Typography sx={infoText}>+254 791 331 932</Typography>
+              <CardContent>
+                <Typography sx={infoTitle}><PhoneIcon sx={iconStyle} /> Call Us</Typography>
+                <Box sx={goldDivider} />
+                <Typography sx={infoText}>+254 791 331 932</Typography>
+                <Typography sx={infoText}>+254 794 515 407</Typography>
+                <Box sx={{ mt: 4 }}>
+                  <Typography sx={infoTitle}><EmailIcon sx={iconStyle} /> Email Us</Typography>
+                  <Box sx={goldDivider} />
+                  <Typography sx={infoText}>info@mudetesacco.co.ke</Typography>
+                  <Typography sx={{ color: TEXT_LIGHT, opacity: 0.6, fontSize: '12px' }}>Send us an email anytime.</Typography>
                 </Box>
-                <Box>
-                  <Typography sx={infoTitle}><AccessTimeIcon sx={iconStyle} /> Hours</Typography>
-                  <Typography sx={infoText}>Mon-Fri: 8:30AM - 4:30PM</Typography>
+              </CardContent>
+            </Card>
+
+            <Card sx={glassCard}>
+              <CardContent>
+                <Typography sx={infoTitle}><AccessTimeIcon sx={iconStyle} /> Office Hours</Typography>
+                <Box sx={goldDivider} />
+                <Typography sx={infoText}>Monday – Friday: <b>8:30 AM – 4:30 PM</b></Typography>
+                <Typography sx={infoText}>Saturday: <b>8:30 AM – 12:30 PM</b></Typography>
+                <Box sx={{ mt: 4 }}>
+                  <Typography sx={infoTitle}>Connect With Us</Typography>
+                  <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+                    <IconButton sx={socialIcon}><X /></IconButton>
+                    <IconButton sx={socialIcon}><Facebook /></IconButton>
+                    <IconButton sx={socialIcon}><FaWhatsapp /></IconButton>
+                  </Box>
                 </Box>
               </CardContent>
             </Card>
           </Stack>
         </Grid>
 
-        {/* RIGHT COLUMN: FEEDBACK FORM (Occupying empty space) */}
-        <Grid item xs={12} md={6}>
-          <Card sx={{ ...glassCard, height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <CardContent component="form" onSubmit={handleFormSubmit} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-              <Typography sx={{ ...branchTitle, mb: 1 }}>Send Us a Message</Typography>
+        {/* COLUMN 3: Feedback Form (The New Rectangular Card) */}
+        <Grid item xs={12} md={4}>
+          <Card sx={{ ...glassCard, height: '100%' }}>
+            <CardContent component="form" onSubmit={handleFormSubmit}>
+              <Typography sx={infoTitle}>Send Us a Message</Typography>
               <Box sx={goldDivider} />
-              
-              <TextField
-                label="Email Address"
-                name="Email"
-                type="email"
-                fullWidth
-                required
-                value={formData.Email}
-                onChange={handleFormChange}
-                InputProps={{ sx: formInputStyle }}
-                InputLabelProps={{ sx: formLabelStyle }}
-              />
-              <TextField
-                label="Subject"
-                name="Subject"
-                fullWidth
-                required
-                value={formData.Subject}
-                onChange={handleFormChange}
-                InputProps={{ sx: formInputStyle }}
-                InputLabelProps={{ sx: formLabelStyle }}
-              />
-              <TextField
-                label="Message"
-                name="Message"
-                multiline
-                rows={4}
-                fullWidth
-                required
-                value={formData.Message}
-                onChange={handleFormChange}
-                InputProps={{ sx: formInputStyle }}
-                InputLabelProps={{ sx: formLabelStyle }}
-              />
-              
-              <Box sx={{ mt: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <IconButton sx={socialIcon}><X /></IconButton>
-                  <IconButton sx={socialIcon}><Facebook /></IconButton>
-                  <IconButton sx={socialIcon}><FaWhatsapp /></IconButton>
-                </Box>
-                
+              <Stack spacing={2.5} sx={{ mt: 2 }}>
+                <TextField 
+                  label="Email" name="Email" fullWidth required value={formData.Email} onChange={handleFormChange}
+                  InputProps={{ sx: feedbackInput }} InputLabelProps={{ sx: feedbackLabel }}
+                />
+                <TextField 
+                  label="Subject" name="Subject" fullWidth required value={formData.Subject} onChange={handleFormChange}
+                  InputProps={{ sx: feedbackInput }} InputLabelProps={{ sx: feedbackLabel }}
+                />
+                <TextField 
+                  label="Message" name="Message" multiline rows={6} fullWidth required value={formData.Message} onChange={handleFormChange}
+                  InputProps={{ sx: feedbackInput }} InputLabelProps={{ sx: feedbackLabel }}
+                />
                 <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={formLoading}
-                  endIcon={!formLoading && <SendIcon />}
-                  sx={submitBtnStyle}
+                  type="submit" variant="contained" disabled={formLoading}
+                  endIcon={!formLoading && <SendIcon />} sx={feedbackSubmitBtn}
                 >
-                  {formLoading ? <CircularProgress size={20} /> : 'Submit'}
+                  {formLoading ? <CircularProgress size={24} /> : 'Submit Feedback'}
                 </Button>
-              </Box>
+              </Stack>
             </CardContent>
           </Card>
         </Grid>
+
       </Grid>
     </Box>
   );
@@ -188,36 +187,34 @@ const goldDivider = {
   height: '1px',
   background: `linear-gradient(90deg, ${BRAND_GOLD}, transparent)`,
   width: '100%',
-  mb: 1,
+  mb: 2,
   opacity: 0.5
 };
 
-const formInputStyle = {
-  background: 'rgba(255,255,255,0.05)',
-  borderRadius: '10px',
-  color: TEXT_LIGHT,
-  '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(236, 155, 20, 0.2)' },
-  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: BRAND_GOLD },
+const feedbackInput = {
+  background: 'rgba(255,255,255,0.9)',
+  borderRadius: '12px',
+  '& .MuiOutlinedInput-notchedOutline': { border: 'none' }
 };
 
-const formLabelStyle = { color: 'rgba(244, 244, 244, 0.6)' };
+const feedbackLabel = { color: '#02150F', fontWeight: 600 };
 
-const submitBtnStyle = {
+const feedbackSubmitBtn = {
   background: BRAND_GOLD,
   color: BRAND_DARK,
-  fontWeight: 700,
-  px: 4,
-  borderRadius: '10px',
+  fontWeight: 900,
+  py: 1.5,
+  borderRadius: '12px',
   '&:hover': { background: '#D48A12' }
 };
 
-const mapStyle = { width: { xs: '100%', sm: '180px' }, height: '110px', borderRadius: '8px', border: 'none' };
-const directionsBtn = { color: BRAND_GOLD, borderColor: `${BRAND_GOLD}66`, textTransform: 'none', mt: 1 };
-const branchTitle = { fontWeight: 700, color: BRAND_GOLD, mb: 2, fontSize: '1.1rem' };
-const branchText = { color: TEXT_LIGHT, display: 'flex', alignItems: 'center', mb: 1, fontSize: '0.9rem' };
-const infoTitle = { fontWeight: 600, color: BRAND_GOLD, display: 'flex', alignItems: 'center', fontSize: '0.9rem', mb: 0.5 };
-const infoText = { color: TEXT_LIGHT, fontSize: '0.85rem' };
-const iconStyle = { fontSize: 18, mr: 1, color: BRAND_GOLD };
-const socialIcon = { color: BRAND_GOLD, border: `1px solid ${BRAND_GOLD}44`, p: 0.5 };
+const mapStyle = { width: '100%', height: '130px', borderRadius: '8px', border: `1px solid ${BRAND_GOLD}22` };
+const directionsBtn = { color: BRAND_GOLD, borderColor: `${BRAND_GOLD}66`, textTransform: 'none', fontSize: '0.75rem', width: 'fit-content', mt: 1 };
+const branchTitle = { fontWeight: 700, color: BRAND_GOLD, mb: 2, fontSize: '1rem' };
+const branchText = { color: TEXT_LIGHT, display: 'flex', alignItems: 'center', mb: 1, fontSize: '0.85rem' };
+const infoTitle = { fontWeight: 600, color: BRAND_GOLD, display: 'flex', alignItems: 'center', fontSize: '1rem', mb: 0.5 };
+const infoText = { color: TEXT_LIGHT, fontSize: '1rem', mb: 0.5 };
+const iconStyle = { fontSize: 20, mr: 1.5, color: BRAND_GOLD };
+const socialIcon = { color: BRAND_GOLD, border: `1px solid ${BRAND_GOLD}44`, '&:hover': { background: BRAND_GOLD, color: BRAND_DARK } };
 
 export default ContactDetails;
