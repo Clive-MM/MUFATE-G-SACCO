@@ -1614,7 +1614,7 @@ Message:
             recipients=[email],
             body=f"""Dear Member,
 
-Thank you for reaching out to MUFATE G SACCO. We have received your message:
+Thank you for reaching out to GOLDEN GENERATIO DT SACCO SUPPORT. We have received your message:
 
 "{subject}"
 
