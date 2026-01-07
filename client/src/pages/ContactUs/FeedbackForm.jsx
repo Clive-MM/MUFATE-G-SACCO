@@ -9,7 +9,6 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useSnackbar } from 'notistack';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Unified Brand Tokens
 const BRAND = {
   gold: '#EC9B14',
   goldSoft: '#F4D03F',
@@ -25,6 +24,7 @@ const FeedbackForm = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isSmallPhone = useMediaQuery('(max-width:360px)');
 
+  // Ensure these keys match the Python data.get() exactly
   const [formData, setFormData] = useState({
     Email: '',
     Subject: '',
@@ -45,17 +45,26 @@ const FeedbackForm = () => {
     try {
       const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json' 
+        },
+        body: JSON.stringify({
+          Email: formData.Email,
+          Subject: formData.Subject,
+          Message: formData.Message
+        }),
       });
+
+      const result = await response.json();
 
       if (response.status === 201) {
         setSubmitted(true);
         setFormData({ Email: '', Subject: '', Message: '' });
-        // Reset success state after 5 seconds to show form again
         setTimeout(() => setSubmitted(false), 5000);
       } else {
-        enqueueSnackbar('Submission failed. Please check required fields.', { variant: 'error' });
+        // This will show the actual error message from your Flask backend
+        enqueueSnackbar(result.message || 'Submission failed.', { variant: 'error' });
       }
     } catch (error) {
       enqueueSnackbar('Connection error. Please try again later.', { variant: 'error' });
@@ -80,32 +89,6 @@ const FeedbackForm = () => {
         alignItems: { xs: 'center', md: 'flex-start' },
       }}
     >
-      {/* DECORATIVE BACKGROUND ELEMENTS */}
-      {!isSmallPhone && (
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0, bottom: 0, right: '4vw',
-            display: 'flex', gap: { xs: '15px', md: '35px' },
-            zIndex: 0, pointerEvents: 'none'
-          }}
-        >
-          {[BRAND.gold, BRAND.goldSoft, '#F9E79F'].map((color, index) => (
-            <Box
-              key={index}
-              sx={{
-                width: { xs: '20px', md: '60px' },
-                height: '100%',
-                backgroundColor: color,
-                opacity: 0.1,
-                borderRadius: '12px',
-                filter: 'blur(50px)',
-              }}
-            />
-          ))}
-        </Box>
-      )}
-
       {/* HEADER */}
       <Typography
         variant="h4"
@@ -117,6 +100,7 @@ const FeedbackForm = () => {
           zIndex: 2,
           fontSize: { xs: '1.5rem', sm: '2rem', md: '2.3rem' },
           textAlign: { xs: 'center', md: 'left' },
+          textDecoration: 'none'
         }}
       >
         Send Us a Message
@@ -126,7 +110,6 @@ const FeedbackForm = () => {
         Have questions? Our team typically responds within 24 hours.
       </Typography>
 
-      {/* FORM CONTAINER */}
       <Box sx={{ width: '100%', maxWidth: '600px', zIndex: 2 }}>
         <AnimatePresence mode="wait">
           {!submitted ? (
@@ -227,8 +210,6 @@ const FeedbackForm = () => {
     </Box>
   );
 };
-
-/* ================= STYLES ================= */
 
 const inputStyle = {
   '& .MuiOutlinedInput-root': {
