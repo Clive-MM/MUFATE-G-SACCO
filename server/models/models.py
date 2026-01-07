@@ -193,6 +193,7 @@ class Feedback(db.Model):
 
     FeedbackID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Email = db.Column(db.String(100))
+    PhoneNumber = db.Column(db.String(20))   # ✅ NEW
     Subject = db.Column(db.String(200))
     Message = db.Column(db.Text)
     StatusID = db.Column(db.Integer, db.ForeignKey('Feedback_Status.StatusID'))

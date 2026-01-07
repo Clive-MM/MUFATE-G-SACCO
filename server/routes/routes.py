@@ -1576,36 +1576,51 @@ def get_holiday_message():
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
-        data = request.get_json()
+        data = request.get_json() or {}
+
         email = data.get('Email')
+        phone = data.get('PhoneNumber')   # ✅ NEW
         subject = data.get('Subject')
         message = data.get('Message')
 
-        # ✅ Validate input
+        # ✅ Basic validation
         if not email or not subject or not message:
-            return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
+            return jsonify({
+                'message': '❌ Email, Subject, and Message are required!'
+            }), 400
+
+        # ✅ Optional phone normalization
+        if phone:
+            phone = phone.strip().replace(' ', '')
 
         # ✅ Save feedback to the database
-        new_feedback = Feedback(
+        feedback = Feedback(
             Email=email,
+            PhoneNumber=phone,   # ✅ SAVED
             Subject=subject,
             Message=message,
-            StatusID=1  # Default to "Unread"
+            StatusID=1  # Default: Unread
         )
-        db.session.add(new_feedback)
+
+        db.session.add(feedback)
         db.session.commit()
 
         # ✅ Prepare email to SACCO admin
         admin_msg = Message(
             subject=f"📥 New Feedback: {subject}",
             recipients=["maderumoyia@mudetesacco.co.ke"],
-            body=f"""You have received new feedback from {email}.
+            body=f"""You have received new feedback via the website.
+
+Email: {email}
+Phone: {phone or 'Not provided'}
 
 Subject: {subject}
+
 Message:
 {message}
 
--- MUFATE G SACCO Website"""
+-- MUFATE G SACCO Website
+"""
         )
 
         # ✅ Prepare acknowledgment email to user
@@ -1614,18 +1629,20 @@ Message:
             recipients=[email],
             body=f"""Dear Member,
 
-Thank you for reaching out to GOLDEN GENERATION DT SACCO SUPPORT TEAM. We have received your message:
+Thank you for contacting GOLDEN GENERATION DT SACCO.
 
+We have received your message titled:
 "{subject}"
 
 Our team will review it and get back to you as necessary.
 
-Warm regards,  
-GOLDEN GENERATION DT SACCO Team  
-maderumoyia@mudetesacco.co.ke"""
+Warm regards,
+GOLDEN GENERATION DT SACCO Team
+maderumoyia@mudetesacco.co.ke
+"""
         )
 
-        # ✅ Try sending emails
+        # ✅ Send emails (non-blocking logic style)
         try:
             mail.send(admin_msg)
             mail.send(user_msg)
@@ -1633,13 +1650,13 @@ maderumoyia@mudetesacco.co.ke"""
             import traceback
             traceback.print_exc()
             return jsonify({
-                'message': '⚠️ Feedback saved, but email failed to send.',
+                'message': '⚠️ Feedback saved successfully, but email failed to send.',
                 'error': str(email_error)
             }), 500
 
         return jsonify({
             'message': '😊 Thank you for your feedback!',
-            'feedback_id': new_feedback.FeedbackID
+            'feedback_id': feedback.FeedbackID
         }), 201
 
     except Exception as e:
@@ -1649,6 +1666,7 @@ maderumoyia@mudetesacco.co.ke"""
             'message': '❌ Failed to submit feedback.',
             'error': str(e)
         }), 500
+
  
 #✅Route to fetch active gallery photos
 @routes.route('/gallery', methods=['GET'])
