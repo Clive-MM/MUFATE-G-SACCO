@@ -93,14 +93,14 @@ const ContactUs = () => {
             </Typography>
             
             <Box 
-              sx={{ 
-                width: '60px', 
-                height: '4px', 
-                bgcolor: BRAND.gold, 
-                mx: 'auto', 
-                mb: 3,
-                borderRadius: '2px' 
-              }} 
+              // sx={{ 
+              //   width: '60px', 
+              //   height: '4px', 
+              //   bgcolor: BRAND.gold, 
+              //   mx: 'auto', 
+              //   mb: 3,
+              //   borderRadius: '2px' 
+              // }} 
             />
 
             <Typography
