@@ -1610,18 +1610,18 @@ Message:
 
         # ✅ Prepare acknowledgment email to user
         user_msg = Message(
-            subject="✅ Thank You for Your Feedback - MUFATE G SACCO",
+            subject="✅ Thank You for Your Feedback - GOLDEN GENERATION DT SACCO",
             recipients=[email],
             body=f"""Dear Member,
 
-Thank you for reaching out to GOLDEN GENERATIO DT SACCO SUPPORT. We have received your message:
+Thank you for reaching out to GOLDEN GENERATION DT SACCO SUPPORT TEAM. We have received your message:
 
 "{subject}"
 
 Our team will review it and get back to you as necessary.
 
 Warm regards,  
-MUFA​TE G SACCO Team  
+GOLDEN GENERATION DT SACCO Team  
 maderumoyia@mudetesacco.co.ke"""
         )
 
