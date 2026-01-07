@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
 import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  CircularProgress
+  Box, Typography, TextField, Button, CircularProgress, 
+  Stack, InputAdornment, useMediaQuery, useTheme 
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import LockIcon from '@mui/icons-material/Lock';
 import { useSnackbar } from 'notistack';
 import { motion } from 'framer-motion';
 
-const BRAND_GOLD = '#F4D03F';
-const GOLD_LIGHT = '#F7DC6F';
-const GOLD_SOFT = '#F9E79F';
+// Unified Brand Tokens
+const BRAND = {
+  gold: '#EC9B14',
+  goldSoft: '#F4D03F',
+  dark: '#02150F',
+  light: '#F4F4F4',
+  success: '#25D366'
+};
 
 const FeedbackForm = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
+  
+  // Responsive Breakpoints logic
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallPhone = useMediaQuery('(max-width:360px)');
 
   const [formData, setFormData] = useState({
     Email: '',
+    Phone: '+254', // Enforce prefix for cleaner data
     Subject: '',
     Message: '',
   });
@@ -31,32 +40,30 @@ const FeedbackForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Basic Phone Validation for SACCO standards
+    if (formData.Phone.length < 13) {
+      enqueueSnackbar('Please enter a valid phone number (e.g., +254 7XX XXX XXX)', { variant: 'warning' });
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const response = await fetch(
-        'https://mufate-g-sacco.onrender.com/feedback',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const result = await response.json();
+      const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
       if (response.status === 201) {
-        enqueueSnackbar(result.message, { variant: 'success' });
-        setFormData({ Email: '', Subject: '', Message: '' });
+        enqueueSnackbar('Feedback sent successfully!', { variant: 'success' });
+        setFormData({ Email: '', Phone: '+254', Subject: '', Message: '' });
       } else {
-        enqueueSnackbar(result.message || 'Submission failed.', {
-          variant: 'error',
-        });
+        enqueueSnackbar('Submission failed. Please try again.', { variant: 'error' });
       }
     } catch (error) {
-      enqueueSnackbar('Something went wrong. Please try again.', {
-        variant: 'error',
-      });
+      enqueueSnackbar('Connection error. Check your internet.', { variant: 'error' });
     } finally {
       setLoading(false);
     }
@@ -66,170 +73,196 @@ const FeedbackForm = () => {
     <Box
       sx={{
         position: 'relative',
-        minHeight: '85vh',
-        px: { xs: 2, md: 8 },
-        pt: { xs: 3, md: 5 },
-        pb: { xs: 5, md: 7 },
-        background: 'linear-gradient(to bottom, #0A1F14, #03140D)',
-        borderBottomLeftRadius: '18px',
-        borderBottomRightRadius: '18px',
+        minHeight: { xs: 'auto', md: '85vh' },
+        px: { xs: 3, md: 6 }, // Optimized padding for 14-inch laptops and mobile
+        pt: { xs: 4, md: 5 },
+        pb: { xs: 6, md: 7 },
+        background: `linear-gradient(135deg, #0A1F14 0%, ${BRAND.dark} 100%)`,
+        borderRadius: '24px',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         alignItems: { xs: 'center', md: 'flex-start' },
       }}
     >
-      {/* RIGHT GOLD BARS */}
-      <motion.div
-        initial={{ opacity: 0, x: 120 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.9 }}
-        style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          right: '4vw',
-          display: 'flex',
-          gap: '35px',
-          zIndex: 0,
-        }}
-      >
-        {[BRAND_GOLD, GOLD_LIGHT, GOLD_SOFT, GOLD_LIGHT, BRAND_GOLD]
-          .slice(
-            0,
-            window.innerWidth < 600
-              ? 2
-              : window.innerWidth < 1024
-              ? 3
-              : 5
-          )
-          .map((color, index) => (
-            <motion.div
+      {/* RIGHT GOLD BARS - Optimized for low-end phone performance */}
+      {!isSmallPhone && (
+        <Box
+          component={motion.div}
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          sx={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            right: '4vw',
+            display: 'flex',
+            gap: { xs: '15px', md: '35px' },
+            zIndex: 0,
+            pointerEvents: 'none'
+          }}
+        >
+          {[BRAND.gold, BRAND.goldSoft, '#F9E79F'].map((color, index) => (
+            <Box
               key={index}
-              initial={{ height: 0 }}
-              whileInView={{
-                height:
-                  window.innerWidth < 600
-                    ? '45%'
-                    : window.innerWidth < 1024
-                    ? '70%'
-                    : '100%',
-              }}
-              transition={{ duration: 0.9 + index * 0.2 }}
-              style={{
-                width: window.innerWidth < 600 ? '40px' : '70px',
+              sx={{
+                width: { xs: '20px', md: '60px' },
+                height: { xs: '40%', md: '100%' },
                 backgroundColor: color,
+                opacity: 0.15, // Reduced opacity for better text contrast
                 borderRadius: '12px',
-                boxShadow: `0 0 30px rgba(244,208,63,0.55)`,
+                filter: 'blur(40px)', // Softer look
               }}
             />
           ))}
-      </motion.div>
+        </Box>
+      )}
 
       {/* HEADER */}
       <Typography
         variant="h4"
         sx={{
-          color: BRAND_GOLD,
+          color: BRAND.gold,
           fontWeight: 900,
           textTransform: 'uppercase',
-          mb: 3,
+          mb: 1,
           zIndex: 2,
-          fontSize: { xs: '1.7rem', md: '2.3rem' },
+          fontSize: { xs: '1.5rem', sm: '2rem', md: '2.3rem' },
           textAlign: { xs: 'center', md: 'left' },
+          letterSpacing: '1px'
         }}
       >
-        We Value Your Feedback
+        Send Us a Message
+      </Typography>
+      
+      <Typography sx={{ color: BRAND.light, opacity: 0.7, mb: 4, zIndex: 2, fontSize: '0.9rem' }}>
+        Have questions? Our team typically responds within 24 hours.
       </Typography>
 
       {/* FORM */}
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
+      <Box
+        component={motion.div}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        style={{ width: '100%', maxWidth: '650px', zIndex: 2 }}
+        transition={{ duration: 0.5 }}
+        sx={{ width: '100%', maxWidth: '600px', zIndex: 2 }}
       >
-        <Box
+        <Stack
           component="form"
           onSubmit={handleSubmit}
+          spacing={2.5}
           sx={{
-            backdropFilter: 'blur(15px)',
-            background: 'rgba(255,255,255,0.06)',
+            backdropFilter: 'blur(10px)',
+            background: 'rgba(255,255,255,0.03)',
             borderRadius: '22px',
             p: { xs: 2.5, md: 4 },
-            boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2.5,
+            border: '1px solid rgba(255,255,255,0.08)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+            willChange: 'transform', // Performance optimization for mobile
           }}
         >
-          {['Email', 'Subject', 'Message'].map((field) => (
-            <TextField
-              key={field}
-              label={field}
-              name={field}
-              type={field === 'Email' ? 'email' : 'text'}
-              value={formData[field]}
-              onChange={handleChange}
-              required
-              multiline={field === 'Message'}
-              rows={field === 'Message' ? 4 : 1}
-              fullWidth
-              InputLabelProps={{
-                sx: {
-                  color: '#000',
-                  fontWeight: 800,
-                },
-              }}
-              InputProps={{
-                sx: {
-                  background: 'rgba(255,255,255,0.9)',
-                  borderRadius: '14px',
-                  boxShadow:
-                    'inset 3px 3px 8px rgba(0,0,0,0.2), inset -3px -3px 8px rgba(255,255,255,0.9)',
-                },
-              }}
-            />
-          ))}
+          <TextField
+            label="Email Address"
+            name="Email"
+            type="email"
+            fullWidth
+            required
+            value={formData.Email}
+            onChange={handleChange}
+            helperText="We'll send our reply to this address."
+            sx={inputStyle}
+          />
 
-          {/* SUBMIT BUTTON */}
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={loading}
-            startIcon={!loading && <SendIcon />}
-            sx={{
-              alignSelf: { xs: 'center', md: 'flex-start' },
-              px: { xs: 3, md: 4 },
-              py: 1.5,
-              borderRadius: '14px',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              fontSize: '1rem',
-              color: '#000',
-              background: `linear-gradient(90deg, ${BRAND_GOLD}, ${GOLD_LIGHT})`,
-              boxShadow: '0 0 22px rgba(244,208,63,0.75)',
-              transition: '0.3s ease',
-              '&:hover': {
-                background: `linear-gradient(90deg, #042F1A, ${BRAND_GOLD})`,
-                boxShadow: '0 0 30px rgba(244,208,63,0.95)',
-                transform: 'scale(1.05)',
-              },
-            }}
-          >
-            {loading ? (
-              <>
-                <CircularProgress size={20} sx={{ color: '#000' }} />
-                &nbsp;Submitting...
-              </>
-            ) : (
-              'Submit'
-            )}
-          </Button>
-        </Box>
-      </motion.div>
+          <TextField
+            label="Phone Number"
+            name="Phone"
+            fullWidth
+            required
+            value={formData.Phone}
+            onChange={handleChange}
+            placeholder="+254 700 000 000"
+            helperText="Required for urgent SMS updates."
+            sx={inputStyle}
+          />
+
+          <TextField
+            label="Subject"
+            name="Subject"
+            fullWidth
+            required
+            value={formData.Subject}
+            onChange={handleChange}
+            sx={inputStyle}
+          />
+
+          <TextField
+            label="How can we help?"
+            name="Message"
+            multiline
+            rows={isMobile ? 4 : 5}
+            fullWidth
+            required
+            value={formData.Message}
+            onChange={handleChange}
+            sx={inputStyle}
+          />
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', md: 'flex-start' }, gap: 2 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={loading}
+              startIcon={!loading && <SendIcon />}
+              sx={submitBtnStyle}
+            >
+              {loading ? <CircularProgress size={24} sx={{ color: BRAND.dark }} /> : 'Submit Message'}
+            </Button>
+
+            {/* SECURITY NOTE */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, opacity: 0.6 }}>
+              <LockIcon sx={{ fontSize: '14px', color: BRAND.success }} />
+              <Typography sx={{ color: BRAND.light, fontSize: '0.75rem' }}>
+                Your information is kept confidential and secure.
+              </Typography>
+            </Box>
+          </Box>
+        </Stack>
+      </Box>
     </Box>
   );
+};
+
+/* ================= STYLES ================= */
+
+const inputStyle = {
+  '& .MuiOutlinedInput-root': {
+    background: 'rgba(255,255,255,0.95)',
+    borderRadius: '12px',
+    transition: '0.3s ease',
+    '& fieldset': { border: 'none' },
+    '&:hover': { transform: 'translateY(-2px)' },
+    '&.Mui-focused': { boxShadow: `0 0 0 2px ${BRAND.gold}` }
+  },
+  '& .MuiInputLabel-root': { color: BRAND.dark, fontWeight: 700 },
+  '& .MuiFormHelperText-root': { color: 'rgba(255,255,255,0.5)', marginLeft: 1 }
+};
+
+const submitBtnStyle = {
+  width: { xs: '100%', sm: 'auto' },
+  px: 5,
+  py: 1.8,
+  borderRadius: '12px',
+  fontWeight: 900,
+  fontSize: '1rem',
+  color: BRAND.dark,
+  background: `linear-gradient(90deg, ${BRAND.gold}, ${BRAND.goldSoft})`,
+  boxShadow: `0 8px 20px ${BRAND.gold}44`,
+  '&:hover': {
+    background: BRAND.goldSoft,
+    transform: 'scale(1.02)',
+    boxShadow: `0 12px 25px ${BRAND.gold}66`,
+  },
 };
 
 export default FeedbackForm;

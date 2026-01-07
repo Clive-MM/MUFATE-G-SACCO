@@ -1,24 +1,30 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
   Box, Typography, Grid, Card, CardContent, IconButton,
-  CircularProgress, Button, Stack, TextField, Container, Fab, Zoom
+  CircularProgress, Button, Stack, TextField, Container, Fab, Zoom, Skeleton, useMediaQuery, useTheme
 } from '@mui/material';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import PhoneIcon from '@mui/icons-material/Phone';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import EmailIcon from '@mui/icons-material/Email';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import SendIcon from '@mui/icons-material/Send';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import { Facebook, X } from '@mui/icons-material';
+import { 
+  Phone as PhoneIcon, 
+  AccessTime as AccessTimeIcon, 
+  LocationOn as LocationOnIcon, 
+  Email as EmailIcon, 
+  ChevronRight as ChevronRightIcon, 
+  CheckCircleOutline as CheckCircleOutlineIcon, 
+  Lock as LockIcon,
+  Facebook, X 
+} from '@mui/icons-material';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useSnackbar } from 'notistack';
 
-const BRAND_GOLD = '#EC9B14';
-const BRAND_DARK = '#02150F';
-const TEXT_LIGHT = '#F4F4F4';
+// Centralized Brand Tokens
+const BRAND = {
+  gold: '#EC9B14',
+  dark: '#02150F',
+  light: '#F4F4F4',
+  textMuted: 'rgba(244, 244, 244, 0.6)',
+  success: '#25D366'
+};
 
 const toEmbedMap = (location) => {
   const encoded = encodeURIComponent(location);
@@ -27,13 +33,18 @@ const toEmbedMap = (location) => {
 
 const ContactDetails = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
+  
+  // Responsive Breakpoint Logic
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
   const scrollRef = useRef(null);
-  const formRef = useRef(null);
   const isInView = useInView(scrollRef, { once: true, margin: "-100px" });
 
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ Email: '', Subject: '', Message: '' });
+  const [formData, setFormData] = useState({ Email: '', Phone: '+254', Subject: '', Message: '' });
   const [formLoading, setFormLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -51,6 +62,10 @@ const ContactDetails = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (formData.Phone.length < 13) {
+      enqueueSnackbar('Please use +254 format', { variant: 'warning' });
+      return;
+    }
     setFormLoading(true);
     try {
       const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
@@ -69,43 +84,44 @@ const ContactDetails = () => {
     }
   };
 
-  // Animation Variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.25 } }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } }
-  };
-
   return (
     <Container 
       id="contact-section" 
       ref={scrollRef} 
-      maxWidth={false} 
-      sx={{ py: { xs: 6, md: 10 }, px: { xs: 2, md: 8 } }}
+      maxWidth="xl" 
+      sx={{ py: { xs: 4, md: 8 }, px: { xs: 3, md: 6 } }}
     >
-      <motion.div variants={containerVariants} initial="hidden" animate={isInView ? "visible" : "hidden"}>
-        <Grid container spacing={5} justifyContent="center">
+      <motion.div 
+        initial="hidden" 
+        animate={isInView ? "visible" : "hidden"} 
+        variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+      >
+        <Grid container spacing={4} justifyContent="center">
           
-          {/* COLUMN 1: BRANCHES */}
-          <Grid item xs={12} lg={4} component={motion.div} variants={cardVariants} sx={{ display: 'flex' }}>
-            <Stack spacing={4} sx={{ flexGrow: 1, width: '100%' }}>
+          {/* COLUMN 1: BRANCH LOCATIONS */}
+          <Grid item xs={12} md={6} lg={4}>
+            <Stack spacing={3}>
               {loading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', p: 10 }}><CircularProgress sx={{ color: BRAND_GOLD }} /></Box>
+                [1, 2].map((i) => (
+                  <Skeleton key={i} variant="rectangular" height={420} sx={skeletonStyle} />
+                ))
               ) : (
                 branches.slice(0, 2).map((branch) => (
-                  <Card sx={megaGlassCard} key={branch.BranchID}>
+                  <Card sx={megaGlassCard} key={branch.BranchID} component={motion.div} variants={cardFadeUp}>
                     <CardContent sx={{ p: 4 }}>
-                      <Typography sx={megaBranchTitle}>OFFICIAL LOCATION</Typography>
+                      <Typography sx={megaBranchTitle}>BRANCH LOCATION</Typography>
                       <Typography sx={subTitleText}>{branch.BranchName}</Typography>
-                      <Box component="iframe" src={toEmbedMap(branch.Location)} sx={megaMapStyle} />
+                      <Box component="iframe" src={toEmbedMap(branch.Location)} sx={megaMapStyle} title={branch.BranchName} />
                       <Stack spacing={2} sx={{ mt: 3 }}>
                         <Typography sx={megaBranchText}><PhoneIcon sx={megaIconStyle} /> {branch.ContactNumber}</Typography>
                         <Typography sx={megaBranchText}><LocationOnIcon sx={megaIconStyle} /> {branch.Location}</Typography>
-                        <Button variant="outlined" endIcon={<ChevronRightIcon />} sx={megaDirectionsBtn} href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.Location)}`} target="_blank">
+                        <Button 
+                          variant="outlined" 
+                          endIcon={<ChevronRightIcon />} 
+                          sx={megaDirectionsBtn} 
+                          href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(branch.Location)}`} 
+                          target="_blank"
+                        >
                           Get Directions
                         </Button>
                       </Stack>
@@ -116,69 +132,89 @@ const ContactDetails = () => {
             </Stack>
           </Grid>
 
-          {/* COLUMN 2: QUICK CONTACT */}
-          <Grid item xs={12} lg={4} component={motion.div} variants={cardVariants} sx={{ display: 'flex' }}>
-            <Stack spacing={4} sx={{ flexGrow: 1, width: '100%' }}>
-              <Card sx={{ ...megaGlassCard, flexGrow: 1 }}>
+          {/* COLUMN 2: QUICK CONTACT & HOURS */}
+          <Grid item xs={12} md={6} lg={4}>
+            <Stack spacing={4} sx={{ height: '100%' }}>
+              <Card sx={{ ...megaGlassCard, flexGrow: 1 }} component={motion.div} variants={cardFadeUp}>
                 <CardContent sx={{ p: 4 }}>
                   <Typography sx={megaInfoTitle}><PhoneIcon sx={megaIconStyle} /> Call Center</Typography>
                   <Box sx={megaGoldDivider} />
                   <Typography sx={hugeInfoText}>+254 791 331 932</Typography>
                   <Typography sx={hugeInfoText}>+254 794 515 407</Typography>
-                  <Box sx={{ mt: 6 }}>
+                  <Box sx={{ mt: 4 }}>
                     <Typography sx={megaInfoTitle}><EmailIcon sx={megaIconStyle} /> Email Us</Typography>
                     <Box sx={megaGoldDivider} />
                     <Typography sx={hugeInfoText}>info@mudetesacco.co.ke</Typography>
                   </Box>
                 </CardContent>
               </Card>
-              <Card sx={{ ...megaGlassCard, flexGrow: 1 }}>
+
+              <Card sx={{ ...megaGlassCard, flexGrow: 1 }} component={motion.div} variants={cardFadeUp}>
                 <CardContent sx={{ p: 4 }}>
                   <Typography sx={megaInfoTitle}><AccessTimeIcon sx={megaIconStyle} /> Business Hours</Typography>
                   <Box sx={megaGoldDivider} />
                   <Typography sx={hugeInfoText}>Mon – Fri: <b>8:30 AM – 4:30 PM</b></Typography>
                   <Typography sx={hugeInfoText}>Sat: <b>8:30 AM – 12:30 PM</b></Typography>
-                  <Box sx={{ mt: 5, display: 'flex', gap: 2 }}>
-                    <IconButton sx={megaSocialIcon}><X /></IconButton>
-                    <IconButton sx={megaSocialIcon}><Facebook /></IconButton>
-                    <IconButton sx={megaSocialIcon}><FaWhatsapp size={24} /></IconButton>
+                  <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+                    <IconButton sx={megaSocialIcon} aria-label="Follow us on X"><X /></IconButton>
+                    <IconButton sx={megaSocialIcon} aria-label="Follow us on Facebook"><Facebook /></IconButton>
+                    <IconButton sx={megaSocialIcon} aria-label="Chat with us on WhatsApp"><FaWhatsapp size={24} /></IconButton>
                   </Box>
                 </CardContent>
               </Card>
             </Stack>
           </Grid>
 
-          {/* COLUMN 3: FEEDBACK PORTAL */}
-          <Grid item xs={12} lg={4} component={motion.div} variants={cardVariants} sx={{ display: 'flex' }}>
-            <Card sx={{ ...megaGlassCard, flexGrow: 1, position: 'relative' }}>
+          {/* COLUMN 3: FEEDBACK PORTAL (Full width on Tablet, 1/3 on Desktop) */}
+          <Grid item xs={12} lg={4} sx={{ display: 'flex' }}>
+            <Card sx={{ ...megaGlassCard, flexGrow: 1, position: 'relative', minHeight: '600px' }} component={motion.div} variants={cardFadeUp}>
               <AnimatePresence mode="wait">
                 {!submitted ? (
                   <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ height: '100%' }}>
-                    <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: 5, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography sx={megaInfoTitle}>Send a Message</Typography>
-                        <VerifiedUserIcon sx={{ color: BRAND_GOLD, opacity: 0.5 }} />
-                      </Box>
+                    <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: { xs: 3, md: 5 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                      <Typography sx={megaInfoTitle}>Send Us a Message</Typography>
                       <Box sx={megaGoldDivider} />
-                      <Stack spacing={3} sx={{ mt: 2, flexGrow: 1 }}>
-                        <TextField label="Email Address" name="Email" fullWidth required value={formData.Email} onChange={handleFormChange} sx={megaInputStyle} InputLabelProps={{ sx: megaLabelStyle }} />
-                        <TextField label="Subject" name="Subject" fullWidth required value={formData.Subject} onChange={handleFormChange} sx={megaInputStyle} InputLabelProps={{ sx: megaLabelStyle }} />
-                        <TextField label="How can we help?" name="Message" multiline rows={10} fullWidth required value={formData.Message} onChange={handleFormChange} sx={megaInputStyle} InputLabelProps={{ sx: megaLabelStyle }} />
-                        <Box sx={{ display: 'flex', justifyContent: 'center', pt: 2 }}>
-                          <Button type="submit" variant="contained" disabled={formLoading} sx={refinedGlowBtn}>
+                      
+                      <Stack spacing={2.5} sx={{ mt: 1, flexGrow: 1 }}>
+                        <TextField 
+                          label="Email Address" name="Email" fullWidth required 
+                          value={formData.Email} onChange={handleFormChange} 
+                          sx={megaInputStyle} helperText="We respond within 24 hours"
+                          FormHelperTextProps={{ sx: { color: BRAND.textMuted } }}
+                        />
+                        <TextField 
+                          label="Phone Number" name="Phone" fullWidth required 
+                          value={formData.Phone} onChange={handleFormChange} 
+                          sx={megaInputStyle} helperText="Format: +254..."
+                          FormHelperTextProps={{ sx: { color: BRAND.textMuted } }}
+                        />
+                        <TextField 
+                          label="Message" name="Message" multiline rows={isMobile ? 4 : 6} 
+                          fullWidth required value={formData.Message} 
+                          onChange={handleFormChange} sx={megaInputStyle} 
+                        />
+                        
+                        <Box sx={{ pt: 2 }}>
+                          <Button type="submit" variant="contained" disabled={formLoading} sx={refinedGlowBtn} fullWidth>
                             {formLoading ? <CircularProgress size={24} color="inherit" /> : 'SEND MESSAGE'}
                           </Button>
+                          
+                          <Stack direction="row" spacing={1} justifyContent="center" alignItems="center" sx={{ mt: 2, opacity: 0.7 }}>
+                            <LockIcon sx={{ fontSize: 16, color: BRAND.success }} />
+                            <Typography sx={{ color: BRAND.light, fontSize: '0.75rem' }}>
+                              Confidential & Secure
+                            </Typography>
+                          </Stack>
                         </Box>
-                        <Typography sx={{ textAlign: 'center', color: TEXT_LIGHT, opacity: 0.4, fontSize: '0.8rem' }}>Kindly ensure your contact information is accurate.</Typography>
                       </Stack>
                     </CardContent>
                   </motion.div>
                 ) : (
-                  <motion.div key="success" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <motion.div key="success" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Box sx={{ textAlign: 'center', p: 4 }}>
-                      <CheckCircleOutlineIcon sx={{ fontSize: 120, color: BRAND_GOLD, mb: 2 }} />
-                      <Typography variant="h4" sx={{ color: BRAND_GOLD, fontWeight: 900, mb: 1 }}>SENT!</Typography>
-                      <Typography sx={{ color: TEXT_LIGHT, opacity: 0.8 }}>We've received your feedback.</Typography>
+                      <CheckCircleOutlineIcon sx={{ fontSize: 100, color: BRAND.gold, mb: 2 }} />
+                      <Typography variant="h4" sx={{ color: BRAND.gold, fontWeight: 900, mb: 1 }}>SENT!</Typography>
+                      <Typography sx={{ color: BRAND.light, opacity: 0.8 }}>Thank you for reaching out.</Typography>
                     </Box>
                   </motion.div>
                 )}
@@ -188,12 +224,13 @@ const ContactDetails = () => {
         </Grid>
       </motion.div>
 
-      {/* FLOATING WHATSAPP BUTTON */}
+      {/* FLOATING WHATSAPP */}
       <Zoom in={true} style={{ transitionDelay: '1000ms' }}>
         <Fab 
           href="https://wa.me/254791331932" 
           target="_blank"
           sx={whatsappFabStyle}
+          aria-label="WhatsApp Support"
         >
           <FaWhatsapp size={35} />
         </Fab>
@@ -205,56 +242,92 @@ const ContactDetails = () => {
 /* ================= STYLES ================= */
 
 const megaGlassCard = {
-  background: 'rgba(2, 21, 15, 0.92)',
+  background: 'rgba(2, 21, 15, 0.94)',
   backdropFilter: 'blur(20px)',
   borderRadius: '32px',
-  border: `1px solid rgba(236, 155, 20, 0.25)`,
-  boxShadow: '0 30px 70px rgba(0,0,0,0.8)',
-  transition: 'all 0.4s ease',
-  '&:hover': { transform: 'translateY(-10px)', borderColor: BRAND_GOLD }
+  border: `1px solid rgba(236, 155, 20, 0.2)`,
+  boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
+  transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease',
+  willChange: 'transform',
+  '&:hover': { 
+    transform: 'translateY(-8px)', 
+    borderColor: BRAND.gold,
+    boxShadow: `0 40px 80px rgba(0,0,0,0.7), 0 0 20px ${BRAND.gold}22`
+  }
 };
 
-const megaGoldDivider = { height: '3px', background: `linear-gradient(90deg, ${BRAND_GOLD}, transparent)`, width: '80px', mb: 4, mt: 1 };
+const skeletonStyle = {
+  bgcolor: 'rgba(255,255,255,0.05)',
+  borderRadius: '32px',
+  mb: 3
+};
+
+const cardFadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+};
+
+const megaGoldDivider = { 
+  height: '3px', 
+  background: `linear-gradient(90deg, ${BRAND.gold}, transparent)`, 
+  width: '60px', 
+  mb: 3, 
+  mt: 1 
+};
 
 const megaInputStyle = {
   '& .MuiOutlinedInput-root': {
-    color: '#FFF', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '16px',
-    '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.15)' },
-    '&.Mui-focused fieldset': { borderColor: BRAND_GOLD, borderWidth: '2px' },
-  }
+    color: '#FFF', 
+    background: 'rgba(255, 255, 255, 0.05)', 
+    borderRadius: '16px',
+    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.1)' },
+    '&:hover fieldset': { borderColor: 'rgba(236, 155, 20, 0.5)' },
+    '&.Mui-focused fieldset': { borderColor: BRAND.gold },
+  },
+  '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.5)' },
 };
 
-const megaLabelStyle = { color: 'rgba(255,255,255,0.4)' };
-
 const refinedGlowBtn = {
-  background: `linear-gradient(45deg, ${BRAND_GOLD}, #FFD700)`,
-  color: BRAND_DARK, fontWeight: 900, borderRadius: '50px', px: 6, py: 1.8,
-  boxShadow: `0 10px 30px ${BRAND_GOLD}44`,
-  '&:hover': { transform: 'scale(1.05)', boxShadow: `0 15px 40px ${BRAND_GOLD}77` }
+  background: `linear-gradient(45deg, ${BRAND.gold}, #F4D03F)`,
+  color: BRAND.dark, 
+  fontWeight: 900, 
+  borderRadius: '16px', 
+  py: 2,
+  boxShadow: `0 10px 25px ${BRAND.gold}33`,
+  '&:hover': { 
+    background: '#F4D03F',
+    boxShadow: `0 15px 35px ${BRAND.gold}55` 
+  }
 };
 
 const whatsappFabStyle = {
-  position: 'fixed', bottom: 40, right: 40,
+  position: 'fixed', bottom: { xs: 20, md: 40 }, right: { xs: 20, md: 40 },
   backgroundColor: '#25D366', color: '#FFF',
-  width: 70, height: 70,
-  '&:hover': { backgroundColor: '#128C7E', transform: 'scale(1.1) rotate(10deg)' },
-  boxShadow: '0 10px 25px rgba(37, 211, 102, 0.4)',
-  animation: 'pulse 2s infinite',
-  '@keyframes pulse': {
-    '0%': { boxShadow: '0 0 0 0 rgba(37, 211, 102, 0.7)' },
-    '70%': { boxShadow: '0 0 0 20px rgba(37, 211, 102, 0)' },
-    '100%': { boxShadow: '0 0 0 0 rgba(37, 211, 102, 0)' }
-  }
+  width: { xs: 60, md: 75 }, height: { xs: 60, md: 75 },
+  '&:hover': { backgroundColor: '#128C7E', transform: 'scale(1.1)' },
+  zIndex: 1000
 };
 
-const megaMapStyle = { width: '100%', height: '220px', borderRadius: '24px', border: 'none', mt: 2 };
-const megaDirectionsBtn = { color: BRAND_GOLD, borderColor: BRAND_GOLD, borderRadius: '12px', mt: 2 };
-const megaBranchTitle = { fontWeight: 900, color: BRAND_GOLD, fontSize: '0.8rem', letterSpacing: '3px' };
-const subTitleText = { color: TEXT_LIGHT, fontWeight: 800, fontSize: '1.8rem', mb: 1 };
-const megaBranchText = { color: TEXT_LIGHT, display: 'flex', alignItems: 'center', gap: 2 };
-const megaInfoTitle = { fontWeight: 800, color: BRAND_GOLD, display: 'flex', alignItems: 'center', fontSize: '1.6rem', gap: 2 };
-const hugeInfoText = { color: TEXT_LIGHT, fontSize: '1.4rem', fontWeight: 600 };
-const megaIconStyle = { fontSize: 30, color: BRAND_GOLD };
-const megaSocialIcon = { color: BRAND_GOLD, border: `1px solid ${BRAND_GOLD}44`, '&:hover': { backgroundColor: BRAND_GOLD, color: BRAND_DARK } };
+const megaMapStyle = { 
+  width: '100%', height: '200px', borderRadius: '20px', 
+  border: '1px solid rgba(255,255,255,0.1)', mt: 2 
+};
+
+const megaDirectionsBtn = { 
+  color: BRAND.gold, borderColor: 'rgba(236, 155, 20, 0.4)', 
+  borderRadius: '12px', textTransform: 'none', fontWeight: 700 
+};
+
+const megaBranchTitle = { fontWeight: 900, color: BRAND.gold, fontSize: '0.75rem', letterSpacing: '2px' };
+const subTitleText = { color: BRAND.light, fontWeight: 800, fontSize: { xs: '1.4rem', md: '1.7rem' }, mb: 1 };
+const megaBranchText = { color: BRAND.light, display: 'flex', alignItems: 'center', gap: 1.5, fontSize: '0.95rem' };
+const megaInfoTitle = { fontWeight: 800, color: BRAND.gold, display: 'flex', alignItems: 'center', fontSize: '1.4rem', gap: 1.5 };
+const hugeInfoText = { color: BRAND.light, fontSize: '1.2rem', fontWeight: 600, mb: 0.5 };
+const megaIconStyle = { fontSize: 24, color: BRAND.gold };
+const megaSocialIcon = { 
+  color: BRAND.gold, 
+  border: `1px solid rgba(236, 155, 20, 0.3)`, 
+  '&:hover': { backgroundColor: BRAND.gold, color: BRAND.dark } 
+};
 
 export default ContactDetails;
