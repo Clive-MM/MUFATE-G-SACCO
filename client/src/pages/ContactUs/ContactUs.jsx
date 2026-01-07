@@ -147,7 +147,7 @@ const ContactUs = () => {
       {/* FOOTER CONFIDENCE MARK (Optional) */}
       <Box sx={{ py: 4, textAlign: 'center', opacity: 0.3 }}>
         <Typography variant="caption" sx={{ color: BRAND.light, letterSpacing: '2px' }}>
-          MUFATE G-SACCO &copy; {new Date().getFullYear()} | SECURE MEMBER PORTAL
+          GOLDEN GENERATION DT SACCO &copy; {new Date().getFullYear()} 
         </Typography>
       </Box>
 
