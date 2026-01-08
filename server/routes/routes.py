@@ -1572,14 +1572,19 @@ def get_holiday_message():
     else:
         return jsonify({ 'message': None }), 200
 
-# ✅ Public route to submit feedback
+# # ✅ Public route to submit feedback
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
-        data = request.get_json() or {}
+        data = request.get_json(silent=True)
+
+        if not data:
+            return jsonify({
+                'message': '❌ Invalid JSON payload.'
+            }), 400
 
         email = data.get('Email')
-        phone = data.get('PhoneNumber')   # ✅ NEW
+        phone = data.get('PhoneNumber')
         subject = data.get('Subject')
         message = data.get('Message')
 
@@ -1589,23 +1594,23 @@ def submit_feedback():
                 'message': '❌ Email, Subject, and Message are required!'
             }), 400
 
-        # ✅ Optional phone normalization
+        # ✅ Normalize phone number (optional)
         if phone:
             phone = phone.strip().replace(' ', '')
 
-        # ✅ Save feedback to the database
+        # ✅ Save feedback
         feedback = Feedback(
             Email=email,
-            PhoneNumber=phone,   # ✅ SAVED
+            PhoneNumber=phone,
             Subject=subject,
             Message=message,
-            StatusID=1  # Default: Unread
+            StatusID=1  # Unread
         )
 
         db.session.add(feedback)
         db.session.commit()
 
-        # ✅ Prepare email to SACCO admin
+        # ✅ Admin notification email
         admin_msg = Message(
             subject=f"📥 New Feedback: {subject}",
             recipients=["maderumoyia@mudetesacco.co.ke"],
@@ -1619,11 +1624,11 @@ Subject: {subject}
 Message:
 {message}
 
--- MUFATE G SACCO Website
+-- GOLDEN GENERATION DT SACCO Website
 """
         )
 
-        # ✅ Prepare acknowledgment email to user
+        # ✅ User acknowledgment email
         user_msg = Message(
             subject="✅ Thank You for Your Feedback - GOLDEN GENERATION DT SACCO",
             recipients=[email],
@@ -1642,21 +1647,19 @@ maderumoyia@mudetesacco.co.ke
 """
         )
 
-        # ✅ Send emails (non-blocking logic style)
+        email_warning = None
         try:
             mail.send(admin_msg)
             mail.send(user_msg)
         except Exception as email_error:
             import traceback
             traceback.print_exc()
-            return jsonify({
-                'message': '⚠️ Feedback saved successfully, but email failed to send.',
-                'error': str(email_error)
-            }), 500
+            email_warning = "⚠️ Feedback saved, but email failed to send."
 
         return jsonify({
             'message': '😊 Thank you for your feedback!',
-            'feedback_id': feedback.FeedbackID
+            'feedback_id': feedback.FeedbackID,
+            'warning': email_warning
         }), 201
 
     except Exception as e:
@@ -1666,6 +1669,7 @@ maderumoyia@mudetesacco.co.ke
             'message': '❌ Failed to submit feedback.',
             'error': str(e)
         }), 500
+
 
  
 #✅Route to fetch active gallery photos
