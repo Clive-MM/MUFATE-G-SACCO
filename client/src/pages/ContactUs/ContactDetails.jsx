@@ -82,23 +82,24 @@ const ContactDetails = () => {
     <Box sx={{ background: BRAND.dark, width: '100%', position: 'relative', overflow: 'hidden' }}>
       
       {/* BACKGROUND PARTICLE EFFECT */}
-      <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, opacity: 0.4 }}>
-        {[...Array(5)].map((_, i) => (
+      <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, opacity: 0.3 }}>
+        {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
             animate={{
-              x: [0, Math.random() * 100, 0],
-              y: [0, Math.random() * 100, 0],
+              x: [0, Math.random() * 80, 0],
+              y: [0, Math.random() * 80, 0],
+              scale: [1, 1.2, 1]
             }}
-            transition={{ duration: 10 + i, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 12 + i, repeat: Infinity, ease: "easeInOut" }}
             style={{
               position: 'absolute',
-              width: '300px',
-              height: '300px',
+              width: '350px',
+              height: '350px',
               borderRadius: '50%',
-              background: `radial-gradient(circle, ${BRAND.gold}22 0%, transparent 70%)`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              background: `radial-gradient(circle, ${BRAND.gold}15 0%, transparent 75%)`,
+              left: `${Math.random() * 90}%`,
+              top: `${Math.random() * 90}%`,
             }}
           />
         ))}
@@ -107,12 +108,19 @@ const ContactDetails = () => {
       <Container 
         ref={scrollRef} 
         maxWidth={false} 
-        sx={{ py: { xs: 4, md: 8 }, px: { xs: 2, md: 4, lg: 6 }, width: '100%', maxWidth: '1920px', position: 'relative', zIndex: 1 }}
+        sx={{ 
+          py: { xs: 4, md: 8 }, 
+          px: { xs: 2, md: 4, lg: 6 }, 
+          width: '100%', 
+          maxWidth: '1920px', // Width expansion logic
+          position: 'relative', 
+          zIndex: 1 
+        }}
       >
         <motion.div initial="hidden" animate={isInView ? 'visible' : 'hidden'} variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
           <Grid container spacing={3} alignItems="stretch">
             
-            {/* COLUMN 1: CONTACT INFO */}
+            {/* COLUMN 1: CONTACT INFO (UPATED WITH NEW PHONE) */}
             <Grid item xs={12} md={6} lg={4} sx={{ display: 'flex' }}>
               <Card sx={{ ...megaGlassCard, flexGrow: 1 }}>
                 <CardContent sx={{ p: { xs: 3, md: 5 } }}>
@@ -125,14 +133,25 @@ const ContactDetails = () => {
                         <Typography sx={infoLabel}>Postal Address</Typography>
                         <Typography sx={infoValue}>P.O. BOX 221-50104 KHAYEGA</Typography>
                       </Box>
-                      <Tooltip title="Copy Address"><IconButton onClick={() => handleCopy('P.O. BOX 221-50104 KHAYEGA', 'Postal address')} sx={{ color: BRAND.gold }}><CopyIcon fontSize="small" /></IconButton></Tooltip>
+                      <Tooltip title="Copy Address">
+                        <IconButton onClick={() => handleCopy('P.O. BOX 221-50104 KHAYEGA', 'Address')} sx={{ color: BRAND.gold }}>
+                          <CopyIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     </Box>
 
                     <Box sx={infoIconBox}>
                       <PhoneIcon sx={iconStyle} />
                       <Box>
                         <Typography sx={infoLabel}>Call Us</Typography>
-                        <Typography component="a" href="tel:+254791331932" sx={{ ...infoValue, textDecoration: 'none', '&:hover': { color: BRAND.gold } }}>+254 791 331 932</Typography>
+                        <Stack spacing={0.5}>
+                          <Typography component="a" href="tel:+254791331932" sx={{ ...infoValue, textDecoration: 'none', '&:hover': { color: BRAND.gold } }}>
+                            +254 791 331 932
+                          </Typography>
+                          <Typography component="a" href="tel:+254794515407" sx={{ ...infoValue, textDecoration: 'none', '&:hover': { color: BRAND.gold } }}>
+                            +254 794 515 407
+                          </Typography>
+                        </Stack>
                       </Box>
                     </Box>
 
@@ -140,7 +159,9 @@ const ContactDetails = () => {
                       <EmailIcon sx={iconStyle} />
                       <Box>
                         <Typography sx={infoLabel}>Email Us</Typography>
-                        <Typography component="a" href="mailto:info@mudetesacco.co.ke" sx={{ ...infoValue, textDecoration: 'none', '&:hover': { color: BRAND.gold } }}>info@mudetesacco.co.ke</Typography>
+                        <Typography component="a" href="mailto:info@mudetesacco.co.ke" sx={{ ...infoValue, textDecoration: 'none', '&:hover': { color: BRAND.gold } }}>
+                          info@mudetesacco.co.ke
+                        </Typography>
                       </Box>
                     </Box>
 
@@ -149,6 +170,7 @@ const ContactDetails = () => {
                       <Box>
                         <Typography sx={infoLabel}>Working Hours</Typography>
                         <Typography sx={infoValue}>Mon - Fri: 8:00 AM - 5:00 PM</Typography>
+                        <Typography sx={infoValue}>Sat: 8:00 AM - 12:00 PM</Typography>
                       </Box>
                     </Box>
                   </Stack>
@@ -156,15 +178,15 @@ const ContactDetails = () => {
               </Card>
             </Grid>
 
-            {/* COLUMN 2: BRANCHES */}
+            {/* COLUMN 2: BRANCHES (SCROLLBAR HIDDEN) */}
             <Grid item xs={12} md={6} lg={4} sx={{ display: 'flex' }}>
               <Card sx={{ ...megaGlassCard, flexGrow: 1 }}>
                 <CardContent sx={{ p: { xs: 3, md: 5 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <Typography sx={megaInfoTitle}>Our Branches</Typography>
                   <Box sx={{ 
-                    flexGrow: 1, overflowY: 'auto', pr: 1, maxHeight: '550px', mt: 2,
-                    '&::-webkit-scrollbar': { width: '0px' }, // Hides scrollbar
-                    scrollbarWidth: 'none' // Firefox
+                    flexGrow: 1, overflowY: 'auto', pr: 0.5, maxHeight: '550px', mt: 2,
+                    '&::-webkit-scrollbar': { width: '0px' }, // Hide scrollbar track
+                    scrollbarWidth: 'none' 
                   }}>
                     {loading ? <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 4, bgcolor: 'rgba(255,255,255,0.05)' }} /> : (
                       <Stack spacing={2}>
@@ -194,14 +216,14 @@ const ContactDetails = () => {
                       color={isEmailValid(formData.Email) ? "success" : "primary"}
                     />
                     <TextField 
-                      label="Phone" fullWidth required sx={megaInputStyle} 
+                      label="Phone Number" fullWidth required sx={megaInputStyle} 
                       value={formData.PhoneNumber} onChange={(e) => setFormData({...formData, PhoneNumber: e.target.value})}
                       color={isPhoneValid(formData.PhoneNumber) ? "success" : "primary"}
                     />
                     <TextField label="Subject" fullWidth required sx={megaInputStyle} value={formData.Subject} onChange={(e) => setFormData({...formData, Subject: e.target.value})} />
                     <TextField label="Message" multiline rows={4} fullWidth required sx={megaInputStyle} value={formData.Message} onChange={(e) => setFormData({...formData, Message: e.target.value})} />
                     <Button type="submit" variant="contained" disabled={formLoading} sx={refinedGlowBtn} fullWidth>
-                      {formLoading ? <CircularProgress size={24} color="inherit" /> : submitted ? 'SENT SUCCESSFULLY' : 'SEND MESSAGE'}
+                      {formLoading ? <CircularProgress size={24} color="inherit" /> : submitted ? 'MESSAGE SENT!' : 'SEND MESSAGE'}
                     </Button>
                   </Stack>
                 </CardContent>
@@ -243,11 +265,11 @@ const megaInputStyle = {
 
 const branchItemStyle = {
   background: 'rgba(255, 255, 255, 0.02)',
-  padding: 2,
+  padding: 2.5,
   borderRadius: '24px',
   border: '1px solid rgba(255,255,255,0.05)',
   transition: '0.3s all',
-  '&:hover': { background: 'rgba(255,255,255,0.05)' }
+  '&:hover': { background: 'rgba(255, 255, 255, 0.05)' }
 };
 
 const infoIconBox = { display: 'flex', alignItems: 'center', gap: 3, p: 1, borderRadius: '12px', transition: '0.3s all', '&:hover': { background: 'rgba(255,255,255,0.02)' } };
