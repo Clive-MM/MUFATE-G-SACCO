@@ -136,11 +136,11 @@ const ContactUs = () => {
       </Box>
 
       {/* FOOTER CONFIDENCE MARK (Optional) */}
-      <Box sx={{ py: 4, textAlign: 'center', opacity: 0.3 }}>
+      {/* <Box sx={{ py: 4, textAlign: 'center', opacity: 0.3 }}>
         <Typography variant="caption" sx={{ color:BRAND.gold, letterSpacing: '2px' }}>
           GOLDEN GENERATION DT SACCO &copy; {new Date().getFullYear()} 
         </Typography>
-      </Box>
+      </Box> */}
 
     </Box>
   );
