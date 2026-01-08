@@ -27,7 +27,7 @@ const FeedbackForm = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Form state
+  // ✅ Backend-aligned state
   const [formData, setFormData] = useState({
     Email: '',
     PhoneNumber: '',
@@ -69,7 +69,7 @@ const FeedbackForm = () => {
 
         enqueueSnackbar(result.message, { variant: 'success' });
 
-        // Clear fields immediately
+        // Clear fields
         setFormData({
           Email: '',
           PhoneNumber: '',
@@ -77,18 +77,12 @@ const FeedbackForm = () => {
           Message: ''
         });
 
-        // Hide success message after 6 seconds
         setTimeout(() => setSuccessMessage(''), 6000);
       } else {
-        enqueueSnackbar(result.message || 'Submission failed.', {
-          variant: 'error'
-        });
+        enqueueSnackbar(result.message || 'Submission failed.', { variant: 'error' });
       }
-    } catch (error) {
-      enqueueSnackbar(
-        'Connection error. Please try again later.',
-        { variant: 'error' }
-      );
+    } catch {
+      enqueueSnackbar('Connection error. Please try again later.', { variant: 'error' });
     } finally {
       setLoading(false);
     }
@@ -155,9 +149,10 @@ const FeedbackForm = () => {
           />
 
           <TextField
-            label="Phone Number (Optional)"
+            label="Phone Number"
             name="PhoneNumber"
             fullWidth
+            required
             value={formData.PhoneNumber}
             onChange={handleChange}
             sx={inputStyle}
@@ -174,7 +169,7 @@ const FeedbackForm = () => {
           />
 
           <TextField
-            label="How can we help?"
+            label="Message"
             name="Message"
             multiline
             rows={isMobile ? 4 : 5}
@@ -192,14 +187,10 @@ const FeedbackForm = () => {
             startIcon={!loading && <SendIcon />}
             sx={submitBtnStyle}
           >
-            {loading ? (
-              <CircularProgress size={24} sx={{ color: BRAND.dark }} />
-            ) : (
-              'Submit Message'
-            )}
+            {loading ? <CircularProgress size={24} sx={{ color: BRAND.dark }} /> : 'SEND MESSAGE'}
           </Button>
 
-          {/* Confidential + Success Message */}
+          {/* Confidential + Success */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, opacity: 0.6 }}>
               <LockIcon sx={{ fontSize: 14, color: BRAND.success }} />
@@ -215,11 +206,7 @@ const FeedbackForm = () => {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
-                  sx={{
-                    color: BRAND.success,
-                    fontSize: '0.85rem',
-                    fontWeight: 600
-                  }}
+                  sx={{ color: BRAND.success, fontSize: '0.85rem', fontWeight: 600 }}
                 >
                   {successMessage}
                 </Typography>
@@ -239,10 +226,7 @@ const inputStyle = {
     '& fieldset': { border: 'none' },
     '&.Mui-focused': { boxShadow: '0 0 0 2px #EC9B14' }
   },
-  '& .MuiInputLabel-root': {
-    color: '#02150F',
-    fontWeight: 700
-  }
+  '& .MuiInputLabel-root': { color: '#02150F', fontWeight: 700 }
 };
 
 const submitBtnStyle = {
