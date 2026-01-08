@@ -57,19 +57,30 @@ const ContactDetails = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
+
+      const data = await response.json();
+
+      // Check for 201 (Created) which is what your new route returns
       if (response.status === 201 || response.ok) {
-        enqueueSnackbar('Message sent successfully!', { variant: 'success' });
+        enqueueSnackbar(data.message || 'Message sent successfully!', { variant: 'success' });
         setSubmitted(true);
+        // Clear form
         setFormData({ Email: '', PhoneNumber: '+254', Subject: '', Message: '' });
+        
+        // Reset the button icon after 5 seconds
         setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        // Handle cases where server returns 400 or 500
+        enqueueSnackbar(data.message || 'Failed to send message', { variant: 'error' });
       }
     } catch (err) {
-      enqueueSnackbar('Failed to connect to server', { variant: 'error' });
+      // This handles the "Failed to connect" or CORS issues
+      console.error("Submission error:", err);
+      enqueueSnackbar('Server connection lost. Please check your internet.', { variant: 'error' });
     } finally {
       setFormLoading(false);
     }
   };
-
   return (
     <Box sx={{ background: BRAND.dark, width: '100%', position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
