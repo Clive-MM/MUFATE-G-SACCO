@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import {
   Box, Typography, Grid, Card, CardContent, CircularProgress, 
   Button, Stack, TextField, Container, Fab, Zoom, Skeleton,
-  useMediaQuery, useTheme
+  useMediaQuery, useTheme, IconButton, Tooltip
 } from '@mui/material';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import {
@@ -10,9 +10,9 @@ import {
   AccessTime as AccessTimeIcon,
   Email as EmailIcon,
   CheckCircleOutline as CheckCircleOutlineIcon,
-  Lock as LockIcon,
+  ContentCopy as CopyIcon,
   LocationOn as LocationOnIcon,
-  MarkEmailRead as MailIcon // Icon for P.O. Box
+  MarkEmailRead as MailIcon
 } from '@mui/icons-material';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useSnackbar } from 'notistack';
@@ -32,36 +32,30 @@ const ContactDetails = () => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
-
   const scrollRef = useRef(null);
   const isInView = useInView(scrollRef, { once: true, margin: '-100px' });
 
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const [formData, setFormData] = useState({
-    Email: '',
-    PhoneNumber: '+254',
-    Subject: '',
-    Message: ''
-  });
-
+  const [formData, setFormData] = useState({ Email: '', PhoneNumber: '+254', Subject: '', Message: '' });
   const [formLoading, setFormLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // Live Validation Helpers
+  const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isPhoneValid = (phone) => phone.length >= 13;
 
   useEffect(() => {
     fetch('https://mufate-g-sacco.onrender.com/branches')
       .then(res => res.json())
-      .then(data => {
-        setBranches(data.branches || []);
-        setLoading(false);
-      })
+      .then(data => { setBranches(data.branches || []); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
-  const handleFormChange = (e) =>
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleCopy = (text, label) => {
+    navigator.clipboard.writeText(text);
+    enqueueSnackbar(`${label} copied!`, { variant: 'success', autoHideDuration: 2000 });
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -73,61 +67,72 @@ const ContactDetails = () => {
         body: JSON.stringify(formData)
       });
       if (response.status === 201) {
-        enqueueSnackbar('Message Sent!', { variant: 'success' });
         setSubmitted(true);
         setFormData({ Email: '', PhoneNumber: '+254', Subject: '', Message: '' });
-        setTimeout(() => setSubmitted(false), 6000);
+        setTimeout(() => setSubmitted(false), 5000);
       }
     } catch (err) {
-      enqueueSnackbar('Error sending message', { variant: 'error' });
+      enqueueSnackbar('Server connection failed', { variant: 'error' });
     } finally {
       setFormLoading(false);
     }
   };
 
   return (
-    <Box sx={{ background: BRAND.dark, width: '100%' }}>
-      {/* 1. maxWidth={false} and the sx width/maxWidth below are the primary width-increasing lines */}
+    <Box sx={{ background: BRAND.dark, width: '100%', position: 'relative', overflow: 'hidden' }}>
+      
+      {/* BACKGROUND PARTICLE EFFECT */}
+      <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, opacity: 0.4 }}>
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{
+              x: [0, Math.random() * 100, 0],
+              y: [0, Math.random() * 100, 0],
+            }}
+            transition={{ duration: 10 + i, repeat: Infinity, ease: "linear" }}
+            style={{
+              position: 'absolute',
+              width: '300px',
+              height: '300px',
+              borderRadius: '50%',
+              background: `radial-gradient(circle, ${BRAND.gold}22 0%, transparent 70%)`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+          />
+        ))}
+      </Box>
+
       <Container 
         ref={scrollRef} 
         maxWidth={false} 
-        sx={{ 
-          py: { xs: 4, md: 8 }, 
-          px: { xs: 2, md: 4, lg: 6 },
-          width: '100%',
-          maxWidth: '1920px' // Allows the cards to stretch much wider on large monitors
-        }}
+        sx={{ py: { xs: 4, md: 8 }, px: { xs: 2, md: 4, lg: 6 }, width: '100%', maxWidth: '1920px', position: 'relative', zIndex: 1 }}
       >
-        <motion.div
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
-        >
-          {/* 2. spacing={2} reduces the gap between cards, allowing the cards themselves to occupy more horizontal space */}
-          <Grid container spacing={2} alignItems="stretch">
+        <motion.div initial="hidden" animate={isInView ? 'visible' : 'hidden'} variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
+          <Grid container spacing={3} alignItems="stretch">
             
             {/* COLUMN 1: CONTACT INFO */}
             <Grid item xs={12} md={6} lg={4} sx={{ display: 'flex' }}>
               <Card sx={{ ...megaGlassCard, flexGrow: 1 }}>
                 <CardContent sx={{ p: { xs: 3, md: 5 } }}>
                   <Typography sx={megaInfoTitle}>Get in Touch</Typography>
-                  <Box sx={megaGoldDivider} />
-                  
                   <Stack spacing={4} sx={{ mt: 4 }}>
-                    {/* NEW P.O. BOX SECTION */}
+                    
                     <Box sx={infoIconBox}>
                       <MailIcon sx={iconStyle} />
-                      <Box>
+                      <Box sx={{ flexGrow: 1 }}>
                         <Typography sx={infoLabel}>Postal Address</Typography>
                         <Typography sx={infoValue}>P.O. BOX 221-50104 KHAYEGA</Typography>
                       </Box>
+                      <Tooltip title="Copy Address"><IconButton onClick={() => handleCopy('P.O. BOX 221-50104 KHAYEGA', 'Postal address')} sx={{ color: BRAND.gold }}><CopyIcon fontSize="small" /></IconButton></Tooltip>
                     </Box>
 
                     <Box sx={infoIconBox}>
                       <PhoneIcon sx={iconStyle} />
                       <Box>
                         <Typography sx={infoLabel}>Call Us</Typography>
-                        <Typography sx={infoValue}>+254 791 331 932</Typography>
+                        <Typography component="a" href="tel:+254791331932" sx={{ ...infoValue, textDecoration: 'none', '&:hover': { color: BRAND.gold } }}>+254 791 331 932</Typography>
                       </Box>
                     </Box>
 
@@ -135,7 +140,7 @@ const ContactDetails = () => {
                       <EmailIcon sx={iconStyle} />
                       <Box>
                         <Typography sx={infoLabel}>Email Us</Typography>
-                        <Typography sx={infoValue}>info@mudetesacco.co.ke</Typography>
+                        <Typography component="a" href="mailto:info@mudetesacco.co.ke" sx={{ ...infoValue, textDecoration: 'none', '&:hover': { color: BRAND.gold } }}>info@mudetesacco.co.ke</Typography>
                       </Box>
                     </Box>
 
@@ -144,7 +149,6 @@ const ContactDetails = () => {
                       <Box>
                         <Typography sx={infoLabel}>Working Hours</Typography>
                         <Typography sx={infoValue}>Mon - Fri: 8:00 AM - 5:00 PM</Typography>
-                        <Typography sx={infoValue}>Sat: 8:00 AM - 12:00 PM</Typography>
                       </Box>
                     </Box>
                   </Stack>
@@ -157,27 +161,17 @@ const ContactDetails = () => {
               <Card sx={{ ...megaGlassCard, flexGrow: 1 }}>
                 <CardContent sx={{ p: { xs: 3, md: 5 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <Typography sx={megaInfoTitle}>Our Branches</Typography>
-                  <Box sx={megaGoldDivider} />
                   <Box sx={{ 
-                    flexGrow: 1, 
-                    overflowY: 'auto', 
-                    pr: 1, 
-                    maxHeight: '550px', 
-                    mt: 2,
-                    '&::-webkit-scrollbar': { width: '5px' },
-                    '&::-webkit-scrollbar-thumb': { background: BRAND.gold, borderRadius: '10px' }
+                    flexGrow: 1, overflowY: 'auto', pr: 1, maxHeight: '550px', mt: 2,
+                    '&::-webkit-scrollbar': { width: '0px' }, // Hides scrollbar
+                    scrollbarWidth: 'none' // Firefox
                   }}>
-                    {loading ? <Skeleton variant="rectangular" height={300} /> : (
+                    {loading ? <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 4, bgcolor: 'rgba(255,255,255,0.05)' }} /> : (
                       <Stack spacing={2}>
                         {branches.map((branch, idx) => (
                           <Box key={idx} sx={branchItemStyle}>
-                            <Typography sx={{ color: BRAND.gold, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <LocationOnIcon fontSize="small" /> {branch.BranchName}
-                            </Typography>
-                            <Typography sx={{ color: BRAND.light, fontSize: '0.85rem', mb: 1, opacity: 0.8 }}>
-                              {branch.Location}
-                            </Typography>
-                            <Box component="iframe" src={toEmbedMap(branch.Location)} sx={{ width: '100%', height: '150px', border: 0, borderRadius: '12px' }} />
+                            <Typography sx={{ color: BRAND.gold, fontWeight: 700, mb: 1 }}>{branch.BranchName}</Typography>
+                            <Box component="iframe" src={toEmbedMap(branch.Location)} sx={{ width: '100%', height: '160px', border: 0, borderRadius: '16px', filter: 'invert(90%) hue-rotate(180deg) opacity(0.8)' }} />
                           </Box>
                         ))}
                       </Stack>
@@ -187,21 +181,29 @@ const ContactDetails = () => {
               </Card>
             </Grid>
 
-            {/* COLUMN 3: FORM */}
+            {/* COLUMN 3: FORM WITH LIVE VALIDATION */}
             <Grid item xs={12} lg={4} sx={{ display: 'flex' }}>
               <Card sx={{ ...megaGlassCard, flexGrow: 1 }}>
-                <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: { xs: 3, md: 5 }, height: '100%' }}>
-                   <Typography sx={megaInfoTitle}>Send Message</Typography>
-                   <Box sx={megaGoldDivider} />
-                   <Stack spacing={2.5} sx={{ mt: 2 }}>
-                      <TextField label="Email" name="Email" fullWidth required sx={megaInputStyle} value={formData.Email} onChange={handleFormChange} />
-                      <TextField label="Phone" name="PhoneNumber" fullWidth required sx={megaInputStyle} value={formData.PhoneNumber} onChange={handleFormChange} />
-                      <TextField label="Subject" name="Subject" fullWidth required sx={megaInputStyle} value={formData.Subject} onChange={handleFormChange} />
-                      <TextField label="Message" name="Message" multiline rows={4} fullWidth required sx={megaInputStyle} value={formData.Message} onChange={handleFormChange} />
-                      <Button type="submit" variant="contained" sx={refinedGlowBtn} fullWidth>
-                        {formLoading ? <CircularProgress size={24} color="inherit" /> : 'SEND MESSAGE'}
-                      </Button>
-                   </Stack>
+                <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: { xs: 3, md: 5 } }}>
+                  <Typography sx={megaInfoTitle}>Send Message</Typography>
+                  <Stack spacing={2.5} sx={{ mt: 3 }}>
+                    <TextField 
+                      label="Email" fullWidth required sx={megaInputStyle} 
+                      value={formData.Email} onChange={(e) => setFormData({...formData, Email: e.target.value})}
+                      error={formData.Email !== '' && !isEmailValid(formData.Email)}
+                      color={isEmailValid(formData.Email) ? "success" : "primary"}
+                    />
+                    <TextField 
+                      label="Phone" fullWidth required sx={megaInputStyle} 
+                      value={formData.PhoneNumber} onChange={(e) => setFormData({...formData, PhoneNumber: e.target.value})}
+                      color={isPhoneValid(formData.PhoneNumber) ? "success" : "primary"}
+                    />
+                    <TextField label="Subject" fullWidth required sx={megaInputStyle} value={formData.Subject} onChange={(e) => setFormData({...formData, Subject: e.target.value})} />
+                    <TextField label="Message" multiline rows={4} fullWidth required sx={megaInputStyle} value={formData.Message} onChange={(e) => setFormData({...formData, Message: e.target.value})} />
+                    <Button type="submit" variant="contained" disabled={formLoading} sx={refinedGlowBtn} fullWidth>
+                      {formLoading ? <CircularProgress size={24} color="inherit" /> : submitted ? 'SENT SUCCESSFULLY' : 'SEND MESSAGE'}
+                    </Button>
+                  </Stack>
                 </CardContent>
               </Card>
             </Grid>
@@ -215,52 +217,53 @@ const ContactDetails = () => {
 /* ================= STYLES ================= */
 
 const megaGlassCard = {
-  background: 'rgba(2, 21, 15, 0.98)',
-  backdropFilter: 'blur(30px)',
+  background: 'rgba(2, 21, 15, 0.95)',
+  backdropFilter: 'blur(40px)',
   borderRadius: { xs: '24px', md: '40px' },
-  border: `1px solid rgba(236, 155, 20, 0.25)`,
-  boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
-  transition: 'all 0.4s ease-in-out',
-  '&:hover': { 
-    transform: 'translateY(-10px)',
-    borderColor: BRAND.gold,
-    boxShadow: `0 30px 70px rgba(236, 155, 20, 0.15)`
-  }
+  border: `1px solid rgba(255, 255, 255, 0.08)`,
+  boxShadow: '0 25px 80px rgba(0,0,0,0.8)',
+  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  '&:hover': { transform: 'translateY(-10px)', borderColor: BRAND.gold, boxShadow: `0 0 40px ${BRAND.gold}22` }
 };
 
-const megaInfoTitle = { color: BRAND.gold, fontSize: { xs: '1.4rem', md: '1.8rem' }, fontWeight: 900, textTransform: 'uppercase' };
-const megaGoldDivider = { height: '4px', background: BRAND.gold, width: '80px', mb: 2 };
+const megaInfoTitle = { color: BRAND.gold, fontSize: { xs: '1.4rem', md: '1.8rem' }, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px' };
+
 const megaInputStyle = {
   '& .MuiOutlinedInput-root': {
     color: '#FFF',
-    background: 'rgba(255,255,255,0.05)',
-    borderRadius: '16px',
+    background: 'rgba(255,255,255,0.03)',
+    borderRadius: '20px',
+    transition: '0.3s all',
     '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' },
-    '&.Mui-focused fieldset': { borderColor: BRAND.gold }
+    '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+    '&.Mui-focused fieldset': { borderWidth: '2px' }
   },
-  '& label': { color: 'rgba(255,255,255,0.5)' },
-  '& label.Mui-focused': { color: BRAND.gold }
+  '& label': { color: 'rgba(255,255,255,0.4)' }
 };
 
 const branchItemStyle = {
-  background: 'rgba(255, 255, 255, 0.03)',
-  padding: 3,
+  background: 'rgba(255, 255, 255, 0.02)',
+  padding: 2,
   borderRadius: '24px',
-  border: '1px solid rgba(255,255,255,0.08)',
+  border: '1px solid rgba(255,255,255,0.05)',
+  transition: '0.3s all',
+  '&:hover': { background: 'rgba(255,255,255,0.05)' }
 };
 
-const infoIconBox = { display: 'flex', alignItems: 'center', gap: 3 };
+const infoIconBox = { display: 'flex', alignItems: 'center', gap: 3, p: 1, borderRadius: '12px', transition: '0.3s all', '&:hover': { background: 'rgba(255,255,255,0.02)' } };
 const iconStyle = { color: BRAND.gold, fontSize: { xs: '2rem', md: '2.5rem' } };
-const infoLabel = { color: BRAND.textMuted, fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' };
+const infoLabel = { color: BRAND.textMuted, fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', mb: 0.5 };
 const infoValue = { color: BRAND.light, fontWeight: 500, fontSize: { xs: '0.95rem', md: '1.1rem' } };
 
 const refinedGlowBtn = {
-  background: `linear-gradient(45deg, ${BRAND.gold}, #FFD700)`,
+  background: `linear-gradient(90deg, ${BRAND.gold}, #FFB84D)`,
   color: BRAND.dark,
   fontWeight: 900,
-  borderRadius: '16px',
+  borderRadius: '20px',
   py: 2,
-  '&:hover': { background: '#FFD700' }
+  boxShadow: `0 10px 30px ${BRAND.gold}44`,
+  '&:hover': { transform: 'scale(1.02)', boxShadow: `0 15px 40px ${BRAND.gold}66` },
+  '&.Mui-disabled': { background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)' }
 };
 
 export default ContactDetails;
