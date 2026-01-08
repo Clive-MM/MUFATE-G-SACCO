@@ -31,7 +31,7 @@ const ContactUs = () => {
         sx={{
           position: 'relative',
           height: {
-            xs: '60vh',   // Increased for better text-to-background contrast on mobile
+            xs: '60vh',   
             sm: '65vh',
             md: '70vh',
           },
@@ -92,16 +92,7 @@ const ContactUs = () => {
               Get In Touch
             </Typography>
             
-            <Box 
-              // sx={{ 
-              //   width: '60px', 
-              //   height: '4px', 
-              //   bgcolor: BRAND.gold, 
-              //   mx: 'auto', 
-              //   mb: 3,
-              //   borderRadius: '2px' 
-              // }} 
-            />
+            
 
             <Typography
               sx={{
@@ -131,13 +122,13 @@ const ContactUs = () => {
           zIndex: 3,
           // Fluid overlap logic
           mt: { 
-            xs: -8,   // Deeper overlap on mobile to hide image edge
+            xs: -8,   
             sm: -12, 
             md: -18,
-            lg: -22    // 14-inch laptops get a dramatic pull-up
+            lg: -22    
           }, 
           pb: 10,
-          // Ensuring the side padding matches the Card padding for vertical alignment
+         
           px: { xs: 0, md: 2 } 
         }}
       >
