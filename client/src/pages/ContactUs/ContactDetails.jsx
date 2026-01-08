@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
-  Box, Typography, Grid, Card, CardContent, CircularProgress, 
+  Box, Typography, Grid, Card, CardContent, CircularProgress,
   Button, Stack, TextField, Container, IconButton, Tooltip, Skeleton,
   useMediaQuery, useTheme
 } from '@mui/material';
@@ -72,42 +72,45 @@ const ContactDetails = () => {
 
   return (
     <Box sx={{ background: BRAND.dark, width: '100%', position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      
+
       {/* PROFESSIONAL BACKGROUND AMBIENCE */}
       <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
         <Box sx={{ position: 'absolute', top: '-10%', right: '-5%', width: '500px', height: '500px', borderRadius: '50%', background: `radial-gradient(circle, ${BRAND.gold}10 0%, transparent 70%)`, filter: 'blur(60px)' }} />
         <Box sx={{ position: 'absolute', bottom: '10%', left: '-5%', width: '400px', height: '400px', borderRadius: '50%', background: `radial-gradient(circle, ${BRAND.gold}08 0%, transparent 70%)`, filter: 'blur(50px)' }} />
       </Box>
 
-      <Container 
-        ref={scrollRef} 
-        maxWidth={false} 
-        sx={{ 
-          py: { xs: 6, md: 10 }, 
-          px: { xs: 2, md: 4 }, 
+      <Container
+        ref={scrollRef}
+        maxWidth={false}
+        sx={{
+          py: { xs: 6, md: 10 },
+          px: { xs: 2, md: 4 },
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center', // Horizontal centralization of the whole content
-          position: 'relative', 
-          zIndex: 1 
+          position: 'relative',
+          zIndex: 1
         }}
       >
-        <motion.div 
-            initial="hidden" 
-            animate={isInView ? 'visible' : 'hidden'} 
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-            style={{ width: '100%', maxWidth: '1400px' }} // Restricts width to keep cards grouped
+        <motion.div
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+          style={{ width: '100%', maxWidth: '1400px' }} // Restricts width to keep cards grouped
         >
           {/* justifyContent="center" centers the card list on the row */}
           <Grid container spacing={3} justifyContent="center" alignItems="stretch">
-            
+
             {/* CARD 1: CONTACT */}
-            <Grid item xs={12} md={6} lg={4} sx={{ display: 'flex' }}>
+            {/* CARD 1: CONTACT */}
+            <Grid item xs={12} md={6} lg={5} sx={{ display: 'flex' }}> {/* Increased lg from 4 to 5 */}
               <Card sx={professionalCardStyle}>
                 <CardContent sx={{ p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', height: '100%' }}>
                   <Typography sx={megaInfoTitle}>Get in Touch</Typography>
-                  <Stack spacing={3.5} sx={{ mt: 4, flexGrow: 1 }}>
+
+                  {/* Changed flexGrow to 1 and added justifyContent: 'space-between' */}
+                  <Stack spacing={3.5} sx={{ mt: 4, flexGrow: 1, justifyContent: 'space-between' }}>
                     <Box sx={infoIconBox}>
                       <MailIcon sx={iconStyle} />
                       <Box sx={{ flexGrow: 1 }}>
@@ -133,6 +136,7 @@ const ContactDetails = () => {
                       </Box>
                     </Box>
                   </Stack>
+
                   <Box sx={{ mt: 3, pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 1 }}>
                     <ShieldIcon sx={{ color: BRAND.gold, fontSize: '1rem' }} />
                     <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem' }}>Secure Communication Channel</Typography>
@@ -168,10 +172,10 @@ const ContactDetails = () => {
                 <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: { xs: 3, md: 4 } }}>
                   <Typography sx={megaInfoTitle}>Send Message</Typography>
                   <Stack spacing={2.5} sx={{ mt: 3 }}>
-                    <TextField label="Email" fullWidth required sx={megaInputStyle} value={formData.Email} onChange={(e) => setFormData({...formData, Email: e.target.value})} error={formData.Email !== '' && !isEmailValid(formData.Email)} />
-                    <TextField label="Phone Number" fullWidth required sx={megaInputStyle} value={formData.PhoneNumber} onChange={(e) => setFormData({...formData, PhoneNumber: e.target.value})} />
-                    <TextField label="Subject" fullWidth required sx={megaInputStyle} value={formData.Subject} onChange={(e) => setFormData({...formData, Subject: e.target.value})} />
-                    <TextField label="Message" multiline rows={4} fullWidth required sx={megaInputStyle} value={formData.Message} onChange={(e) => setFormData({...formData, Message: e.target.value})} />
+                    <TextField label="Email" fullWidth required sx={megaInputStyle} value={formData.Email} onChange={(e) => setFormData({ ...formData, Email: e.target.value })} error={formData.Email !== '' && !isEmailValid(formData.Email)} />
+                    <TextField label="Phone Number" fullWidth required sx={megaInputStyle} value={formData.PhoneNumber} onChange={(e) => setFormData({ ...formData, PhoneNumber: e.target.value })} />
+                    <TextField label="Subject" fullWidth required sx={megaInputStyle} value={formData.Subject} onChange={(e) => setFormData({ ...formData, Subject: e.target.value })} />
+                    <TextField label="Message" multiline rows={4} fullWidth required sx={megaInputStyle} value={formData.Message} onChange={(e) => setFormData({ ...formData, Message: e.target.value })} />
                     <Button type="submit" variant="contained" disabled={formLoading} sx={{ ...refinedGlowBtn, ...(submitted && { background: BRAND.success }) }} fullWidth>
                       {formLoading ? <CircularProgress size={24} color="inherit" /> : submitted ? <SuccessIcon /> : 'SUBMIT ENQUIRY'}
                     </Button>
@@ -185,7 +189,7 @@ const ContactDetails = () => {
         {/* GOLDEN FOOTER */}
         <Box sx={{ mt: 8, textAlign: 'center' }}>
           <Typography variant="caption" sx={{ color: BRAND.gold, letterSpacing: '3px', fontWeight: 700, textTransform: 'uppercase' }}>
-            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()} 
+            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
           </Typography>
         </Box>
       </Container>
@@ -225,14 +229,14 @@ const megaInputStyle = {
 const scrollBoxStyle = {
   flexGrow: 1, overflowY: 'auto', pr: 0.5, maxHeight: '500px', mt: 3,
   '&::-webkit-scrollbar': { width: '0px' },
-  scrollbarWidth: 'none' 
+  scrollbarWidth: 'none'
 };
 
-const linkHover = { 
-  color: BRAND.light, 
-  textDecoration: 'none', 
-  transition: '0.3s', 
-  '&:hover': { color: BRAND.gold, transform: 'translateX(5px)' } 
+const linkHover = {
+  color: BRAND.light,
+  textDecoration: 'none',
+  transition: '0.3s',
+  '&:hover': { color: BRAND.gold, transform: 'translateX(5px)' }
 };
 
 const branchItemStyle = { background: 'rgba(255, 255, 255, 0.02)', p: 2, borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' };
