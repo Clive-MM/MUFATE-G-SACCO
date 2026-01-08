@@ -33,11 +33,15 @@ def register_mail_instance(mail_instance):
     mail = mail_instance
 
 # ✅ Test route
+
+
 @routes.route('/test', methods=['GET'])
 def test_route():
     return jsonify({"message": "Test route working successfully!"}), 200
 
 # ✅ Login route
+
+
 @routes.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -64,6 +68,8 @@ def login():
     }), 200
 
 # ✅ Admin-only Career creation route
+
+
 @routes.route('/careers/create', methods=['POST'])
 @jwt_required()
 def create_career():
@@ -108,8 +114,10 @@ def create_career():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ An error occurred.', 'error': str(e)}), 500
-    
-# ✅Admin updating a career post    
+
+# ✅Admin updating a career post
+
+
 @routes.route('/careers/update/<int:career_id>', methods=['PUT'])
 @jwt_required()
 def update_career(career_id):
@@ -148,7 +156,8 @@ def update_career(career_id):
             career.JobType = job_type
         if deadline_str:
             try:
-                career.Deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
+                career.Deadline = datetime.strptime(
+                    deadline_str, "%Y-%m-%d").date()
             except ValueError:
                 return jsonify({'message': '❌ Deadline must be in YYYY-MM-DD format.'}), 400
         if application_instructions:
@@ -167,12 +176,12 @@ def update_career(career_id):
         return jsonify({'message': '❌ An error occurred while updating career.', 'error': str(e)}), 500
 
 
-
 # ✅ Public route to view all active career posts
 @routes.route('/careers', methods=['GET'])
 def view_careers():
     try:
-        careers = Career.query.filter_by(IsActiveID=1).all()  # Only show active posts
+        careers = Career.query.filter_by(
+            IsActiveID=1).all()  # Only show active posts
         if not careers:
             return jsonify({'message': 'ℹ️ No vacancies career posts found.'}), 404
 
@@ -234,14 +243,15 @@ def create_core_value():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create core value', 'error': str(e)}), 500
-    
 
-#Route for viewing the core_values 
+
+# Route for viewing the core_values
 # ✅ Public route to view all active core values
 @routes.route('/corevalues', methods=['GET'])
 def view_core_values():
     try:
-        core_values = CoreValue.query.filter_by(IsActiveID=1).all()  # Only show active core values
+        core_values = CoreValue.query.filter_by(
+            IsActiveID=1).all()  # Only show active core values
         if not core_values:
             return jsonify({'message': 'ℹ️ No active core values found.'}), 404
 
@@ -261,13 +271,13 @@ def view_core_values():
         traceback.print_exc()
         return jsonify({'message': '❌ An error occurred while fetching core values.', 'error': str(e)}), 500
 
-    
-#upload image urls
+
+# upload image urls
 @routes.route('/upload_image', methods=['POST'])
 @jwt_required()
 def upload_image():
     try:
-        file = request.files['image']  
+        file = request.files['image']
         upload_result = cloudinary.uploader.upload(file)
         image_url = upload_result['secure_url']
 
@@ -280,8 +290,10 @@ def upload_image():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to upload image.', 'error': str(e)}), 500
-    
-#upload a resource.
+
+# upload a resource.
+
+
 @routes.route('/resources/upload', methods=['POST'])
 def upload_resource():
     try:
@@ -337,10 +349,13 @@ def upload_resource():
         return jsonify({'message': '❌ Failed to upload resource.', 'error': str(e)}), 500
 
 # Viewing resources with download links
+
+
 @routes.route('/resources', methods=['GET'])
 def list_resources():
     try:
-        resources = Resources.query.filter_by(IsActiveID=1).order_by(Resources.UploadedAt.desc()).all()
+        resources = Resources.query.filter_by(
+            IsActiveID=1).order_by(Resources.UploadedAt.desc()).all()
         resource_list = []
 
         for res in resources:
@@ -414,13 +429,16 @@ def create_faq():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create FAQ', 'error': str(e)}), 500
-    
+
 # ✅ Public route to view FAQs
+
+
 @routes.route('/faqs', methods=['GET'])
 def list_faqs():
     try:
         # Fetch FAQs where IsActiveID = 1 (Active)
-        faqs = FAQ.query.filter_by(IsActiveID=1).order_by(FAQ.CreatedDate.desc()).all()
+        faqs = FAQ.query.filter_by(IsActiveID=1).order_by(
+            FAQ.CreatedDate.desc()).all()
 
         faq_list = []
         for faq in faqs:
@@ -437,8 +455,10 @@ def list_faqs():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch FAQs.', 'error': str(e)}), 500
-    
-#Route for viewing the feedbacks for the admin only   
+
+# Route for viewing the feedbacks for the admin only
+
+
 @routes.route('/admin/feedbacks', methods=['GET'])
 @jwt_required()
 def get_all_feedbacks():
@@ -462,7 +482,7 @@ def get_all_feedbacks():
     return jsonify({'feedbacks': results}), 200
 
 
-#Admin creating a route for creating mobile banking details 
+# Admin creating a route for creating mobile banking details
 @routes.route('/mobile-banking/create', methods=['POST'])
 @jwt_required()
 def create_mobile_banking_info():
@@ -504,12 +524,13 @@ def create_mobile_banking_info():
         return jsonify({'message': '❌ Failed to create mobile banking info.', 'error': str(e)}), 500
 
 
-#Route for viewing mobile banking information
+# Route for viewing mobile banking information
 @routes.route('/mobile-banking', methods=['GET'])
 def view_mobile_banking_info():
     try:
         # Only fetch active entries (IsActiveID = 1)
-        entries = MobileBankingInfo.query.filter_by(IsActiveID=1).order_by(MobileBankingInfo.CreatedAt.desc()).all()
+        entries = MobileBankingInfo.query.filter_by(IsActiveID=1).order_by(
+            MobileBankingInfo.CreatedAt.desc()).all()
 
         results = []
         for entry in entries:
@@ -526,7 +547,9 @@ def view_mobile_banking_info():
     except Exception as e:
         return jsonify({'message': '❌ Failed to fetch mobile banking info.', 'error': str(e)}), 500
 
-#route for creating the operational hours 
+# route for creating the operational hours
+
+
 @routes.route('/operation-hours/create', methods=['POST'])
 @jwt_required()
 def create_operation_hours():
@@ -567,11 +590,12 @@ def create_operation_hours():
         return jsonify({'message': '❌ Failed to create operation hours', 'error': str(e)}), 500
 
 
-#View operational Hours
+# View operational Hours
 @routes.route('/operation-hours', methods=['GET'])
 def get_operation_hours():
     try:
-        timelines = OperationTimeline.query.order_by(OperationTimeline.CreatedAt.asc()).all()
+        timelines = OperationTimeline.query.order_by(
+            OperationTimeline.CreatedAt.asc()).all()
 
         hours_list = []
         for timeline in timelines:
@@ -587,7 +611,7 @@ def get_operation_hours():
         return jsonify({'message': '❌ Failed to fetch operation hours.', 'error': str(e)}), 500
 
 
-#Creating partners linking with the sacco
+# Creating partners linking with the sacco
 @routes.route('/partnerships/create', methods=['POST'])
 @jwt_required()
 def create_partnership():
@@ -639,12 +663,13 @@ def create_partnership():
         return jsonify({'message': '❌ Failed to create partnership', 'error': str(e)}), 500
 
 
-#Route for fetching active partners
+# Route for fetching active partners
 @routes.route('/partnerships', methods=['GET'])
 def get_partnerships():
     try:
         # Fetch partnerships that are marked as active (IsActiveID = 1)
-        partnerships = Partnership.query.filter_by(IsActiveID=1).order_by(Partnership.CreatedAt.desc()).all()
+        partnerships = Partnership.query.filter_by(
+            IsActiveID=1).order_by(Partnership.CreatedAt.desc()).all()
 
         partner_list = []
         for partner in partnerships:
@@ -664,7 +689,7 @@ def get_partnerships():
         return jsonify({'message': '❌ Failed to fetch partnerships.', 'error': str(e)}), 500
 
 
-#Route creating a post
+# Route creating a post
 @routes.route('/posts/create', methods=['POST'])
 @jwt_required()
 def create_post():
@@ -702,7 +727,9 @@ def create_post():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create post.', 'error': str(e)}), 500
 
-#viewing posts 
+# viewing posts
+
+
 @routes.route('/posts', methods=['GET'])
 def get_all_posts():
     try:
@@ -725,7 +752,9 @@ def get_all_posts():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch posts.', 'error': str(e)}), 500
 
-#Route for viewing a post details
+# Route for viewing a post details
+
+
 @routes.route('/posts/<int:post_id>', methods=['GET'])
 def get_single_post(post_id):
     try:
@@ -749,7 +778,7 @@ def get_single_post(post_id):
         return jsonify({'message': '❌ Failed to retrieve post.', 'error': str(e)}), 500
 
 
-#Route for creating the products offered by a sacco
+# Route for creating the products offered by a sacco
 @routes.route('/products/create', methods=['POST'])
 @jwt_required()
 def create_product():
@@ -788,7 +817,9 @@ def create_product():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create product.', 'error': str(e)}), 500
 
-# View products 
+# View products
+
+
 @routes.route('/products', methods=['GET'])
 def view_products():
     try:
@@ -816,8 +847,7 @@ def view_products():
         return jsonify({'message': '❌ Failed to fetch products.', 'error': str(e)}), 500
 
 
-
-#Viewing a particular product
+# Viewing a particular product
 @routes.route('/products/<int:product_id>', methods=['GET'])
 def view_product(product_id):
     try:
@@ -841,7 +871,7 @@ def view_product(product_id):
         return jsonify({'message': '❌ Failed to fetch product.', 'error': str(e)}), 500
 
 
-#Route for creating a sacco branch 
+# Route for creating a sacco branch
 @routes.route('/branches/create', methods=['POST'])
 @jwt_required()
 def create_branch():
@@ -880,11 +910,14 @@ def create_branch():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create branch.', 'error': str(e)}), 500
 
-#Viewing all the branches 
+# Viewing all the branches
+
+
 @routes.route('/branches', methods=['GET'])
 def view_all_branches():
     try:
-        branches = SaccoBranch.query.order_by(SaccoBranch.CreatedAt.desc()).all()
+        branches = SaccoBranch.query.order_by(
+            SaccoBranch.CreatedAt.desc()).all()
         branch_list = []
 
         for branch in branches:
@@ -905,7 +938,7 @@ def view_all_branches():
         return jsonify({'message': '❌ Failed to fetch branches.', 'error': str(e)}), 500
 
 
-#Creating a sacco profile
+# Creating a sacco profile
 @routes.route('/sacco-profile/create', methods=['POST'])
 @jwt_required()
 def create_sacco_profile():
@@ -918,12 +951,13 @@ def create_sacco_profile():
 
         data = request.get_json()
 
-        required_fields = ['SaccoName', 'LogoURL', 'Slogan', 'PhysicalAddress', 'ContactNumber', 
-                           'FacebookURL', 'TwitterURL', 'InstagramURL', 'LinkedInURL', 
+        required_fields = ['SaccoName', 'LogoURL', 'Slogan', 'PhysicalAddress', 'ContactNumber',
+                           'FacebookURL', 'TwitterURL', 'InstagramURL', 'LinkedInURL',
                            'SaccoHistory', 'MissionStatement', 'VisionStatement']
-        
+
         # Check for missing required fields
-        missing_fields = [field for field in required_fields if not data.get(field)]
+        missing_fields = [
+            field for field in required_fields if not data.get(field)]
         if missing_fields:
             return jsonify({'message': '❌ Missing required fields.', 'missing_fields': missing_fields}), 400
 
@@ -952,12 +986,15 @@ def create_sacco_profile():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create SACCO profile.', 'error': str(e)}), 500
 
-#Viewing Sacco_Profile
+# Viewing Sacco_Profile
+
+
 @routes.route('/sacco-profile', methods=['GET'])
 def view_sacco_profile():
     try:
         # Get the most recent SACCO profile (or the first one if only one exists)
-        sacco_profile = SaccoProfile.query.order_by(SaccoProfile.SaccoID.desc()).first()
+        sacco_profile = SaccoProfile.query.order_by(
+            SaccoProfile.SaccoID.desc()).first()
 
         if not sacco_profile:
             return jsonify({'message': '❌ No SACCO profile found.'}), 404
@@ -975,7 +1012,7 @@ def view_sacco_profile():
             "SaccoHistory": sacco_profile.SaccoHistory,
             "MissionStatement": sacco_profile.MissionStatement,
             "VisionStatement": sacco_profile.VisionStatement,
-           
+
         }
 
         return jsonify(profile_data), 200
@@ -986,7 +1023,7 @@ def view_sacco_profile():
         return jsonify({'message': '❌ Failed to fetch SACCO profile.', 'error': str(e)}), 500
 
 
-#Create a service
+# Create a service
 @routes.route('/services/create', methods=['POST'])
 @jwt_required()
 def create_service():
@@ -998,10 +1035,13 @@ def create_service():
             return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
 
         # Accept either form-data or JSON
-        service_name = request.form.get('ServiceName') or request.json.get('ServiceName')
-        description = request.form.get('Description') or request.json.get('Description')
+        service_name = request.form.get(
+            'ServiceName') or request.json.get('ServiceName')
+        description = request.form.get(
+            'Description') or request.json.get('Description')
         image_file = request.files.get('ImageFile')  # if uploaded
-        image_url = request.form.get('ImageURL') or request.json.get('ImageURL')  # if directly linked
+        image_url = request.form.get('ImageURL') or request.json.get(
+            'ImageURL')  # if directly linked
 
         if not service_name or not description:
             return jsonify({'message': '❌ ServiceName and Description are required!'}), 400
@@ -1031,14 +1071,15 @@ def create_service():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create service.', 'error': str(e)}), 500
-    
+
 # Route for viewing the services offered by the SACCO
+
 
 @routes.route('/services', methods=['GET'])
 def view_services():
     try:
         services = Service.query.order_by(Service.CreatedAt.desc()).all()
-        
+
         service_list = []
         for svc in services:
             service_list.append({
@@ -1048,8 +1089,8 @@ def view_services():
                 'Description': svc.Description,
                 'ServiceCategory': svc.ServiceCategory,
                 'LoanFormURL': svc.LoanFormURL,
-                'Features': svc.Features,           
-                'Benefits': svc.Benefits,           
+                'Features': svc.Features,
+                'Benefits': svc.Benefits,
                 'CreatedAt': svc.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
             })
 
@@ -1061,7 +1102,7 @@ def view_services():
         return jsonify({'message': '❌ Failed to fetch services.', 'error': str(e)}), 500
 
 
-#Creating sacco clients 
+# Creating sacco clients
 @routes.route('/clients/create', methods=['POST'])
 @jwt_required()
 def create_client():
@@ -1105,12 +1146,15 @@ def create_client():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create SACCO client.', 'error': str(e)}), 500
 
-#Route for viewing the SACCO Clients
+# Route for viewing the SACCO Clients
+
+
 @routes.route('/clients', methods=['GET'])
 def get_clients():
     try:
         # Get only active clients (IsActiveID = 1)
-        clients = SaccoClient.query.filter_by(IsActiveID=1).order_by(SaccoClient.CreatedAt.desc()).all()
+        clients = SaccoClient.query.filter_by(IsActiveID=1).order_by(
+            SaccoClient.CreatedAt.desc()).all()
 
         client_list = []
         for client in clients:
@@ -1129,7 +1173,9 @@ def get_clients():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch SACCO clients.', 'error': str(e)}), 500
 
-#Route for creating a sacco statistics 
+# Route for creating a sacco statistics
+
+
 @routes.route('/statistics/create', methods=['POST'])
 @jwt_required()
 def create_statistics():
@@ -1166,12 +1212,13 @@ def create_statistics():
         return jsonify({'message': '❌ Failed to create SACCO statistics.', 'error': str(e)}), 500
 
 
-#Route for viewing the Statistics
+# Route for viewing the Statistics
 @routes.route('/statistics', methods=['GET'])
 def get_latest_statistics():
     try:
         # Get the most recently created statistics entry
-        latest_stats = SaccoStatistics.query.order_by(SaccoStatistics.LastUpdated.desc()).first()
+        latest_stats = SaccoStatistics.query.order_by(
+            SaccoStatistics.LastUpdated.desc()).first()
 
         if not latest_stats:
             return jsonify({'message': 'ℹ️ No statistics found.'}), 404
@@ -1191,7 +1238,9 @@ def get_latest_statistics():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch statistics.', 'error': str(e)}), 500
 
-#Creating Homepage slides
+# Creating Homepage slides
+
+
 @routes.route('/slider/create', methods=['POST'])
 @jwt_required()
 def create_homepage_slider():
@@ -1303,7 +1352,8 @@ def register_membership():
             return jsonify({"message": "❌ DOB must be in YYYY-MM-DD format"}), 400
 
         today = datetime.today()
-        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        age = today.year - dob.year - \
+            ((today.month, today.day) < (dob.month, dob.day))
         if age < 18:
             return jsonify({"message": "❌ You must be at least 18 years old to register."}), 400
 
@@ -1422,7 +1472,9 @@ MUFA​TE G SACCO Team
         traceback.print_exc()
         return jsonify({"message": "❌ Registration failed", "error": str(e)}), 500
 
-#Viewing the BOD Members
+# Viewing the BOD Members
+
+
 @routes.route('/bod/view', methods=['GET'])
 def view_bod():
     bod_list = BOD.query.all()
@@ -1437,7 +1489,9 @@ def view_bod():
     ]
     return jsonify(result), 200
 
-#VIEW MANAGEMENT TEAM
+# VIEW MANAGEMENT TEAM
+
+
 @routes.route('/management/view', methods=['GET'])
 def view_management():
     management_list = Management.query.all()
@@ -1483,7 +1537,6 @@ def get_recent_resources():
             'message': '❌ Failed to fetch resources.',
             'error': str(e)
         }), 500
-
 
 
 # Route to fetch career hero image
@@ -1538,7 +1591,6 @@ def get_career_hero_image_2():
         return jsonify({'message': '❌ Error fetching ImageID = 5.', 'error': str(e)}), 500
 
 
-
 @routes.route('/posts/images', methods=['GET'])
 def get_post_images():
     try:
@@ -1546,7 +1598,8 @@ def get_post_images():
         posts = Post.query.order_by(Post.DatePosted.desc()).limit(4).all()
 
         # Only extract CoverImage URLs
-        images = [{'PostID': post.PostID, 'CoverImage': post.CoverImage} for post in posts if post.CoverImage]
+        images = [{'PostID': post.PostID, 'CoverImage': post.CoverImage}
+                  for post in posts if post.CoverImage]
 
         return jsonify({'images': images}), 200
 
@@ -1555,7 +1608,9 @@ def get_post_images():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch post images.', 'error': str(e)}), 500
 
-#Return the holiday
+# Return the holiday
+
+
 @routes.route('/holiday/message', methods=['GET'])
 def get_holiday_message():
     from datetime import datetime
@@ -1572,9 +1627,11 @@ def get_holiday_message():
             'message': holiday.Message
         }), 200
     else:
-        return jsonify({ 'message': None }), 200
+        return jsonify({'message': None}), 200
 
 #  ✅ Public route to submit feedback
+
+
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
@@ -1610,7 +1667,8 @@ def submit_feedback():
                 # This part might take 5-10 seconds, but it happens in the background
                 mail.send(admin_msg)
                 mail.send(user_msg)
-                print(f"✅ Emails dispatched successfully for Feedback ID: {feedback.FeedbackID}")
+                print(
+                    f"✅ Emails dispatched successfully for Feedback ID: {feedback.FeedbackID}")
             except Exception as e:
                 # Log the error without crashing the user's request
                 print(f"❌ SMTP Error on host26: {str(e)}")
@@ -1618,6 +1676,8 @@ def submit_feedback():
         # 4. Prepare the Email Content
         admin_msg = Message(
             subject=f"📥 New Website Feedback: {subject}",
+            # Add this line to satisfy Safaricom's security:
+            sender=current_app.config['MAIL_USERNAME'],
             recipients=["maderumoyia@mudetesacco.co.ke"],
             body=f"New feedback received:\n\nFrom: {email}\nPhone: {phone}\nSubject: {subject}\n\nMessage:\n{message}"
         )
@@ -1630,7 +1690,8 @@ def submit_feedback():
 
         # 5. Fire the Thread and Return Response
         # This thread starts the email process but does NOT wait for it to finish
-        email_thread = threading.Thread(target=send_async_email, args=(admin_msg, user_msg))
+        email_thread = threading.Thread(
+            target=send_async_email, args=(admin_msg, user_msg))
         email_thread.start()
 
         # Return 201 immediately to the React frontend
@@ -1648,12 +1709,12 @@ def submit_feedback():
         }), 500
 
 
- 
-#✅Route to fetch active gallery photos
+# ✅Route to fetch active gallery photos
 @routes.route('/gallery', methods=['GET'])
 def get_gallery_photos():
     try:
-        photos = GalleryPhoto.query.filter_by(IsActive=True).order_by(GalleryPhoto.UploadedAt.desc()).all()
+        photos = GalleryPhoto.query.filter_by(IsActive=True).order_by(
+            GalleryPhoto.UploadedAt.desc()).all()
 
         gallery_list = []
         for photo in photos:
@@ -1671,20 +1732,24 @@ def get_gallery_photos():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch gallery photos.', 'error': str(e)}), 500
-    
+
 # =========================
 # LOAN PRODUCTS & SCHEDULE
 # =========================
 
 # ---- helpers (dates, rounding) ----
+
+
 def _parse_date(iso):
     if not iso:
         return date.today()
     y, m, d = map(int, iso.split("-"))
     return date(y, m, d)
 
+
 def _end_of_month(d):
     return date(d.year, d.month, monthrange(d.year, d.month)[1])
+
 
 def _add_months(d, months, first_due_rule="same_day_next_month"):
     # base add
@@ -1696,8 +1761,10 @@ def _add_months(d, months, first_due_rule="same_day_next_month"):
         return _end_of_month(new_d)
     return new_d
 
+
 def _add_days(d, days):
     return d + timedelta(days=days)
+
 
 def _adjust_business_day(d, rule):
     # weekend handling only; (optional) extend with holiday calendar
@@ -1718,6 +1785,7 @@ def _adjust_business_day(d, rule):
         return d
     return d
 
+
 def _round_unit(x, unit):
     try:
         unit = float(unit or 1)
@@ -1726,6 +1794,7 @@ def _round_unit(x, unit):
     if unit <= 0:
         return round(float(x), 2)
     return round(float(x) / unit) * unit
+
 
 def _product_to_dict(p: LoanProduct):
     return {
@@ -1747,6 +1816,8 @@ def _product_to_dict(p: LoanProduct):
     }
 
 # ---- schedules (reducing-balance engines) ----
+
+
 def _schedule_equal_principal(P, r_m, n, start_date, unit, first_due_rule, holiday_rule):
     rows = []
     bal = float(P)
@@ -1774,6 +1845,7 @@ def _schedule_equal_principal(P, r_m, n, start_date, unit, first_due_rule, holid
         total_p += principal
 
     return rows, total_p, total_i
+
 
 def _schedule_emi(P, r_m, n, start_date, unit, first_due_rule, holiday_rule):
     rows = []
@@ -1811,6 +1883,8 @@ def _schedule_emi(P, r_m, n, start_date, unit, first_due_rule, holiday_rule):
 # =====================
 
 # List active products
+
+
 @routes.route('/loan/products', methods=['GET'])
 def loan_list_products():
     try:
@@ -1823,10 +1897,13 @@ def loan_list_products():
         return jsonify({"message": "❌ Failed to list products.", "error": str(e)}), 500
 
 # Get a single product by ProductKey
+
+
 @routes.route('/loan/products/<product_key>', methods=['GET'])
 def loan_get_product(product_key):
     try:
-        p = LoanProduct.query.filter_by(ProductKey=product_key, IsActive=True).first()
+        p = LoanProduct.query.filter_by(
+            ProductKey=product_key, IsActive=True).first()
         if not p:
             return jsonify({"message": "❌ Product not found or inactive."}), 404
         return jsonify(_product_to_dict(p)), 200
@@ -1835,9 +1912,11 @@ def loan_get_product(product_key):
         return jsonify({"message": "❌ Failed to fetch product.", "error": str(e)}), 500
 
 # Calculate repayment schedule (reducing balance)
+
+
 @routes.route('/loan/calc', methods=['POST'])
 def loan_calc_schedule():
-    
+
     try:
         data = request.get_json(force=True)
 
@@ -1852,7 +1931,8 @@ def loan_calc_schedule():
             return jsonify({"message": "❌ 'principal' must be > 0."}), 400
 
         # Load product
-        p = LoanProduct.query.filter_by(ProductKey=product_key, IsActive=True).first()
+        p = LoanProduct.query.filter_by(
+            ProductKey=product_key, IsActive=True).first()
         if not p:
             return jsonify({"message": "❌ Product not found or inactive."}), 404
 
@@ -1863,7 +1943,8 @@ def loan_calc_schedule():
             return jsonify({"message": f"❌ Principal exceeds maximum ({float(p.MaxPrincipal):,.2f})."}), 400
 
         # Term
-        n = int(term_override) if term_override else int(p.DefaultTermMonths or 0)
+        n = int(term_override) if term_override else int(
+            p.DefaultTermMonths or 0)
         if n <= 0:
             return jsonify({"message": "❌ 'term_months' must be > 0."}), 400
         if p.MinTermMonths is not None and n < int(p.MinTermMonths):
@@ -1880,12 +1961,14 @@ def loan_calc_schedule():
 
         # Build schedule
         if method == "emi":
-            rows, total_p, total_i = _schedule_emi(principal, r, n, start, unit, first_due_rule, holiday_rule)
+            rows, total_p, total_i = _schedule_emi(
+                principal, r, n, start, unit, first_due_rule, holiday_rule)
             emi_value = rows[0]["total"] if rows else 0
             monthly_principal = None
         else:
             # default to constant-principal reducing balance (your CBS style)
-            rows, total_p, total_i = _schedule_equal_principal(principal, r, n, start, unit, first_due_rule, holiday_rule)
+            rows, total_p, total_i = _schedule_equal_principal(
+                principal, r, n, start, unit, first_due_rule, holiday_rule)
             emi_value = None
             monthly_principal = _round_unit(principal / n, unit)
 
@@ -1924,7 +2007,8 @@ def submit_support_ticket():
 
         # Extract fields
         email = (data.get('Email') or '').strip()
-        phone = (data.get('PhoneNumber') or '').strip()  # NEW: optional alternative
+        # NEW: optional alternative
+        phone = (data.get('PhoneNumber') or '').strip()
         message = (data.get('Message') or '').strip()
         page_url = (data.get('PageUrl') or '').strip()
 
