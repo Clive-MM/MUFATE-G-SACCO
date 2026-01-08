@@ -1572,7 +1572,7 @@ def get_holiday_message():
     else:
         return jsonify({ 'message': None }), 200
 
-# # ✅ Public route to submit feedback
+#  ✅ Public route to submit feedback
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
