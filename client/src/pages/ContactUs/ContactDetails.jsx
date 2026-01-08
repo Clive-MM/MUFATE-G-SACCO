@@ -186,12 +186,7 @@ const ContactDetails = () => {
           </Grid>
         </motion.div>
 
-        {/* GOLDEN FOOTER */}
-        <Box sx={{ mt: 8, textAlign: 'center' }}>
-          <Typography variant="caption" sx={{ color: BRAND.gold, letterSpacing: '3px', fontWeight: 700, textTransform: 'uppercase' }}>
-            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
-          </Typography>
-        </Box>
+        
       </Container>
     </Box>
   );

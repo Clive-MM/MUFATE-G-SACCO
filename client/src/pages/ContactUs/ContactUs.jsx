@@ -16,22 +16,22 @@ const ContactUs = () => {
   const isSmallPhone = useMediaQuery('(max-width:360px)');
 
   return (
-    <Box 
-      sx={{ 
-        backgroundColor: BRAND.dark, 
-        minHeight: '100vh', 
+    <Box
+      sx={{
+        backgroundColor: BRAND.dark,
+        minHeight: '100vh',
         overflowX: 'hidden',
         // Smooth scroll for the whole page
-        scrollBehavior: 'smooth' 
+        scrollBehavior: 'smooth'
       }}
     >
-      
+
       {/* HERO SECTION WITH ENHANCED DEPTH */}
       <Box
         sx={{
           position: 'relative',
           height: {
-            xs: '60vh',   
+            xs: '60vh',
             sm: '65vh',
             md: '70vh',
           },
@@ -76,10 +76,10 @@ const ContactUs = () => {
               sx={{
                 fontWeight: 900,
                 textTransform: 'uppercase',
-                fontSize: { 
-                  xs: isSmallPhone ? '1.8rem' : '2.5rem', 
-                  sm: '3.5rem', 
-                  md: '4.5rem' 
+                fontSize: {
+                  xs: isSmallPhone ? '1.8rem' : '2.5rem',
+                  sm: '3.5rem',
+                  md: '4.5rem'
                 },
                 color: BRAND.gold,
                 letterSpacing: { xs: '0.1em', md: '0.25em' },
@@ -91,8 +91,8 @@ const ContactUs = () => {
             >
               Get In Touch
             </Typography>
-            
-            
+
+
 
             <Typography
               sx={{
@@ -107,8 +107,8 @@ const ContactUs = () => {
                 textShadow: '0 2px 10px rgba(0,0,0,0.5)'
               }}
             >
-              Your financial growth is our priority. Whether you have questions about 
-              membership or need technical support, our dedicated team is here 
+              Your financial growth is our priority. Whether you have questions about
+              membership or need technical support, our dedicated team is here
               to ensure your experience is seamless.
             </Typography>
           </Box>
@@ -116,31 +116,31 @@ const ContactUs = () => {
       </Box>
 
       {/* MAIN CONTENT SECTION */}
-      <Box 
-        sx={{ 
+      <Box
+        sx={{
           position: 'relative',
           zIndex: 3,
           // Fluid overlap logic
-          mt: { 
-            xs: -8,   
-            sm: -12, 
+          mt: {
+            xs: -8,
+            sm: -12,
             md: -18,
-            lg: -22    
-          }, 
+            lg: -22
+          },
           pb: 10,
-         
-          px: { xs: 0, md: 2 } 
+
+          px: { xs: 0, md: 2 }
         }}
       >
         <ContactDetails />
       </Box>
 
       {/* FOOTER CONFIDENCE MARK (Optional) */}
-      {/* <Box sx={{ py: 4, textAlign: 'center', opacity: 0.3 }}>
-        <Typography variant="caption" sx={{ color:BRAND.gold, letterSpacing: '2px' }}>
-          GOLDEN GENERATION DT SACCO &copy; {new Date().getFullYear()} 
+      <Box sx={{ mt: 8, textAlign: 'center' }}>
+        <Typography variant="caption" sx={{ color: BRAND.gold, letterSpacing: '3px', fontWeight: 700, textTransform: 'uppercase' }}>
+          GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
         </Typography>
-      </Box> */}
+      </Box>
 
     </Box>
   );
