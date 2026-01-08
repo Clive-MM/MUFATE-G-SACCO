@@ -15,6 +15,7 @@ CLOUDINARY_API_SECRET=yn0Sp1Wynf7EfLG_PJeUb5kul1E
 MAIL_SERVER=host26.safaricombusiness.co.ke
 MAIL_PORT=587
 MAIL_USE_TLS=True
+MAIL_USE_SSL= False
 MAIL_USERNAME=maderumoyia@mudetesacco.co.ke
 MAIL_PASSWORD=AZiza@2812
 MAIL_DEFAULT_SENDER=maderumoyia@mudetesacco.co.ke

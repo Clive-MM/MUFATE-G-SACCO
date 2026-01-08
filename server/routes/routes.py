@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, copy_current_request_context, current_app
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -10,6 +10,8 @@ import re
 import traceback
 from datetime import date, timedelta
 from calendar import monthrange
+import threading
+from flask_mail import Message
 
 
 # ✅ Initialize Blueprint and Flask extensions
@@ -1576,95 +1578,70 @@ def get_holiday_message():
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
+        # 1. Get and Validate Data
         data = request.get_json(silent=True)
-
         if not data:
-            return jsonify({
-                'message': '❌ Invalid JSON payload.'
-            }), 400
+            return jsonify({'message': '❌ Invalid JSON payload.'}), 400
 
         email = data.get('Email')
         phone = data.get('PhoneNumber')
         subject = data.get('Subject')
         message = data.get('Message')
 
-        # ✅ Basic validation
         if not email or not subject or not message:
-            return jsonify({
-                'message': '❌ Email, Subject, and Message are required!'
-            }), 400
+            return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
 
-        # ✅ Normalize phone number (optional)
-        if phone:
-            phone = phone.strip().replace(' ', '')
-
-        # ✅ Save feedback
+        # 2. Save to Database (Commit immediately so data is safe)
         feedback = Feedback(
             Email=email,
-            PhoneNumber=phone,
+            PhoneNumber=phone.strip().replace(' ', '') if phone else None,
             Subject=subject,
             Message=message,
             StatusID=1  # Unread
         )
-
         db.session.add(feedback)
         db.session.commit()
 
-        # ✅ Admin notification email
+        # 3. Define the Background Email Function
+        # We use @copy_current_request_context so the thread can access MAIL settings
+        @copy_current_request_context
+        def send_async_email(admin_msg, user_msg):
+            try:
+                # This part might take 5-10 seconds, but it happens in the background
+                mail.send(admin_msg)
+                mail.send(user_msg)
+                print(f"✅ Emails dispatched successfully for Feedback ID: {feedback.FeedbackID}")
+            except Exception as e:
+                # Log the error without crashing the user's request
+                print(f"❌ SMTP Error on host26: {str(e)}")
+
+        # 4. Prepare the Email Content
         admin_msg = Message(
-            subject=f"📥 New Feedback: {subject}",
+            subject=f"📥 New Website Feedback: {subject}",
             recipients=["maderumoyia@mudetesacco.co.ke"],
-            body=f"""You have received new feedback via the website.
-
-Email: {email}
-Phone: {phone or 'Not provided'}
-
-Subject: {subject}
-
-Message:
-{message}
-
--- GOLDEN GENERATION DT SACCO Website
-"""
+            body=f"New feedback received:\n\nFrom: {email}\nPhone: {phone}\nSubject: {subject}\n\nMessage:\n{message}"
         )
 
-        # ✅ User acknowledgment email
         user_msg = Message(
-            subject="✅ Thank You for Your Feedback - GOLDEN GENERATION DT SACCO",
+            subject="✅ Message Received - GOLDEN GENERATION DT SACCO",
             recipients=[email],
-            body=f"""Dear Member,
-
-Thank you for contacting GOLDEN GENERATION DT SACCO.
-
-We have received your message titled:
-"{subject}"
-
-Our team will review it and get back to you as necessary.
-
-Warm regards,
-GOLDEN GENERATION DT SACCO Team
-maderumoyia@mudetesacco.co.ke
-"""
+            body=f"Dear Member,\n\nWe have received your message regarding '{subject}'. Our team will review it shortly."
         )
 
-        email_warning = None
-        try:
-            mail.send(admin_msg)
-            mail.send(user_msg)
-        except Exception as email_error:
-            import traceback
-            traceback.print_exc()
-            email_warning = "⚠️ Feedback saved, but email failed to send."
+        # 5. Fire the Thread and Return Response
+        # This thread starts the email process but does NOT wait for it to finish
+        email_thread = threading.Thread(target=send_async_email, args=(admin_msg, user_msg))
+        email_thread.start()
 
+        # Return 201 immediately to the React frontend
         return jsonify({
-            'message': '😊 Thank you for your feedback!',
-            'feedback_id': feedback.FeedbackID,
-            'warning': email_warning
+            'message': '😊 Thank you! Your feedback has been received.',
+            'feedback_id': feedback.FeedbackID
         }), 201
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
+        db.session.rollback()
+        print(f"❌ Fatal Route Error: {str(e)}")
         return jsonify({
             'message': '❌ Failed to submit feedback.',
             'error': str(e)
