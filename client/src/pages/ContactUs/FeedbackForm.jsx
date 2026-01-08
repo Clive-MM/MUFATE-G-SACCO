@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Box, Typography, TextField, Button, CircularProgress, 
-  Stack, useMediaQuery, useTheme 
+  Box, Typography, TextField, Button, CircularProgress,
+  Stack, useMediaQuery, useTheme
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import LockIcon from '@mui/icons-material/Lock';
@@ -20,13 +20,13 @@ const BRAND = {
 const FeedbackForm = () => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isSmallPhone = useMediaQuery('(max-width:360px)');
 
-  // Ensure these keys match the Python data.get() exactly
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  // ✅ Match backend keys exactly
   const [formData, setFormData] = useState({
     Email: '',
+    PhoneNumber: '',
     Subject: '',
     Message: '',
   });
@@ -35,7 +35,7 @@ const FeedbackForm = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
@@ -43,31 +43,48 @@ const FeedbackForm = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json' 
-        },
-        body: JSON.stringify({
-          Email: formData.Email,
-          Subject: formData.Subject,
-          Message: formData.Message
-        }),
-      });
+      const response = await fetch(
+        'https://mufate-g-sacco.onrender.com/feedback',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const result = await response.json();
 
       if (response.status === 201) {
         setSubmitted(true);
-        setFormData({ Email: '', Subject: '', Message: '' });
+        enqueueSnackbar(result.message || 'Feedback sent successfully!', {
+          variant: 'success',
+        });
+
+        if (result.warning) {
+          enqueueSnackbar(result.warning, { variant: 'warning' });
+        }
+
+        setFormData({
+          Email: '',
+          PhoneNumber: '',
+          Subject: '',
+          Message: '',
+        });
+
         setTimeout(() => setSubmitted(false), 5000);
       } else {
-        // This will show the actual error message from your Flask backend
-        enqueueSnackbar(result.message || 'Submission failed.', { variant: 'error' });
+        enqueueSnackbar(result.message || 'Submission failed.', {
+          variant: 'error',
+        });
       }
     } catch (error) {
-      enqueueSnackbar('Connection error. Please try again later.', { variant: 'error' });
+      enqueueSnackbar(
+        'Connection error. Please try again later.',
+        { variant: 'error' }
+      );
     } finally {
       setLoading(false);
     }
@@ -97,30 +114,27 @@ const FeedbackForm = () => {
           fontWeight: 900,
           textTransform: 'uppercase',
           mb: 1,
-          zIndex: 2,
           fontSize: { xs: '1.5rem', sm: '2rem', md: '2.3rem' },
           textAlign: { xs: 'center', md: 'left' },
-          textDecoration: 'none'
         }}
       >
         Send Us a Message
       </Typography>
-      
-      <Typography sx={{ color: BRAND.light, opacity: 0.7, mb: 4, zIndex: 2, fontSize: '0.9rem' }}>
+
+      <Typography sx={{ color: BRAND.light, opacity: 0.7, mb: 4 }}>
         Have questions? Our team typically responds within 24 hours.
       </Typography>
 
-      <Box sx={{ width: '100%', maxWidth: '600px', zIndex: 2 }}>
+      <Box sx={{ width: '100%', maxWidth: '600px' }}>
         <AnimatePresence mode="wait">
           {!submitted ? (
             <Stack
-              key="form"
               component={motion.form}
+              onSubmit={handleSubmit}
+              spacing={2.5}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              onSubmit={handleSubmit}
-              spacing={2.5}
               sx={{
                 backdropFilter: 'blur(10px)',
                 background: 'rgba(255,255,255,0.03)',
@@ -137,6 +151,15 @@ const FeedbackForm = () => {
                 fullWidth
                 required
                 value={formData.Email}
+                onChange={handleChange}
+                sx={inputStyle}
+              />
+
+              <TextField
+                label="Phone Number (Optional)"
+                name="PhoneNumber"
+                fullWidth
+                value={formData.PhoneNumber}
                 onChange={handleChange}
                 sx={inputStyle}
               />
@@ -163,28 +186,29 @@ const FeedbackForm = () => {
                 sx={inputStyle}
               />
 
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', md: 'flex-start' }, gap: 2 }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={loading}
-                  startIcon={!loading && <SendIcon />}
-                  sx={submitBtnStyle}
-                >
-                  {loading ? <CircularProgress size={24} sx={{ color: BRAND.dark }} /> : 'Submit Message'}
-                </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={loading}
+                startIcon={!loading && <SendIcon />}
+                sx={submitBtnStyle}
+              >
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: BRAND.dark }} />
+                ) : (
+                  'Submit Message'
+                )}
+              </Button>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, opacity: 0.6 }}>
-                  <LockIcon sx={{ fontSize: '14px', color: BRAND.success }} />
-                  <Typography sx={{ color: BRAND.light, fontSize: '0.75rem' }}>
-                    Your information is kept confidential.
-                  </Typography>
-                </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, opacity: 0.6 }}>
+                <LockIcon sx={{ fontSize: 14, color: BRAND.success }} />
+                <Typography sx={{ color: BRAND.light, fontSize: '0.75rem' }}>
+                  Your information is kept confidential.
+                </Typography>
               </Box>
             </Stack>
           ) : (
             <Box
-              key="success"
               component={motion.div}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -196,8 +220,8 @@ const FeedbackForm = () => {
                 border: `1px solid ${BRAND.gold}33`,
               }}
             >
-              <CheckCircleOutlineIcon sx={{ fontSize: 80, color: BRAND.gold, mb: 2 }} />
-              <Typography variant="h5" sx={{ color: BRAND.gold, fontWeight: 800, mb: 1 }}>
+              <CheckCircleOutlineIcon sx={{ fontSize: 80, color: BRAND.gold }} />
+              <Typography variant="h5" sx={{ color: BRAND.gold, fontWeight: 800, mt: 2 }}>
                 MESSAGE SENT
               </Typography>
               <Typography sx={{ color: BRAND.light, opacity: 0.7 }}>
@@ -216,22 +240,18 @@ const inputStyle = {
     background: 'rgba(255,255,255,0.95)',
     borderRadius: '12px',
     '& fieldset': { border: 'none' },
-    '&.Mui-focused': { boxShadow: `0 0 0 2px ${BRAND.gold}` }
+    '&.Mui-focused': { boxShadow: `0 0 0 2px #EC9B14` },
   },
-  '& .MuiInputLabel-root': { color: BRAND.dark, fontWeight: 700 },
+  '& .MuiInputLabel-root': { color: '#02150F', fontWeight: 700 },
 };
 
 const submitBtnStyle = {
-  width: { xs: '100%', sm: 'auto' },
-  px: 5, py: 1.8,
+  width: '100%',
+  py: 1.8,
   borderRadius: '12px',
   fontWeight: 900,
-  color: BRAND.dark,
-  background: `linear-gradient(90deg, ${BRAND.gold}, ${BRAND.goldSoft})`,
-  '&:hover': {
-    background: BRAND.goldSoft,
-    transform: 'scale(1.02)',
-  },
+  color: '#02150F',
+  background: 'linear-gradient(90deg, #EC9B14, #F4D03F)',
 };
 
 export default FeedbackForm;
