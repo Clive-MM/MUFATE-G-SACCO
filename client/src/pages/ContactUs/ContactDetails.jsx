@@ -12,7 +12,9 @@ import {
   ContentCopy as CopyIcon,
   MarkEmailRead as MailIcon,
   CheckCircle as SuccessIcon,
-  VerifiedUser as ShieldIcon
+  VerifiedUser as ShieldIcon,
+  Twitter as TwitterIcon,
+  WhatsApp as WhatsAppIcon
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
@@ -35,24 +37,37 @@ const ContactDetails = () => {
 
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ Email: '', PhoneNumber: '+254', Subject: '', Message: '' });
+  const [formData, setFormData] = useState({
+    Email: '',
+    PhoneNumber: '+254',
+    Subject: '',
+    Message: ''
+  });
   const [formLoading, setFormLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isEmailValid = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   useEffect(() => {
     fetch('https://mufate-g-sacco.onrender.com/branches')
       .then(res => res.json())
-      .then(data => { setBranches(data.branches || []); setLoading(false); })
+      .then(data => {
+        setBranches(data.branches || []);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, []);
 
-  // ✅ ONLY NEW LOGIC ADDED
   const handleCopyAddress = () => {
     navigator.clipboard.writeText('P.O. BOX 221-50104 KHAYEGA');
     enqueueSnackbar('Postal address copied', { variant: 'success' });
   };
+
+  const whatsappNumber = '254791331932';
+  const whatsappMessage = encodeURIComponent(
+    'Hello 👋, thank you for contacting Golden Generation DT SACCO. We’re delighted to hear from you. How may we assist you today?'
+  );
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -75,7 +90,7 @@ const ContactDetails = () => {
         enqueueSnackbar(data.message || 'Failed to send message', { variant: 'error' });
       }
     } catch (err) {
-      console.error("Submission error:", err);
+      console.error('Submission error:', err);
       enqueueSnackbar('Server connection lost. Please check your internet.', { variant: 'error' });
     } finally {
       setFormLoading(false);
@@ -83,12 +98,39 @@ const ContactDetails = () => {
   };
 
   return (
-    <Box sx={{ background: BRAND.dark, width: '100%', position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-
+    <Box
+      sx={{
+        background: BRAND.dark,
+        width: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
       {/* PROFESSIONAL BACKGROUND AMBIENCE */}
-      <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
-        <Box sx={{ position: 'absolute', top: '-10%', right: '-5%', width: '500px', height: '500px', borderRadius: '50%', background: `radial-gradient(circle, ${BRAND.gold}10 0%, transparent 70%)`, filter: 'blur(60px)' }} />
-        <Box sx={{ position: 'absolute', bottom: '10%', left: '-5%', width: '400px', height: '400px', borderRadius: '50%', background: `radial-gradient(circle, ${BRAND.gold}08 0%, transparent 70%)`, filter: 'blur(50px)' }} />
+      <Box sx={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <Box sx={{
+          position: 'absolute',
+          top: '-10%',
+          right: '-5%',
+          width: 500,
+          height: 500,
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${BRAND.gold}10 0%, transparent 70%)`,
+          filter: 'blur(60px)'
+        }} />
+        <Box sx={{
+          position: 'absolute',
+          bottom: '10%',
+          left: '-5%',
+          width: 400,
+          height: 400,
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${BRAND.gold}08 0%, transparent 70%)`,
+          filter: 'blur(50px)'
+        }} />
       </Box>
 
       <Container
@@ -124,9 +166,7 @@ const ContactDetails = () => {
                       <MailIcon sx={iconStyle} />
                       <Box sx={{ flexGrow: 1 }}>
                         <Typography sx={infoLabel}>Postal Address</Typography>
-
-                        {/* ✅ COPY ICON ADDED — NOTHING ELSE CHANGED */}
-                        <Stack direction="row" alignItems="center" spacing={1}>
+                        <Stack direction="row" spacing={1} alignItems="center">
                           <Typography sx={infoValue}>P.O. BOX 221-50104 KHAYEGA</Typography>
                           <Tooltip title="Copy address">
                             <IconButton size="small" onClick={handleCopyAddress} sx={{ color: BRAND.gold }}>
@@ -153,11 +193,47 @@ const ContactDetails = () => {
                         <Typography component="a" href="mailto:info@mudetesacco.co.ke" sx={linkHover}>info@mudetesacco.co.ke</Typography>
                       </Box>
                     </Box>
+
+                    {/* SOCIAL PLATFORMS */}
+                    <Box>
+                      <Typography sx={infoLabel}>Connect With Us</Typography>
+                      <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
+                        <Tooltip title="Follow us on X (Twitter)">
+                          <IconButton
+                            component="a"
+                            href="https://x.com/GMufate"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            sx={socialIconStyle}
+                          >
+                            <TwitterIcon />
+                          </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Chat with us on WhatsApp">
+                          <IconButton
+                            component="a"
+                            href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            sx={{
+                              ...socialIconStyle,
+                              background: 'rgba(37,211,102,0.15)',
+                              '&:hover': { background: 'rgba(37,211,102,0.25)' }
+                            }}
+                          >
+                            <WhatsAppIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    </Box>
                   </Stack>
 
                   <Box sx={{ mt: 3, pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 1 }}>
                     <ShieldIcon sx={{ color: BRAND.gold, fontSize: '1rem' }} />
-                    <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem' }}>Secure Communication Channel</Typography>
+                    <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem' }}>
+                      Secure Communication Channel
+                    </Typography>
                   </Box>
                 </CardContent>
               </Card>
@@ -178,8 +254,6 @@ const ContactDetails = () => {
                             <Typography sx={{ color: BRAND.gold, fontWeight: 700, mb: 1, fontSize: '0.9rem' }}>
                               {branch.BranchName}
                             </Typography>
-
-                            {/* ✅ LAZY-LOADED MAP (UNCHANGED) */}
                             <Box
                               component="iframe"
                               loading="lazy"
@@ -201,24 +275,45 @@ const ContactDetails = () => {
                 <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: { xs: 3, md: 4 } }}>
                   <Typography sx={megaInfoTitle}>Send Message</Typography>
                   <Stack spacing={2.5} sx={{ mt: 3 }}>
-                    <TextField label="Email" fullWidth required sx={megaInputStyle}
+                    <TextField
+                      label="Email"
+                      fullWidth
+                      required
+                      sx={megaInputStyle}
                       value={formData.Email}
                       onChange={(e) => setFormData({ ...formData, Email: e.target.value })}
                       error={formData.Email !== '' && !isEmailValid(formData.Email)}
                     />
-                    <TextField label="Phone Number" fullWidth required sx={megaInputStyle}
+                    <TextField
+                      label="Phone Number"
+                      fullWidth
+                      required
+                      sx={megaInputStyle}
                       value={formData.PhoneNumber}
                       onChange={(e) => setFormData({ ...formData, PhoneNumber: e.target.value })}
                     />
-                    <TextField label="Subject" fullWidth required sx={megaInputStyle}
+                    <TextField
+                      label="Subject"
+                      fullWidth
+                      required
+                      sx={megaInputStyle}
                       value={formData.Subject}
                       onChange={(e) => setFormData({ ...formData, Subject: e.target.value })}
                     />
-                    <TextField label="Message" multiline rows={4} fullWidth required sx={megaInputStyle}
+                    <TextField
+                      label="Message"
+                      multiline
+                      rows={4}
+                      fullWidth
+                      required
+                      sx={megaInputStyle}
                       value={formData.Message}
                       onChange={(e) => setFormData({ ...formData, Message: e.target.value })}
                     />
-                    <Button type="submit" variant="contained" disabled={formLoading}
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={formLoading}
                       sx={{ ...refinedGlowBtn, ...(submitted && { background: BRAND.success }) }}
                       fullWidth
                     >
@@ -236,7 +331,7 @@ const ContactDetails = () => {
   );
 };
 
-/* ================= STYLES (UNCHANGED) ================= */
+/* ================= STYLES ================= */
 
 const professionalCardStyle = {
   flexGrow: 1,
@@ -250,7 +345,13 @@ const professionalCardStyle = {
   '&:hover': { transform: 'translateY(-10px)', boxShadow: `0 30px 60px ${BRAND.gold}15` }
 };
 
-const megaInfoTitle = { color: BRAND.gold, fontSize: '1.4rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px' };
+const megaInfoTitle = {
+  color: BRAND.gold,
+  fontSize: '1.4rem',
+  fontWeight: 900,
+  textTransform: 'uppercase',
+  letterSpacing: '2px'
+};
 
 const megaInputStyle = {
   '& .MuiOutlinedInput-root': {
@@ -309,6 +410,19 @@ const refinedGlowBtn = {
   borderRadius: '16px',
   py: 1.8,
   '&:hover': { transform: 'scale(1.02)', boxShadow: `0 10px 20px ${BRAND.gold}44` }
+};
+
+const socialIconStyle = {
+  color: BRAND.gold,
+  border: '1px solid rgba(255,255,255,0.1)',
+  backdropFilter: 'blur(10px)',
+  transition: '0.3s ease',
+  '&:hover': {
+    color: BRAND.dark,
+    background: BRAND.gold,
+    transform: 'translateY(-3px)',
+    boxShadow: `0 6px 20px ${BRAND.gold}55`
+  }
 };
 
 export default ContactDetails;
