@@ -136,7 +136,7 @@ const ContactUs = () => {
       </Box>
 
       {/* FOOTER CONFIDENCE MARK (Optional) */}
-      <Box sx={{ mt: 8, textAlign: 'center' }}>
+      <Box sx={{ mt: 4, textAlign: 'center' }}>
         <Typography
           variant="caption"
           sx={{
@@ -144,13 +144,14 @@ const ContactUs = () => {
             letterSpacing: '3px',
             fontWeight: 900,
             textTransform: 'uppercase',
-            fontSize: '1.1rem', // This line increases the font height/size
-            display: 'block'    // Ensures the size applies correctly if variant defaults to inline
+            fontSize: '1.35rem',
+            display: 'block'
           }}
         >
           GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
         </Typography>
       </Box>
+
 
     </Box>
   );

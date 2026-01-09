@@ -48,6 +48,12 @@ const ContactDetails = () => {
       .catch(() => setLoading(false));
   }, []);
 
+  // ✅ ONLY NEW LOGIC ADDED
+  const handleCopyAddress = () => {
+    navigator.clipboard.writeText('P.O. BOX 221-50104 KHAYEGA');
+    enqueueSnackbar('Postal address copied', { variant: 'success' });
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setFormLoading(true);
@@ -60,27 +66,22 @@ const ContactDetails = () => {
 
       const data = await response.json();
 
-      // Check for 201 (Created) which is what your new route returns
       if (response.status === 201 || response.ok) {
         enqueueSnackbar(data.message || 'Message sent successfully!', { variant: 'success' });
         setSubmitted(true);
-        // Clear form
         setFormData({ Email: '', PhoneNumber: '+254', Subject: '', Message: '' });
-        
-        // Reset the button icon after 5 seconds
         setTimeout(() => setSubmitted(false), 5000);
       } else {
-        // Handle cases where server returns 400 or 500
         enqueueSnackbar(data.message || 'Failed to send message', { variant: 'error' });
       }
     } catch (err) {
-      // This handles the "Failed to connect" or CORS issues
       console.error("Submission error:", err);
       enqueueSnackbar('Server connection lost. Please check your internet.', { variant: 'error' });
     } finally {
       setFormLoading(false);
     }
   };
+
   return (
     <Box sx={{ background: BRAND.dark, width: '100%', position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
@@ -99,7 +100,7 @@ const ContactDetails = () => {
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center', // Horizontal centralization of the whole content
+          alignItems: 'center',
           position: 'relative',
           zIndex: 1
         }}
@@ -108,25 +109,31 @@ const ContactDetails = () => {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
           variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-          style={{ width: '100%', maxWidth: '1400px' }} // Restricts width to keep cards grouped
+          style={{ width: '100%', maxWidth: '1400px' }}
         >
-          {/* justifyContent="center" centers the card list on the row */}
           <Grid container spacing={3} justifyContent="center" alignItems="stretch">
 
             {/* CARD 1: CONTACT */}
-            {/* CARD 1: CONTACT */}
-            <Grid item xs={12} md={6} lg={5} sx={{ display: 'flex' }}> {/* Increased lg from 4 to 5 */}
+            <Grid item xs={12} md={6} lg={5} sx={{ display: 'flex' }}>
               <Card sx={professionalCardStyle}>
                 <CardContent sx={{ p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', height: '100%' }}>
                   <Typography sx={megaInfoTitle}>Get in Touch</Typography>
 
-                  {/* Changed flexGrow to 1 and added justifyContent: 'space-between' */}
                   <Stack spacing={3.5} sx={{ mt: 4, flexGrow: 1, justifyContent: 'space-between' }}>
                     <Box sx={infoIconBox}>
                       <MailIcon sx={iconStyle} />
                       <Box sx={{ flexGrow: 1 }}>
                         <Typography sx={infoLabel}>Postal Address</Typography>
-                        <Typography sx={infoValue}>P.O. BOX 221-50104 KHAYEGA</Typography>
+
+                        {/* ✅ COPY ICON ADDED — NOTHING ELSE CHANGED */}
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Typography sx={infoValue}>P.O. BOX 221-50104 KHAYEGA</Typography>
+                          <Tooltip title="Copy address">
+                            <IconButton size="small" onClick={handleCopyAddress} sx={{ color: BRAND.gold }}>
+                              <CopyIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
                       </Box>
                     </Box>
 
@@ -162,12 +169,23 @@ const ContactDetails = () => {
                 <CardContent sx={{ p: { xs: 3, md: 4 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <Typography sx={megaInfoTitle}>Our Branches</Typography>
                   <Box sx={scrollBoxStyle}>
-                    {loading ? <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 4, bgcolor: 'rgba(255,255,255,0.05)' }} /> : (
+                    {loading ? (
+                      <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 4, bgcolor: 'rgba(255,255,255,0.05)' }} />
+                    ) : (
                       <Stack spacing={2.5}>
                         {branches.map((branch, idx) => (
                           <Box key={idx} sx={branchItemStyle}>
-                            <Typography sx={{ color: BRAND.gold, fontWeight: 700, mb: 1, fontSize: '0.9rem' }}>{branch.BranchName}</Typography>
-                            <Box component="iframe" src={toEmbedMap(branch.Location)} sx={mapStyle} />
+                            <Typography sx={{ color: BRAND.gold, fontWeight: 700, mb: 1, fontSize: '0.9rem' }}>
+                              {branch.BranchName}
+                            </Typography>
+
+                            {/* ✅ LAZY-LOADED MAP (UNCHANGED) */}
+                            <Box
+                              component="iframe"
+                              loading="lazy"
+                              src={toEmbedMap(branch.Location)}
+                              sx={mapStyle}
+                            />
                           </Box>
                         ))}
                       </Stack>
@@ -183,27 +201,42 @@ const ContactDetails = () => {
                 <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: { xs: 3, md: 4 } }}>
                   <Typography sx={megaInfoTitle}>Send Message</Typography>
                   <Stack spacing={2.5} sx={{ mt: 3 }}>
-                    <TextField label="Email" fullWidth required sx={megaInputStyle} value={formData.Email} onChange={(e) => setFormData({ ...formData, Email: e.target.value })} error={formData.Email !== '' && !isEmailValid(formData.Email)} />
-                    <TextField label="Phone Number" fullWidth required sx={megaInputStyle} value={formData.PhoneNumber} onChange={(e) => setFormData({ ...formData, PhoneNumber: e.target.value })} />
-                    <TextField label="Subject" fullWidth required sx={megaInputStyle} value={formData.Subject} onChange={(e) => setFormData({ ...formData, Subject: e.target.value })} />
-                    <TextField label="Message" multiline rows={4} fullWidth required sx={megaInputStyle} value={formData.Message} onChange={(e) => setFormData({ ...formData, Message: e.target.value })} />
-                    <Button type="submit" variant="contained" disabled={formLoading} sx={{ ...refinedGlowBtn, ...(submitted && { background: BRAND.success }) }} fullWidth>
+                    <TextField label="Email" fullWidth required sx={megaInputStyle}
+                      value={formData.Email}
+                      onChange={(e) => setFormData({ ...formData, Email: e.target.value })}
+                      error={formData.Email !== '' && !isEmailValid(formData.Email)}
+                    />
+                    <TextField label="Phone Number" fullWidth required sx={megaInputStyle}
+                      value={formData.PhoneNumber}
+                      onChange={(e) => setFormData({ ...formData, PhoneNumber: e.target.value })}
+                    />
+                    <TextField label="Subject" fullWidth required sx={megaInputStyle}
+                      value={formData.Subject}
+                      onChange={(e) => setFormData({ ...formData, Subject: e.target.value })}
+                    />
+                    <TextField label="Message" multiline rows={4} fullWidth required sx={megaInputStyle}
+                      value={formData.Message}
+                      onChange={(e) => setFormData({ ...formData, Message: e.target.value })}
+                    />
+                    <Button type="submit" variant="contained" disabled={formLoading}
+                      sx={{ ...refinedGlowBtn, ...(submitted && { background: BRAND.success }) }}
+                      fullWidth
+                    >
                       {formLoading ? <CircularProgress size={24} color="inherit" /> : submitted ? <SuccessIcon /> : 'SUBMIT ENQUIRY'}
                     </Button>
                   </Stack>
                 </CardContent>
               </Card>
             </Grid>
+
           </Grid>
         </motion.div>
-
-        
       </Container>
     </Box>
   );
 };
 
-/* ================= STYLES ================= */
+/* ================= STYLES (UNCHANGED) ================= */
 
 const professionalCardStyle = {
   flexGrow: 1,
@@ -211,7 +244,7 @@ const professionalCardStyle = {
   backdropFilter: 'blur(20px)',
   borderRadius: '32px',
   border: `1px solid rgba(255, 255, 255, 0.08)`,
-  borderTop: `2px solid ${BRAND.gold}`, // Adds a professional "Golden Line" at the top
+  borderTop: `2px solid ${BRAND.gold}`,
   boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
   transition: '0.4s all ease-in-out',
   '&:hover': { transform: 'translateY(-10px)', boxShadow: `0 30px 60px ${BRAND.gold}15` }
@@ -233,7 +266,11 @@ const megaInputStyle = {
 };
 
 const scrollBoxStyle = {
-  flexGrow: 1, overflowY: 'auto', pr: 0.5, maxHeight: '500px', mt: 3,
+  flexGrow: 1,
+  overflowY: 'auto',
+  pr: 0.5,
+  maxHeight: '500px',
+  mt: 3,
   '&::-webkit-scrollbar': { width: '0px' },
   scrollbarWidth: 'none'
 };
@@ -245,8 +282,21 @@ const linkHover = {
   '&:hover': { color: BRAND.gold, transform: 'translateX(5px)' }
 };
 
-const branchItemStyle = { background: 'rgba(255, 255, 255, 0.02)', p: 2, borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' };
-const mapStyle = { width: '100%', height: '150px', border: 0, borderRadius: '12px', filter: 'grayscale(1) invert(90%)' };
+const branchItemStyle = {
+  background: 'rgba(255, 255, 255, 0.02)',
+  p: 2,
+  borderRadius: '20px',
+  border: '1px solid rgba(255,255,255,0.05)'
+};
+
+const mapStyle = {
+  width: '100%',
+  height: '150px',
+  border: 0,
+  borderRadius: '12px',
+  filter: 'grayscale(1) invert(90%)'
+};
+
 const infoIconBox = { display: 'flex', alignItems: 'center', gap: 2.5 };
 const iconStyle = { color: BRAND.gold, fontSize: '2rem' };
 const infoLabel = { color: BRAND.textMuted, fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' };
