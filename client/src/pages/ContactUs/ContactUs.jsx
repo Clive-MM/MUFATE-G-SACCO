@@ -20,29 +20,27 @@ const ContactUs = () => {
         backgroundColor: BRAND.dark,
         minHeight: '100vh',
         position: 'relative',
-        overflowX: 'hidden',
-        // --- RESPONSIVE BACKGROUND LOGIC ---
+        // FIX: Responsive background sizing
         backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
         backgroundRepeat: 'no-repeat',
-        /* FIX: On Laptop (md), use 'cover' and 'fixed'.
-           On Mobile (xs), use 'contain' so the image isn't zoomed, 
-           or '100% auto' to fit the width perfectly.
+        /* FIX: On mobile (xs) we use '100% auto' so the image fits the width perfectly.
+           On laptop (md) we keep 'cover' for that full-screen look.
         */
-        backgroundSize: { xs: 'contain', md: 'cover' },
+        backgroundSize: { xs: '100% auto', md: 'cover' },
         backgroundPosition: { xs: 'top center', md: 'center center' },
-        backgroundAttachment: { xs: 'scroll', md: 'fixed' },
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+        overflowX: 'hidden',
       }}
     >
-      {/* Dark Overlay: Made lighter at the top for mobile to see the image clearly */}
+      {/* Global Dark Overlay */}
       <Box
         sx={{
-          position: 'absolute',
+          position: 'fixed',
           inset: 0,
           background: isMobile 
-            ? `linear-gradient(to bottom, rgba(2,21,15,0.4) 0%, ${BRAND.dark} 40%, ${BRAND.dark} 100%)`
+            ? `linear-gradient(to bottom, rgba(2,21,15,0.7) 0%, ${BRAND.dark} 50%, ${BRAND.dark} 100%)`
             : `linear-gradient(to bottom, rgba(2,21,15,0.7) 0%, ${BRAND.dark} 100%)`,
           zIndex: 1,
-          pointerEvents: 'none'
         }}
       />
 
@@ -51,33 +49,32 @@ const ContactUs = () => {
         {/* Transparent Hero Section */}
         <Box
           sx={{
-            // Reduced height on mobile to keep the text closer to the smaller image
-            height: { xs: '40vh', md: '65vh' }, 
+            height: { xs: '45vh', md: '65vh' }, // Adjusted mobile height to fit the smaller image scale
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
             px: 2,
-            pt: { xs: 8, md: 0 }
+            pt: { xs: 2, md: 0 }
           }}
         >
           <Container maxWidth="lg">
             <Box
               component={motion.div}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
               <Typography
                 sx={{
                   fontWeight: 900,
                   textTransform: 'uppercase',
-                  fontSize: { xs: isSmallPhone ? '1.8rem' : '2.4rem', sm: '3.5rem', md: '5rem' },
+                  fontSize: { xs: isSmallPhone ? '2.2rem' : '2.8rem', sm: '4rem', md: '5rem' },
                   color: BRAND.gold,
-                  letterSpacing: { xs: '0.02em', md: '0.15em' },
-                  mb: 1,
+                  letterSpacing: { xs: '0.05em', md: '0.15em' },
+                  mb: 2,
                   lineHeight: 1.1,
-                  filter: 'drop-shadow(0 5px 15px rgba(0,0,0,0.9))',
+                  filter: 'drop-shadow(0 10px 10px rgba(0,0,0,0.8))',
                 }}
               >
                 Get In {isMobile && <br />} Touch
@@ -85,42 +82,42 @@ const ContactUs = () => {
 
               <Typography
                 sx={{
-                  fontSize: { xs: '0.9rem', md: '1.25rem' },
+                  fontSize: { xs: '1rem', md: '1.25rem' },
                   color: BRAND.light,
-                  maxWidth: '600px',
+                  maxWidth: '700px',
                   mx: 'auto',
-                  lineHeight: 1.5,
-                  opacity: 0.9,
+                  lineHeight: { xs: 1.6, md: 1.8 },
+                  opacity: 0.95,
                   fontWeight: 500,
-                  textShadow: '0 2px 8px rgba(0,0,0,1)',
+                  textShadow: '0 2px 10px rgba(0,0,0,0.8)',
+                  px: { xs: 2, md: 0 }
                 }}
               >
-                Your financial growth is our priority.
+                Your financial growth is our priority. Whether you have questions 
+                about membership or need technical support, our team is here.
               </Typography>
             </Box>
           </Container>
         </Box>
 
-        {/* Contact Details Section */}
+        {/* Contact Details Overlap */}
         <Box sx={{ 
-          // Pull cards up slightly, but not so much that they hide the mobile image
-          mt: { xs: 2, md: -15 }, 
+          mt: { xs: 0, md: -15 }, // Removed negative margin on mobile so it doesn't cover the image
           pb: 10,
-          px: { xs: 0, md: 0 } 
+          px: { xs: 1, md: 0 } 
         }}>
           <ContactDetails />
         </Box>
 
         {/* FOOTER */}
-        <Box sx={{ pb: 6, textAlign: 'center' }}>
+        <Box sx={{ py: 6, textAlign: 'center' }}>
           <Typography
             sx={{
               color: BRAND.gold,
-              letterSpacing: '2px',
-              fontWeight: 800,
+              letterSpacing: '3px',
+              fontWeight: 900,
               textTransform: 'uppercase',
-              fontSize: { xs: '0.8rem', md: '1.2rem' },
-              opacity: 0.8
+              fontSize: { xs: '0.9rem', md: '1.35rem' }
             }}
           >
             GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
