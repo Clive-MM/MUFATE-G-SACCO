@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -1630,11 +1630,14 @@ def get_holiday_message():
         return jsonify({'message': None}), 200
 
 #  ✅ Public route to submit feedback
+from flask import request, jsonify, current_app
+import traceback
+from flask_mail import Message
 
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
-        # 1. Get and Validate Data
+        # 1️⃣ Get and validate data
         data = request.get_json(silent=True)
         if not data:
             return jsonify({'message': '❌ Invalid JSON payload.'}), 400
@@ -1645,9 +1648,11 @@ def submit_feedback():
         message = data.get('Message')
 
         if not email or not subject or not message:
-            return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
+            return jsonify({
+                'message': '❌ Email, Subject, and Message are required!'
+            }), 400
 
-        # 2. Save to Database
+        # 2️⃣ Save feedback to database
         feedback = Feedback(
             Email=email,
             PhoneNumber=phone.strip().replace(' ', '') if phone else None,
@@ -1658,13 +1663,13 @@ def submit_feedback():
         db.session.add(feedback)
         db.session.commit()
 
-        # 3. Prepare Admin Email (EXPLICIT sender)
+        # 3️⃣ Prepare admin email
         admin_msg = Message(
             subject=f"📥 New Website Feedback: {subject}",
             sender=current_app.config['MAIL_USERNAME'],
             recipients=["maderumoyia@mudetesacco.co.ke"],
             body=f"""
-New feedback received:
+New feedback received via the website.
 
 From: {email}
 Phone: {phone or 'N/A'}
@@ -1672,12 +1677,14 @@ Subject: {subject}
 
 Message:
 {message}
+
+Submitted At: {feedback.SubmittedAt.strftime('%Y-%m-%d %H:%M:%S')}
 """
         )
 
-        # 4. Prepare User Acknowledgement Email (EXPLICIT sender)
+        # 4️⃣ Prepare user acknowledgement email
         user_msg = Message(
-            subject="✅ Message Received – Golden Generation DT SACCO",
+            subject="✅ Thank you for contacting Golden Generation DT SACCO",
             sender=current_app.config['MAIL_USERNAME'],
             recipients=[email],
             body=f"""
@@ -1685,21 +1692,27 @@ Dear Member,
 
 Thank you for contacting Golden Generation DT SACCO.
 
-We have received your message regarding:
+We have successfully received your message regarding:
 "{subject}"
 
-Our team will review it and get back to you shortly.
+Our team is currently reviewing your inquiry and you will hear from us very soon.
+
+If your matter is urgent, you may reach us via:
+📞 +254 791 331 932,0794515407
+📧 info@mudetesacco.co.ke
 
 Warm regards,
 Golden Generation DT SACCO
+"Walking With You"
 """
         )
 
-        # 5. Send Emails (SYNCHRONOUS & SAFE)
+        # 5️⃣ Send emails
         if mail:
             mail.send(admin_msg)
             mail.send(user_msg)
 
+        # 6️⃣ Return success response
         return jsonify({
             'message': '😊 Thank you! Your feedback has been received.',
             'feedback_id': feedback.FeedbackID
@@ -1712,6 +1725,7 @@ Golden Generation DT SACCO
             'message': '❌ Failed to submit feedback.',
             'error': str(e)
         }), 500
+
 
 
 
