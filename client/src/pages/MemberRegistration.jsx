@@ -12,7 +12,6 @@ import GroupIcon from "@mui/icons-material/Group";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import axios from "axios";
 
-// --- BRAND TOKENS ---
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
@@ -26,13 +25,14 @@ const steps = [
   { label: "Nominee", icon: <GroupIcon /> }
 ];
 
-// --- BORDERLESS INPUT STYLE ---
 const megaInputStyle = {
+  mb: 1,
   '& .MuiFilledInput-root': {
     color: BRAND.light,
     background: 'rgba(255,255,255,0.05)',
     borderRadius: '16px',
     border: 'none',
+    minHeight: '60px', // Ensures enough height for labels
     transition: 'all 0.3s ease',
     '&:hover': { background: 'rgba(255,255,255,0.08)' },
     '&.Mui-focused': {
@@ -41,7 +41,11 @@ const megaInputStyle = {
     },
     '&:before, &:after': { display: 'none' },
   },
-  '& label': { color: BRAND.textMuted },
+  '& label': { 
+    color: BRAND.textMuted,
+    overflow: 'visible', // Ensure label doesn't crop
+    whiteSpace: 'nowrap'
+  },
   '& label.Mui-focused': { color: BRAND.gold }
 };
 
@@ -50,30 +54,10 @@ const refinedGlowBtn = {
   color: BRAND.dark,
   fontWeight: 900,
   borderRadius: '14px',
-  px: 6, py: 2,
+  px: { xs: 4, md: 8 }, 
+  py: 2,
   boxShadow: `0 8px 20px ${BRAND.gold}33`,
   '&:hover': { transform: 'translateY(-2px)', boxShadow: `0 12px 25px ${BRAND.gold}55` },
-};
-
-// --- RESPONSIVE LAYOUT (xs: 12 fixes cropping) ---
-const layout = {
-  FullName: { xs: 12, sm: 8 }, Salutation: { xs: 12, sm: 4 },
-  IDType: { xs: 12, sm: 6, md: 4 }, IDNumber: { xs: 12, sm: 6, md: 4 }, DOB: { xs: 12, sm: 6, md: 4 },
-  MaritalStatus: { xs: 12, sm: 6, md: 4 }, Gender: { xs: 12, sm: 6, md: 4 }, KRAPin: { xs: 12, sm: 6, md: 4 },
-  County: { xs: 12, sm: 6 }, District: { xs: 12, sm: 6 }, Division: { xs: 12, sm: 6 }, Address: { xs: 12, sm: 6 },
-  PostalCode: { xs: 12, sm: 6 }, PhysicalAddress: { xs: 12, sm: 6 }, MobileNumber: { xs: 12, sm: 6 },
-  AlternateMobileNumber: { xs: 12, sm: 6 }, Email: { xs: 12, sm: 12 }, Profession: { xs: 12, sm: 6 },
-  ProfessionSector: { xs: 12, sm: 6 }, NomineeName: { xs: 12, sm: 8 }, NomineeIDNumber: { xs: 12, sm: 4 },
-  NomineePhoneNumber: { xs: 12, sm: 6 }, NomineeRelation: { xs: 12, sm: 6 },
-};
-
-const countiesInKenya = ["Baringo","Bomet","Bungoma","Busia","Elgeyo-Marakwet","Embu","Garissa","Homa Bay","Isiolo","Kajiado","Kakamega","Kericho","Kiambu","Kilifi","Kirinyaga","Kisii","Kisumu","Kitui","Kwale","Laikipia","Lamu","Machakos","Makueni","Mandera","Marsabit","Meru","Migori","Mombasa","Murang'a","Nairobi","Nakuru","Nandi","Narok","Nyamira","Nyandarua","Nyeri","Samburu","Siaya","Taita Taveta","Tana River","Tharaka-Nithi","Trans Nzoia","Turkana","Uasin Gishu","Vihiga","Wajir","West Pokot"];
-const selectOptions = {
-  IDType: ["ID Card", "Certificate of Incorp", "Passport"],
-  MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
-  Gender: ["Male", "Female", "Others"],
-  Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
-  NomineeRelation: ["Wife","Husband","Grandfather","Grandmother","Cousin","Brother","Sister","Friend","Father","Mother","Daughter","Son","Uncle","Aunt"],
 };
 
 const MemberRegistration = () => {
@@ -141,7 +125,7 @@ const MemberRegistration = () => {
       <Container maxWidth="md">
         <AnimatePresence mode="wait">
           {!success ? (
-            <motion.div key="form" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <Typography align="center" sx={{ fontWeight: 900, color: BRAND.gold, fontSize: { xs: '1.8rem', md: '2.5rem' }, textTransform: 'uppercase', letterSpacing: '4px', mb: 2 }}>
                 Member Registration
               </Typography>
@@ -149,7 +133,6 @@ const MemberRegistration = () => {
                 Join the Golden Generation DT SACCO. Complete the steps below.
               </Typography>
 
-              {/* CLEAN PROGRESS INDICATOR */}
               <Box sx={{ mb: 8 }}>
                 <Stepper activeStep={activeStep} alternativeLabel sx={{ '& .MuiStepConnector-line': { borderColor: 'rgba(255,255,255,0.05)' } }}>
                   {steps.map((s, idx) => (
@@ -187,7 +170,7 @@ const MemberRegistration = () => {
               <CheckCircleIcon sx={{ fontSize: 100, color: BRAND.gold, mb: 4 }} />
               <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '2.5rem', mb: 2 }}>THANK YOU</Typography>
               <Typography sx={{ color: BRAND.light, maxWidth: '500px', mx: 'auto', mb: 6, opacity: 0.8 }}>
-                Your membership application has been submitted successfully. A representative will contact you shortly regarding the next steps.
+                Your membership application has been submitted successfully.
               </Typography>
               <Button sx={refinedGlowBtn} onClick={() => window.location.href = '/'}>Return Home</Button>
             </motion.div>
@@ -200,6 +183,15 @@ const MemberRegistration = () => {
       </Snackbar>
     </Box>
   );
+};
+
+const countiesInKenya = ["Baringo","Bomet","Bungoma","Busia","Elgeyo-Marakwet","Embu","Garissa","Homa Bay","Isiolo","Kajiado","Kakamega","Kericho","Kiambu","Kilifi","Kirinyaga","Kisii","Kisumu","Kitui","Kwale","Laikipia","Lamu","Machakos","Makueni","Mandera","Marsabit","Meru","Migori","Mombasa","Murang'a","Nairobi","Nakuru","Nandi","Narok","Nyamira","Nyandarua","Nyeri","Samburu","Siaya","Taita Taveta","Tana River","Tharaka-Nithi","Trans Nzoia","Turkana","Uasin Gishu","Vihiga","Wajir","West Pokot"];
+const selectOptions = {
+  IDType: ["ID Card", "Certificate of Incorp", "Passport"],
+  MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
+  Gender: ["Male", "Female", "Others"],
+  Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
+  NomineeRelation: ["Wife","Husband","Grandfather","Grandmother","Cousin","Brother","Sister","Friend","Father","Mother","Daughter","Son","Uncle","Aunt"],
 };
 
 export default MemberRegistration;
