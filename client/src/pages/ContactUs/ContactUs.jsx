@@ -20,24 +20,25 @@ const ContactUs = () => {
         backgroundColor: BRAND.dark,
         minHeight: '100vh',
         position: 'relative',
-        /* FIX 1: Ensure background covers the FULL page height on mobile */
+        /* THE KEY FIX: Background Sizing */
         backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
         backgroundRepeat: 'no-repeat',
-        /* FIX 2: Using 'cover' on the main Box ensures it stays behind everything */
-        backgroundSize: 'cover', 
-        backgroundPosition: { xs: 'center center', md: 'center center' },
+        /* xs: '100% auto' makes the image narrower to fit the phone width perfectly.
+           md: 'cover' keeps the full cinematic look for laptops.
+        */
+        backgroundSize: { xs: '100% auto', md: 'cover' },
+        backgroundPosition: 'top center',
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         overflowX: 'hidden',
       }}
     >
-      {/* Global Dark Overlay - Fixed to the screen */}
+      {/* Dark Overlay - Made more subtle on mobile to see the narrower image */}
       <Box
         sx={{
           position: 'fixed',
           inset: 0,
-          /* FIX 3: Made the gradient lighter so the image is visible behind the cards */
           background: isMobile 
-            ? `linear-gradient(to bottom, rgba(2,21,15,0.6) 0%, rgba(2,21,15,0.85) 100%)`
+            ? `linear-gradient(to bottom, rgba(2,21,15,0.4) 0%, ${BRAND.dark} 60%, ${BRAND.dark} 100%)`
             : `linear-gradient(to bottom, rgba(2,21,15,0.7) 0%, ${BRAND.dark} 100%)`,
           zIndex: 1,
         }}
@@ -45,15 +46,16 @@ const ContactUs = () => {
 
       <Box sx={{ position: 'relative', zIndex: 2 }}>
         
-        {/* Transparent Hero Section */}
+        {/* Hero Section - Height reduced for mobile to match narrower image */}
         <Box
           sx={{
-            height: { xs: '50vh', md: '65vh' },
+            height: { xs: '40vh', md: '65vh' },
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
             px: 2,
+            pt: { xs: 4, md: 0 }
           }}
         >
           <Container maxWidth="lg">
@@ -67,7 +69,7 @@ const ContactUs = () => {
                 sx={{
                   fontWeight: 900,
                   textTransform: 'uppercase',
-                  fontSize: { xs: isSmallPhone ? '2.2rem' : '2.8rem', sm: '4rem', md: '5rem' },
+                  fontSize: { xs: isSmallPhone ? '2rem' : '2.5rem', sm: '4rem', md: '5rem' },
                   color: BRAND.gold,
                   letterSpacing: { xs: '0.05em', md: '0.15em' },
                   mb: 2,
@@ -80,15 +82,15 @@ const ContactUs = () => {
 
               <Typography
                 sx={{
-                  fontSize: { xs: '1rem', md: '1.25rem' },
+                  fontSize: { xs: '0.95rem', md: '1.25rem' },
                   color: BRAND.light,
                   maxWidth: '700px',
                   mx: 'auto',
-                  lineHeight: { xs: 1.6, md: 1.8 },
+                  lineHeight: 1.6,
                   opacity: 0.95,
                   fontWeight: 500,
-                  textShadow: '0 2px 10px rgba(0,0,0,0.8)',
-                  px: { xs: 2, md: 0 }
+                  textShadow: '0 2px 10px rgba(0,0,0,0.9)',
+                  px: { xs: 1, md: 0 }
                 }}
               >
                 Your financial growth is our priority. Whether you have questions 
@@ -98,10 +100,10 @@ const ContactUs = () => {
           </Container>
         </Box>
 
-        {/* Contact Details Overlap */}
+        {/* Contact Details Section */}
         <Box sx={{ 
-          /* FIX 4: Margin-top adjusted to keep cards visible over the background */
-          mt: { xs: -5, md: -15 }, 
+          /* mt: 0 on mobile ensures the cards start right after the hero image ends */
+          mt: { xs: 2, md: -15 }, 
           pb: 10,
           px: { xs: 1, md: 0 } 
         }}>
@@ -116,7 +118,7 @@ const ContactUs = () => {
               letterSpacing: '3px',
               fontWeight: 900,
               textTransform: 'uppercase',
-              fontSize: { xs: '0.9rem', md: '1.35rem' }
+              fontSize: { xs: '0.8rem', md: '1.35rem' }
             }}
           >
             GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
