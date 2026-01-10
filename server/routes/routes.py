@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, copy_current_request_context, current_app
+from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -10,7 +10,7 @@ import re
 import traceback
 from datetime import date, timedelta
 from calendar import monthrange
-import threading
+
 from flask_mail import Message
 
 
@@ -1631,7 +1631,6 @@ def get_holiday_message():
 
 #  ✅ Public route to submit feedback
 
-
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
@@ -1648,7 +1647,7 @@ def submit_feedback():
         if not email or not subject or not message:
             return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
 
-        # 2. Save to Database (Commit immediately so data is safe)
+        # 2. Save to Database
         feedback = Feedback(
             Email=email,
             PhoneNumber=phone.strip().replace(' ', '') if phone else None,
@@ -1659,42 +1658,48 @@ def submit_feedback():
         db.session.add(feedback)
         db.session.commit()
 
-        # 3. Define the Background Email Function
-        # We use @copy_current_request_context so the thread can access MAIL settings
-        @copy_current_request_context
-        def send_async_email(admin_msg, user_msg):
-            try:
-                # This part might take 5-10 seconds, but it happens in the background
-                mail.send(admin_msg)
-                mail.send(user_msg)
-                print(
-                    f"✅ Emails dispatched successfully for Feedback ID: {feedback.FeedbackID}")
-            except Exception as e:
-                # Log the error without crashing the user's request
-                print(f"❌ SMTP Error on host26: {str(e)}")
-
-        # 4. Prepare the Email Content
+        # 3. Prepare Admin Email (EXPLICIT sender)
         admin_msg = Message(
             subject=f"📥 New Website Feedback: {subject}",
-            # Add this line to satisfy Safaricom's security:
             sender=current_app.config['MAIL_USERNAME'],
             recipients=["maderumoyia@mudetesacco.co.ke"],
-            body=f"New feedback received:\n\nFrom: {email}\nPhone: {phone}\nSubject: {subject}\n\nMessage:\n{message}"
+            body=f"""
+New feedback received:
+
+From: {email}
+Phone: {phone or 'N/A'}
+Subject: {subject}
+
+Message:
+{message}
+"""
         )
 
+        # 4. Prepare User Acknowledgement Email (EXPLICIT sender)
         user_msg = Message(
-            subject="✅ Message Received - GOLDEN GENERATION DT SACCO",
+            subject="✅ Message Received – Golden Generation DT SACCO",
+            sender=current_app.config['MAIL_USERNAME'],
             recipients=[email],
-            body=f"Dear Member,\n\nWe have received your message regarding '{subject}'. Our team will review it shortly."
+            body=f"""
+Dear Member,
+
+Thank you for contacting Golden Generation DT SACCO.
+
+We have received your message regarding:
+"{subject}"
+
+Our team will review it and get back to you shortly.
+
+Warm regards,
+Golden Generation DT SACCO
+"""
         )
 
-        # 5. Fire the Thread and Return Response
-        # This thread starts the email process but does NOT wait for it to finish
-        email_thread = threading.Thread(
-            target=send_async_email, args=(admin_msg, user_msg))
-        email_thread.start()
+        # 5. Send Emails (SYNCHRONOUS & SAFE)
+        if mail:
+            mail.send(admin_msg)
+            mail.send(user_msg)
 
-        # Return 201 immediately to the React frontend
         return jsonify({
             'message': '😊 Thank you! Your feedback has been received.',
             'feedback_id': feedback.FeedbackID
@@ -1702,11 +1707,12 @@ def submit_feedback():
 
     except Exception as e:
         db.session.rollback()
-        print(f"❌ Fatal Route Error: {str(e)}")
+        traceback.print_exc()
         return jsonify({
             'message': '❌ Failed to submit feedback.',
             'error': str(e)
         }), 500
+
 
 
 # ✅Route to fetch active gallery photos
