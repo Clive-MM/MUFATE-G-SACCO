@@ -162,7 +162,7 @@ const MemberRegistration = () => {
                 Member Registration
               </Typography>
               <Typography align="center" sx={{ color: BRAND.textMuted, mb: 6, fontSize: '0.9rem' }}>
-                Golden Generation DT SACCO Portal
+                Complete the registration process to become our member.
               </Typography>
 
               <Box sx={{ mb: 8 }}>
@@ -193,7 +193,7 @@ const MemberRegistration = () => {
                   <Button variant="text" sx={{ color: BRAND.textMuted, px: 4 }} onClick={() => setActiveStep(prev => prev - 1)}>Back</Button>
                 )}
                 <Button sx={refinedGlowBtn} disabled={loading} onClick={activeStep < steps.length - 1 ? () => setActiveStep(prev => prev + 1) : confirmSubmission}>
-                  {activeStep < steps.length - 1 ? "Continue" : loading ? <CircularProgress size={24} color="inherit" /> : "Submit Application"}
+                  {activeStep < steps.length - 1 ? "Continue" : loading ? <CircularProgress size={24} color="inherit" /> : "Register"}
                 </Button>
               </Stack>
             </motion.div>
