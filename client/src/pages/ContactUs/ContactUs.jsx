@@ -20,25 +20,24 @@ const ContactUs = () => {
         backgroundColor: BRAND.dark,
         minHeight: '100vh',
         position: 'relative',
-        // FIX: Responsive background sizing
+        /* FIX 1: Ensure background covers the FULL page height on mobile */
         backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
         backgroundRepeat: 'no-repeat',
-        /* FIX: On mobile (xs) we use '100% auto' so the image fits the width perfectly.
-           On laptop (md) we keep 'cover' for that full-screen look.
-        */
-        backgroundSize: { xs: '100% auto', md: 'cover' },
-        backgroundPosition: { xs: 'top center', md: 'center center' },
+        /* FIX 2: Using 'cover' on the main Box ensures it stays behind everything */
+        backgroundSize: 'cover', 
+        backgroundPosition: { xs: 'center center', md: 'center center' },
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         overflowX: 'hidden',
       }}
     >
-      {/* Global Dark Overlay */}
+      {/* Global Dark Overlay - Fixed to the screen */}
       <Box
         sx={{
           position: 'fixed',
           inset: 0,
+          /* FIX 3: Made the gradient lighter so the image is visible behind the cards */
           background: isMobile 
-            ? `linear-gradient(to bottom, rgba(2,21,15,0.7) 0%, ${BRAND.dark} 50%, ${BRAND.dark} 100%)`
+            ? `linear-gradient(to bottom, rgba(2,21,15,0.6) 0%, rgba(2,21,15,0.85) 100%)`
             : `linear-gradient(to bottom, rgba(2,21,15,0.7) 0%, ${BRAND.dark} 100%)`,
           zIndex: 1,
         }}
@@ -49,13 +48,12 @@ const ContactUs = () => {
         {/* Transparent Hero Section */}
         <Box
           sx={{
-            height: { xs: '45vh', md: '65vh' }, // Adjusted mobile height to fit the smaller image scale
+            height: { xs: '50vh', md: '65vh' },
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
             px: 2,
-            pt: { xs: 2, md: 0 }
           }}
         >
           <Container maxWidth="lg">
@@ -102,7 +100,8 @@ const ContactUs = () => {
 
         {/* Contact Details Overlap */}
         <Box sx={{ 
-          mt: { xs: 0, md: -15 }, // Removed negative margin on mobile so it doesn't cover the image
+          /* FIX 4: Margin-top adjusted to keep cards visible over the background */
+          mt: { xs: -5, md: -15 }, 
           pb: 10,
           px: { xs: 1, md: 0 } 
         }}>
