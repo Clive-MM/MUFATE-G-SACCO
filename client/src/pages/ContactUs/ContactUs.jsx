@@ -20,27 +20,26 @@ const ContactUs = () => {
         backgroundColor: BRAND.dark,
         minHeight: '100vh',
         position: 'relative',
-        /* FIX: Apply image to the entire component wrapper.
-           We use 'cover' but 'top center' so it doesn't look stretched 
-           but remains the background for the WHOLE page.
+        overflowX: 'hidden',
+        /* FIX: Set background to 'contain' on mobile so it shows the whole 
+           image proportionally without zooming in.
         */
         backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover', 
-        backgroundPosition: 'top center',
+        backgroundSize: { xs: 'contain', md: 'cover' },
+        backgroundPosition: { xs: 'top center', md: 'center center' },
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
-        overflowX: 'hidden',
       }}
     >
-      {/* OVERLAY FIX: This ensures the image is visible behind the cards.
-          We use a gradient that stays semi-transparent longer on mobile.
+      {/* OVERLAY FIX: We use a lighter gradient at the top for mobile 
+          so the "narrow" image is clearly visible behind the text.
       */}
       <Box
         sx={{
           position: 'fixed',
           inset: 0,
           background: isMobile 
-            ? `linear-gradient(to bottom, rgba(2,21,15,0.5) 0%, rgba(2,21,15,0.8) 50%, ${BRAND.dark} 100%)`
+            ? `linear-gradient(to bottom, rgba(2,21,15,0.4) 0%, ${BRAND.dark} 40%, ${BRAND.dark} 100%)`
             : `linear-gradient(to bottom, rgba(2,21,15,0.7) 0%, ${BRAND.dark} 100%)`,
           zIndex: 1,
         }}
@@ -48,15 +47,16 @@ const ContactUs = () => {
 
       <Box sx={{ position: 'relative', zIndex: 2 }}>
         
-        {/* Hero Section - Proportional height */}
+        {/* Hero Section - Height adjusted for mobile to match the narrow image */}
         <Box
           sx={{
-            height: { xs: '45vh', md: '65vh' },
+            height: { xs: '40vh', md: '65vh' }, 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
             px: 2,
+            pt: { xs: 5, md: 0 }
           }}
         >
           <Container maxWidth="lg">
@@ -101,7 +101,7 @@ const ContactUs = () => {
           </Container>
         </Box>
 
-        {/* Contact Details Section - Now appearing OVER the background */}
+        {/* Contact Details - Positioning fixed for mobile view */}
         <Box sx={{ 
           mt: { xs: 2, md: -15 }, 
           pb: 10,
