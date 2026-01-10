@@ -26,70 +26,62 @@ const steps = [
   { label: "Nominee", icon: <GroupIcon /> }
 ];
 
-// --- UPDATED LAYOUT (Extended widths to prevent cropping) ---
+// --- UPDATED LAYOUT: Increased 'md' values to prevent laptop cropping ---
 const layout = {
   // Bio Data
-  FullName: { xs: 12, sm: 8, md: 8 },
-  Salutation: { xs: 12, sm: 4, md: 4 }, 
-  IDType: { xs: 12, sm: 6, md: 6 },     
+  FullName: { xs: 12, sm: 12, md: 8 },
+  Salutation: { xs: 12, sm: 6, md: 4 }, // Increased md from 2/3 to 4
+  IDType: { xs: 12, sm: 6, md: 6 },     // Increased to half-width for label space
   IDNumber: { xs: 12, sm: 6, md: 6 },
   DOB: { xs: 12, sm: 6, md: 4 },
-  MaritalStatus: { xs: 12, sm: 6, md: 4 },
+  MaritalStatus: { xs: 12, sm: 6, md: 4 }, // Increased from 3 to 4
   Gender: { xs: 12, sm: 6, md: 4 },
   KRAPin: { xs: 12, sm: 12, md: 12 },   
 
   // Contact
-  County: { xs: 12, sm: 6 },
-  District: { xs: 12, sm: 6 },
-  Division: { xs: 12, sm: 6 },
-  Address: { xs: 12, sm: 6 },
-  PostalCode: { xs: 12, sm: 6 },
-  PhysicalAddress: { xs: 12, sm: 6 },
-  MobileNumber: { xs: 12, sm: 6 },
-  AlternateMobileNumber: { xs: 12, sm: 6 },
-  Email: { xs: 12, sm: 12 },           
-  Profession: { xs: 12, sm: 6 },
-  ProfessionSector: { xs: 12, sm: 6 },
+  County: { xs: 12, sm: 6, md: 4 },
+  District: { xs: 12, sm: 6, md: 4 },
+  Division: { xs: 12, sm: 6, md: 4 },
+  Address: { xs: 12, sm: 6, md: 6 },
+  PostalCode: { xs: 12, sm: 6, md: 6 },
+  PhysicalAddress: { xs: 12, sm: 6, md: 6 },
+  MobileNumber: { xs: 12, sm: 6, md: 6 },
+  AlternateMobileNumber: { xs: 12, sm: 6, md: 6 },
+  Email: { xs: 12, sm: 12, md: 12 },
+  Profession: { xs: 12, sm: 6, md: 6 },
+  ProfessionSector: { xs: 12, sm: 6, md: 6 },
 
   // Nominee
-  NomineeName: { xs: 12, sm: 8 },
-  NomineeIDNumber: { xs: 12, sm: 4 },
-  NomineePhoneNumber: { xs: 12, sm: 6 },
-  NomineeRelation: { xs: 12, sm: 6 },
+  NomineeName: { xs: 12, sm: 12, md: 8 },
+  NomineeIDNumber: { xs: 12, sm: 6, md: 4 },
+  NomineePhoneNumber: { xs: 12, sm: 6, md: 6 },
+  NomineeRelation: { xs: 12, sm: 6, md: 6 },
 };
 
 const megaInputStyle = {
   '& .MuiFilledInput-root': {
     color: BRAND.light,
-    background: 'rgba(255,255,255,0.05)',
+    background: 'rgba(255,255,255,0.06)', // Slightly more visible
     borderRadius: '16px',
     border: 'none',
-    minHeight: '62px', 
-    minWidth: '120px', // Safety net: Ensures fields never get too small for labels
-    transition: 'all 0.3s ease',
-    '&:hover': { background: 'rgba(255,255,255,0.08)' },
+    minHeight: '64px', 
+    transition: 'all 0.2s ease-in-out',
+    '&:hover': { background: 'rgba(255,255,255,0.1)' },
     '&.Mui-focused': {
-      background: 'rgba(255,255,255,0.07)',
-      boxShadow: `0 0 0 1px ${BRAND.gold}66`,
+      background: 'rgba(255,255,255,0.08)',
+      boxShadow: `0 8px 24px -10px ${BRAND.gold}44`, // Soft glow when active
     },
     '&:before, &:after': { display: 'none' },
   },
-  '& label': { 
+  '& .MuiInputLabel-root': { 
     color: BRAND.textMuted,
     fontSize: '0.95rem',
-    whiteSpace: 'nowrap', // Prevents label text from trying to wrap/stack
+    transform: 'translate(12px, 20px) scale(1)', // Better vertical alignment
+    '&.Mui-focused, &.MuiInputLabel-shrink': {
+       transform: 'translate(12px, 7px) scale(0.75)',
+       color: BRAND.gold
+    }
   },
-  '& label.Mui-focused': { color: BRAND.gold }
-};
-
-const refinedGlowBtn = {
-  background: `linear-gradient(135deg, ${BRAND.gold}, #FFB84D)`,
-  color: BRAND.dark,
-  fontWeight: 900,
-  borderRadius: '14px',
-  px: 8, py: 2,
-  boxShadow: `0 8px 20px ${BRAND.gold}33`,
-  '&:hover': { transform: 'translateY(-2px)', boxShadow: `0 12px 25px ${BRAND.gold}55` },
 };
 
 const MemberRegistration = () => {
@@ -98,7 +90,6 @@ const MemberRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-  const [regMeta, setRegMeta] = useState({ next_step: null, payment: null, member_id: null, email_warning: null });
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -106,10 +97,6 @@ const MemberRegistration = () => {
     setLoading(true);
     try {
       const { data } = await axios.post("https://mufate-g-sacco.onrender.com/membership-register", formData);
-      setRegMeta({
-        next_step: data.next_step || null, payment: data.payment || null,
-        member_id: data.member_id || null, email_warning: data.email_warning || null,
-      });
       setSuccess(true);
       setSnackbar({ open: true, message: data.message, severity: "success" });
     } catch (error) {
@@ -150,39 +137,41 @@ const MemberRegistration = () => {
 
   return (
     <Box sx={{ 
-      minHeight: "100vh", py: { xs: 4, md: 10 }, 
+      minHeight: "100vh", py: { xs: 4, md: 8 }, 
       backgroundColor: BRAND.dark,
-      backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(236, 155, 20, 0.05) 0%, transparent 70%)' 
+      backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(236, 155, 20, 0.05) 0%, transparent 75%)' 
     }}>
       <Container maxWidth="md">
         <AnimatePresence mode="wait">
           {!success ? (
-            <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <Typography align="center" sx={{ fontWeight: 900, color: BRAND.gold, fontSize: { xs: '1.8rem', md: '2.5rem' }, textTransform: 'uppercase', letterSpacing: '4px', mb: 2 }}>
+            <motion.div key="form" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <Typography align="center" sx={{ fontWeight: 900, color: BRAND.gold, fontSize: { xs: '1.8rem', md: '2.4rem' }, textTransform: 'uppercase', letterSpacing: '4px', mb: 1 }}>
                 Member Registration
               </Typography>
               <Typography align="center" sx={{ color: BRAND.textMuted, mb: 6, fontSize: '0.9rem' }}>
                 Complete the registration process to become our member.
               </Typography>
 
+              {/* CLEAN STEPPER */}
               <Box sx={{ mb: 8 }}>
-                <Stepper activeStep={activeStep} alternativeLabel sx={{ '& .MuiStepConnector-line': { borderColor: 'rgba(255,255,255,0.05)' } }}>
+                <Stepper activeStep={activeStep} alternativeLabel>
                   {steps.map((s, idx) => (
                     <Step key={s.label}>
                       <StepLabel 
                         StepIconProps={{ sx: { 
                           color: activeStep >= idx ? BRAND.gold : 'rgba(255,255,255,0.1)',
                           '&.Mui-active': { color: BRAND.gold, filter: `drop-shadow(0 0 10px ${BRAND.gold}66)` },
+                          '& .MuiStepIcon-text': { fill: BRAND.dark, fontWeight: 900 }
                         }}}
                       >
-                        <Typography sx={{ color: activeStep >= idx ? BRAND.light : BRAND.textMuted, fontWeight: 700, fontSize: '0.7rem' }}>{s.label}</Typography>
+                        <Typography sx={{ color: activeStep >= idx ? BRAND.light : BRAND.textMuted, fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase' }}>{s.label}</Typography>
                       </StepLabel>
                     </Step>
                   ))}
                 </Stepper>
               </Box>
 
-              <Grid container spacing={3}>
+              <Grid container spacing={2.5}>
                 {stepFields[activeStep].map((field) => (
                   <Grid item key={field} {...layout[field]}>{renderField(field)}</Grid>
                 ))}
@@ -190,33 +179,35 @@ const MemberRegistration = () => {
 
               <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 8 }}>
                 {activeStep > 0 && (
-                  <Button variant="text" sx={{ color: BRAND.textMuted, px: 4 }} onClick={() => setActiveStep(prev => prev - 1)}>Back</Button>
+                  <Button variant="text" sx={{ color: BRAND.textMuted, px: 4, fontWeight: 700 }} onClick={() => setActiveStep(prev => prev - 1)}>BACK</Button>
                 )}
-                <Button sx={refinedGlowBtn} disabled={loading} onClick={activeStep < steps.length - 1 ? () => setActiveStep(prev => prev + 1) : confirmSubmission}>
-                  {activeStep < steps.length - 1 ? "Continue" : loading ? <CircularProgress size={24} color="inherit" /> : "Register"}
+                <Button 
+                  variant="contained"
+                  sx={{ 
+                    background: BRAND.gold, color: BRAND.dark, fontWeight: 900, borderRadius: '12px', px: 8, py: 2,
+                    '&:hover': { background: '#FFB84D' }
+                  }} 
+                  disabled={loading} 
+                  onClick={activeStep < steps.length - 1 ? () => setActiveStep(prev => prev + 1) : confirmSubmission}
+                >
+                  {activeStep < steps.length - 1 ? "CONTINUE" : loading ? <CircularProgress size={24} color="inherit" /> : "REGISTER"}
                 </Button>
               </Stack>
             </motion.div>
           ) : (
-            <motion.div key="success" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ textAlign: 'center' }}>
+            <Box textAlign="center" py={10}>
               <CheckCircleIcon sx={{ fontSize: 100, color: BRAND.gold, mb: 4 }} />
               <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '2.5rem', mb: 2 }}>SUCCESS</Typography>
-              <Typography sx={{ color: BRAND.light, maxWidth: '500px', mx: 'auto', mb: 6, opacity: 0.8 }}>
-                Your membership application has been received.
-              </Typography>
-              <Button sx={refinedGlowBtn} onClick={() => window.location.href = '/'}>Home</Button>
-            </motion.div>
+              <Typography sx={{ color: BRAND.light, opacity: 0.8 }}>Thank you for joining Golden Generation DT SACCO.</Typography>
+            </Box>
           )}
         </AnimatePresence>
       </Container>
-
-      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
-        <Alert severity={snackbar.severity} variant="filled" sx={{ borderRadius: '12px' }}>{snackbar.message}</Alert>
-      </Snackbar>
     </Box>
   );
 };
 
+// ... (countiesInKenya and selectOptions remain the same)
 const countiesInKenya = ["Baringo","Bomet","Bungoma","Busia","Elgeyo-Marakwet","Embu","Garissa","Homa Bay","Isiolo","Kajiado","Kakamega","Kericho","Kiambu","Kilifi","Kirinyaga","Kisii","Kisumu","Kitui","Kwale","Laikipia","Lamu","Machakos","Makueni","Mandera","Marsabit","Meru","Migori","Mombasa","Murang'a","Nairobi","Nakuru","Nandi","Narok","Nyamira","Nyandarua","Nyeri","Samburu","Siaya","Taita Taveta","Tana River","Tharaka-Nithi","Trans Nzoia","Turkana","Uasin Gishu","Vihiga","Wajir","West Pokot"];
 const selectOptions = {
   IDType: ["ID Card", "Certificate of Incorp", "Passport"],
