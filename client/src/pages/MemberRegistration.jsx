@@ -12,6 +12,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import axios from "axios";
 
+// --- BRAND TOKENS ---
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
@@ -25,19 +26,19 @@ const steps = [
   { label: "Nominee", icon: <GroupIcon /> }
 ];
 
-// --- BALANCED RESPONSIVE LAYOUT ---
-// We use 6 columns (half-width) for small fields on laptop (md) 
-// to ensure labels like "Salutation" are NEVER cropped.
+// --- UPDATED LAYOUT (Extended widths to prevent cropping) ---
 const layout = {
-  FullName: { xs: 12, md: 8 },
-  Salutation: { xs: 12, sm: 6, md: 4 }, 
+  // Bio Data
+  FullName: { xs: 12, sm: 8, md: 8 },
+  Salutation: { xs: 12, sm: 4, md: 4 }, 
   IDType: { xs: 12, sm: 6, md: 6 },     
   IDNumber: { xs: 12, sm: 6, md: 6 },
   DOB: { xs: 12, sm: 6, md: 4 },
   MaritalStatus: { xs: 12, sm: 6, md: 4 },
   Gender: { xs: 12, sm: 6, md: 4 },
-  KRAPin: { xs: 12, md: 12 },
+  KRAPin: { xs: 12, sm: 12, md: 12 },   
 
+  // Contact
   County: { xs: 12, sm: 6 },
   District: { xs: 12, sm: 6 },
   Division: { xs: 12, sm: 6 },
@@ -46,42 +47,49 @@ const layout = {
   PhysicalAddress: { xs: 12, sm: 6 },
   MobileNumber: { xs: 12, sm: 6 },
   AlternateMobileNumber: { xs: 12, sm: 6 },
-  Email: { xs: 12 },
+  Email: { xs: 12, sm: 12 },           
   Profession: { xs: 12, sm: 6 },
   ProfessionSector: { xs: 12, sm: 6 },
 
-  NomineeName: { xs: 12, md: 8 },
-  NomineeIDNumber: { xs: 12, sm: 6, md: 4 },
+  // Nominee
+  NomineeName: { xs: 12, sm: 8 },
+  NomineeIDNumber: { xs: 12, sm: 4 },
   NomineePhoneNumber: { xs: 12, sm: 6 },
   NomineeRelation: { xs: 12, sm: 6 },
 };
 
 const megaInputStyle = {
-  mb: 1,
   '& .MuiFilledInput-root': {
     color: BRAND.light,
     background: 'rgba(255,255,255,0.05)',
-    borderRadius: '20px', // Restored the big rounded look
-    border: '1px solid rgba(255,255,255,0.1)',
-    minHeight: '65px', 
+    borderRadius: '16px',
+    border: 'none',
+    minHeight: '62px', 
+    minWidth: '120px', // Safety net: Ensures fields never get too small for labels
     transition: 'all 0.3s ease',
     '&:hover': { background: 'rgba(255,255,255,0.08)' },
     '&.Mui-focused': {
       background: 'rgba(255,255,255,0.07)',
-      borderColor: BRAND.gold,
-      boxShadow: `0 0 0 1px ${BRAND.gold}`,
+      boxShadow: `0 0 0 1px ${BRAND.gold}66`,
     },
     '&:before, &:after': { display: 'none' },
   },
   '& label': { 
     color: BRAND.textMuted,
-    fontSize: '1rem',
-    marginLeft: '8px',
-    '&.Mui-focused, &.MuiInputLabel-shrink': {
-      color: BRAND.gold,
-      marginLeft: '0px',
-    }
+    fontSize: '0.95rem',
+    whiteSpace: 'nowrap', // Prevents label text from trying to wrap/stack
   },
+  '& label.Mui-focused': { color: BRAND.gold }
+};
+
+const refinedGlowBtn = {
+  background: `linear-gradient(135deg, ${BRAND.gold}, #FFB84D)`,
+  color: BRAND.dark,
+  fontWeight: 900,
+  borderRadius: '14px',
+  px: 8, py: 2,
+  boxShadow: `0 8px 20px ${BRAND.gold}33`,
+  '&:hover': { transform: 'translateY(-2px)', boxShadow: `0 12px 25px ${BRAND.gold}55` },
 };
 
 const MemberRegistration = () => {
@@ -90,16 +98,22 @@ const MemberRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [regMeta, setRegMeta] = useState({ next_step: null, payment: null, member_id: null, email_warning: null });
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const confirmSubmission = async () => {
     setLoading(true);
     try {
-      await axios.post("https://mufate-g-sacco.onrender.com/membership-register", formData);
+      const { data } = await axios.post("https://mufate-g-sacco.onrender.com/membership-register", formData);
+      setRegMeta({
+        next_step: data.next_step || null, payment: data.payment || null,
+        member_id: data.member_id || null, email_warning: data.email_warning || null,
+      });
       setSuccess(true);
+      setSnackbar({ open: true, message: data.message, severity: "success" });
     } catch (error) {
-      setSnackbar({ open: true, message: "Registration failed.", severity: "error" });
+      setSnackbar({ open: true, message: error.response?.data?.message || "Registration failed.", severity: "error" });
     }
     setLoading(false);
   };
@@ -112,13 +126,7 @@ const MemberRegistration = () => {
       return (
         <FormControl variant="filled" fullWidth required sx={megaInputStyle}>
           <InputLabel>{field === "NomineeRelation" ? "Relation" : field}</InputLabel>
-          <Select 
-            name={field} 
-            value={formData[field] || ""} 
-            onChange={handleChange} 
-            input={<FilledInput disableUnderline />}
-            MenuProps={{ PaperProps: { sx: { bgcolor: BRAND.dark, color: BRAND.light } } }}
-          >
+          <Select name={field} value={formData[field] || ""} onChange={handleChange} input={<FilledInput disableUnderline />}>
             {options.map((op) => (<MenuItem key={op} value={op}>{op}</MenuItem>))}
           </Select>
         </FormControl>
@@ -141,63 +149,81 @@ const MemberRegistration = () => {
   ];
 
   return (
-    <Box sx={{ minHeight: "100vh", py: { xs: 4, md: 8 }, backgroundColor: BRAND.dark }}>
+    <Box sx={{ 
+      minHeight: "100vh", py: { xs: 4, md: 10 }, 
+      backgroundColor: BRAND.dark,
+      backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(236, 155, 20, 0.05) 0%, transparent 70%)' 
+    }}>
       <Container maxWidth="md">
         <AnimatePresence mode="wait">
           {!success ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <Typography align="center" variant="h4" sx={{ fontWeight: 900, color: BRAND.gold, mb: 4, textTransform: 'uppercase' }}>
+            <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <Typography align="center" sx={{ fontWeight: 900, color: BRAND.gold, fontSize: { xs: '1.8rem', md: '2.5rem' }, textTransform: 'uppercase', letterSpacing: '4px', mb: 2 }}>
                 Member Registration
               </Typography>
+              <Typography align="center" sx={{ color: BRAND.textMuted, mb: 6, fontSize: '0.9rem' }}>
+                Complete the registration process to become our member.
+              </Typography>
 
-              <Box sx={{ mb: 6 }}>
-                <Stepper activeStep={activeStep} alternativeLabel>
-                  {steps.map((s) => (
+              <Box sx={{ mb: 8 }}>
+                <Stepper activeStep={activeStep} alternativeLabel sx={{ '& .MuiStepConnector-line': { borderColor: 'rgba(255,255,255,0.05)' } }}>
+                  {steps.map((s, idx) => (
                     <Step key={s.label}>
-                      <StepLabel StepIconProps={{ sx: { color: 'rgba(255,255,255,0.1)', '&.Mui-active': { color: BRAND.gold } } }}>
-                        <Typography sx={{ color: BRAND.light, fontWeight: 700, fontSize: '0.8rem' }}>{s.label}</Typography>
+                      <StepLabel 
+                        StepIconProps={{ sx: { 
+                          color: activeStep >= idx ? BRAND.gold : 'rgba(255,255,255,0.1)',
+                          '&.Mui-active': { color: BRAND.gold, filter: `drop-shadow(0 0 10px ${BRAND.gold}66)` },
+                        }}}
+                      >
+                        <Typography sx={{ color: activeStep >= idx ? BRAND.light : BRAND.textMuted, fontWeight: 700, fontSize: '0.7rem' }}>{s.label}</Typography>
                       </StepLabel>
                     </Step>
                   ))}
                 </Stepper>
               </Box>
 
-              <Grid container spacing={2}>
+              <Grid container spacing={3}>
                 {stepFields[activeStep].map((field) => (
                   <Grid item key={field} {...layout[field]}>{renderField(field)}</Grid>
                 ))}
               </Grid>
 
-              <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 6 }}>
-                {activeStep > 0 && <Button onClick={() => setActiveStep(prev => prev - 1)} sx={{ color: BRAND.light }}>Back</Button>}
-                <Button 
-                  onClick={activeStep < 2 ? () => setActiveStep(prev => prev + 1) : confirmSubmission}
-                  variant="contained" 
-                  sx={{ bgcolor: BRAND.gold, color: BRAND.dark, fontWeight: 900, borderRadius: '15px', px: 6, py: 1.5, '&:hover': { bgcolor: '#d48a12' } }}
-                >
-                  {activeStep < 2 ? "CONTINUE" : "REGISTER"}
+              <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 8 }}>
+                {activeStep > 0 && (
+                  <Button variant="text" sx={{ color: BRAND.textMuted, px: 4 }} onClick={() => setActiveStep(prev => prev - 1)}>Back</Button>
+                )}
+                <Button sx={refinedGlowBtn} disabled={loading} onClick={activeStep < steps.length - 1 ? () => setActiveStep(prev => prev + 1) : confirmSubmission}>
+                  {activeStep < steps.length - 1 ? "Continue" : loading ? <CircularProgress size={24} color="inherit" /> : "Register"}
                 </Button>
               </Stack>
             </motion.div>
           ) : (
-            <Box textAlign="center" py={10}>
-               <CheckCircleIcon sx={{ fontSize: 80, color: BRAND.gold, mb: 2 }} />
-               <Typography variant="h4" sx={{ color: BRAND.gold, fontWeight: 900 }}>REGISTRATION SUCCESSFUL</Typography>
-            </Box>
+            <motion.div key="success" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ textAlign: 'center' }}>
+              <CheckCircleIcon sx={{ fontSize: 100, color: BRAND.gold, mb: 4 }} />
+              <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '2.5rem', mb: 2 }}>SUCCESS</Typography>
+              <Typography sx={{ color: BRAND.light, maxWidth: '500px', mx: 'auto', mb: 6, opacity: 0.8 }}>
+                Your membership application has been received.
+              </Typography>
+              <Button sx={refinedGlowBtn} onClick={() => window.location.href = '/'}>Home</Button>
+            </motion.div>
           )}
         </AnimatePresence>
       </Container>
+
+      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
+        <Alert severity={snackbar.severity} variant="filled" sx={{ borderRadius: '12px' }}>{snackbar.message}</Alert>
+      </Snackbar>
     </Box>
   );
 };
 
-const countiesInKenya = ["Nairobi", "Mombasa", "Kiambu", "Nakuru", "Kisumu"]; // Add more as needed
+const countiesInKenya = ["Baringo","Bomet","Bungoma","Busia","Elgeyo-Marakwet","Embu","Garissa","Homa Bay","Isiolo","Kajiado","Kakamega","Kericho","Kiambu","Kilifi","Kirinyaga","Kisii","Kisumu","Kitui","Kwale","Laikipia","Lamu","Machakos","Makueni","Mandera","Marsabit","Meru","Migori","Mombasa","Murang'a","Nairobi","Nakuru","Nandi","Narok","Nyamira","Nyandarua","Nyeri","Samburu","Siaya","Taita Taveta","Tana River","Tharaka-Nithi","Trans Nzoia","Turkana","Uasin Gishu","Vihiga","Wajir","West Pokot"];
 const selectOptions = {
-  IDType: ["ID Card", "Passport"],
-  MaritalStatus: ["Married", "Single"],
-  Gender: ["Male", "Female"],
-  Salutation: ["Mr", "Mrs", "Ms", "Dr"],
-  NomineeRelation: ["Spouse", "Parent", "Child", "Sibling"],
+  IDType: ["ID Card", "Certificate of Incorp", "Passport"],
+  MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
+  Gender: ["Male", "Female", "Others"],
+  Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
+  NomineeRelation: ["Wife","Husband","Grandfather","Grandmother","Cousin","Brother","Sister","Friend","Father","Mother","Daughter","Son","Uncle","Aunt"],
 };
 
 export default MemberRegistration;
