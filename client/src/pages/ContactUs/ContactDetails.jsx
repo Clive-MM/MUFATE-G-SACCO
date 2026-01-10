@@ -13,8 +13,7 @@ import {
   VerifiedUser as ShieldIcon,
   Twitter as TwitterIcon,
   WhatsApp as WhatsAppIcon,
-  MarkEmailRead as MailIcon,
-  LocationOn as MapPinIcon
+  MarkEmailRead as MailIcon
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
@@ -36,7 +35,6 @@ const ContactDetails = () => {
   const scrollRef = useRef(null);
   const isInView = useInView(scrollRef, { once: true, margin: '-100px' });
 
-  // States
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -48,14 +46,9 @@ const ContactDetails = () => {
   });
   const [formLoading, setFormLoading] = useState(false);
 
-  // Original Logic: Email Validation
   const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  // Original Logic: WhatsApp Settings
   const whatsappNumber = '254791331932';
-  const whatsappMessage = encodeURIComponent(
-    'Hello 👋, thank you for contacting Golden Generation DT SACCO. We’re delighted to hear from you. How may we assist you today?'
-  );
+  const whatsappMessage = encodeURIComponent('Hello 👋, I am contacting Golden Generation DT SACCO regarding...');
 
   useEffect(() => {
     fetch('https://mufate-g-sacco.onrender.com/branches')
@@ -81,30 +74,27 @@ const ContactDetails = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      const data = await response.json();
-
-      if (response.status === 201 || response.ok) {
+      if (response.ok) {
         setShowSuccessModal(true);
         setFormData({ Email: '', PhoneNumber: '+254', Subject: '', Message: '' });
       } else {
-        enqueueSnackbar(data.message || 'Failed to send message', { variant: 'error' });
+        enqueueSnackbar('Failed to send message', { variant: 'error' });
       }
     } catch (err) {
-      enqueueSnackbar('Server connection lost. Please check your internet.', { variant: 'error' });
+      enqueueSnackbar('Server connection lost.', { variant: 'error' });
     } finally {
       setFormLoading(false);
     }
   };
 
-  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
   };
 
   const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.6 } }
   };
 
   return (
@@ -113,7 +103,7 @@ const ContactDetails = () => {
         ref={scrollRef} 
         maxWidth={false} 
         sx={{ 
-            py: { xs: 6, md: 10 }, 
+            py: { xs: 4, md: 8 }, 
             px: { xs: 2, md: 4 },
             display: 'flex',
             flexDirection: 'column',
@@ -126,30 +116,28 @@ const ContactDetails = () => {
           animate={isInView ? "visible" : "hidden"}
           style={{ width: '100%', maxWidth: '1400px' }}
         >
-          <Grid container spacing={3} justifyContent="center" alignItems="stretch">
-            
-            {/* CARD 1: CONTACT (Restored Items) */}
+          <Grid 
+            container 
+            spacing={3} 
+            justifyContent="center" 
+            alignItems={isMobile ? "flex-start" : "stretch"}
+          >
+            {/* CARD 1: CONTACT */}
             <Grid item xs={12} md={6} lg={5} component={motion.div} variants={itemVariants} sx={{ display: 'flex' }}>
               <Card sx={professionalCardStyle}>
-                <CardContent sx={{ p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <CardContent sx={{ p: { xs: 2.5, md: 4 }, display: 'flex', flexDirection: 'column', height: '100%' }}>
                   <Typography sx={megaInfoTitle}>Get in Touch</Typography>
-                  <Stack spacing={3.5} sx={{ mt: 4, flexGrow: 1 }}>
-                    
+                  <Stack spacing={isMobile ? 2.5 : 3.5} sx={{ mt: 3, flexGrow: 1 }}>
                     <Box sx={infoIconBox}>
                       <MailIcon sx={iconStyle} />
                       <Box sx={{ flexGrow: 1 }}>
                         <Typography sx={infoLabel}>Postal Address</Typography>
                         <Stack direction="row" spacing={1} alignItems="center">
                           <Typography sx={infoValue}>P.O. BOX 221-50104 KHAYEGA</Typography>
-                          <Tooltip title="Copy address">
-                            <IconButton size="small" onClick={handleCopyAddress} sx={{ color: BRAND.gold }}>
-                              <CopyIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
+                          <IconButton size="small" onClick={handleCopyAddress} sx={{ color: BRAND.gold }}><CopyIcon fontSize="small" /></IconButton>
                         </Stack>
                       </Box>
                     </Box>
-
                     <Box sx={infoIconBox}>
                       <PhoneIcon sx={iconStyle} />
                       <Box>
@@ -158,7 +146,6 @@ const ContactDetails = () => {
                         <Typography component="a" href="tel:+254794515407" sx={{ ...linkHover, display: 'block' }}>+254 794 515 407</Typography>
                       </Box>
                     </Box>
-
                     <Box sx={infoIconBox}>
                       <EmailIcon sx={iconStyle} />
                       <Box>
@@ -166,53 +153,29 @@ const ContactDetails = () => {
                         <Typography component="a" href="mailto:info@mudetesacco.co.ke" sx={linkHover}>info@mudetesacco.co.ke</Typography>
                       </Box>
                     </Box>
-
                     <Box>
                       <Typography sx={infoLabel}>Connect With Us</Typography>
                       <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-                        <Tooltip title="Follow us on X (Twitter)">
-                          <IconButton component="a" href="https://x.com/GMufate" target="_blank" sx={socialIconStyle}>
-                            <TwitterIcon />
-                          </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title="Chat with us on WhatsApp">
-                          <IconButton 
-                            component="a" 
-                            href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`} 
-                            target="_blank" 
-                            sx={{ ...socialIconStyle, '&:hover': { background: BRAND.success, color: '#FFF' } }}
-                          >
-                            <WhatsAppIcon />
-                          </IconButton>
-                        </Tooltip>
+                        <IconButton component="a" href="https://x.com/GMufate" target="_blank" sx={socialIconStyle}><TwitterIcon /></IconButton>
+                        <IconButton component="a" href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`} target="_blank" sx={{ ...socialIconStyle, '&:hover': { background: BRAND.success, color: '#FFF' } }}><WhatsAppIcon /></IconButton>
                       </Stack>
                     </Box>
                   </Stack>
-
-                  <Box sx={{ mt: 3, pt: 2, borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <ShieldIcon sx={{ color: BRAND.gold, fontSize: '1rem' }} />
-                    <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem' }}>
-                      Secure Communication Channel
-                    </Typography>
-                  </Box>
                 </CardContent>
               </Card>
             </Grid>
 
-            {/* CARD 2: BRANCHES (Restored Hover Effects) */}
+            {/* CARD 2: BRANCHES */}
             <Grid item xs={12} md={6} lg={3.5} component={motion.div} variants={itemVariants} sx={{ display: 'flex' }}>
               <Card sx={professionalCardStyle}>
-                <CardContent sx={{ p: { xs: 3, md: 4 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <CardContent sx={{ p: { xs: 2.5, md: 4 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <Typography sx={megaInfoTitle}>Our Branches</Typography>
                   <Box sx={scrollBoxStyle}>
-                    {loading ? <Skeleton variant="rectangular" height={350} sx={{ borderRadius: 4, bgcolor: 'rgba(255,255,255,0.05)' }} /> : (
-                      <Stack spacing={2.5}>
+                    {loading ? <Skeleton variant="rectangular" height={300} sx={{ borderRadius: 4, bgcolor: 'rgba(255,255,255,0.05)' }} /> : (
+                      <Stack spacing={2}>
                         {branches.map((branch, idx) => (
                           <Box key={idx} sx={branchItemStyle}>
-                            <Typography sx={{ color: BRAND.gold, fontWeight: 700, mb: 1.5, fontSize: '0.9rem' }}>
-                              {branch.BranchName}
-                            </Typography>
+                            <Typography sx={{ color: BRAND.gold, fontWeight: 700, mb: 1, fontSize: '0.85rem' }}>{branch.BranchName}</Typography>
                             <Box component="iframe" loading="lazy" src={toEmbedMap(branch.Location)} sx={mapStyle} />
                           </Box>
                         ))}
@@ -223,49 +186,17 @@ const ContactDetails = () => {
               </Card>
             </Grid>
 
-            {/* CARD 3: FORM (Restored Validation) */}
+            {/* CARD 3: FORM */}
             <Grid item xs={12} lg={3.5} component={motion.div} variants={itemVariants} sx={{ display: 'flex' }}>
               <Card sx={professionalCardStyle}>
-                <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: { xs: 3, md: 4 } }}>
+                <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: { xs: 2.5, md: 4 } }}>
                   <Typography sx={megaInfoTitle}>Send Message</Typography>
-                  <Stack spacing={2.5} sx={{ mt: 3 }}>
-                    <TextField
-                      label="Email"
-                      fullWidth required
-                      sx={megaInputStyle}
-                      value={formData.Email}
-                      onChange={(e) => setFormData({ ...formData, Email: e.target.value })}
-                      error={formData.Email !== '' && !isEmailValid(formData.Email)}
-                    />
-                    <TextField
-                      label="Phone Number"
-                      fullWidth required
-                      sx={megaInputStyle}
-                      value={formData.PhoneNumber}
-                      onChange={(e) => setFormData({ ...formData, PhoneNumber: e.target.value })}
-                    />
-                    <TextField
-                      label="Subject"
-                      fullWidth required
-                      sx={megaInputStyle}
-                      value={formData.Subject}
-                      onChange={(e) => setFormData({ ...formData, Subject: e.target.value })}
-                    />
-                    <TextField
-                      label="Message"
-                      multiline rows={4}
-                      fullWidth required
-                      sx={megaInputStyle}
-                      value={formData.Message}
-                      onChange={(e) => setFormData({ ...formData, Message: e.target.value })}
-                    />
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      disabled={formLoading}
-                      sx={refinedGlowBtn}
-                      fullWidth
-                    >
+                  <Stack spacing={2} sx={{ mt: 3 }}>
+                    <TextField label="Email" fullWidth required sx={megaInputStyle} value={formData.Email} onChange={(e) => setFormData({ ...formData, Email: e.target.value })} error={formData.Email !== '' && !isEmailValid(formData.Email)} />
+                    <TextField label="Phone" fullWidth required sx={megaInputStyle} value={formData.PhoneNumber} onChange={(e) => setFormData({ ...formData, PhoneNumber: e.target.value })} />
+                    <TextField label="Subject" fullWidth required sx={megaInputStyle} value={formData.Subject} onChange={(e) => setFormData({ ...formData, Subject: e.target.value })} />
+                    <TextField label="Message" multiline rows={isMobile ? 3 : 4} fullWidth required sx={megaInputStyle} value={formData.Message} onChange={(e) => setFormData({ ...formData, Message: e.target.value })} />
+                    <Button type="submit" variant="contained" disabled={formLoading} sx={refinedGlowBtn} fullWidth>
                       {formLoading ? <CircularProgress size={24} color="inherit" /> : 'SUBMIT ENQUIRY'}
                     </Button>
                   </Stack>
@@ -275,104 +206,88 @@ const ContactDetails = () => {
           </Grid>
         </motion.div>
       </Container>
-
       <SuccessModal isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} />
     </Box>
   );
 };
 
-// --- RESTORED SUCCESS MODAL ---
-const SuccessModal = ({ isOpen, onClose }) => (
-  <AnimatePresence>
-    {isOpen && (
-      <Box
-        component={motion.div}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        sx={{
-          position: 'fixed', inset: 0, zIndex: 9999,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'rgba(2, 21, 15, 0.9)', backdropFilter: 'blur(12px)', p: 3
-        }}
-      >
-        <Box
-          component={motion.div}
-          initial={{ scale: 0.8, y: 50, opacity: 0 }}
-          animate={{ scale: 1, y: 0, opacity: 1 }}
-          exit={{ scale: 0.8, y: 50, opacity: 0 }}
-          sx={{
-            maxWidth: 450, width: '100%', background: 'rgba(2, 21, 15, 0.95)',
-            borderRadius: '40px', border: `1px solid ${BRAND.gold}33`,
-            p: 6, textAlign: 'center', boxShadow: `0 0 60px ${BRAND.gold}22`
-          }}
-        >
-          <Box sx={modalIconBox}><SuccessIcon sx={{ color: BRAND.dark, fontSize: '3rem' }} /></Box>
-          <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '1.8rem', mb: 2 }}>MESSAGE RECEIVED</Typography>
-          <Typography sx={{ color: BRAND.light, opacity: 0.8, lineHeight: 1.6, mb: 4 }}>
-            Thank you for reaching out to **Golden Generation DT SACCO**. 
-            Our team will get back to you shortly.
-          </Typography>
-          <Button onClick={onClose} variant="contained" fullWidth sx={refinedGlowBtn}>RETURN TO PAGE</Button>
-        </Box>
-      </Box>
-    )}
-  </AnimatePresence>
-);
-
 /* ================= STYLES ================= */
 
 const professionalCardStyle = {
   flexGrow: 1,
+  width: '100%',
   background: 'rgba(2, 21, 15, 0.7)',
   backdropFilter: 'blur(20px) saturate(160%)',
   borderRadius: '32px',
   border: `1px solid rgba(255, 255, 255, 0.08)`,
   borderTop: `4px solid ${BRAND.gold}`,
   boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+  minHeight: { xs: 'auto', md: '620px' },
   transition: '0.4s all ease-in-out',
-  '&:hover': { transform: 'translateY(-10px)', background: 'rgba(2, 21, 15, 0.8)' }
+  '&:hover': { transform: { md: 'translateY(-10px)' }, background: 'rgba(2, 21, 15, 0.8)' }
 };
 
 const megaInputStyle = {
   '& .MuiOutlinedInput-root': {
     color: '#FFF',
+    fontSize: '0.9rem',
     background: 'rgba(255,255,255,0.03)',
-    borderRadius: '16px',
+    borderRadius: '12px',
     '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' },
     '&:hover fieldset': { borderColor: BRAND.gold },
     '&.Mui-focused fieldset': { borderColor: BRAND.gold, borderWidth: '2px' }
   },
-  '& label': { color: 'rgba(255,255,255,0.4)' },
+  '& label': { color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem' },
   '& label.Mui-focused': { color: BRAND.gold }
 };
 
 const mapStyle = {
-  width: '100%', height: '150px', border: 0, borderRadius: '12px',
-  filter: 'grayscale(1) invert(90%) opacity(0.7)', transition: '0.4s',
+  width: '100%', height: { xs: '120px', md: '140px' }, border: 0, borderRadius: '12px',
+  filter: 'grayscale(1) invert(90%) opacity(0.6)', transition: '0.4s',
   '&:hover': { filter: 'grayscale(0.3) invert(0%)', opacity: 1 }
 };
 
 const socialIconStyle = {
   color: BRAND.gold, border: '1px solid rgba(255,255,255,0.1)',
-  transition: '0.3s ease',
-  '&:hover': { color: BRAND.dark, background: BRAND.gold, transform: 'translateY(-3px)' }
+  '&:hover': { color: BRAND.dark, background: BRAND.gold }
 };
 
 const refinedGlowBtn = {
   background: `linear-gradient(90deg, ${BRAND.gold}, #FFB84D)`,
-  color: BRAND.dark, fontWeight: 900, borderRadius: '16px', py: 1.8,
-  '&:hover': { transform: 'scale(1.02)', boxShadow: `0 10px 20px ${BRAND.gold}44` }
+  color: BRAND.dark, fontWeight: 900, borderRadius: '12px', py: { xs: 1.5, md: 1.8 },
+  '&:hover': { boxShadow: `0 10px 20px ${BRAND.gold}44` }
 };
 
-const megaInfoTitle = { color: BRAND.gold, fontSize: '1.4rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px' };
-const infoIconBox = { display: 'flex', alignItems: 'center', gap: 2.5 };
-const iconStyle = { color: BRAND.gold, fontSize: '2rem' };
-const infoLabel = { color: BRAND.textMuted, fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' };
-const infoValue = { color: BRAND.light, fontWeight: 500, fontSize: '0.95rem' };
-const linkHover = { color: BRAND.light, textDecoration: 'none', transition: '0.3s', '&:hover': { color: BRAND.gold, transform: 'translateX(5px)' } };
-const scrollBoxStyle = { flexGrow: 1, overflowY: 'auto', maxHeight: '500px', mt: 3, '&::-webkit-scrollbar': { width: '0px' } };
-const branchItemStyle = { background: 'rgba(255, 255, 255, 0.02)', p: 2, borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' };
-const modalIconBox = { width: 80, height: 80, borderRadius: '50%', background: BRAND.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', mx: 'auto', mb: 4 };
+const megaInfoTitle = { 
+    color: BRAND.gold, 
+    fontSize: { xs: '1.1rem', md: '1.4rem' }, 
+    fontWeight: 900, 
+    textTransform: 'uppercase', 
+    letterSpacing: '1px' 
+};
+
+const infoIconBox = { display: 'flex', alignItems: 'center', gap: { xs: 1.5, md: 2.5 } };
+const iconStyle = { color: BRAND.gold, fontSize: { xs: '1.5rem', md: '2rem' } };
+const infoLabel = { color: BRAND.textMuted, fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase' };
+const infoValue = { color: BRAND.light, fontWeight: 500, fontSize: { xs: '0.8rem', md: '0.95rem' } };
+const linkHover = { color: BRAND.light, textDecoration: 'none', fontSize: { xs: '0.85rem', md: '0.95rem' }, '&:hover': { color: BRAND.gold } };
+const scrollBoxStyle = { flexGrow: 1, overflowY: 'auto', maxHeight: { xs: '350px', md: '480px' }, mt: 2, pr: 1, '&::-webkit-scrollbar': { width: '3px' }, '&::-webkit-scrollbar-thumb': { background: BRAND.gold, borderRadius: '10px' } };
+const branchItemStyle = { background: 'rgba(255, 255, 255, 0.02)', p: 1.5, borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' };
+
+// Success Modal remains the same
+const SuccessModal = ({ isOpen, onClose }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <Box component={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} sx={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(2, 21, 15, 0.9)', backdropFilter: 'blur(12px)', p: 3 }}>
+        <Box component={motion.div} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} sx={{ maxWidth: 400, width: '100%', background: 'rgba(2, 21, 15, 0.95)', borderRadius: '32px', border: `1px solid ${BRAND.gold}33`, p: 5, textAlign: 'center' }}>
+          <Box sx={{ width: 60, height: 60, borderRadius: '50%', background: BRAND.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', mx: 'auto', mb: 3 }}><SuccessIcon sx={{ color: BRAND.dark, fontSize: '2rem' }} /></Box>
+          <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '1.4rem', mb: 1 }}>SENT!</Typography>
+          <Typography sx={{ color: BRAND.light, opacity: 0.8, fontSize: '0.9rem', mb: 4 }}>We have received your message and will respond shortly.</Typography>
+          <Button onClick={onClose} variant="contained" fullWidth sx={refinedGlowBtn}>CLOSE</Button>
+        </Box>
+      </Box>
+    )}
+  </AnimatePresence>
+);
 
 export default ContactDetails;
