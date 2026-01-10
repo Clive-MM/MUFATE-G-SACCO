@@ -20,26 +20,29 @@ const ContactUs = () => {
         backgroundColor: BRAND.dark,
         minHeight: '100vh',
         position: 'relative',
-        // FIX: Global Background Image with responsive positioning
-        backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
-        backgroundSize: 'cover',
-        /* FIX: On mobile, we shift the focus to 'center 20%' 
-           to ensure the headphones/subject are visible.
-        */
-        backgroundPosition: { xs: 'center 20%', md: 'center center' },
-        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
         overflowX: 'hidden',
+        // --- RESPONSIVE BACKGROUND LOGIC ---
+        backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
+        backgroundRepeat: 'no-repeat',
+        /* FIX: On Laptop (md), use 'cover' and 'fixed'.
+           On Mobile (xs), use 'contain' so the image isn't zoomed, 
+           or '100% auto' to fit the width perfectly.
+        */
+        backgroundSize: { xs: 'contain', md: 'cover' },
+        backgroundPosition: { xs: 'top center', md: 'center center' },
+        backgroundAttachment: { xs: 'scroll', md: 'fixed' },
       }}
     >
-      {/* Global Dark Overlay - Adjusted opacity for mobile clarity */}
+      {/* Dark Overlay: Made lighter at the top for mobile to see the image clearly */}
       <Box
         sx={{
-          position: 'fixed',
+          position: 'absolute',
           inset: 0,
           background: isMobile 
-            ? `linear-gradient(to bottom, rgba(2,21,15,0.85) 0%, ${BRAND.dark} 100%)`
+            ? `linear-gradient(to bottom, rgba(2,21,15,0.4) 0%, ${BRAND.dark} 40%, ${BRAND.dark} 100%)`
             : `linear-gradient(to bottom, rgba(2,21,15,0.7) 0%, ${BRAND.dark} 100%)`,
           zIndex: 1,
+          pointerEvents: 'none'
         }}
       />
 
@@ -48,32 +51,33 @@ const ContactUs = () => {
         {/* Transparent Hero Section */}
         <Box
           sx={{
-            height: { xs: '60vh', md: '65vh' }, // Taller on mobile to show more image
+            // Reduced height on mobile to keep the text closer to the smaller image
+            height: { xs: '40vh', md: '65vh' }, 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
             px: 2,
-            pt: { xs: 5, md: 0 }
+            pt: { xs: 8, md: 0 }
           }}
         >
           <Container maxWidth="lg">
             <Box
               component={motion.div}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8 }}
             >
               <Typography
                 sx={{
                   fontWeight: 900,
                   textTransform: 'uppercase',
-                  fontSize: { xs: isSmallPhone ? '2.2rem' : '2.8rem', sm: '4rem', md: '5rem' },
+                  fontSize: { xs: isSmallPhone ? '1.8rem' : '2.4rem', sm: '3.5rem', md: '5rem' },
                   color: BRAND.gold,
-                  letterSpacing: { xs: '0.05em', md: '0.15em' },
-                  mb: 2,
+                  letterSpacing: { xs: '0.02em', md: '0.15em' },
+                  mb: 1,
                   lineHeight: 1.1,
-                  filter: 'drop-shadow(0 10px 10px rgba(0,0,0,0.8))',
+                  filter: 'drop-shadow(0 5px 15px rgba(0,0,0,0.9))',
                 }}
               >
                 Get In {isMobile && <br />} Touch
@@ -81,42 +85,42 @@ const ContactUs = () => {
 
               <Typography
                 sx={{
-                  fontSize: { xs: '1rem', md: '1.25rem' },
+                  fontSize: { xs: '0.9rem', md: '1.25rem' },
                   color: BRAND.light,
-                  maxWidth: '700px',
+                  maxWidth: '600px',
                   mx: 'auto',
-                  lineHeight: { xs: 1.6, md: 1.8 },
-                  opacity: 0.95,
+                  lineHeight: 1.5,
+                  opacity: 0.9,
                   fontWeight: 500,
-                  textShadow: '0 2px 10px rgba(0,0,0,0.8)',
-                  px: { xs: 2, md: 0 }
+                  textShadow: '0 2px 8px rgba(0,0,0,1)',
                 }}
               >
-                Your financial growth is our priority. Whether you have questions 
-                about membership or need technical support, our team is here.
+                Your financial growth is our priority.
               </Typography>
             </Box>
           </Container>
         </Box>
 
-        {/* Contact Details Overlap */}
+        {/* Contact Details Section */}
         <Box sx={{ 
-          mt: { xs: -8, md: -15 }, 
+          // Pull cards up slightly, but not so much that they hide the mobile image
+          mt: { xs: 2, md: -15 }, 
           pb: 10,
-          px: { xs: 1, md: 0 } 
+          px: { xs: 0, md: 0 } 
         }}>
           <ContactDetails />
         </Box>
 
         {/* FOOTER */}
-        <Box sx={{ py: 6, textAlign: 'center' }}>
+        <Box sx={{ pb: 6, textAlign: 'center' }}>
           <Typography
             sx={{
               color: BRAND.gold,
-              letterSpacing: '3px',
-              fontWeight: 900,
+              letterSpacing: '2px',
+              fontWeight: 800,
               textTransform: 'uppercase',
-              fontSize: { xs: '0.9rem', md: '1.35rem' }
+              fontSize: { xs: '0.8rem', md: '1.2rem' },
+              opacity: 0.8
             }}
           >
             GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
