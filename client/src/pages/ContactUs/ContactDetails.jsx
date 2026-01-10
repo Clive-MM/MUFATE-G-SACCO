@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
   Box, Typography, Grid, Card, CardContent, CircularProgress,
-  Button, Stack, TextField, Container, IconButton, Tooltip, Skeleton,
-  useTheme
+  Button, Stack, TextField, Container, IconButton, Tooltip, Skeleton
 } from '@mui/material';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import {
   Phone as PhoneIcon,
   Email as EmailIcon,
@@ -13,7 +12,8 @@ import {
   VerifiedUser as ShieldIcon,
   Twitter as TwitterIcon,
   WhatsApp as WhatsAppIcon,
-  MarkEmailRead as MailIcon
+  MarkEmailRead as MailIcon,
+  LocationOn as MapPinIcon
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
@@ -35,16 +35,9 @@ const ContactDetails = () => {
 
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    Email: '',
-    PhoneNumber: '+254',
-    Subject: '',
-    Message: ''
-  });
+  const [formData, setFormData] = useState({ Email: '', PhoneNumber: '+254', Subject: '', Message: '' });
   const [formLoading, setFormLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
-  const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   useEffect(() => {
     fetch('https://mufate-g-sacco.onrender.com/branches')
@@ -56,100 +49,61 @@ const ContactDetails = () => {
       .catch(() => setLoading(false));
   }, []);
 
-  const handleCopyAddress = () => {
-    navigator.clipboard.writeText('P.O. BOX 221-50104 KHAYEGA');
-    enqueueSnackbar('Postal address copied', { variant: 'success' });
-  };
-
-  const whatsappNumber = '254791331932';
-  const whatsappMessage = encodeURIComponent('Hello 👋, thank you for contacting Golden Generation DT SACCO...');
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    setFormLoading(true);
-    try {
-      const response = await fetch('https://mufate-g-sacco.onrender.com/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (response.ok) {
-        enqueueSnackbar('Message sent successfully!', { variant: 'success' });
-        setSubmitted(true);
-        setFormData({ Email: '', PhoneNumber: '+254', Subject: '', Message: '' });
-        setTimeout(() => setSubmitted(false), 5000);
-      }
-    } catch (err) {
-      enqueueSnackbar('Connection error.', { variant: 'error' });
-    } finally {
-      setFormLoading(false);
+  // Animation Variants for Staggered Entrance
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2, delayChildren: 0.1 }
     }
   };
 
-  return (
-    <Box
-      sx={{
-        /* CHANGE: Background is now transparent so Parent image shows */
-        background: 'transparent', 
-        width: '100%',
-        position: 'relative',
-        zIndex: 1
-      }}
-    >
-      <Container
-        ref={scrollRef}
-        maxWidth={false}
-        sx={{
-          py: { xs: 4, md: 8 },
-          px: { xs: 2, md: 4 },
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <motion.div
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-          style={{ width: '100%', maxWidth: '1400px' }}
-        >
-          <Grid container spacing={4} justifyContent="center" alignItems="stretch">
+  const itemVariants = {
+    hidden: { y: 40, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+  };
 
-            {/* CARD 1: CONTACT */}
-            <Grid item xs={12} md={6} lg={5} sx={{ display: 'flex' }}>
+  return (
+    <Box sx={{ background: 'transparent', width: '100%', position: 'relative', zIndex: 1 }}>
+      <Container ref={scrollRef} maxWidth="xl" sx={{ py: { xs: 4, md: 12 } }}>
+        <motion.div variants={containerVariants} initial="hidden" animate={isInView ? "visible" : "hidden"}>
+          
+          <Grid container spacing={4} justifyContent="center">
+            
+            {/* CARD 1: CONTACT INFO - High Interaction */}
+            <Grid item xs={12} md={6} lg={4} component={motion.div} variants={itemVariants}>
               <Card sx={professionalCardStyle}>
-                <CardContent sx={{ p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <Typography sx={megaInfoTitle}>Get in Touch</Typography>
-                  <Stack spacing={4} sx={{ mt: 4, flexGrow: 1 }}>
-                    <Box sx={infoIconBox}>
-                      <MailIcon sx={iconStyle} />
-                      <Box>
-                        <Typography sx={infoLabel}>Postal Address</Typography>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                          <Typography sx={infoValue}>P.O. BOX 221-50104 KHAYEGA</Typography>
-                          <IconButton size="small" onClick={handleCopyAddress} sx={{ color: BRAND.gold }}><CopyIcon fontSize="small" /></IconButton>
-                        </Stack>
+                <CardContent sx={{ p: { xs: 4, md: 5 } }}>
+                  <Typography sx={megaInfoTitle}>Connect Directly</Typography>
+                  <Stack spacing={4} sx={{ mt: 5 }}>
+                    {[
+                      { icon: <MailIcon />, label: 'Postal', val: 'P.O. BOX 221-50104 KHAYEGA', copy: true },
+                      { icon: <PhoneIcon />, label: 'Call Us', val: '+254 791 331 932', link: 'tel:+254791331932' },
+                      { icon: <EmailIcon />, label: 'Email', val: 'info@mudetesacco.co.ke', link: 'mailto:info@mudetesacco.co.ke' }
+                    ].map((item, i) => (
+                      <Box key={i} sx={infoRowStyle}>
+                        <Box sx={iconWrapperStyle}>{item.icon}</Box>
+                        <Box>
+                          <Typography sx={infoLabel}>{item.label}</Typography>
+                          <Stack direction="row" alignItems="center" spacing={1}>
+                            <Typography component={item.link ? "a" : "p"} href={item.link} sx={item.link ? linkHover : infoValue}>
+                              {item.val}
+                            </Typography>
+                            {item.copy && (
+                              <IconButton size="small" onClick={() => { navigator.clipboard.writeText(item.val); enqueueSnackbar('Copied!', { variant: 'info' }); }} sx={{ color: BRAND.gold }}>
+                                <CopyIcon fontSize="inherit" />
+                              </IconButton>
+                            )}
+                          </Stack>
+                        </Box>
                       </Box>
-                    </Box>
-                    <Box sx={infoIconBox}>
-                      <PhoneIcon sx={iconStyle} />
-                      <Box>
-                        <Typography sx={infoLabel}>Call Us</Typography>
-                        <Typography component="a" href="tel:+254791331932" sx={linkHover}>+254 791 331 932</Typography>
-                      </Box>
-                    </Box>
-                    <Box sx={infoIconBox}>
-                      <EmailIcon sx={iconStyle} />
-                      <Box>
-                        <Typography sx={infoLabel}>Email Support</Typography>
-                        <Typography component="a" href="mailto:info@mudetesacco.co.ke" sx={linkHover}>info@mudetesacco.co.ke</Typography>
-                      </Box>
-                    </Box>
-                    <Box>
-                      <Typography sx={infoLabel}>Connect With Us</Typography>
-                      <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-                        <IconButton sx={socialIconStyle} component="a" href="https://x.com/GMufate" target="_blank"><TwitterIcon /></IconButton>
-                        <IconButton sx={socialIconStyle} component="a" href={`https://wa.me/${whatsappNumber}`} target="_blank"><WhatsAppIcon /></IconButton>
+                    ))}
+                    
+                    <Box sx={{ pt: 2 }}>
+                      <Typography sx={infoLabel}>Social Presence</Typography>
+                      <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+                        <IconButton sx={socialIconStyle}><TwitterIcon /></IconButton>
+                        <IconButton sx={socialIconStyle}><WhatsAppIcon /></IconButton>
                       </Stack>
                     </Box>
                   </Stack>
@@ -157,17 +111,22 @@ const ContactDetails = () => {
               </Card>
             </Grid>
 
-            {/* CARD 2: BRANCHES */}
-            <Grid item xs={12} md={6} lg={3.5} sx={{ display: 'flex' }}>
+            {/* CARD 2: BRANCHES - Interactive Maps */}
+            <Grid item xs={12} md={6} lg={4} component={motion.div} variants={itemVariants}>
               <Card sx={professionalCardStyle}>
-                <CardContent sx={{ p: { xs: 3, md: 4 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <Typography sx={megaInfoTitle}>Our Branches</Typography>
+                <CardContent sx={{ p: { xs: 4, md: 5 } }}>
+                  <Typography sx={megaInfoTitle}>Our Network</Typography>
                   <Box sx={scrollBoxStyle}>
-                    {loading ? <Skeleton variant="rectangular" height={300} sx={{ borderRadius: 4, bgcolor: 'rgba(255,255,255,0.05)' }} /> : (
+                    {loading ? <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 4, bgcolor: 'rgba(236, 155, 20, 0.05)' }} /> : (
                       <Stack spacing={3}>
                         {branches.map((branch, idx) => (
                           <Box key={idx} sx={branchItemStyle}>
-                            <Typography sx={{ color: BRAND.gold, fontWeight: 700, mb: 1 }}>{branch.BranchName}</Typography>
+                            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+                              <MapPinIcon sx={{ color: BRAND.gold, fontSize: '1rem' }} />
+                              <Typography sx={{ color: BRAND.gold, fontWeight: 900, textTransform: 'uppercase', fontSize: '0.85rem' }}>
+                                {branch.BranchName}
+                              </Typography>
+                            </Stack>
                             <Box component="iframe" src={toEmbedMap(branch.Location)} sx={mapStyle} />
                           </Box>
                         ))}
@@ -178,23 +137,42 @@ const ContactDetails = () => {
               </Card>
             </Grid>
 
-            {/* CARD 3: FORM */}
-            <Grid item xs={12} lg={3.5} sx={{ display: 'flex' }}>
+            {/* CARD 3: MESSAGE FORM - The "Golden Glow" Experience */}
+            <Grid item xs={12} lg={4} component={motion.div} variants={itemVariants}>
               <Card sx={professionalCardStyle}>
-                <CardContent component="form" onSubmit={handleFormSubmit} sx={{ p: { xs: 3, md: 4 } }}>
-                  <Typography sx={megaInfoTitle}>Send Message</Typography>
-                  <Stack spacing={2.5} sx={{ mt: 3 }}>
-                    <TextField label="Email" fullWidth required sx={megaInputStyle} value={formData.Email} onChange={(e) => setFormData({ ...formData, Email: e.target.value })} />
-                    <TextField label="Phone Number" fullWidth required sx={megaInputStyle} value={formData.PhoneNumber} onChange={(e) => setFormData({ ...formData, PhoneNumber: e.target.value })} />
-                    <TextField label="Subject" fullWidth required sx={megaInputStyle} value={formData.Subject} onChange={(e) => setFormData({ ...formData, Subject: e.target.value })} />
-                    <TextField label="Message" multiline rows={4} fullWidth required sx={megaInputStyle} value={formData.Message} onChange={(e) => setFormData({ ...formData, Message: e.target.value })} />
-                    <Button type="submit" variant="contained" disabled={formLoading} sx={{ ...refinedGlowBtn, ...(submitted && { background: BRAND.success }) }} fullWidth>
-                      {formLoading ? <CircularProgress size={24} color="inherit" /> : submitted ? <SuccessIcon /> : 'SUBMIT ENQUIRY'}
+                <CardContent component="form" sx={{ p: { xs: 4, md: 5 } }}>
+                  <Typography sx={megaInfoTitle}>Send a Message</Typography>
+                  <Stack spacing={3} sx={{ mt: 4 }}>
+                    {['Email', 'PhoneNumber', 'Subject', 'Message'].map((field) => (
+                      <TextField
+                        key={field}
+                        label={field.replace(/([A-Z])/g, ' $1').trim()}
+                        fullWidth
+                        multiline={field === 'Message'}
+                        rows={field === 'Message' ? 4 : 1}
+                        sx={megaInputStyle}
+                        value={formData[field]}
+                        onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
+                      />
+                    ))}
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      sx={{ ...refinedGlowBtn, ...(submitted && { background: BRAND.success }) }}
+                    >
+                      {submitted ? <SuccessIcon /> : 'ENQUIRE NOW'}
                     </Button>
+                    <Stack direction="row" justifyContent="center" alignItems="center" spacing={1} sx={{ opacity: 0.6 }}>
+                      <ShieldIcon sx={{ color: BRAND.gold, fontSize: '0.9rem' }} />
+                      <Typography sx={{ fontSize: '0.7rem', color: BRAND.light, letterSpacing: 1 }}>
+                        PROTECTED BY END-TO-END ENCRYPTION
+                      </Typography>
+                    </Stack>
                   </Stack>
                 </CardContent>
               </Card>
             </Grid>
+
           </Grid>
         </motion.div>
       </Container>
@@ -202,43 +180,103 @@ const ContactDetails = () => {
   );
 };
 
-/* ================= REFINED GLASS STYLES ================= */
+/* ================= THE 10/10 STYLE ENGINE ================= */
 
 const professionalCardStyle = {
-  flexGrow: 1,
-  background: 'rgba(2, 21, 15, 0.7)', // Reduced opacity to show image
-  backdropFilter: 'blur(15px) saturate(160%)', // Premium glass blur
-  borderRadius: '32px',
-  border: `1px solid rgba(236, 155, 20, 0.2)`,
+  height: '100%',
+  background: 'rgba(2, 21, 15, 0.65)',
+  backdropFilter: 'blur(20px) saturate(160%)',
+  borderRadius: '40px', // Smoother, larger radius
+  border: '1px solid rgba(236, 155, 20, 0.15)',
   borderTop: `4px solid ${BRAND.gold}`,
-  boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
-  transition: '0.4s all ease-in-out',
-  '&:hover': { transform: 'translateY(-10px)', background: 'rgba(2, 21, 15, 0.8)' }
+  transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+  '&:hover': {
+    transform: 'translateY(-12px)',
+    background: 'rgba(2, 21, 15, 0.8)',
+    boxShadow: `0 40px 80px rgba(0,0,0,0.6), 0 0 20px ${BRAND.gold}15`,
+    border: `1px solid ${BRAND.gold}44`,
+  }
 };
 
-const megaInfoTitle = { color: BRAND.gold, fontSize: '1.3rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px' };
+const iconWrapperStyle = {
+  width: 50,
+  height: 50,
+  borderRadius: '16px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: `linear-gradient(135deg, ${BRAND.gold}22, transparent)`,
+  color: BRAND.gold,
+  border: `1px solid ${BRAND.gold}33`
+};
 
 const megaInputStyle = {
   '& .MuiOutlinedInput-root': {
     color: '#FFF',
-    background: 'rgba(0,0,0,0.3)', // Darker inputs for contrast
-    borderRadius: '16px',
+    background: 'rgba(0,0,0,0.3)',
+    borderRadius: '20px',
+    transition: 'all 0.3s ease',
     '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' },
     '&:hover fieldset': { borderColor: BRAND.gold },
+    '&.Mui-focused': {
+      background: 'rgba(0,0,0,0.5)',
+      boxShadow: `0 0 15px ${BRAND.gold}22`,
+      '& fieldset': { borderColor: BRAND.gold, borderWidth: '2px' }
+    }
   },
-  '& label': { color: 'rgba(255,255,255,0.5)' },
+  '& label': { color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem' },
   '& label.Mui-focused': { color: BRAND.gold }
 };
 
-const scrollBoxStyle = { flexGrow: 1, overflowY: 'auto', maxHeight: '500px', mt: 3, '&::-webkit-scrollbar': { width: '0px' } };
-const branchItemStyle = { background: 'rgba(255, 255, 255, 0.03)', p: 2, borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' };
-const mapStyle = { width: '100%', height: '140px', border: 0, borderRadius: '12px', filter: 'grayscale(1) invert(90%) opacity(0.7)' };
-const infoIconBox = { display: 'flex', alignItems: 'center', gap: 2.5 };
-const iconStyle = { color: BRAND.gold, fontSize: '2rem' };
-const infoLabel = { color: BRAND.textMuted, fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' };
+const infoRowStyle = { 
+  display: 'flex', 
+  alignItems: 'center', 
+  gap: 3,
+  p: 2,
+  borderRadius: '20px',
+  transition: '0.3s',
+  '&:hover': { background: 'rgba(255,255,255,0.03)' }
+};
+
+const mapStyle = {
+  width: '100%',
+  height: '160px',
+  border: 0,
+  borderRadius: '16px',
+  filter: 'grayscale(1) invert(90%) contrast(0.8)',
+  opacity: 0.7,
+  transition: '0.4s',
+  '&:hover': { opacity: 1, filter: 'grayscale(0.5) invert(0%)' }
+};
+
+const branchItemStyle = { 
+  background: 'rgba(255, 255, 255, 0.02)', 
+  p: 2.5, 
+  borderRadius: '24px', 
+  border: '1px solid rgba(255,255,255,0.05)' 
+};
+
+const megaInfoTitle = { color: BRAND.gold, fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '3px' };
+const infoLabel = { color: BRAND.textMuted, fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', mb: 0.5 };
 const infoValue = { color: BRAND.light, fontWeight: 500, fontSize: '0.95rem' };
-const linkHover = { color: BRAND.light, textDecoration: 'none', transition: '0.3s', '&:hover': { color: BRAND.gold } };
-const refinedGlowBtn = { background: `linear-gradient(90deg, ${BRAND.gold}, #FFB84D)`, color: BRAND.dark, fontWeight: 900, borderRadius: '16px', py: 1.8 };
-const socialIconStyle = { color: BRAND.gold, border: '1px solid rgba(255,255,255,0.1)', transition: '0.3s ease', '&:hover': { background: BRAND.gold, color: BRAND.dark } };
+const linkHover = { color: BRAND.light, textDecoration: 'none', transition: '0.3s', fontWeight: 500, '&:hover': { color: BRAND.gold } };
+const scrollBoxStyle = { flexGrow: 1, overflowY: 'auto', maxHeight: '550px', mt: 3, '&::-webkit-scrollbar': { width: '0px' } };
+const iconStyle = { color: BRAND.gold, fontSize: '1.8rem' };
+const refinedGlowBtn = { 
+  background: `linear-gradient(90deg, ${BRAND.gold}, #FFB84D)`, 
+  color: BRAND.dark, 
+  fontWeight: 900, 
+  borderRadius: '18px', 
+  py: 2.2,
+  letterSpacing: '2px',
+  boxShadow: `0 10px 20px ${BRAND.gold}33`,
+  '&:hover': { transform: 'scale(1.02)', boxShadow: `0 15px 30px ${BRAND.gold}55` }
+};
+const socialIconStyle = { 
+  color: BRAND.gold, 
+  border: '1px solid rgba(255,255,255,0.1)', 
+  p: 1.5,
+  '&:hover': { background: BRAND.gold, color: BRAND.dark, transform: 'rotate(10deg)' } 
+};
 
 export default ContactDetails;
