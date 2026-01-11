@@ -81,7 +81,7 @@ const SaccoGallery = () => {
   return (
     <Box sx={{
       minHeight: "100vh", py: 10, position: "relative", bgcolor: BRAND.dark,
-      backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768161885/CAMERA_5_owwyrh.png)`,
+      backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768163060/camera_4_si2lla.png)`,
       backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed",
       "&::before": {
         content: '""', position: "absolute", inset: 0,
