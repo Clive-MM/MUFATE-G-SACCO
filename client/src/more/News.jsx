@@ -15,7 +15,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import Footer from '../components/Footer';
-import SaccoGallery from './saccogallery';
+// import SaccoGallery from './saccogallery';
 
 const ExpandMore = styled(({ expand, ...other }) => <IconButton {...other} />)(
   ({ expand }) => ({
@@ -194,7 +194,7 @@ const News = () => {
       </Box>
 
       <Box sx={{ height: 20, backgroundColor: '#f2a922', mt: 6 }} />
-      <SaccoGallery />
+      {/* <SaccoGallery /> */}
       <Footer />
     </Box>
   );
