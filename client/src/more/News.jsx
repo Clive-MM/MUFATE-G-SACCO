@@ -284,11 +284,7 @@ const News = () => {
         </Grid>
 
         {/* Footer Accent */}
-        <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 15, opacity: 0.2 }} spacing={3}>
-           <Divider sx={{ width: 100, borderColor: BRAND.gold }} />
-           <NewsIcon sx={{ color: BRAND.gold, fontSize: "2.5rem" }} />
-           <Divider sx={{ width: 100, borderColor: BRAND.gold }} />
-        </Stack>
+        
       </Container>
     </Box>
   );
