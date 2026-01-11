@@ -113,7 +113,7 @@ const SaccoGallery = () => {
 
           <Typography variant="h1" sx={{ 
             color: "#FFF", fontWeight: 900, 
-            fontSize: { xs: "2.8rem", md: "5rem" }, 
+            fontSize: { xs: "1.7rem", md: "3rem" }, 
             textShadow: "0 10px 20px rgba(0,0,0,0.5)"
           }}>
             GOLDEN <span style={{ color: BRAND.gold }}>GALLERY</span>
