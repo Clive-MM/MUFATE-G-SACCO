@@ -29,7 +29,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 const BRAND = {
   gold: "#EC9B14",
-  dark: "#02150F",
+  dark: "#02150F", // The primary solid background color
   glass: "rgba(255, 255, 255, 0.03)",
   textMuted: "rgba(244, 244, 244, 0.7)",
 };
@@ -98,23 +98,12 @@ const News = () => {
       minHeight: "100vh", 
       py: { xs: 6, md: 10 }, 
       position: "relative", 
-      bgcolor: BRAND.dark,
-      backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768163060/camera_4_si2lla.png)`,
-      backgroundSize: "cover", 
-      backgroundPosition: "center", 
-      backgroundAttachment: "fixed",
-      "&::before": {
-        content: '""', 
-        position: "absolute", 
-        inset: 0,
-        background: `radial-gradient(circle at center, rgba(2, 21, 15, 0.4) 0%, rgba(2, 21, 15, 0.9) 100%)`,
-        zIndex: 1
-      }
+      bgcolor: BRAND.dark, // Clean simple background as requested
     }}>
       
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 2 }}>
         
-        {/* Elite Header - Uniform with Gallery */}
+        {/* Elite Header - Consistent Typography but without complex bg */}
         <Stack alignItems="center" spacing={2} sx={{ mb: 8, textAlign: "center" }}>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
@@ -232,7 +221,7 @@ const News = () => {
             </Box>
           </Grid>
 
-          {/* RIGHT: ICYMI Sidebar - Glassmorphism Finalized */}
+          {/* RIGHT: ICYMI Sidebar */}
           <Grid item xs={12} md={4}>
             <Box sx={{ 
               position: 'sticky', 
@@ -294,7 +283,7 @@ const News = () => {
           </Grid>
         </Grid>
 
-        {/* Footer Accent - Uniform with Gallery */}
+        {/* Footer Accent */}
         <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 15, opacity: 0.2 }} spacing={3}>
            <Divider sx={{ width: 100, borderColor: BRAND.gold }} />
            <NewsIcon sx={{ color: BRAND.gold, fontSize: "2.5rem" }} />
