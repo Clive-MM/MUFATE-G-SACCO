@@ -14,13 +14,12 @@ import "lightgallery/css/lg-thumbnail.css";
 // Material UI
 import {
   Container, Typography, Grid, CardMedia, CircularProgress,
-  Box, Stack, Divider, IconButton, Chip, Button, TextField, InputAdornment
+  Box, Stack, Divider, IconButton, Chip, TextField, InputAdornment
 } from "@mui/material";
 import {
   Collections as GalleryIcon,
   AutoAwesome as SparkleIcon,
   Search as ZoomIcon,
-  ArrowForward as ArrowIcon,
   FilterList as FilterIcon
 } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
@@ -56,7 +55,6 @@ const SaccoGallery = () => {
   useEffect(() => {
     axios.get("https://mufate-g-sacco.onrender.com/gallery")
       .then((res) => {
-        // Filter by IsActive from your DB model
         const activePhotos = (res.data.gallery || []).filter(p => p.IsActive !== false);
         setPhotos(activePhotos);
         setLoading(false);
@@ -74,18 +72,29 @@ const SaccoGallery = () => {
   if (loading) return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", bgcolor: BRAND.dark }}>
       <CircularProgress sx={{ color: BRAND.gold }} />
-      <Typography sx={{ color: BRAND.gold, mt: 3, fontWeight: 700, letterSpacing: 4 }}>ACCESSING SECURE ARCHIVES...</Typography>
+      <Typography sx={{ color: BRAND.gold, mt: 3, fontWeight: 700, letterSpacing: 4 }}>
+        ACCESSING SECURE ARCHIVES...
+      </Typography>
     </Box>
   );
 
   return (
     <Box sx={{
-      minHeight: "100vh", py: 10, position: "relative", bgcolor: BRAND.dark,
+      minHeight: "100vh", 
+      py: 10, 
+      position: "relative", 
+      bgcolor: BRAND.dark,
+      // Using a single-focus image with 'cover' prevents stretching
       backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768163060/camera_4_si2lla.png)`,
-      backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed",
+      backgroundSize: "cover", 
+      backgroundPosition: "center", 
+      backgroundAttachment: "fixed",
       "&::before": {
-        content: '""', position: "absolute", inset: 0,
-        background: `radial-gradient(circle at center, rgba(2, 21, 15, 0.75) 0%, rgba(2, 21, 15, 0.98) 100%)`,
+        content: '""', 
+        position: "absolute", 
+        inset: 0,
+        // Radial gradient creates the professional "vignette" look from the preview
+        background: `radial-gradient(circle at center, rgba(2, 21, 15, 0.8) 0%, rgba(2, 21, 15, 0.98) 100%)`,
         zIndex: 1
       }
     }}>
@@ -151,7 +160,6 @@ const SaccoGallery = () => {
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.4, delay: idx * 0.05 }}
                   >
-                    {/* LightGallery link uses Title and Description from your Model */}
                     <a 
                         href={photo.ImageURL} 
                         data-sub-html={`<div style="padding:10px;">
@@ -175,7 +183,6 @@ const SaccoGallery = () => {
                         }}>
                           <Typography variant="h6" sx={{ color: "#FFF", fontWeight: 800 }}>{photo.Title}</Typography>
                           
-                          {/* Display short snippet of Description */}
                           <Typography variant="caption" sx={{ color: BRAND.textMuted, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', mb: 2 }}>
                             {photo.Description}
                           </Typography>
@@ -197,25 +204,6 @@ const SaccoGallery = () => {
             </AnimatePresence>
           </Grid>
         </LightGallery>
-
-        {/* CTA Section */}
-        {/* <Box sx={{ mt: 15, p: { xs: 4, md: 8 }, borderRadius: "40px", background: "rgba(236, 155, 20, 0.03)", border: `1px solid ${BRAND.gold}33`, textAlign: "center", position: 'relative', overflow: 'hidden' }}>
-          <Typography variant="h3" sx={{ color: "#FFF", fontWeight: 900, mb: 2 }}>Ready to Secure Your Future?</Typography>
-          <Typography sx={{ color: BRAND.textMuted, mb: 4, maxWidth: '600px', mx: 'auto' }}>
-             The milestones above represent thousands of lives changed. Join Golden Generation DT SACCO today and let's build your legacy together.
-          </Typography>
-          <Button 
-            variant="contained" 
-            endIcon={<ArrowIcon />}
-            sx={{ 
-              bgcolor: BRAND.gold, color: BRAND.dark, fontWeight: 900, px: 6, py: 2, borderRadius: "50px",
-              boxShadow: `0 0 20px ${BRAND.gold}44`,
-              "&:hover": { bgcolor: "#FFF", transform: "translateY(-3px)", boxShadow: `0 10px 30px ${BRAND.gold}66` }
-            }}
-          >
-            BECOME A MEMBER
-          </Button>
-        </Box> */}
 
         {/* Footer Accent */}
         <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 10, opacity: 0.2 }} spacing={3}>
