@@ -16,6 +16,7 @@ import FAQs from './more/FAQs';
 import ContactUs from './pages/ContactUs/ContactUs';
 import Careers from './pages/Careers/Careers';
 import News from './more/News';
+import SaccoGallery from './more/saccogallery';
 import MemberRegistration from "./pages/MemberRegistration";
 import LoanCalculator from './pages/Products/LoanCalculator';
 import SupportChatWidget from "./components/SupportChatWidget";
@@ -55,7 +56,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/media/gallery" element={<SaccoGallery />} />
           <Route path="/media/videos" element={<Videos />} />
           <Route path="/media/blogs" element={<News />} />
-          <Route path="/news" element={<News />} />
+          {/* <Route path="/news" element={<News />} /> */}
           <Route path="/customer_registration" element={<MemberRegistration />} />
           <Route path="/products/loanCalculator" element={<LoanCalculator />} />
           <Route path="/mufategsaccosupport" element={<SupportChatWidget />} />

@@ -78,7 +78,7 @@ const News = () => {
           fontSize: { xs: '1.4rem', sm: '2rem', md: '2.5rem' }
         }}
       >
-        MUFATE G SACCO NEWS
+        GOLDEN GENERATION DT SACCO NEWS UPDATES
       </Typography>
 
       <Box sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 1, sm: 2 }, position: 'relative' }}>
