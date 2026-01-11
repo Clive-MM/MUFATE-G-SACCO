@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 // LightGallery Imports
 import LightGallery from "lightgallery/react";
@@ -32,7 +32,6 @@ const BRAND = {
   textMuted: "rgba(244, 244, 244, 0.6)",
 };
 
-// Styled Components for Elite Look
 const GlassCard = styled(motion.div)({
   background: BRAND.glass,
   backdropFilter: "blur(12px)",
@@ -52,7 +51,6 @@ const SaccoGallery = () => {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     axios.get("https://mufate-g-sacco.onrender.com/gallery")
@@ -74,12 +72,27 @@ const SaccoGallery = () => {
   );
 
   return (
-    <Box sx={{ bgcolor: BRAND.dark, minHeight: "100vh", py: 10, position: "relative", overflow: "hidden" }}>
+    <Box sx={{ 
+      minHeight: "100vh", 
+      py: 10, 
+      position: "relative", 
+      overflow: "hidden",
+      backgroundColor: BRAND.dark,
+      // --- BACKGROUND IMAGE & GREENISH SHADOW IMPLEMENTATION ---
+      backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768160651/camera_background_tq9lbp.png)`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: "fixed",
+      "&::before": {
+        content: '""',
+        position: "absolute",
+        top: 0, left: 0, right: 0, bottom: 0,
+        // This creates the deep green tint and the side shadows
+        background: `linear-gradient(135deg, rgba(2, 21, 15, 0.95) 0%, rgba(2, 21, 15, 0.7) 50%, rgba(2, 21, 15, 0.95) 100%)`,
+        zIndex: 1
+      }
+    }}>
       
-      {/* Dynamic Background Decorations */}
-      <Box sx={{ position: "absolute", top: "-10%", right: "-10%", width: "400px", height: "400px", background: `radial-gradient(circle, ${BRAND.gold}11 0%, transparent 70%)`, filter: "blur(80px)" }} />
-      <Box sx={{ position: "absolute", bottom: "10%", left: "-5%", width: "300px", height: "300px", background: `radial-gradient(circle, ${BRAND.gold}08 0%, transparent 70%)`, filter: "blur(60px)" }} />
-
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 2 }}>
         
         {/* Header Section */}
@@ -98,7 +111,6 @@ const SaccoGallery = () => {
           </Typography>
         </Stack>
 
-        {/* Gallery Content */}
         <LightGallery 
           speed={500} 
           plugins={[lgZoom, lgThumbnail, lgAutoplay]} 
@@ -128,12 +140,11 @@ const SaccoGallery = () => {
                         }}
                       />
                       
-                      {/* Interactive Overlay */}
                       <Box className="overlay" sx={{ 
                         position: "absolute", inset: 0, 
-                        background: "linear-gradient(to top, rgba(2,21,15,0.9) 0%, transparent 60%)",
+                        background: "linear-gradient(to top, rgba(2,21,15,0.95) 0%, transparent 60%)",
                         display: "flex", flexDirection: "column", justifyContent: "flex-end",
-                        p: 3, opacity: 0.7, transition: "opacity 0.4s"
+                        p: 3, opacity: 0.8, transition: "opacity 0.4s"
                       }}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center">
                           <Box>
@@ -157,7 +168,6 @@ const SaccoGallery = () => {
           </Grid>
         </LightGallery>
 
-        {/* Brand Footer Aesthetic */}
         <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 10, opacity: 0.4 }} spacing={2}>
            <Divider sx={{ width: 100, borderColor: BRAND.gold }} />
            <GalleryIcon sx={{ color: BRAND.gold }} />
