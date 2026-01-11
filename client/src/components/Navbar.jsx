@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import {
-  AppBar, Toolbar, Box, Button, Link, Stack, Paper, IconButton,
+  AppBar, Toolbar, Box, Button, Link, Stack, IconButton,
   Typography, useTheme, useMediaQuery, Drawer,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const BRAND_GOLD = '#EC9B14';
 const BRAND_DARK = '#02150F'; 
@@ -19,21 +19,12 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // SMOOTH SCROLL HANDLER
   const handleContactClick = (e) => {
     setDrawerOpen(false);
-    
     if (location.pathname === '/contact') {
-      e.preventDefault();
       const element = document.getElementById('contact-section');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Auto-focus the first input field for better UX
-        const firstInput = element.querySelector('input');
-        if (firstInput) firstInput.focus();
-      }
+      if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-      // If not on contact page, navigate there first
       navigate('/contact');
     }
   };
@@ -43,40 +34,37 @@ const Navbar = () => {
     { to: '/about', label: 'About Us' },
     { to: '/products', label: 'Products' },
     { to: '/services', label: 'Services' },
-    { to: '/resources', label: 'Resources' },
-    { to: '/careers', label: 'Careers' },
     { to: '/membership', label: 'Membership' },
-    { to: '/faqs', label: 'FAQs' },
-    { to: '/news', label: 'Media' },
+    { to: '/media', label: 'Media' },
+    { to: '/careers', label: 'Careers' },
   ];
 
   const premiumButtonStyle = {
-    background: 'linear-gradient(to right, #04522F, #0B8A4A)',
+    background: `linear-gradient(90deg, #04522F, #0B8A4A)`,
     color: BRAND_GOLD,
-    fontWeight: 'bold',
+    fontWeight: 800,
     px: 3, py: 1,
-    borderRadius: '30px',
+    borderRadius: '12px',
     textTransform: 'uppercase',
-    letterSpacing: '1px',
-    transition: 'all 0.3s ease',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+    fontSize: '0.75rem',
+    border: `1px solid ${BRAND_GOLD}44`,
+    transition: '0.3s all ease',
     '&:hover': {
-      background: 'linear-gradient(to right, #0B8A4A, #04522F)',
-      transform: 'scale(1.05)',
-      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6)',
-      letterSpacing: '1.5px',
+      transform: 'translateY(-2px)',
+      boxShadow: `0 8px 20px rgba(0,0,0,0.4)`,
+      borderColor: BRAND_GOLD
     },
   };
 
   const sharedLinkStyles = (isActive) => ({
-    fontWeight: isActive ? 'bold' : 500,
-    color: BRAND_GOLD,
-    textShadow: isActive ? '0 0 5px rgba(236, 155, 20, 0.6)' : 'none',
-    transform: isActive ? 'scale(1.03)' : 'scale(1)',
+    fontWeight: 700,
+    fontSize: '0.85rem',
+    color: isActive ? BRAND_GOLD : BRAND_TEXT_LIGHT,
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
     textDecoration: 'none',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    '&:hover': { color: BRAND_GOLD, transform: 'translateY(-3px) scale(1.05)' },
+    transition: '0.3s all ease',
+    '&:hover': { color: BRAND_GOLD, transform: 'translateY(-2px)' },
   });
 
   const NavDropdown = ({ label, items, isActive }) => (
@@ -84,18 +72,19 @@ const Navbar = () => {
       <Link underline="none" sx={sharedLinkStyles(isActive)}>{label}</Link>
       <Box
         className="dropdown-menu"
-        component={motion.div}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
         sx={{
-          position: 'absolute', top: '100%', left: 0, display: 'none', flexDirection: 'column',
-          backgroundColor: BRAND_DARK, borderRadius: 1, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.4)',
-          minWidth: 200, zIndex: 10, py: 1, border: `1px solid ${BRAND_GOLD}33`
+          position: 'absolute', top: '100%', left: '-20px', display: 'none', flexDirection: 'column',
+          backgroundColor: 'rgba(2, 21, 15, 0.95)', backdropFilter: 'blur(10px)',
+          borderRadius: '12px', minWidth: 180, zIndex: 100, py: 2, mt: 1,
+          border: `1px solid ${BRAND_GOLD}33`, boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
         }}
       >
         {items.map((item) => (
           <Link key={item.to} component={RouterLink} to={item.to} underline="none"
-            sx={{ px: 2, py: 1, textDecoration: 'none', color: BRAND_TEXT_LIGHT, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.04)', color: BRAND_GOLD } }}>
+            sx={{ 
+              px: 3, py: 1.2, color: BRAND_TEXT_LIGHT, fontSize: '0.8rem', fontWeight: 600,
+              '&:hover': { backgroundColor: 'rgba(236, 155, 20, 0.1)', color: BRAND_GOLD } 
+            }}>
             {item.label}
           </Link>
         ))}
@@ -104,69 +93,57 @@ const Navbar = () => {
   );
 
   return (
-    <AppBar position="sticky" component={Paper} elevation={6} sx={{
-      backgroundColor: 'rgba(2, 21, 15, 0.92)', backdropFilter: 'blur(10px)',
-      borderBottom: '2px solid', borderColor: BRAND_GOLD, color: BRAND_TEXT_LIGHT,
+    <AppBar position="sticky" elevation={0} sx={{
+      backgroundColor: 'transparent',
+      backdropFilter: 'blur(12px)',
+      borderBottom: `1px solid rgba(255,255,255,0.05)`,
       zIndex: theme.zIndex.appBar,
     }}>
-      <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.6, md: 1.4 }, minHeight: { xs: 90, md: 120 } }}>
+      <Toolbar sx={{ justifyContent: 'space-between', py: 1, minHeight: { xs: 80, md: 100 } }}>
         
-        {/* LOGO SECTION */}
-        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-          <Link component={RouterLink} to="/" underline="none" sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}>
+        {/* LOGO */}
+        <Box sx={{ flex: 1 }}>
+          <Link component={RouterLink} to="/" underline="none" sx={{ display: 'flex', alignItems: 'center' }}>
             <Box component="img" src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
-                 sx={{ height: isMobile ? 50 : 75, width: 'auto', objectFit: 'contain' }} />
-            <Stack spacing={0.1} sx={{ ml: 1.5 }}>
-              <Typography sx={{ fontSize: { xs: '0.8rem', md: '1.05rem' }, fontWeight: 700, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.16em', lineHeight: 1.1 }}>
-                Golden Generation
-              </Typography>
-              <Typography sx={{ fontSize: { xs: '0.75rem', md: '0.95rem' }, fontWeight: 700, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.28em', lineHeight: 1.1 }}>
-                DT SACCO
-              </Typography>
-              <Typography sx={{ display: { xs: 'none', sm: 'block' }, fontSize: { sm: '0.75rem', md: '0.9rem' }, fontWeight: 400, fontStyle: 'italic', color: BRAND_TEXT_LIGHT, lineHeight: 1.2 }}>
-                Walking With You
-              </Typography>
-            </Stack>
+                 sx={{ height: { xs: 45, md: 65 }, width: 'auto' }} />
+            <Box sx={{ ml: 1.5 }}>
+              <Typography sx={{ fontSize: '0.9rem', fontWeight: 900, color: BRAND_GOLD, lineHeight: 1, letterSpacing: '1px' }}>GOLDEN GENERATION</Typography>
+              <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, color: BRAND_GOLD, letterSpacing: '2.5px' }}>DT SACCO</Typography>
+            </Box>
           </Link>
         </Box>
 
-        {/* DESKTOP NAV */}
+        {/* DESKTOP MENU */}
         {!isMobile ? (
-          <>
-            <Stack direction="row" spacing={3} sx={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
-              {navLinks.map((item) => {
-                const isActive = location.pathname.startsWith(item.to) && (item.to !== '/' || location.pathname === '/');
-                if (item.label === 'About Us') return <NavDropdown key="about" label="About Us" isActive={isActive} items={[{ to: '/about/who-we-are', label: 'Profile' }, { to: '/about/board-of-directors', label: 'Board' }, { to: '/about/management', label: 'Management' }]} />;
-                if (item.label === 'Products') return <NavDropdown key="products" label="Products" isActive={isActive} items={[{ to: '/products/fosa', label: 'FOSA' }, { to: '/products/bosa', label: 'BOSA' }, { to: '/products/savings', label: 'Savings' }]} />;
-                if (item.label === 'Media') return <NavDropdown key="media" label="Media" isActive={isActive} items={[{ to: '/news/media/blogs', label: 'News' },{ to: '/media/gallery', label: 'Gallery' }, { to: '/videos', label: 'Videos' }]} />;
-                return <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(isActive)}>{item.label}</Link>;
-              })}
-              <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register Here</Button>
-            </Stack>
+          <Stack direction="row" spacing={4} sx={{ flex: 2, justifyContent: 'center' }}>
+            {navLinks.map((item) => {
+              const isActive = location.pathname.startsWith(item.to);
+              if (item.label === 'About Us') return <NavDropdown key="about" label="About Us" isActive={isActive} items={[{ to: '/about/who-we-are', label: 'Our Profile' }, { to: '/about/board-of-directors', label: 'The Board' }, { to: '/about/management', label: 'Management' }]} />;
+              if (item.label === 'Products') return <NavDropdown key="products" label="Products" isActive={isActive} items={[{ to: '/products/fosa', label: 'FOSA Accounts' }, { to: '/products/bosa', label: 'BOSA Savings' }, { to: '/products/savings', label: 'Investment Plans' }]} />;
+              if (item.label === 'Media') return <NavDropdown key="media" label="Media" isActive={isActive} items={[{ to: '/media/news', label: 'Latest News' }, { to: '/media/insights', label: 'Golden Insights' }, { to: '/media/gallery', label: 'Photo Gallery' }]} />;
+              return <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(isActive)}>{item.label}</Link>;
+            })}
+          </Stack>
+        ) : null}
 
-            {/* SMOOTH ACTION CONTACT BUTTON */}
-            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
-              <Button onClick={handleContactClick} startIcon={<PhoneIcon />} sx={premiumButtonStyle}>Contact Us</Button>
-            </Box>
-          </>
-        ) : (
-          <IconButton onClick={() => setDrawerOpen(true)}><MenuIcon sx={{ color: BRAND_GOLD }} /></IconButton>
-        )}
+        {/* ACTIONS */}
+        <Stack direction="row" spacing={2} sx={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
+          {!isMobile && <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>}
+          <Button onClick={handleContactClick} sx={{ ...premiumButtonStyle, background: BRAND_GOLD, color: BRAND_DARK }}>Contact</Button>
+          {isMobile && <IconButton onClick={() => setDrawerOpen(true)}><MenuIcon sx={{ color: BRAND_GOLD }} /></IconButton>}
+        </Stack>
 
         {/* MOBILE DRAWER */}
-        <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ '& .MuiDrawer-paper': { width: '80%', padding: 2, backgroundColor: BRAND_DARK, color: BRAND_TEXT_LIGHT } }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, pb: 1, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-             <Box component="img" src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png" sx={{ height: 40, mr: 1 }} />
-             <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, color: BRAND_GOLD }}>GOLDEN GENERATION DT SACCO</Typography>
+        <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ '& .MuiDrawer-paper': { width: 280, backgroundColor: BRAND_DARK } }}>
+          <Box sx={{ p: 3 }}>
+             <Typography sx={{ color: BRAND_GOLD, fontWeight: 900, mb: 4 }}>MENU</Typography>
+             <Stack spacing={3}>
+               {navLinks.map(link => (
+                 <Link key={link.to} component={RouterLink} to={link.to} onClick={() => setDrawerOpen(false)} sx={{ color: '#FFF', textDecoration: 'none', fontWeight: 600 }}>{link.label}</Link>
+               ))}
+               <Button component={RouterLink} to="/customer_registration" fullWidth sx={premiumButtonStyle}>Register Here</Button>
+             </Stack>
           </Box>
-
-          <Stack spacing={2}>
-            {navLinks.map((item) => (
-              <Link key={item.to} component={RouterLink} to={item.to} onClick={() => setDrawerOpen(false)} underline="none" sx={{ color: BRAND_TEXT_LIGHT, py: 0.5 }}>{item.label}</Link>
-            ))}
-            <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle} fullWidth onClick={() => setDrawerOpen(false)}>Register Here</Button>
-            <Button onClick={handleContactClick} startIcon={<PhoneIcon />} sx={premiumButtonStyle} fullWidth>Contact Us</Button>
-          </Stack>
         </Drawer>
       </Toolbar>
     </AppBar>
