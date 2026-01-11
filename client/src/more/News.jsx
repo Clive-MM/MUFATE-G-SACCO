@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import axios from 'axios';
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Slider from 'react-slick';
 import AOS from 'aos';
 
@@ -13,7 +13,6 @@ import {
 
 // Icons
 import { 
-  Search as SearchIcon, 
   Whatshot as HotIcon, 
   AccessTime as TimeIcon,
   AutoAwesome as SparkleIcon,
@@ -57,9 +56,6 @@ const News = () => {
   const sliderRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
   useEffect(() => {
     axios.get('https://mufate-g-sacco.onrender.com/posts')
@@ -115,15 +111,10 @@ const News = () => {
         zIndex: 1
       }
     }}>
-      {/* Scroll Progress Bar */}
-      <motion.div style={{ 
-        scaleX, position: 'fixed', top: 0, left: 0, right: 0, 
-        height: 3, background: BRAND.gold, transformOrigin: '0%', zIndex: 2000 
-      }} />
       
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 2 }}>
         
-        {/* Elite Header - Exactly matches Gallery for uniformity */}
+        {/* Elite Header - Uniform with Gallery */}
         <Stack alignItems="center" spacing={2} sx={{ mb: 8, textAlign: "center" }}>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
@@ -223,7 +214,7 @@ const News = () => {
                 ))}
               </Slider>
 
-              {/* Navigation Arrows - Uniform with Gallery Icon style */}
+              {/* Navigation Arrows */}
               <Stack direction="row" spacing={2} sx={{ mt: 2, px: 1.5 }}>
                 <IconButton 
                   onClick={() => sliderRef.current.slickPrev()} 
@@ -241,9 +232,18 @@ const News = () => {
             </Box>
           </Grid>
 
-          {/* RIGHT: ICYMI Sidebar */}
+          {/* RIGHT: ICYMI Sidebar - Glassmorphism Finalized */}
           <Grid item xs={12} md={4}>
-            <Box sx={{ position: 'sticky', top: 100 }}>
+            <Box sx={{ 
+              position: 'sticky', 
+              top: 100,
+              background: "rgba(255, 255, 255, 0.02)",
+              backdropFilter: "blur(15px)",
+              borderRadius: "28px",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
+              p: 3,
+              boxShadow: "0 10px 40px rgba(0,0,0,0.4)"
+            }}>
                 <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
                     <HotIcon sx={{ color: BRAND.gold, fontSize: '1.5rem' }} />
                     <Typography variant="h5" sx={{ fontWeight: 900, color: '#FFF', letterSpacing: '1px' }}>
@@ -256,7 +256,7 @@ const News = () => {
                         <motion.div key={i} whileHover={{ x: 10 }} style={{ cursor: 'pointer' }}>
                             <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={4}>
-                                    <Box sx={{ height: 80, borderRadius: '15px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                                    <Box sx={{ height: 80, borderRadius: '15px', overflow: 'hidden', border: `1px solid ${BRAND.gold}33` }}>
                                         <img src={post.CoverImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
                                     </Box>
                                 </Grid>
@@ -276,10 +276,18 @@ const News = () => {
                     ))}
                 </Stack>
 
-                <Box sx={{ mt: 6, p: 3, borderRadius: '20px', background: 'linear-gradient(135deg, rgba(236, 155, 20, 0.1) 0%, transparent 100%)', border: '1px solid rgba(236, 155, 20, 0.2)' }}>
-                  <Typography variant="h6" sx={{ color: BRAND.gold, fontWeight: 800, mb: 1 }}>Stay Informed</Typography>
+                <Box sx={{ 
+                  mt: 4, 
+                  p: 2, 
+                  borderRadius: '15px', 
+                  background: 'rgba(236, 155, 20, 0.05)', 
+                  border: '1px solid rgba(236, 155, 20, 0.2)' 
+                }}>
+                  <Typography variant="subtitle2" sx={{ color: BRAND.gold, fontWeight: 800, mb: 0.5 }}>
+                    Secure Updates
+                  </Typography>
                   <Typography variant="caption" sx={{ color: BRAND.textMuted }}>
-                    Get the latest Sacco milestones and financial insights delivered to your screen.
+                    Financial insights from the Golden Generation DT SACCO.
                   </Typography>
                 </Box>
             </Box>
