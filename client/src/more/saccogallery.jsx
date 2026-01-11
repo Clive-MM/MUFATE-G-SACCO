@@ -199,7 +199,7 @@ const SaccoGallery = () => {
         </LightGallery>
 
         {/* CTA Section */}
-        <Box sx={{ mt: 15, p: { xs: 4, md: 8 }, borderRadius: "40px", background: "rgba(236, 155, 20, 0.03)", border: `1px solid ${BRAND.gold}33`, textAlign: "center", position: 'relative', overflow: 'hidden' }}>
+        {/* <Box sx={{ mt: 15, p: { xs: 4, md: 8 }, borderRadius: "40px", background: "rgba(236, 155, 20, 0.03)", border: `1px solid ${BRAND.gold}33`, textAlign: "center", position: 'relative', overflow: 'hidden' }}>
           <Typography variant="h3" sx={{ color: "#FFF", fontWeight: 900, mb: 2 }}>Ready to Secure Your Future?</Typography>
           <Typography sx={{ color: BRAND.textMuted, mb: 4, maxWidth: '600px', mx: 'auto' }}>
              The milestones above represent thousands of lives changed. Join Golden Generation DT SACCO today and let's build your legacy together.
@@ -215,7 +215,7 @@ const SaccoGallery = () => {
           >
             BECOME A MEMBER
           </Button>
-        </Box>
+        </Box> */}
 
         {/* Footer Accent */}
         <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 10, opacity: 0.2 }} spacing={3}>
