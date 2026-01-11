@@ -79,7 +79,7 @@ const SaccoGallery = () => {
       overflow: "hidden",
       backgroundColor: BRAND.dark,
       // --- BACKGROUND IMAGE & GREENISH SHADOW IMPLEMENTATION ---
-      backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768161277/camera_3_oikryr.png)`,
+      backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768161885/CAMERA_5_owwyrh.png)`,
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundAttachment: "fixed",
