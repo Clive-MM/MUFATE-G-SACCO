@@ -14,7 +14,7 @@ import "lightgallery/css/lg-thumbnail.css";
 // Material UI
 import {
   Container, Typography, Grid, CardMedia, CircularProgress,
-  Box, Stack, Divider, IconButton, Chip, TextField, InputAdornment
+  Box, Stack, Divider, IconButton, TextField, InputAdornment
 } from "@mui/material";
 import {
   Collections as GalleryIcon,
@@ -84,7 +84,6 @@ const SaccoGallery = () => {
       py: 10, 
       position: "relative", 
       bgcolor: BRAND.dark,
-      // Using a single-focus image with 'cover' prevents stretching
       backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768163060/camera_4_si2lla.png)`,
       backgroundSize: "cover", 
       backgroundPosition: "center", 
@@ -93,8 +92,8 @@ const SaccoGallery = () => {
         content: '""', 
         position: "absolute", 
         inset: 0,
-        // Radial gradient creates the professional "vignette" look from the preview
-        background: `radial-gradient(circle at center, rgba(2, 21, 15, 0.8) 0%, rgba(2, 21, 15, 0.98) 100%)`,
+        // Adjusted: 0.4 center alpha shows more camera detail; 0.9 edges keep focus
+        background: `radial-gradient(circle at center, rgba(2, 21, 15, 0.4) 0%, rgba(2, 21, 15, 0.9) 100%)`,
         zIndex: 1
       }
     }}>
@@ -120,25 +119,33 @@ const SaccoGallery = () => {
             GOLDEN <span style={{ color: BRAND.gold }}>GALLERY</span>
           </Typography>
 
-          {/* Search and Stats Bar */}
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} alignItems="center" sx={{ mt: 4, width: '100%', maxWidth: '800px' }}>
+          {/* Polished Glassmorphism Search Bar */}
+          <Stack direction="row" justifyContent="center" sx={{ mt: 4, width: '100%' }}>
             <TextField 
-              fullWidth
+              sx={{ 
+                maxWidth: '600px', 
+                width: '100%',
+                backdropFilter: "blur(12px)",
+                borderRadius: '15px',
+                overflow: 'hidden'
+              }}
               placeholder="Search milestones, events, or descriptions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{
-                startAdornment: <InputAdornment position="start"><FilterIcon sx={{ color: BRAND.gold }} /></InputAdornment>,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FilterIcon sx={{ color: BRAND.gold, ml: 1 }} />
+                  </InputAdornment>
+                ),
                 sx: { 
-                  color: '#FFF', bgcolor: 'rgba(255,255,255,0.05)', borderRadius: '15px',
-                  '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.3)' },
+                  color: '#FFF', 
+                  bgcolor: 'rgba(255, 255, 255, 0.08)', 
+                  '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.4)' },
                   '&:hover fieldset': { borderColor: BRAND.gold },
+                  '&.Mui-focused fieldset': { borderColor: BRAND.gold, borderWidth: '2px' },
                 }
               }}
-            />
-            <Chip 
-              label={`${filteredPhotos.length} ACTIVE MEMORIES`} 
-              sx={{ bgcolor: BRAND.gold, color: BRAND.dark, fontWeight: 900, height: '45px', px: 2 }} 
             />
           </Stack>
         </Stack>
@@ -177,7 +184,7 @@ const SaccoGallery = () => {
                         
                         <Box className="card-overlay" sx={{ 
                           position: "absolute", bottom: 0, inset: 0,
-                          background: "linear-gradient(to top, rgba(2,21,15,1) 0%, rgba(2,21,15,0.4) 50%, transparent 100%)",
+                          background: "linear-gradient(to top, rgba(2, 21, 15, 1) 0%, rgba(2, 21, 15, 0.4) 50%, transparent 100%)",
                           p: 4, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                           transform: "translateY(20px)", opacity: 0, transition: "0.4s ease"
                         }}>
