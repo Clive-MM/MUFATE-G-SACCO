@@ -142,7 +142,7 @@ const Navbar = () => {
                     items={[
                       { to: '/media/blogs', label: 'News' },
                       { to: '/media/gallery', label: 'Gallery' }, 
-                      { to: '/media/videos', label: 'Documentaries' } 
+                      { to: '/media/videos', label: 'Golden Insights' } 
                     ]} 
                   />
                 );
