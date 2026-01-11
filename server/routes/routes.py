@@ -1698,7 +1698,7 @@ We have successfully received your message regarding:
 Our team is currently reviewing your inquiry and you will hear from us very soon.
 
 If your matter is urgent, you may reach us via:
-📞 +254 791 331 932,0794515407
+📞 +254 791 331 932,+254 794 515 407
 📧 info@mudetesacco.co.ke
 
 Warm regards,
