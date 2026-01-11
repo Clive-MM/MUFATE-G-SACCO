@@ -138,7 +138,7 @@ const Navbar = () => {
                 const isActive = location.pathname.startsWith(item.to) && (item.to !== '/' || location.pathname === '/');
                 if (item.label === 'About Us') return <NavDropdown key="about" label="About Us" isActive={isActive} items={[{ to: '/about/who-we-are', label: 'Profile' }, { to: '/about/board-of-directors', label: 'Board' }, { to: '/about/management', label: 'Management' }]} />;
                 if (item.label === 'Products') return <NavDropdown key="products" label="Products" isActive={isActive} items={[{ to: '/products/fosa', label: 'FOSA' }, { to: '/products/bosa', label: 'BOSA' }, { to: '/products/savings', label: 'Savings' }]} />;
-                if (item.label === 'Media') return <NavDropdown key="media" label="Media" isActive={isActive} items={[{ to: '/news', label: 'News' }, { to: '/videos', label: 'Videos' }]} />;
+                if (item.label === 'Media') return <NavDropdown key="media" label="Media" isActive={isActive} items={[{ to: '/news/media/blogs', label: 'News' },{ to: '/media/gallery', label: 'Gallery' }, { to: '/videos', label: 'Videos' }]} />;
                 return <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(isActive)}>{item.label}</Link>;
               })}
               <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register Here</Button>
