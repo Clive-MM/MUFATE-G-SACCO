@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import axios from 'axios';
-import { motion } from 'framer-motion';
 import Slider from 'react-slick';
 
 // Material UI
@@ -22,9 +21,6 @@ import {
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
 const BRAND = {
   gold: "#EC9B14",
   dark: "#02150F", 
@@ -32,40 +28,42 @@ const BRAND = {
   textMuted: "rgba(244, 244, 244, 0.7)",
 };
 
-// The Individual News Card Style
+// COMPACT YouTube-style Card
 const NewsCard = ({ post }) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <Box sx={{ 
       bgcolor: BRAND.cardBg, 
-      borderRadius: '20px', 
-      border: `1px solid ${expanded ? BRAND.gold : 'rgba(255,255,255,0.05)'}`,
+      borderRadius: '16px', // Rounded like YT thumbnails
+      border: `1px solid rgba(255,255,255,0.08)`,
       overflow: 'hidden',
-      height: '100%',
-      transition: '0.3s'
+      transition: '0.3s',
+      maxWidth: '340px', // Prevents the card from stretching too wide
+      margin: '0 auto',
+      '&:hover': { transform: 'translateY(-4px)', borderColor: BRAND.gold }
     }}>
-      <Box sx={{ height: 180, overflow: 'hidden' }}>
+      <Box sx={{ height: 160, overflow: 'hidden', position: 'relative' }}>
         <img src={post.CoverImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
       </Box>
-      <CardContent sx={{ p: 2.5 }}>
-        <Typography variant="caption" sx={{ color: BRAND.gold, fontWeight: 700 }}>
+      <CardContent sx={{ p: 2 }}>
+        <Typography variant="caption" sx={{ color: BRAND.gold, fontWeight: 700, fontSize: '0.7rem' }}>
           {new Date(post.DatePosted).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
         </Typography>
-        <Typography variant="h6" sx={{ color: '#FFF', fontWeight: 800, mt: 0.5, mb: 1, lineHeight: 1.2 }}>
+        <Typography variant="subtitle1" sx={{ color: '#FFF', fontWeight: 800, mt: 0.5, lineHeight: 1.2, fontSize: '0.95rem' }}>
           {post.Title}
         </Typography>
         
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <Typography sx={{ color: BRAND.textMuted, fontSize: '0.85rem', mb: 2 }}>
-            {post.Content.replace(/<[^>]*>/g, '')}
+          <Typography sx={{ color: BRAND.textMuted, fontSize: '0.8rem', mt: 1 }}>
+            {post.Content.replace(/<[^>]*>/g, '').substring(0, 100)}...
           </Typography>
         </Collapse>
 
         <Button
           onClick={() => setExpanded(!expanded)}
-          endIcon={expanded ? <CloseIcon /> : <ExpandIcon />}
-          sx={{ color: BRAND.gold, p: 0, fontWeight: 900, fontSize: '0.75rem' }}
+          endIcon={expanded ? <CloseIcon sx={{fontSize: 12}} /> : <ExpandIcon sx={{fontSize: 12}} />}
+          sx={{ color: BRAND.gold, p: 0, mt: 1, fontWeight: 900, fontSize: '0.7rem' }}
         >
           READ FULL STORY
         </Button>
@@ -92,15 +90,11 @@ const News = () => {
       .catch(() => setLoading(false));
   }, []);
 
-  const filteredPosts = useMemo(() => {
-    return posts.filter(p => p.Title?.toLowerCase().includes(searchQuery.toLowerCase()));
-  }, [searchQuery, posts]);
-
   const sliderSettings = {
     dots: false,
-    infinite: filteredPosts.length > 2,
+    infinite: posts.length > 2,
     speed: 500,
-    slidesToShow: isDesktop ? 2 : 1,
+    slidesToShow: isDesktop ? 2 : 1, // Shows 2 compact cards on the right
     slidesToScroll: 1,
     arrows: false,
   };
@@ -108,12 +102,12 @@ const News = () => {
   if (loading) return <Box sx={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", bgcolor: BRAND.dark }}><CircularProgress sx={{ color: BRAND.gold }} /></Box>;
 
   return (
-    <Box sx={{ minHeight: "100vh", py: 6, bgcolor: BRAND.dark, color: '#FFF' }}>
+    <Box sx={{ minHeight: "100vh", py: 4, bgcolor: BRAND.dark, color: '#FFF' }}>
       <Container maxWidth="xl">
         
-        {/* Header Section */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h3" sx={{ fontWeight: 900 }}>
+        {/* Header - Moved to align with content */}
+        <Box sx={{ mb: 4, pl: { md: '26%' } }}> 
+          <Typography variant="h4" sx={{ fontWeight: 900, letterSpacing: -1 }}>
             THE <span style={{ color: BRAND.gold }}>NEWSROOM</span>
           </Typography>
           <TextField
@@ -121,74 +115,80 @@ const News = () => {
             placeholder="Search news..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{ mt: 2, maxWidth: '400px', width: '100%', bgcolor: 'rgba(255,255,255,0.05)', borderRadius: '10px' }}
+            sx={{ mt: 1.5, maxWidth: '300px', width: '100%', bgcolor: 'rgba(255,255,255,0.05)', borderRadius: '8px' }}
             InputProps={{
-              startAdornment: <InputAdornment position="start"><FilterIcon sx={{ color: BRAND.gold }} /></InputAdornment>,
-              sx: { color: '#FFF' }
+              startAdornment: <InputAdornment position="start"><FilterIcon sx={{ color: BRAND.gold, fontSize: 18 }} /></InputAdornment>,
+              sx: { color: '#FFF', fontSize: '0.85rem' }
             }}
           />
         </Box>
 
-        {/* SIDE BY SIDE LAYOUT */}
-        <Grid container spacing={3} alignItems="flex-start">
+        <Grid container spacing={2}>
           
-          {/* LEFT BOX: News Cards Slider */}
-          <Grid item xs={12} md={8}>
+          {/* LEFT SIDE: ICYMI Menu (Accommodated on the left) */}
+          <Grid item xs={12} md={3}>
             <Box sx={{ 
-              bgcolor: 'rgba(255,255,255,0.02)', 
-              p: { xs: 2, md: 4 }, 
+              bgcolor: 'rgba(255,255,255,0.03)', 
+              p: 2.5, 
+              borderRadius: '20px', 
+              border: '1px solid rgba(255,255,255,0.08)',
+              position: 'sticky',
+              top: 20
+            }}>
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
+                <HotIcon sx={{ color: BRAND.gold, fontSize: 20 }} />
+                <Typography variant="h6" sx={{ fontWeight: 900, fontSize: '1.1rem' }}>ICYMI</Typography>
+              </Stack>
+
+              <Stack spacing={2.5}>
+                {posts.slice(0, 5).map((post, i) => (
+                  <Stack key={i} direction="row" spacing={1.5} alignItems="center">
+                    <Box sx={{ width: 50, height: 50, borderRadius: '8px', overflow: 'hidden', flexShrink: 0 }}>
+                      <img src={post.CoverImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontWeight: 800, lineHeight: 1.1, display: 'block', color: '#FFF', fontSize: '0.75rem' }}>
+                        {post.Title.substring(0, 35)}...
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: BRAND.textMuted, fontSize: '0.65rem' }}>1/12/2026</Typography>
+                    </Box>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+          </Grid>
+
+          {/* RIGHT SIDE: Narrowed News Cards Slider */}
+          <Grid item xs={12} md={9}>
+            <Box sx={{ 
+              bgcolor: 'rgba(255,255,255,0.015)', 
+              p: { xs: 2, md: 3 }, 
               borderRadius: '24px', 
-              border: '1px solid rgba(255,255,255,0.05)' 
+              border: '1px solid rgba(255,255,255,0.04)',
+              ml: { md: 2 } // Adds space from the sidebar
             }}>
               <Slider ref={sliderRef} {...sliderSettings}>
-                {filteredPosts.map((post) => (
+                {posts.map((post) => (
                   <Box key={post.PostID} sx={{ px: 1 }}>
                     <NewsCard post={post} />
                   </Box>
                 ))}
               </Slider>
               
-              <Stack direction="row" spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
-                <IconButton onClick={() => sliderRef.current.slickPrev()} sx={{ border: '1px solid rgba(255,255,255,0.1)', color: BRAND.gold }}><LeftIcon /></IconButton>
-                <IconButton onClick={() => sliderRef.current.slickNext()} sx={{ border: '1px solid rgba(255,255,255,0.1)', color: BRAND.gold }}><RightIcon /></IconButton>
+              <Stack direction="row" spacing={1.5} sx={{ mt: 3, justifyContent: 'center' }}>
+                <IconButton 
+                  onClick={() => sliderRef.current.slickPrev()} 
+                  sx={{ border: '1px solid rgba(255,255,255,0.05)', color: BRAND.gold, width: 35, height: 35 }}
+                >
+                  <LeftIcon fontSize="small" />
+                </IconButton>
+                <IconButton 
+                  onClick={() => sliderRef.current.slickNext()} 
+                  sx={{ border: '1px solid rgba(255,255,255,0.05)', color: BRAND.gold, width: 35, height: 35 }}
+                >
+                  <RightIcon fontSize="small" />
+                </IconButton>
               </Stack>
-            </Box>
-          </Grid>
-
-          {/* RIGHT BOX: ICYMI Sidebar */}
-          <Grid item xs={12} md={4}>
-            <Box sx={{ 
-              bgcolor: 'rgba(255,255,255,0.03)', 
-              p: 3, 
-              borderRadius: '24px', 
-              border: '1px solid rgba(255,255,255,0.08)' 
-            }}>
-              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
-                <HotIcon sx={{ color: BRAND.gold }} />
-                <Typography variant="h5" sx={{ fontWeight: 900 }}>ICYMI</Typography>
-              </Stack>
-
-              <Stack spacing={3}>
-                {posts.slice(0, 4).map((post, i) => (
-                  <Stack key={i} direction="row" spacing={2} alignItems="center">
-                    <Box sx={{ width: 60, height: 60, borderRadius: '12px', overflow: 'hidden', flexShrink: 0 }}>
-                      <img src={post.CoverImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-                    </Box>
-                    <Box>
-                      <Typography variant="body2" sx={{ fontWeight: 800, lineHeight: 1.2 }}>{post.Title}</Typography>
-                      <Stack direction="row" alignItems="center" spacing={0.5}>
-                        <TimeIcon sx={{ fontSize: '0.8rem', color: BRAND.gold }} />
-                        <Typography variant="caption" sx={{ color: BRAND.textMuted }}>1/12/2026</Typography>
-                      </Stack>
-                    </Box>
-                  </Stack>
-                ))}
-              </Stack>
-
-              <Box sx={{ mt: 4, p: 2, bgcolor: 'rgba(236, 155, 20, 0.05)', borderRadius: '15px', border: '1px solid rgba(236, 155, 20, 0.2)' }}>
-                <Typography variant="subtitle2" sx={{ color: BRAND.gold, fontWeight: 900 }}>Secure Updates</Typography>
-                <Typography variant="caption" sx={{ color: BRAND.textMuted }}>Official insights from Golden Generation DT SACCO.</Typography>
-              </Box>
             </Box>
           </Grid>
 
