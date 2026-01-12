@@ -229,78 +229,83 @@ const News = () => {
 
 
       {/* PAGE CONTENT CONTAINER */}
-<Container maxWidth="xl" sx={{ mt: 6 }}>
-  {/* container spacing is kept low (2) to prevent pushing items apart too much */}
-  <Grid container spacing={2} alignItems="flex-start" justifyContent="center">
+      {/* Change 1: disableGutters and maxWidth={false} allows us to control the "stretch" manually */}
+      <Container maxWidth={false} sx={{ mt: 6, px: { xs: 2, md: 6, lg: 10 } }}>
+        <Grid container spacing={3} alignItems="flex-start" justifyContent="center">
 
-    {/* LEFT SIDE: ICYMI - Increased to md={3} to grow leftwards */}
-    <Grid item xs={12} md={3}> 
-      <Box
-        sx={{
-          bgcolor: 'rgba(255,255,255,0.03)',
-          p: 3,
-          borderRadius: '24px',
-          border: '1px solid rgba(255,255,255,0.08)',
-          position: 'sticky',
-          top: 150,
-          // We don't use ml: auto here because we want it to hug the left area
-        }}
-      >
-        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
-          <HotIcon sx={{ color: BRAND.gold, fontSize: 20 }} />
-          <Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
-            ICYMI
-          </Typography>
-        </Stack>
-
-        <Stack spacing={2.5}>
-          {posts.slice(0, 5).map((post, i) => (
-            <Stack key={i} direction="row" spacing={1.5} alignItems="center">
-              <Box sx={{ width: 50, height: 50, borderRadius: '10px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
-                <img src={post.CoverImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </Box>
-              <Box>
-                <Typography sx={{ fontWeight: 800, fontSize: '0.75rem', color: '#FFF', lineHeight: 1.1 }}>
-                  {post.Title.substring(0, 25)}...
+          {/* LEFT SIDE: ICYMI - Occupies 25% of the row */}
+          <Grid item xs={12} md={3} lg={2.5}>
+            <Box
+              sx={{
+                bgcolor: 'rgba(255,255,255,0.03)',
+                p: 3,
+                borderRadius: '24px',
+                border: '1px solid rgba(255,255,255,0.08)',
+                position: 'sticky',
+                top: 150,
+                width: '100%', // Ensures it fills its grid column entirely
+              }}
+            >
+              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
+                <HotIcon sx={{ color: BRAND.gold, fontSize: 20 }} />
+                <Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
+                  ICYMI
                 </Typography>
-                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.6rem', mt: 0.5 }}>1/12/2026</Typography>
-              </Box>
-            </Stack>
-          ))}
-        </Stack>
-      </Box>
-    </Grid>
+              </Stack>
 
-    {/* RIGHT SIDE: NEW UPDATES - md={9} stays the same to prevent downward wrapping */}
-    <Grid item xs={12} md={9}>
-      <Box
-        sx={{
-          bgcolor: 'rgba(255,255,255,0.01)',
-          p: 3,
-          borderRadius: '32px',
-          border: '1px solid rgba(255,255,255,0.04)',
-          maxWidth: '980px', // Slightly increased to keep cards looking premium
-          ml: 2,             // Constant gap between sidebar and grid
-          mr: 'auto'          
-        }}
-      >
-        <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, ml: 1 }}>
-          NEW <span style={{ color: BRAND.gold }}>UPDATES</span>
-        </Typography>
+              <Stack spacing={2.5}>
+                {posts.slice(0, 5).map((post, i) => (
+                  <Stack key={i} direction="row" spacing={1.5} alignItems="center">
+                    <Box sx={{ width: 50, height: 50, borderRadius: '10px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <img src={post.CoverImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </Box>
+                    <Box>
+                      <Typography sx={{ fontWeight: 800, fontSize: '0.75rem', color: '#FFF', lineHeight: 1.1 }}>
+                        {post.Title.substring(0, 25)}...
+                      </Typography>
+                      <Typography sx={{ color: BRAND.textMuted, fontSize: '0.6rem', mt: 0.5 }}>1/12/2026</Typography>
+                    </Box>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+          </Grid>
 
-        {/* NESTED GRID: Strictly 3 cards per row */}
-        <Grid container spacing={3}>
-          {filteredPosts.map((post) => (
-            <Grid item xs={12} sm={6} md={4} key={post.PostID}>
-              <NewsCard post={post} />
-            </Grid>
-          ))}
+          {/* RIGHT SIDE: NEW UPDATES - Occupies the remaining 75% of the row */}
+          <Grid item xs={12} md={9} lg={9.5}>
+            <Box
+              sx={{
+                bgcolor: 'rgba(255,255,255,0.01)',
+                p: { xs: 2, md: 4 },
+                borderRadius: '32px',
+                border: '1px solid rgba(255,255,255,0.04)',
+                width: '100%', // REMOVED maxWidth: '980px' to allow it to fill the screen
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
+              <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, ml: 1 }}>
+                NEW <span style={{ color: BRAND.gold }}>UPDATES</span>
+              </Typography>
+
+              {/* NESTED GRID: Distribution logic */}
+              <Grid
+                container
+                spacing={4} // Increased spacing to fill visual "voids"
+                justifyContent="flex-start" // Keeps them aligned left but fills the width
+              >
+                {filteredPosts.map((post) => (
+                  <Grid item xs={12} sm={6} md={4} key={post.PostID}>
+                    {/* This inner grid item will now be wider on large screens because the parent box is wider */}
+                    <NewsCard post={post} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </Grid>
+
         </Grid>
-      </Box>
-    </Grid>
-
-  </Grid>
-</Container>
+      </Container>
     </Box>
   );
 };
