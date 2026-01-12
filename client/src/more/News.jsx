@@ -230,84 +230,81 @@ const News = () => {
 
       {/* PAGE CONTENT CONTAINER */}
       {/* PAGE CONTENT CONTAINER */}
-      <Container maxWidth="xl" sx={{ mt: 6 }}>
-        {/* Key Change: alignItems="flex-start" prevents the sidebar 
-      from stretching and ensures they align at the top.
+<Container maxWidth="xl" sx={{ mt: 6 }}>
+  {/* Top-level Grid: 
+     - container spacing={4} creates the gap between sidebar and news.
+     - alignItems="flex-start" keeps the sidebar at the top.
   */}
-        <Grid container spacing={4} alignItems="flex-start">
+  <Grid container spacing={4} alignItems="flex-start">
 
-          {/* LEFT COLUMN: ICYMI (Sidebar) */}
-          {/* Occupies 4 out of 12 units on medium screens and up */}
-          <Grid item xs={12} md={3.5} lg={3}>
-            <Box
-              sx={{
-                bgcolor: 'rgba(255,255,255,0.03)',
-                p: 3,
-                borderRadius: '24px',
-                border: '1px solid rgba(255,255,255,0.08)',
-                position: 'sticky',
-                top: 150, // Anchored below your sticky newsroom header
-                zIndex: 10,
-              }}
-            >
-              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
-                <HotIcon sx={{ color: BRAND.gold, fontSize: 24 }} />
-                <Typography variant="h5" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
-                  ICYMI
+    {/* LEFT SIDE: ICYMI (3 units out of 12) */}
+    <Grid item xs={12} md={3}>
+      <Box
+        sx={{
+          bgcolor: 'rgba(255,255,255,0.03)',
+          p: 3,
+          borderRadius: '24px',
+          border: '1px solid rgba(255,255,255,0.08)',
+          position: 'sticky',
+          top: 180, // Anchored below the sticky header
+        }}
+      >
+        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
+          <HotIcon sx={{ color: BRAND.gold, fontSize: 24 }} />
+          <Typography variant="h5" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
+            ICYMI
+          </Typography>
+        </Stack>
+
+        <Stack spacing={3}>
+          {posts.slice(0, 5).map((post, i) => (
+            <Stack key={i} direction="row" spacing={2} alignItems="center">
+              <Box sx={{ width: 50, height: 50, borderRadius: '12px', overflow: 'hidden', flexShrink: 0 }}>
+                <img src={post.CoverImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </Box>
+              <Box>
+                <Typography sx={{ fontWeight: 800, fontSize: '0.75rem', color: '#FFF' }}>
+                  {post.Title.substring(0, 25)}...
                 </Typography>
-              </Stack>
+                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.6rem' }}>1/12/2026</Typography>
+              </Box>
+            </Stack>
+          ))}
+        </Stack>
+      </Box>
+    </Grid>
 
-              <Stack spacing={3}>
-                {posts.slice(0, 5).map((post, i) => (
-                  <Stack key={i} direction="row" spacing={2} alignItems="center">
-                    <Box sx={{ width: 55, height: 55, borderRadius: '12px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
-                      <img src={post.CoverImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </Box>
-                    <Box>
-                      <Typography sx={{ fontWeight: 800, fontSize: '0.8rem', color: '#FFF', lineHeight: 1.2 }}>
-                        {post.Title.length > 30 ? post.Title.substring(0, 30) + '...' : post.Title}
-                      </Typography>
-                      <Typography sx={{ color: BRAND.textMuted, fontSize: '0.65rem', mt: 0.5 }}>
-                        {new Date(post.DatePosted).toLocaleDateString()}
-                      </Typography>
-                    </Box>
-                  </Stack>
-                ))}
-              </Stack>
-            </Box>
-          </Grid>
+    {/* RIGHT SIDE: NEW UPDATES (9 units out of 12) */}
+    <Grid item xs={12} md={9}>
+      <Box
+        sx={{
+          bgcolor: 'rgba(255,255,255,0.01)',
+          p: 4,
+          borderRadius: '32px',
+          border: '1px solid rgba(255,255,255,0.04)',
+        }}
+      >
+        <Typography variant="h4" sx={{ fontWeight: 900, mb: 4 }}>
+          NEW <span style={{ color: BRAND.gold }}>UPDATES</span>
+        </Typography>
 
-          {/* RIGHT COLUMN: NEW UPDATES (The Main Grid) */}
-          {/* Occupies the remaining 8 or 9 units next to the sidebar */}
-          <Grid item xs={12} md={8.5} lg={9}>
-            <Box
-              sx={{
-                bgcolor: 'rgba(255,255,255,0.015)',
-                p: { xs: 2, md: 4 },
-                borderRadius: '32px',
-                border: '1px solid rgba(255,255,255,0.04)',
-              }}
-            >
-              <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, px: 1 }}>
-                NEW <span style={{ color: BRAND.gold }}>UPDATES</span>
-              </Typography>
-
-              {/* Internal Grid for the News Cards. 
-            sm={6} makes 2 cards per row. 
-            md={4} makes 3 cards per row (like your wireframe).
+        {/* NESTED GRID: This is the secret.
+           By placing a NEW Grid inside the md={9} item, we can 
+           control exactly how many cards appear in a row.
         */}
-              <Grid container spacing={3}>
-                {filteredPosts.map((post) => (
-                  <Grid item xs={12} sm={6} md={4} key={post.PostID}>
-                    <NewsCard post={post} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          </Grid>
-
+        <Grid container spacing={3}>
+          {filteredPosts.map((post) => (
+            <Grid item xs={12} sm={6} lg={4} key={post.PostID}>
+              {/* lg={4} creates 3 cards per row exactly like your sketch */}
+              <NewsCard post={post} />
+            </Grid>
+          ))}
         </Grid>
-      </Container>
+      </Box>
+    </Grid>
+
+  </Grid>
+</Container>
     </Box>
   );
 };
