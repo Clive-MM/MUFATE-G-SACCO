@@ -147,88 +147,87 @@ const News = () => {
     <Box sx={{ minHeight: "100vh", bgcolor: BRAND.dark, color: '#FFF', pb: 8 }}>
       
       {/* ELITE STICKY HEADER SECTION (Matches Golden Gallery) */}
-      <Box
+     {/* Elite Header */}
+<Stack alignItems="center" spacing={2} sx={{ mb: 6, textAlign: "center" }}>
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.6 }}
+  >
+    <Stack
+      direction="row"
+      spacing={1}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
+      <Typography
+        variant="overline"
         sx={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1100,
-          pt: { xs: 3, md: 5 },
-          pb: 3,
-          bgcolor: 'rgba(2, 21, 15, 0.9)', // BRAND.dark with transparency
-          backdropFilter: "blur(12px)",
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          color: BRAND.gold,
+          fontWeight: 800,
+          letterSpacing: 6,
         }}
       >
-        <Container maxWidth="xl">
-          <Stack alignItems="center" spacing={2} sx={{ textAlign: "center" }}>
-            
-            {/* Subtitle with Sparkle Animation */}
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-              <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center">
-                <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.1rem" }} />
-                <Typography 
-                  variant="overline" 
-                  sx={{ 
-                    color: BRAND.gold, 
-                    fontWeight: 800, 
-                    letterSpacing: 6,
-                    lineHeight: 1 
-                  }}
-                >
-                  The Official Newsroom
-                </Typography>
-                <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.1rem" }} />
-              </Stack>
-            </motion.div>
+        THE OFFICIAL ARCHIVE
+      </Typography>
+    </Stack>
+  </motion.div>
 
-            {/* Main Title */}
-            <Typography 
-              variant="h1" 
-              sx={{ 
-                color: "#FFF", 
-                fontWeight: 900, 
-                fontSize: { xs: "1.7rem", md: "3rem" }, 
-                textShadow: "0 10px 20px rgba(0,0,0,0.5)",
-                letterSpacing: -1
-              }}
-            >
-              GOLDEN <span style={{ color: BRAND.gold }}>NEWSROOM</span>
-            </Typography>
+  <Typography
+    variant="h1"
+    sx={{
+      color: "#FFF",
+      fontWeight: 900,
+      fontSize: { xs: "1.7rem", md: "3rem" },
+      textShadow: "0 10px 20px rgba(0,0,0,0.5)",
+    }}
+  >
+    GOLDEN <span style={{ color: BRAND.gold }}>GALLERY</span>
+  </Typography>
 
-            {/* Polished Glassmorphism Search Bar */}
-            <Stack direction="row" justifyContent="center" sx={{ mt: 2, width: '100%' }}>
-              <TextField 
-                sx={{ 
-                  maxWidth: '600px', 
-                  width: '100%',
-                  backdropFilter: "blur(12px)",
-                  borderRadius: '15px',
-                  overflow: 'hidden',
-                  boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
-                }}
-                placeholder="Search announcements or updates..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <FilterIcon sx={{ color: BRAND.gold, ml: 1 }} />
-                    </InputAdornment>
-                  ),
-                  sx: { 
-                    color: '#FFF', 
-                    bgcolor: 'rgba(255, 255, 255, 0.08)', 
-                    height: '52px',
-                    '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.3)' },
-                    '&:hover fieldset': { borderColor: BRAND.gold },
-                    '&.Mui-focused fieldset': { borderColor: BRAND.gold, borderWidth: '2px' },
-                  }
-                }}
-              />
-            </Stack>
-          </Stack>
-        </Container>
-      </Box>
+  {/* Polished Glassmorphism Search Bar */}
+  <Stack
+    direction="row"
+    justifyContent="center"
+    sx={{ mt: 4, width: "100%" }}
+  >
+    <TextField
+      placeholder="Search milestones, events, or descriptions..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      sx={{
+        maxWidth: "600px",
+        width: "100%",
+        backdropFilter: "blur(12px)",
+        borderRadius: "15px",
+        overflow: "hidden",
+      }}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <FilterIcon sx={{ color: BRAND.gold, ml: 1 }} />
+          </InputAdornment>
+        ),
+        sx: {
+          color: "#FFF",
+          bgcolor: "rgba(255, 255, 255, 0.08)",
+          "& fieldset": {
+            borderColor: "rgba(236, 155, 20, 0.4)",
+          },
+          "&:hover fieldset": {
+            borderColor: BRAND.gold,
+          },
+          "&.Mui-focused fieldset": {
+            borderColor: BRAND.gold,
+            borderWidth: "2px",
+          },
+        },
+      }}
+    />
+  </Stack>
+</Stack>
+
 
       {/* PAGE CONTENT CONTAINER */}
       <Container maxWidth="xl" sx={{ mt: 6 }}>
