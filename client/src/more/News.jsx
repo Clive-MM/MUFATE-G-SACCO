@@ -145,45 +145,72 @@ const News = () => {
     <Box sx={{ minHeight: "100vh", py: 8, bgcolor: BRAND.dark, color: '#FFF' }}>
       <Container maxWidth="xl">
 
-        {/* TOP HEADER SECTION: Matches your pen/paper sketch */}
-        <Stack 
-          direction={{ xs: 'column', md: 'row' }} 
-          justifyContent="space-between" 
-          alignItems={{ md: 'center' }} 
-          sx={{ mb: 6 }}
-        >
-          <Box>
-            <Typography variant="h3" sx={{ fontWeight: 900, letterSpacing: -1 }}>
-              THE <span style={{ color: BRAND.gold }}>NEWSROOM</span>
-            </Typography>
-          </Box>
+        <Stack alignItems="center" spacing={2} sx={{ mb: 8, textAlign: "center" }}>
+  {/* Subtitle with Sparkle */}
+  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+    <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center">
+      <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
+      <Typography 
+        variant="overline" 
+        sx={{ 
+          color: BRAND.gold, 
+          fontWeight: 800, 
+          letterSpacing: 4, 
+          textTransform: 'uppercase' 
+        }}
+      >
+        The Official Newsroom
+      </Typography>
+      <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
+    </Stack>
+  </motion.div>
 
-          <TextField
-            size="small"
-            placeholder="Search news articles..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            sx={{
-              mt: { xs: 2, md: 0 },
-              maxWidth: '400px',
-              width: '100%',
-              bgcolor: 'rgba(255,255,255,0.05)',
-              borderRadius: '12px',
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' },
-                '&:hover fieldset': { borderColor: BRAND.gold },
-              }
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <FilterIcon sx={{ color: BRAND.gold, fontSize: 20 }} />
-                </InputAdornment>
-              ),
-              sx: { color: '#FFF', fontSize: '0.9rem', px: 1 }
-            }}
-          />
-        </Stack>
+  {/* Main Title */}
+  <Typography 
+    variant="h1" 
+    sx={{ 
+      color: "#FFF", 
+      fontWeight: 900, 
+      fontSize: { xs: "2.2rem", md: "3.5rem" }, 
+      textShadow: "0 10px 30px rgba(0,0,0,0.6)",
+      letterSpacing: -1
+    }}
+  >
+    GOLDEN <span style={{ color: BRAND.gold }}>NEWSROOM</span>
+  </Typography>
+
+  {/* Polished Glassmorphism Search Bar */}
+  <Stack direction="row" justifyContent="center" sx={{ mt: 2, width: '100%' }}>
+    <TextField 
+      sx={{ 
+        maxWidth: '600px', 
+        width: '100%',
+        backdropFilter: "blur(12px)",
+        borderRadius: '15px',
+        overflow: 'hidden',
+        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+      }}
+      placeholder="Search for announcements, sacco news, or updates..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <FilterIcon sx={{ color: BRAND.gold, ml: 1 }} />
+          </InputAdornment>
+        ),
+        sx: { 
+          color: '#FFF', 
+          bgcolor: 'rgba(255, 255, 255, 0.05)', 
+          height: '56px',
+          '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.3)' },
+          '&:hover fieldset': { borderColor: BRAND.gold },
+          '&.Mui-focused fieldset': { borderColor: BRAND.gold, borderWidth: '2px' },
+        }
+      }}
+    />
+  </Stack>
+</Stack>
 
         {/* MAIN LAYOUT: Grid size={4} and size={8} */}
         <Grid container spacing={4}>
