@@ -229,107 +229,87 @@ const News = () => {
 
 
       {/* PAGE CONTENT CONTAINER */}
-      <Container maxWidth="xl" sx={{ mt: 6 }}>
-        <Grid container spacing={4}>
+<Container maxWidth="xl" sx={{ mt: 6 }}>
+  <Grid container spacing={4} alignItems="flex-start">
 
-          {/* LEFT COLUMN: ICYMI (Sticky Sidebar) */}
-          <Grid item xs={12} md={4}>
-            <Box
-              sx={{
-                bgcolor: 'rgba(255,255,255,0.03)',
-                p: 3,
-                borderRadius: '24px',
-                border: '1px solid rgba(255,255,255,0.08)',
-                position: 'sticky',
-                top: 240, // Offset to account for the sticky header height
-              }}
-            >
-              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
-                <HotIcon sx={{ color: BRAND.gold, fontSize: 24 }} />
-                <Typography variant="h5" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
-                  ICYMI
-                </Typography>
-              </Stack>
+    {/* LEFT COLUMN: ICYMI (Sticky Sidebar as seen in sketch) */}
+    <Grid item xs={12} md={4}>
+      <Box
+        sx={{
+          bgcolor: 'rgba(255,255,255,0.03)',
+          p: 3,
+          borderRadius: '24px',
+          border: '1px solid rgba(255,255,255,0.08)',
+          position: 'sticky',
+          top: 180, // Anchored below your sticky newsroom header
+          backdropFilter: "blur(10px)",
+        }}
+      >
+        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
+          <HotIcon sx={{ color: BRAND.gold, fontSize: 24 }} />
+          <Typography variant="h5" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
+            ICYMI
+          </Typography>
+        </Stack>
 
-              <Stack spacing={3}>
-                {posts.slice(0, 5).map((post, i) => (
-                  <Stack key={i} direction="row" spacing={2} alignItems="center">
-                    <Box sx={{ width: 65, height: 65, borderRadius: '12px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
-                      <img src={post.CoverImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </Box>
-                    <Box>
-                      <Typography sx={{ fontWeight: 800, fontSize: '0.9rem', color: '#FFF', lineHeight: 1.2 }}>
-                        {post.Title.length > 40 ? post.Title.substring(0, 40) + '...' : post.Title}
-                      </Typography>
-                      <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem', mt: 0.5 }}>
-                        {new Date(post.DatePosted).toLocaleDateString()}
-                      </Typography>
-                    </Box>
-                  </Stack>
-                ))}
-              </Stack>
-
-              <Box sx={{ mt: 4, p: 2, bgcolor: 'rgba(236, 155, 20, 0.05)', borderRadius: '16px', border: `1px dashed ${BRAND.gold}44` }}>
-                 <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '0.8rem' }}>Secure Updates</Typography>
-                 <Typography sx={{ color: BRAND.textMuted, fontSize: '0.75rem' }}>Official insights from Golden Generation Sacco.</Typography>
+        {/* Vertical List of Mini Updates */}
+        <Stack spacing={3}>
+          {posts.slice(0, 6).map((post, i) => (
+            <Stack key={i} direction="row" spacing={2} alignItems="center">
+              <Box sx={{ width: 65, height: 65, borderRadius: '12px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
+                <img src={post.CoverImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </Box>
-            </Box>
-          </Grid>
+              <Box>
+                <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', color: '#FFF', lineHeight: 1.2 }}>
+                  {post.Title.length > 40 ? post.Title.substring(0, 40) + '...' : post.Title}
+                </Typography>
+                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem', mt: 0.5 }}>
+                  {new Date(post.DatePosted).toLocaleDateString()}
+                </Typography>
+              </Box>
+            </Stack>
+          ))}
+        </Stack>
 
-          {/* RIGHT COLUMN: MAIN SLIDER SECTION */}
-          <Grid item xs={12} md={8}>
-            <Box
-              sx={{
-                bgcolor: 'rgba(255,255,255,0.015)',
-                p: { xs: 2, md: 4 },
-                borderRadius: '32px',
-                border: '1px solid rgba(255,255,255,0.04)',
-                minHeight: '600px'
-              }}
-            >
-              <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, px: 1 }}>
-                NEW <span style={{ color: BRAND.gold }}>UPDATES</span>
-              </Typography>
+        {/* Secure Updates Footer Box */}
+        <Box sx={{ mt: 4, p: 2, bgcolor: 'rgba(236, 155, 20, 0.05)', borderRadius: '16px', border: `1px dashed ${BRAND.gold}44` }}>
+           <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '0.8rem' }}>Secure Updates</Typography>
+           <Typography sx={{ color: BRAND.textMuted, fontSize: '0.75rem' }}>Official insights from Golden Generation Sacco.</Typography>
+        </Box>
+      </Box>
+    </Grid>
 
-              <Slider ref={sliderRef} {...sliderSettings}>
-                {filteredPosts.map((post) => (
-                  <Box key={post.PostID} sx={{ px: 1.5, pb: 2 }}>
-                    <NewsCard post={post} />
-                  </Box>
-                ))}
-              </Slider>
+    {/* RIGHT COLUMN: MAIN GRID SECTION (Matches wireframe boxes) */}
+    <Grid item xs={12} md={8}>
+      <Box
+        sx={{
+          bgcolor: 'rgba(255,255,255,0.015)',
+          p: { xs: 2, md: 4 },
+          borderRadius: '32px',
+          border: '1px solid rgba(255,255,255,0.04)',
+          minHeight: '800px' // Taller to accommodate the grid
+        }}
+      >
+        <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, px: 1 }}>
+          NEW <span style={{ color: BRAND.gold }}>UPDATES</span>
+        </Typography>
 
-              {/* NAVIGATION CONTROLS */}
-              <Stack direction="row" spacing={2} sx={{ mt: 4, justifyContent: 'center' }}>
-                <IconButton
-                  onClick={() => sliderRef.current.slickPrev()}
-                  sx={{
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: BRAND.gold,
-                    width: 45, height: 45,
-                    '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
-                  }}
-                >
-                  <LeftIcon />
-                </IconButton>
-
-                <IconButton
-                  onClick={() => sliderRef.current.slickNext()}
-                  sx={{
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: BRAND.gold,
-                    width: 45, height: 45,
-                    '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
-                  }}
-                >
-                  <RightIcon />
-                </IconButton>
-              </Stack>
-            </Box>
-          </Grid>
-
+        {/* Static Grid of News Cards */}
+        <Grid container spacing={3}>
+          {filteredPosts.map((post) => (
+            <Grid item xs={12} sm={6} key={post.PostID}>
+              {/* This renders the card exactly as shown in your wireframe grid */}
+              <NewsCard post={post} />
+            </Grid>
+          ))}
         </Grid>
-      </Container>
+        
+        {/* Optional: If you have many posts, you could add Pagination here instead of a slider */}
+      </Box>
+    </Grid>
+
+  </Grid>
+</Container>
     </Box>
   );
 };
