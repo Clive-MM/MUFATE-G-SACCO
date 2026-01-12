@@ -229,44 +229,41 @@ const News = () => {
 
 
       {/* PAGE CONTENT CONTAINER */}
-      {/* PAGE CONTENT CONTAINER */}
+      
+{/* PAGE CONTENT CONTAINER */}
 <Container maxWidth="xl" sx={{ mt: 6 }}>
-  {/* Top-level Grid: 
-     - container spacing={4} creates the gap between sidebar and news.
-     - alignItems="flex-start" keeps the sidebar at the top.
-  */}
-  <Grid container spacing={4} alignItems="flex-start">
+  <Grid container spacing={2} alignItems="flex-start" justifyContent="flex-end">
 
-    {/* LEFT SIDE: ICYMI (3 units out of 12) */}
-    <Grid item xs={12} md={3}>
+    {/* LEFT SIDE: ICYMI (Smaller width to give right side more room) */}
+    <Grid item xs={12} md={2.5}> 
       <Box
         sx={{
           bgcolor: 'rgba(255,255,255,0.03)',
-          p: 3,
+          p: 2.5,
           borderRadius: '24px',
           border: '1px solid rgba(255,255,255,0.08)',
           position: 'sticky',
-          top: 180, // Anchored below the sticky header
+          top: 150, 
         }}
       >
-        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
-          <HotIcon sx={{ color: BRAND.gold, fontSize: 24 }} />
-          <Typography variant="h5" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
+        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
+          <HotIcon sx={{ color: BRAND.gold, fontSize: 20 }} />
+          <Typography variant="h6" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
             ICYMI
           </Typography>
         </Stack>
 
-        <Stack spacing={3}>
+        <Stack spacing={2.5}>
           {posts.slice(0, 5).map((post, i) => (
-            <Stack key={i} direction="row" spacing={2} alignItems="center">
-              <Box sx={{ width: 50, height: 50, borderRadius: '12px', overflow: 'hidden', flexShrink: 0 }}>
+            <Stack key={i} direction="row" spacing={1.5} alignItems="center">
+              <Box sx={{ width: 45, height: 45, borderRadius: '10px', overflow: 'hidden', flexShrink: 0 }}>
                 <img src={post.CoverImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </Box>
               <Box>
-                <Typography sx={{ fontWeight: 800, fontSize: '0.75rem', color: '#FFF' }}>
-                  {post.Title.substring(0, 25)}...
+                <Typography sx={{ fontWeight: 800, fontSize: '0.7rem', color: '#FFF', lineHeight: 1.1 }}>
+                  {post.Title.substring(0, 20)}...
                 </Typography>
-                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.6rem' }}>1/12/2026</Typography>
+                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.55rem' }}>1/12/2026</Typography>
               </Box>
             </Stack>
           ))}
@@ -274,28 +271,28 @@ const News = () => {
       </Box>
     </Grid>
 
-    {/* RIGHT SIDE: NEW UPDATES (9 units out of 12) */}
+    {/* RIGHT SIDE: NEW UPDATES (Reduced width & pushed to the right) */}
     <Grid item xs={12} md={9}>
       <Box
         sx={{
           bgcolor: 'rgba(255,255,255,0.01)',
-          p: 4,
+          p: 3,
           borderRadius: '32px',
           border: '1px solid rgba(255,255,255,0.04)',
+          maxWidth: '950px', // REDUCED LENGTH: This stops it from being too wide
+          ml: 'auto',        // PUSH TO RIGHT: Moves the container to the far right
+          mr: 2,             // Padding from the right edge
         }}
       >
-        <Typography variant="h4" sx={{ fontWeight: 900, mb: 4 }}>
+        <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, ml: 1 }}>
           NEW <span style={{ color: BRAND.gold }}>UPDATES</span>
         </Typography>
 
-        {/* NESTED GRID: This is the secret.
-           By placing a NEW Grid inside the md={9} item, we can 
-           control exactly how many cards appear in a row.
-        */}
-        <Grid container spacing={3}>
+        {/* NESTED GRID: Strictly 3 cards per row */}
+        <Grid container spacing={2}>
           {filteredPosts.map((post) => (
-            <Grid item xs={12} sm={6} lg={4} key={post.PostID}>
-              {/* lg={4} creates 3 cards per row exactly like your sketch */}
+            <Grid item xs={12} sm={6} md={4} key={post.PostID}>
+              {/* md={4} ensures exactly 3 cards per row (12 / 4 = 3) */}
               <NewsCard post={post} />
             </Grid>
           ))}
