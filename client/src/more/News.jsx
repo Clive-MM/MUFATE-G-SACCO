@@ -229,12 +229,12 @@ const News = () => {
 
 
       {/* PAGE CONTENT CONTAINER */}
-      {/* Change 1: disableGutters and maxWidth={false} allows us to control the "stretch" manually */}
-      <Container maxWidth={false} sx={{ mt: 6, px: { xs: 2, md: 6, lg: 10 } }}>
-        <Grid container spacing={3} alignItems="flex-start" justifyContent="center">
+      <Container maxWidth="xl" sx={{ mt: 6 }}>
+        {/* container spacing is kept low (2) to prevent pushing items apart too much */}
+        <Grid container spacing={2} alignItems="flex-start" justifyContent="center">
 
-          {/* LEFT SIDE: ICYMI - Occupies 25% of the row */}
-          <Grid item xs={12} md={3} lg={2.5}>
+          {/* LEFT SIDE: ICYMI - Increased to md={3} to grow leftwards */}
+          <Grid item xs={12} md={3}>
             <Box
               sx={{
                 bgcolor: 'rgba(255,255,255,0.03)',
@@ -243,7 +243,7 @@ const News = () => {
                 border: '1px solid rgba(255,255,255,0.08)',
                 position: 'sticky',
                 top: 150,
-                width: '100%', // Ensures it fills its grid column entirely
+                // We don't use ml: auto here because we want it to hug the left area
               }}
             >
               <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
@@ -271,32 +271,27 @@ const News = () => {
             </Box>
           </Grid>
 
-          {/* RIGHT SIDE: NEW UPDATES - Occupies the remaining 75% of the row */}
-          <Grid item xs={12} md={9} lg={9.5}>
+          {/* RIGHT SIDE: NEW UPDATES - md={9} stays the same to prevent downward wrapping */}
+          <Grid item xs={12} md={9}>
             <Box
               sx={{
                 bgcolor: 'rgba(255,255,255,0.01)',
-                p: { xs: 2, md: 4 },
+                p: 3,
                 borderRadius: '32px',
                 border: '1px solid rgba(255,255,255,0.04)',
-                width: '100%', // REMOVED maxWidth: '980px' to allow it to fill the screen
-                display: 'flex',
-                flexDirection: 'column'
+                maxWidth: '980px', // Slightly increased to keep cards looking premium
+                ml: 2,             // Constant gap between sidebar and grid
+                mr: 'auto'
               }}
             >
               <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, ml: 1 }}>
                 NEW <span style={{ color: BRAND.gold }}>UPDATES</span>
               </Typography>
 
-              {/* NESTED GRID: Distribution logic */}
-              <Grid
-                container
-                spacing={4} // Increased spacing to fill visual "voids"
-                justifyContent="flex-start" // Keeps them aligned left but fills the width
-              >
+              {/* NESTED GRID: Strictly 3 cards per row */}
+              <Grid container spacing={3}>
                 {filteredPosts.map((post) => (
                   <Grid item xs={12} sm={6} md={4} key={post.PostID}>
-                    {/* This inner grid item will now be wider on large screens because the parent box is wider */}
                     <NewsCard post={post} />
                   </Grid>
                 ))}
