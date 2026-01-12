@@ -229,21 +229,21 @@ const News = () => {
 
 
       {/* PAGE CONTENT CONTAINER */}
-      
-{/* PAGE CONTENT CONTAINER */}
 <Container maxWidth="xl" sx={{ mt: 6 }}>
-  <Grid container spacing={2} alignItems="flex-start" justifyContent="flex-end">
+  {/* container spacing is kept low (2) to prevent pushing items apart too much */}
+  <Grid container spacing={2} alignItems="flex-start" justifyContent="center">
 
-    {/* LEFT SIDE: ICYMI (Smaller width to give right side more room) */}
-    <Grid item xs={12} md={2.5}> 
+    {/* LEFT SIDE: ICYMI - Increased to md={3} to grow leftwards */}
+    <Grid item xs={12} md={3}> 
       <Box
         sx={{
           bgcolor: 'rgba(255,255,255,0.03)',
-          p: 2.5,
+          p: 3,
           borderRadius: '24px',
           border: '1px solid rgba(255,255,255,0.08)',
           position: 'sticky',
-          top: 150, 
+          top: 150,
+          // We don't use ml: auto here because we want it to hug the left area
         }}
       >
         <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
@@ -256,14 +256,14 @@ const News = () => {
         <Stack spacing={2.5}>
           {posts.slice(0, 5).map((post, i) => (
             <Stack key={i} direction="row" spacing={1.5} alignItems="center">
-              <Box sx={{ width: 45, height: 45, borderRadius: '10px', overflow: 'hidden', flexShrink: 0 }}>
+              <Box sx={{ width: 50, height: 50, borderRadius: '10px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
                 <img src={post.CoverImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </Box>
               <Box>
-                <Typography sx={{ fontWeight: 800, fontSize: '0.7rem', color: '#FFF', lineHeight: 1.1 }}>
-                  {post.Title.substring(0, 20)}...
+                <Typography sx={{ fontWeight: 800, fontSize: '0.75rem', color: '#FFF', lineHeight: 1.1 }}>
+                  {post.Title.substring(0, 25)}...
                 </Typography>
-                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.55rem' }}>1/12/2026</Typography>
+                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.6rem', mt: 0.5 }}>1/12/2026</Typography>
               </Box>
             </Stack>
           ))}
@@ -271,7 +271,7 @@ const News = () => {
       </Box>
     </Grid>
 
-    {/* RIGHT SIDE: NEW UPDATES (Reduced width & pushed to the right) */}
+    {/* RIGHT SIDE: NEW UPDATES - md={9} stays the same to prevent downward wrapping */}
     <Grid item xs={12} md={9}>
       <Box
         sx={{
@@ -279,9 +279,9 @@ const News = () => {
           p: 3,
           borderRadius: '32px',
           border: '1px solid rgba(255,255,255,0.04)',
-          maxWidth: '950px', // REDUCED LENGTH: This stops it from being too wide
-          ml: 'auto',        // PUSH TO RIGHT: Moves the container to the far right
-          mr: 2,             // Padding from the right edge
+          maxWidth: '980px', // Slightly increased to keep cards looking premium
+          ml: 2,             // Constant gap between sidebar and grid
+          mr: 'auto'          
         }}
       >
         <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, ml: 1 }}>
@@ -289,10 +289,9 @@ const News = () => {
         </Typography>
 
         {/* NESTED GRID: Strictly 3 cards per row */}
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
           {filteredPosts.map((post) => (
             <Grid item xs={12} sm={6} md={4} key={post.PostID}>
-              {/* md={4} ensures exactly 3 cards per row (12 / 4 = 3) */}
               <NewsCard post={post} />
             </Grid>
           ))}
