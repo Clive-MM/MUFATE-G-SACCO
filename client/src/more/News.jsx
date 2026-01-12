@@ -146,7 +146,6 @@ const News = () => {
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: BRAND.dark, color: '#FFF', pb: 8 }}>
       
-      {/* ELITE STICKY HEADER SECTION (Matches Golden Gallery) */}
      {/* Elite Header */}
 <Stack alignItems="center" spacing={2} sx={{ mb: 6, textAlign: "center" }}>
   <motion.div
@@ -169,7 +168,7 @@ const News = () => {
           letterSpacing: 6,
         }}
       >
-        THE OFFICIAL ARCHIVE
+        NEWS UPDATES
       </Typography>
     </Stack>
   </motion.div>
@@ -183,7 +182,7 @@ const News = () => {
       textShadow: "0 10px 20px rgba(0,0,0,0.5)",
     }}
   >
-    GOLDEN <span style={{ color: BRAND.gold }}>GALLERY</span>
+    THE <span style={{ color: BRAND.gold }}>NEWSROOM</span>
   </Typography>
 
   {/* Polished Glassmorphism Search Bar */}
