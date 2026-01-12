@@ -229,11 +229,16 @@ const News = () => {
 
 
       {/* PAGE CONTENT CONTAINER */}
+      {/* PAGE CONTENT CONTAINER */}
       <Container maxWidth="xl" sx={{ mt: 6 }}>
+        {/* Key Change: alignItems="flex-start" prevents the sidebar 
+      from stretching and ensures they align at the top.
+  */}
         <Grid container spacing={4} alignItems="flex-start">
 
-          {/* LEFT COLUMN: ICYMI (Sticky Sidebar as seen in sketch) */}
-          <Grid item xs={12} md={4}>
+          {/* LEFT COLUMN: ICYMI (Sidebar) */}
+          {/* Occupies 4 out of 12 units on medium screens and up */}
+          <Grid item xs={12} md={3.5} lg={3}>
             <Box
               sx={{
                 bgcolor: 'rgba(255,255,255,0.03)',
@@ -241,8 +246,8 @@ const News = () => {
                 borderRadius: '24px',
                 border: '1px solid rgba(255,255,255,0.08)',
                 position: 'sticky',
-                top: 180, // Anchored below your sticky newsroom header
-                backdropFilter: "blur(10px)",
+                top: 150, // Anchored below your sticky newsroom header
+                zIndex: 10,
               }}
             >
               <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
@@ -252,55 +257,52 @@ const News = () => {
                 </Typography>
               </Stack>
 
-              {/* Vertical List of Mini Updates */}
               <Stack spacing={3}>
-                {posts.slice(0, 6).map((post, i) => (
+                {posts.slice(0, 5).map((post, i) => (
                   <Stack key={i} direction="row" spacing={2} alignItems="center">
-                    <Box sx={{ width: 65, height: 65, borderRadius: '12px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <Box sx={{ width: 55, height: 55, borderRadius: '12px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
                       <img src={post.CoverImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </Box>
                     <Box>
-                      <Typography sx={{ fontWeight: 800, fontSize: '0.85rem', color: '#FFF', lineHeight: 1.2 }}>
-                        {post.Title.length > 40 ? post.Title.substring(0, 40) + '...' : post.Title}
+                      <Typography sx={{ fontWeight: 800, fontSize: '0.8rem', color: '#FFF', lineHeight: 1.2 }}>
+                        {post.Title.length > 30 ? post.Title.substring(0, 30) + '...' : post.Title}
                       </Typography>
-                      <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem', mt: 0.5 }}>
+                      <Typography sx={{ color: BRAND.textMuted, fontSize: '0.65rem', mt: 0.5 }}>
                         {new Date(post.DatePosted).toLocaleDateString()}
                       </Typography>
                     </Box>
                   </Stack>
                 ))}
               </Stack>
-
-              
             </Box>
           </Grid>
 
-          {/* RIGHT COLUMN: MAIN GRID SECTION (Matches wireframe boxes) */}
-          <Grid item xs={12} md={8}>
+          {/* RIGHT COLUMN: NEW UPDATES (The Main Grid) */}
+          {/* Occupies the remaining 8 or 9 units next to the sidebar */}
+          <Grid item xs={12} md={8.5} lg={9}>
             <Box
               sx={{
                 bgcolor: 'rgba(255,255,255,0.015)',
                 p: { xs: 2, md: 4 },
                 borderRadius: '32px',
                 border: '1px solid rgba(255,255,255,0.04)',
-                minHeight: '800px' // Taller to accommodate the grid
               }}
             >
               <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, px: 1 }}>
                 NEW <span style={{ color: BRAND.gold }}>UPDATES</span>
               </Typography>
 
-              {/* Static Grid of News Cards */}
+              {/* Internal Grid for the News Cards. 
+            sm={6} makes 2 cards per row. 
+            md={4} makes 3 cards per row (like your wireframe).
+        */}
               <Grid container spacing={3}>
                 {filteredPosts.map((post) => (
-                  <Grid item xs={12} sm={6} key={post.PostID}>
-                    {/* This renders the card exactly as shown in your wireframe grid */}
+                  <Grid item xs={12} sm={6} md={4} key={post.PostID}>
                     <NewsCard post={post} />
                   </Grid>
                 ))}
               </Grid>
-
-              {/* Optional: If you have many posts, you could add Pagination here instead of a slider */}
             </Box>
           </Grid>
 
