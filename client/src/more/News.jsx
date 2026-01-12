@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
+import { motion } from 'framer-motion';
 
 // Material UI
 import {
@@ -16,11 +17,12 @@ import {
   ChevronRight as RightIcon,
   FilterList as FilterIcon,
   KeyboardArrowDown as ExpandIcon,
-  KeyboardArrowUp as CloseIcon
+  KeyboardArrowUp as CloseIcon,
+  AutoAwesome as SparkleIcon
 } from '@mui/icons-material';
 
 // Slick Slider CSS
-import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 
 const BRAND = {
@@ -142,127 +144,141 @@ const News = () => {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", py: 8, bgcolor: BRAND.dark, color: '#FFF' }}>
-      <Container maxWidth="xl">
-
-        <Stack alignItems="center" spacing={2} sx={{ mb: 8, textAlign: "center" }}>
-  {/* Subtitle with Sparkle */}
-  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-    <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center">
-      <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
-      <Typography 
-        variant="overline" 
-        sx={{ 
-          color: BRAND.gold, 
-          fontWeight: 800, 
-          letterSpacing: 4, 
-          textTransform: 'uppercase' 
+    <Box sx={{ minHeight: "100vh", bgcolor: BRAND.dark, color: '#FFF', pb: 8 }}>
+      
+      {/* ELITE STICKY HEADER SECTION (Matches Golden Gallery) */}
+      <Box
+        sx={{
+          position: "sticky",
+          top: 0,
+          zIndex: 1100,
+          pt: { xs: 3, md: 5 },
+          pb: 3,
+          bgcolor: 'rgba(2, 21, 15, 0.9)', // BRAND.dark with transparency
+          backdropFilter: "blur(12px)",
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
         }}
       >
-        The Official Newsroom
-      </Typography>
-      <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
-    </Stack>
-  </motion.div>
+        <Container maxWidth="xl">
+          <Stack alignItems="center" spacing={2} sx={{ textAlign: "center" }}>
+            
+            {/* Subtitle with Sparkle Animation */}
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+              <Stack direction="row" spacing={1.5} alignItems="center" justifyContent="center">
+                <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.1rem" }} />
+                <Typography 
+                  variant="overline" 
+                  sx={{ 
+                    color: BRAND.gold, 
+                    fontWeight: 800, 
+                    letterSpacing: 6,
+                    lineHeight: 1 
+                  }}
+                >
+                  The Official Newsroom
+                </Typography>
+                <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.1rem" }} />
+              </Stack>
+            </motion.div>
 
-  {/* Main Title */}
-  <Typography 
-    variant="h1" 
-    sx={{ 
-      color: "#FFF", 
-      fontWeight: 900, 
-      fontSize: { xs: "2.2rem", md: "3.5rem" }, 
-      textShadow: "0 10px 30px rgba(0,0,0,0.6)",
-      letterSpacing: -1
-    }}
-  >
-    GOLDEN <span style={{ color: BRAND.gold }}>NEWSROOM</span>
-  </Typography>
+            {/* Main Title */}
+            <Typography 
+              variant="h1" 
+              sx={{ 
+                color: "#FFF", 
+                fontWeight: 900, 
+                fontSize: { xs: "1.7rem", md: "3rem" }, 
+                textShadow: "0 10px 20px rgba(0,0,0,0.5)",
+                letterSpacing: -1
+              }}
+            >
+              GOLDEN <span style={{ color: BRAND.gold }}>NEWSROOM</span>
+            </Typography>
 
-  {/* Polished Glassmorphism Search Bar */}
-  <Stack direction="row" justifyContent="center" sx={{ mt: 2, width: '100%' }}>
-    <TextField 
-      sx={{ 
-        maxWidth: '600px', 
-        width: '100%',
-        backdropFilter: "blur(12px)",
-        borderRadius: '15px',
-        overflow: 'hidden',
-        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
-      }}
-      placeholder="Search for announcements, sacco news, or updates..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <FilterIcon sx={{ color: BRAND.gold, ml: 1 }} />
-          </InputAdornment>
-        ),
-        sx: { 
-          color: '#FFF', 
-          bgcolor: 'rgba(255, 255, 255, 0.05)', 
-          height: '56px',
-          '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.3)' },
-          '&:hover fieldset': { borderColor: BRAND.gold },
-          '&.Mui-focused fieldset': { borderColor: BRAND.gold, borderWidth: '2px' },
-        }
-      }}
-    />
-  </Stack>
-</Stack>
+            {/* Polished Glassmorphism Search Bar */}
+            <Stack direction="row" justifyContent="center" sx={{ mt: 2, width: '100%' }}>
+              <TextField 
+                sx={{ 
+                  maxWidth: '600px', 
+                  width: '100%',
+                  backdropFilter: "blur(12px)",
+                  borderRadius: '15px',
+                  overflow: 'hidden',
+                  boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+                }}
+                placeholder="Search announcements or updates..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FilterIcon sx={{ color: BRAND.gold, ml: 1 }} />
+                    </InputAdornment>
+                  ),
+                  sx: { 
+                    color: '#FFF', 
+                    bgcolor: 'rgba(255, 255, 255, 0.08)', 
+                    height: '52px',
+                    '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.3)' },
+                    '&:hover fieldset': { borderColor: BRAND.gold },
+                    '&.Mui-focused fieldset': { borderColor: BRAND.gold, borderWidth: '2px' },
+                  }
+                }}
+              />
+            </Stack>
+          </Stack>
+        </Container>
+      </Box>
 
-        {/* MAIN LAYOUT: Grid size={4} and size={8} */}
+      {/* PAGE CONTENT CONTAINER */}
+      <Container maxWidth="xl" sx={{ mt: 6 }}>
         <Grid container spacing={4}>
 
-          {/* LEFT COLUMN: ICYMI (size 4) */}
+          {/* LEFT COLUMN: ICYMI (Sticky Sidebar) */}
           <Grid item xs={12} md={4}>
-            <Stack spacing={2}>
-              <Box
-                sx={{
-                  bgcolor: 'rgba(255,255,255,0.03)',
-                  p: 3,
-                  borderRadius: '24px',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  position: 'sticky',
-                  top: 20
-                }}
-              >
-                <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
-                  <HotIcon sx={{ color: BRAND.gold, fontSize: 24 }} />
-                  <Typography variant="h5" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
-                    ICYMI
-                  </Typography>
-                </Stack>
+            <Box
+              sx={{
+                bgcolor: 'rgba(255,255,255,0.03)',
+                p: 3,
+                borderRadius: '24px',
+                border: '1px solid rgba(255,255,255,0.08)',
+                position: 'sticky',
+                top: 240, // Offset to account for the sticky header height
+              }}
+            >
+              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 4 }}>
+                <HotIcon sx={{ color: BRAND.gold, fontSize: 24 }} />
+                <Typography variant="h5" sx={{ fontWeight: 900, letterSpacing: 0.5 }}>
+                  ICYMI
+                </Typography>
+              </Stack>
 
-                <Stack spacing={3}>
-                  {posts.slice(0, 5).map((post, i) => (
-                    <Stack key={i} direction="row" spacing={2} alignItems="center">
-                      <Box sx={{ width: 65, height: 65, borderRadius: '12px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
-                        <img src={post.CoverImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </Box>
-                      <Box>
-                        <Typography sx={{ fontWeight: 800, fontSize: '0.9rem', color: '#FFF', lineHeight: 1.2 }}>
-                          {post.Title.length > 40 ? post.Title.substring(0, 40) + '...' : post.Title}
-                        </Typography>
-                        <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem', mt: 0.5 }}>
-                          {new Date(post.DatePosted).toLocaleDateString()}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  ))}
-                </Stack>
+              <Stack spacing={3}>
+                {posts.slice(0, 5).map((post, i) => (
+                  <Stack key={i} direction="row" spacing={2} alignItems="center">
+                    <Box sx={{ width: 65, height: 65, borderRadius: '12px', overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <img src={post.CoverImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </Box>
+                    <Box>
+                      <Typography sx={{ fontWeight: 800, fontSize: '0.9rem', color: '#FFF', lineHeight: 1.2 }}>
+                        {post.Title.length > 40 ? post.Title.substring(0, 40) + '...' : post.Title}
+                      </Typography>
+                      <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem', mt: 0.5 }}>
+                        {new Date(post.DatePosted).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                ))}
+              </Stack>
 
-                {/* SECURE UPDATES BOX: From your design image */}
-                <Box sx={{ mt: 4, p: 2, bgcolor: 'rgba(236, 155, 20, 0.05)', borderRadius: '16px', border: `1px dashed ${BRAND.gold}44` }}>
-                   <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '0.8rem' }}>Secure Updates</Typography>
-                   <Typography sx={{ color: BRAND.textMuted, fontSize: '0.75rem' }}>Official insights from Golden Generation Sacco.</Typography>
-                </Box>
+              <Box sx={{ mt: 4, p: 2, bgcolor: 'rgba(236, 155, 20, 0.05)', borderRadius: '16px', border: `1px dashed ${BRAND.gold}44` }}>
+                 <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '0.8rem' }}>Secure Updates</Typography>
+                 <Typography sx={{ color: BRAND.textMuted, fontSize: '0.75rem' }}>Official insights from Golden Generation Sacco.</Typography>
               </Box>
-            </Stack>
+            </Box>
           </Grid>
 
-          {/* RIGHT COLUMN: NEW UPDATES (size 8) */}
+          {/* RIGHT COLUMN: MAIN SLIDER SECTION */}
           <Grid item xs={12} md={8}>
             <Box
               sx={{
@@ -270,8 +286,7 @@ const News = () => {
                 p: { xs: 2, md: 4 },
                 borderRadius: '32px',
                 border: '1px solid rgba(255,255,255,0.04)',
-                height: '100%',
-                boxSizing: 'border-box'
+                minHeight: '600px'
               }}
             >
               <Typography variant="h5" sx={{ fontWeight: 900, mb: 4, px: 1 }}>
@@ -286,15 +301,14 @@ const News = () => {
                 ))}
               </Slider>
 
-              {/* NAVIGATION BUTTONS: Aligned center as per image */}
+              {/* NAVIGATION CONTROLS */}
               <Stack direction="row" spacing={2} sx={{ mt: 4, justifyContent: 'center' }}>
                 <IconButton
                   onClick={() => sliderRef.current.slickPrev()}
                   sx={{
                     border: '1px solid rgba(255,255,255,0.1)',
                     color: BRAND.gold,
-                    width: 45,
-                    height: 45,
+                    width: 45, height: 45,
                     '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
                   }}
                 >
@@ -306,8 +320,7 @@ const News = () => {
                   sx={{
                     border: '1px solid rgba(255,255,255,0.1)',
                     color: BRAND.gold,
-                    width: 45,
-                    height: 45,
+                    width: 45, height: 45,
                     '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
                   }}
                 >
