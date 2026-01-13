@@ -8,11 +8,12 @@ import {
   DialogContent,
   IconButton,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
-import { useSnackbar } from 'notistack';
 import './FeedbackBanner.css';
 
 const FeedbackBanner = () => {
@@ -23,23 +24,53 @@ const FeedbackBanner = () => {
     Message: ''
   });
 
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { enqueueSnackbar } = useSnackbar(); // ✅ Notistack hook
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
+    if (!formData.Email || !formData.Subject || !formData.Message) {
+      setSnackbar({
+        open: true,
+        message: '❌ Please fill in all fields.',
+        severity: 'warning'
+      });
+      return;
+    }
+
+    setLoading(true);
     try {
       const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
-      enqueueSnackbar(res.data.message, { variant: 'success' }); // ✅ Success message
+      setSnackbar({
+        open: true,
+        message: res.data.message,
+        severity: 'success'
+      });
       setOpen(false);
       setFormData({ Email: '', Subject: '', Message: '' });
     } catch (err) {
-      enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' }); // ✅ Error message
+      setSnackbar({
+        open: true,
+        message: err?.response?.data?.message || '❌ Failed to submit feedback.',
+        severity: 'error'
+      });
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -84,12 +115,7 @@ const FeedbackBanner = () => {
           }}
         >
           {/* Left Section */}
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: isMobile ? 'center' : 'left'
-            }}
-          >
+          <Box sx={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
             <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
               <img
                 src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
@@ -118,14 +144,7 @@ const FeedbackBanner = () => {
           </Box>
 
           {/* Right Section - Form */}
-          <Box
-            sx={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2
-            }}
-          >
+          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
               label="Email"
               name="Email"
@@ -154,6 +173,7 @@ const FeedbackBanner = () => {
             />
             <Button
               onClick={handleSubmit}
+              disabled={loading}
               sx={{
                 backgroundColor: '#003B2F',
                 color: '#fff',
@@ -163,7 +183,7 @@ const FeedbackBanner = () => {
                 }
               }}
             >
-              SUBMIT
+              {loading ? 'Submitting...' : 'SUBMIT'}
             </Button>
           </Box>
 
@@ -187,6 +207,18 @@ const FeedbackBanner = () => {
           </IconButton>
         </DialogContent>
       </Dialog>
+
+      {/* Snackbar Notification */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity={snackbar.severity} onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
