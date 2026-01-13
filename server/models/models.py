@@ -402,3 +402,10 @@ class PostsCategory(db.Model):
     IsActive = db.Column(db.Boolean, default=True)
 
     posts = db.relationship('Posts', backref='category', lazy=True)
+
+
+class NewsletterSubscription(db.Model):
+    __tablename__ = "NewsletterSubscription"
+    SubID = db.Column(db.Integer, primary_key=True)
+    ContactInfo = db.Column(db.String(100), nullable=False, unique=True) # Email or Phone
+    SubscribedAt = db.Column(db.DateTime, default=datetime.utcnow)

@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
 from datetime import datetime
-from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Posts, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket, PostsCategory
+from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Posts, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket, PostsCategory, NewsletterSubscription
 import cloudinary.uploader
 import re
 import traceback
@@ -689,10 +689,8 @@ def get_partnerships():
         return jsonify({'message': '❌ Failed to fetch partnerships.', 'error': str(e)}), 500
 
 
-
-
 #Fetching the posts in the news page
-@routes.route('/posts', methods=['GET'])
+@routes.route('/news/posts', methods=['GET'])
 def get_posts():
     try:
         # Get category from query parameters (e.g., ?category=Financial Reports)
@@ -2097,3 +2095,20 @@ maderumoyia@mudetesacco.co.ke"""
     except Exception as e:
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to submit ticket.', 'error': str(e)}), 500
+
+#Newsletter subscription
+@routes.route('/subscribe', methods=['POST'])
+def subscribe():
+    data = request.json
+    contact = data.get('contact') # This can be email or phone from the frontend
+    
+    if not contact:
+        return jsonify({'message': 'Contact information is required.'}), 400
+        
+    try:
+        new_sub = NewsletterSubscription(ContactInfo=contact)
+        db.session.add(new_sub)
+        db.session.commit()
+        return jsonify({'message': '✅ Successfully subscribed to Golden Generation updates!'}), 201
+    except Exception:
+        return jsonify({'message': 'You are already subscribed!'}), 409
