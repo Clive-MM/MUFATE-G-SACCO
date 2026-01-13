@@ -692,19 +692,25 @@ def get_partnerships():
 
 
 #Fetching the posts in the news page
-@routes.route('/news/posts', methods=['GET'])
+@routes.route('/posts', methods=['GET'])
 def get_posts():
     try:
         # Get category from query parameters (e.g., ?category=Financial Reports)
         category_name = request.args.get('category')
         
-        query = Posts.query.join(PostsCategory)
+        # 1. Start query and join with Categories
+        query = Post.query.join(PostsCategory)
         
+        # 2. MANDATORY FILTER: Only fetch Categories 1 through 4
+        # This explicitly excludes 'HeroImage' and any other high-ID categories
+        query = query.filter(PostsCategory.PostsCategoryID.between(1, 4))
+        
+        # 3. OPTIONAL FILTER: If user clicked a specific tab (e.g., 'Financial Reports')
         if category_name:
             query = query.filter(PostsCategory.Category == category_name)
         
-        # Order by newest first
-        posts = query.order_by(Posts.DatePosted.desc()).all()
+        # 4. Order and execute
+        posts = query.order_by(Post.DatePosted.desc()).all()
 
         posts_data = [{
             'PostID': p.PostID,
@@ -712,7 +718,7 @@ def get_posts():
             'Content': p.Content,
             'CoverImage': p.CoverImage,
             'DatePosted': p.DatePosted.strftime('%Y-%m-%d %H:%M:%S'),
-            'Category': p.category.Category # Accessing backref from your model
+            'Category': p.category.Category 
         } for p in posts]
 
         return jsonify({'posts': posts_data}), 200
