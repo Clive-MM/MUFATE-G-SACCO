@@ -269,6 +269,7 @@ class Posts(db.Model):
     CoverImage = db.Column(db.String(255), nullable=False)
     DatePosted = db.Column(db.DateTime, default=datetime.utcnow)
     PostsCategoryID = db.Column(db.Integer, db.ForeignKey('PostsCategory.PostsCategoryID'), nullable=False)
+    isActiveID = db.Column(db.Integer)
 
 
 class SaccoClient(db.Model):
