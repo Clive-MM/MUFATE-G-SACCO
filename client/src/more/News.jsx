@@ -67,14 +67,14 @@ const News = () => {
       {/* 1. Page Heading - Fixed above the slider */}
       <Container maxWidth="xl" sx={{ pt: 6, pb: 4 }}>
         <Stack alignItems="center" spacing={1}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+          {/* <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
             <Stack direction="row" spacing={1.5} alignItems="center">
               <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
               <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 800, letterSpacing: 6 }}>
                 GOLDEN GENERATION SACCO
               </Typography>
             </Stack>
-          </motion.div>
+          </motion.div> */}
           <Typography variant="h2" sx={{
             color: "#FFF",
             fontWeight: 900,
