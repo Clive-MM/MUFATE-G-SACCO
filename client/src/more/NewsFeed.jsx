@@ -5,14 +5,13 @@ import {
     Box, Typography, Container, Grid, Card, CardContent, CardMedia,
     Tabs, Tab, Stack, TextField, Button, CardActionArea
 } from '@mui/material';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import HomeIcon from '@mui/icons-material/Home';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const BRAND = {
     gold: "#EC9B14",
     dark: "#02150F",
     cardBg: "rgba(255, 255, 255, 0.05)",
-    textMuted: "rgba(244, 244, 244, 0.7)",
+    textMuted: "rgba(244, 244, 244, 0.8)",
 };
 
 const CATEGORIES = ["Latest News", "Financial Reports", "Announcements", "Calendar"];
@@ -31,9 +30,19 @@ const NewsFeed = () => {
             .catch(err => console.error(err));
     };
 
+    // Helper to format date as DDMMYYYY
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        if (isNaN(date)) return "01012024";
+        const d = String(date.getDate()).padStart(2, '0');
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const y = date.getFullYear();
+        return `${d}${m}${y}`;
+    };
+
     return (
         <Container maxWidth="xl" sx={{ pb: 10, mt: 4 }}>
-            {/* Category Tabs at the Top */}
+            {/* Category Tabs */}
             <Box sx={{ mb: 4 }}>
                 <Tabs
                     value={activeTab}
@@ -52,44 +61,80 @@ const NewsFeed = () => {
                 </Tabs>
             </Box>
 
-            {/* Content Area: Cards and Sidebar starting on the same level */}
             <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>
 
-                {/* LEFT COLUMN: 2 Cards per Row */}
+                {/* LEFT COLUMN: Posts */}
                 <Box sx={{ flex: 1 }}>
                     <Grid container spacing={3}>
                         <AnimatePresence mode="wait">
                             {posts.map((post) => (
                                 <Grid item xs={12} md={6} key={post.PostID}>
-                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        whileHover={{ scale: 1.01 }}
+                                    >
                                         <Card sx={{
-                                            maxWidth: 320,
+                                            maxWidth: 400, // Slightly wider to feel more "Full"
                                             bgcolor: BRAND.cardBg,
-                                            borderRadius: '16px',
-                                            border: `1.5px solid rgba(236, 155, 20, 0.15)`,
+                                            borderRadius: '12px',
+                                            border: `1.5px solid rgba(236, 155, 20, 0.1)`,
                                             height: '100%',
-                                            '&:hover': { borderColor: BRAND.gold }
+                                            overflow: 'hidden',
+                                            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                                            '&:hover': {
+                                                borderColor: BRAND.gold,
+                                                boxShadow: `0px 0px 20px 2px rgba(236, 155, 20, 0.25)`, // Glow Effect
+                                            }
                                         }}>
-                                            <CardActionArea>
-                                                <CardMedia
-                                                    component="img"
-                                                    height="140"
-                                                    image={post.CoverImage || 'https://via.placeholder.com/320x140'}
-                                                    sx={{ objectFit: 'contain', p: 2, bgcolor: 'rgba(255,255,255,0.03)' }}
-                                                />
-                                                <CardContent sx={{ p: 2.5 }}>
-                                                    <Typography variant="h6" sx={{ color: '#FFF', fontWeight: 800, fontSize: '0.95rem', height: '2.4em', overflow: 'hidden', mb: 1 }}>
+                                            <CardActionArea sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                                                {/* Image Container with Zoom-Out Animation */}
+                                                <Box sx={{ width: '100%', overflow: 'hidden', height: 180 }}>
+                                                    <motion.div
+                                                        whileHover={{ scale: 1 }}
+                                                        initial={{ scale: 1.15 }}
+                                                        transition={{ duration: 0.6 }}
+                                                        style={{ width: '100%', height: '100%' }}
+                                                    >
+                                                        <CardMedia
+                                                            component="img"
+                                                            height="100%"
+                                                            image={post.CoverImage || 'https://via.placeholder.com/400x180'}
+                                                            sx={{
+                                                                objectFit: 'cover', // Fills the whole landscape area
+                                                            }}
+                                                        />
+                                                    </motion.div>
+                                                </Box>
+
+                                                <CardContent sx={{ p: 3, flexGrow: 1 }}>
+                                                    {/* Full Title - No cropping */}
+                                                    <Typography variant="h6" sx={{
+                                                        color: '#FFF',
+                                                        fontWeight: 800,
+                                                        fontSize: '1.1rem',
+                                                        lineHeight: 1.3,
+                                                        mb: 2
+                                                    }}>
                                                         {post.Title}
                                                     </Typography>
-                                                    <Typography variant="body2" sx={{ color: BRAND.textMuted, fontSize: '0.75rem', height: '3em', overflow: 'hidden', mb: 2 }}>
+
+                                                    {/* Full Content - No cropping */}
+                                                    <Typography variant="body2" sx={{
+                                                        color: BRAND.textMuted,
+                                                        fontSize: '0.9rem',
+                                                        lineHeight: 1.6,
+                                                        mb: 3
+                                                    }}>
                                                         {post.Content.replace(/<[^>]*>/g, '')}
                                                     </Typography>
-                                                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                                        <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
-                                                            <AccessTimeIcon sx={{ fontSize: '0.8rem' }} />
-                                                            <Typography variant="caption" sx={{ fontWeight: 700 }}>3 min read</Typography>
-                                                        </Stack>
-                                                        <HomeIcon sx={{ fontSize: '1rem', color: BRAND.gold }} />
+
+                                                    {/* Footer: Date Only */}
+                                                    <Stack direction="row" spacing={1} alignItems="center" sx={{ color: BRAND.gold }}>
+                                                        <CalendarTodayIcon sx={{ fontSize: '1rem' }} />
+                                                        <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 1 }}>
+                                                            {formatDate(post.CreatedAt || new Date())}
+                                                        </Typography>
                                                     </Stack>
                                                 </CardContent>
                                             </CardActionArea>
@@ -101,48 +146,41 @@ const NewsFeed = () => {
                     </Grid>
                 </Box>
 
-                {/* RIGHT COLUMN: The Full Gold Newsletter Pillar */}
-                <Box sx={{
-                    width: '260px',
-                    minWidth: '260px',
-                    position: 'sticky',
-                    top: 20, // Adjusted to align perfectly with top of cards
-                    alignSelf: 'stretch' // Ensures container logic allows for height matching
-                }}>
+                {/* RIGHT COLUMN: Gold Newsletter Pillar */}
+                <Box sx={{ width: '280px', minWidth: '280px', position: 'sticky', top: 20 }}>
                     <Box sx={{
-                        p: 3,
+                        p: 3.5,
                         borderRadius: '16px',
-                        bgcolor: BRAND.gold, // Entire card is now Gold
-                        color: BRAND.dark,   // Text is Dark for contrast
+                        bgcolor: BRAND.gold,
+                        color: BRAND.dark,
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between', // Elements occupy space evenly
-                        height: '480px', // Matches the height profile of the first 2 rows of cards
-                        boxShadow: '0 10px 30px rgba(236, 155, 20, 0.2)'
+                        justifyContent: 'space-between',
+                        minHeight: '520px',
+                        boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
                     }}>
                         <Box>
-                            <Typography variant="overline" sx={{ fontWeight: 900, letterSpacing: 1.5, color: 'rgba(2, 21, 15, 0.7)' }}>
-                                STAY UPDATED
+                            <Typography variant="overline" sx={{ fontWeight: 900, letterSpacing: 2, opacity: 0.8 }}>
+                                STAY INFORMED
                             </Typography>
-                            <Typography variant="h5" sx={{ fontWeight: 900, mt: 1, lineHeight: 1.1, fontSize: '1.4rem' }}>
-                                NEWSLETTER <br /> SUBSCRIPTION
+                            <Typography variant="h4" sx={{ fontWeight: 900, mt: 1, lineHeight: 1, fontSize: '1.8rem' }}>
+                                JOIN OUR <br /> FEED
                             </Typography>
                         </Box>
 
-                        <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.85rem', lineHeight: 1.5 }}>
-                            Join our community to receive the latest financial reports, SACCO announcements, and exclusive member tips.
+                        <Typography variant="body1" sx={{ fontWeight: 700, fontSize: '1rem', lineHeight: 1.4 }}>
+                            Get instant updates on financial policies and Sacco events directly in your inbox.
                         </Typography>
 
                         <Box>
                             <TextField
                                 fullWidth
-                                placeholder="Email or Phone"
-                                variant="standard" // Sleeker look on gold background
+                                placeholder="Enter Email or Phone"
+                                variant="standard"
                                 sx={{
-                                    mb: 3,
+                                    mb: 4,
                                     '& .MuiInput-underline:before': { borderBottomColor: BRAND.dark },
-                                    '& .MuiInput-underline:after': { borderBottomColor: BRAND.dark },
-                                    '& input': { fontWeight: 700, color: BRAND.dark }
+                                    '& input': { fontWeight: 800, color: BRAND.dark }
                                 }}
                             />
                             <Button
@@ -152,17 +190,19 @@ const NewsFeed = () => {
                                     bgcolor: BRAND.dark,
                                     color: BRAND.gold,
                                     fontWeight: 900,
-                                    py: 1.5,
-                                    '&:hover': { bgcolor: '#010a07' }
+                                    py: 2,
+                                    fontSize: '0.9rem',
+                                    borderRadius: '8px',
+                                    '&:hover': { bgcolor: '#000' }
                                 }}
                             >
                                 SUBSCRIBE NOW
                             </Button>
                         </Box>
 
-                        {/* <Typography variant="caption" sx={{ textAlign: 'center', fontWeight: 700, opacity: 0.8 }}>
-                            © MUFATE-G SACCO 2024
-                        </Typography> */}
+                        <Typography variant="caption" sx={{ textAlign: 'center', fontWeight: 800, opacity: 0.6 }}>
+                            OFFICIAL MUFATE-G COMMUNICATION
+                        </Typography>
                     </Box>
                 </Box>
 
