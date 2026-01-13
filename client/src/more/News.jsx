@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Box, Typography, Container, CircularProgress, Stack } from '@mui/material';
 import { AutoAwesome as SparkleIcon } from '@mui/icons-material';
 
@@ -20,7 +20,7 @@ const News = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetching from your specialized Hero route
+    // Specifically fetching from your HeroImage (Category 5) route
     axios.get('https://mufate-g-sacco.onrender.com/posts/hero')
       .then(res => {
         setHeroPosts(res.data.hero || []);
@@ -32,101 +32,120 @@ const News = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 1000,
+    speed: 1200,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 6000,
     slidesToShow: 1,
     slidesToScroll: 1,
-    fade: true, // Elegant fade transition
+    fade: true,
     arrows: false,
     appendDots: dots => (
-      <Box sx={{ position: 'absolute', bottom: 30 }}>
-        <ul style={{ margin: "0px" }}> {dots} </ul>
+      <Box sx={{ position: 'absolute', bottom: 40, width: '100%' }}>
+        <ul style={{ margin: "0px", padding: "0px", display: "flex", justifyContent: "center" }}> {dots} </ul>
       </Box>
     ),
+    customPaging: i => (
+      <Box sx={{
+        width: 12, height: 12, bgcolor: "rgba(236, 155, 20, 0.3)",
+        borderRadius: "50%", mx: 0.5, transition: '0.3s',
+        '&:hover': { bgcolor: BRAND.gold }
+      }} />
+    )
   };
 
   if (loading) {
     return (
-      <Box sx={{ height: '60vh', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
+      <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
         <CircularProgress sx={{ color: BRAND.gold }} />
       </Box>
     );
   }
 
   return (
-    <Box sx={{ bgcolor: BRAND.dark, width: '100%' }}>
-      {/* 1. Header Heading Section */}
-      <Container maxWidth="xl" sx={{ pt: 4, pb: 2 }}>
+    <Box sx={{ bgcolor: BRAND.dark, width: '100%', minHeight: '100vh', overflow: 'hidden' }}>
+
+      {/* 1. Page Heading - Fixed above the slider */}
+      <Container maxWidth="xl" sx={{ pt: 6, pb: 4 }}>
         <Stack alignItems="center" spacing={1}>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1rem" }} />
-            <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 800, letterSpacing: 4 }}>
-              OFFICIAL UPDATES
-            </Typography>
-          </Stack>
-          <Typography variant="h2" sx={{ color: "#FFF", fontWeight: 900, fontSize: { xs: "2rem", md: "3.5rem" } }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
+              <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 800, letterSpacing: 6 }}>
+                GOLDEN GENERATION SACCO
+              </Typography>
+            </Stack>
+          </motion.div>
+          <Typography variant="h2" sx={{
+            color: "#FFF",
+            fontWeight: 900,
+            fontSize: { xs: "2.2rem", md: "4rem" },
+            textAlign: 'center'
+          }}>
             THE <span style={{ color: BRAND.gold }}>NEWSROOM</span>
           </Typography>
         </Stack>
       </Container>
 
-      {/* 2. Hero Slider Section */}
-      <Box sx={{ width: '100%', position: 'relative', height: { xs: '50vh', md: '75vh' }, overflow: 'hidden' }}>
+      {/* 2. Actualized Hero Slider Section */}
+      <Box sx={{ width: '100%', position: 'relative', height: { xs: '60vh', md: '75vh' } }}>
         <Slider {...settings}>
           {heroPosts.map((slide, index) => (
-            <Box key={slide.PostID || index} sx={{ position: 'relative', height: { xs: '50vh', md: '75vh' } }}>
-              {/* Background Image with Dark Overlay */}
+            <Box key={slide.PostID || index} sx={{ position: 'relative', height: { xs: '60vh', md: '75vh' } }}>
+
+              {/* Dual-Tone Background Layer (Actualizing the design depth) */}
               <Box
                 sx={{
                   width: '100%',
                   height: '100%',
-                  backgroundImage: `linear-gradient(to top, ${BRAND.dark} 10%, transparent 50%), url(${slide.CoverImage})`,
+                  backgroundImage: `
+                    linear-gradient(to top, ${BRAND.dark} 10%, transparent 50%), 
+                    linear-gradient(to right, rgba(2, 21, 15, 0.7) 0%, transparent 60%), 
+                    url(${slide.CoverImage})
+                  `,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
               />
 
-              {/* Text Content Overlay */}
-              <Container
-                maxWidth="lg"
-                sx={{
-                  position: 'absolute',
-                  bottom: { xs: 60, md: 100 },
-                  left: { xs: 20, md: '10%' },
-                  zIndex: 2
-                }}
-              >
+              {/* Text Content Overlay - Centered vertically on the left */}
+              <Container maxWidth="lg" sx={{
+                position: 'absolute',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                left: { xs: 0, md: '5%' },
+                zIndex: 2
+              }}>
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
+                  key={index} // Re-triggers animation on every slide change
+                  initial={{ opacity: 0, x: -40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.9, ease: "easeOut" }}
                 >
-                  <Typography
-                    variant="h3"
-                    sx={{
-                      color: "#FFF",
-                      fontWeight: 900,
-                      maxWidth: "800px",
-                      mb: 2,
-                      textShadow: "2px 4px 10px rgba(0,0,0,0.8)",
-                      fontSize: { xs: '1.8rem', md: '3.5rem' }
-                    }}
-                  >
+                  <Typography variant="h3" sx={{
+                    color: "#FFF",
+                    fontWeight: 900,
+                    maxWidth: "850px",
+                    mb: 2,
+                    lineHeight: 1.1,
+                    textShadow: "4px 4px 15px rgba(0,0,0,0.9)",
+                    fontSize: { xs: '2rem', md: '4rem' }
+                  }}>
                     {slide.Title}
                   </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: BRAND.textMuted,
-                      maxWidth: "600px",
-                      lineHeight: 1.6,
-                      textShadow: "1px 1px 5px rgba(0,0,0,0.5)",
-                      display: { xs: 'none', md: 'block' }
-                    }}
-                  >
-                    {slide.Content.replace(/<[^>]*>/g, '').substring(0, 180)}...
+
+                  <Typography variant="h6" sx={{
+                    color: BRAND.textMuted,
+                    maxWidth: "600px",
+                    fontWeight: 400,
+                    lineHeight: 1.6,
+                    display: { xs: 'none', md: 'block' },
+                    textShadow: "2px 2px 10px rgba(0,0,0,0.8)"
+                  }}>
+                    {slide.Content.replace(/<[^>]*>/g, '').substring(0, 200)}...
                   </Typography>
+
+                  {/* Optional: Add a Gold accent line to match the wireframe */}
+                  <Box sx={{ width: '60px', height: '4px', bgcolor: BRAND.gold, mt: 4, borderRadius: '2px' }} />
                 </motion.div>
               </Container>
             </Box>
@@ -137,4 +156,4 @@ const News = () => {
   );
 };
 
-export default News
+export default News;
