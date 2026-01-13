@@ -699,7 +699,7 @@ def get_posts():
         category_name = request.args.get('category')
         
         # 1. Start query and join with Categories
-        query = Post.query.join(PostsCategory)
+        query = Posts.query.join(PostsCategory)
         
         # 2. MANDATORY FILTER: Only fetch Categories 1 through 4
         # This explicitly excludes 'HeroImage' and any other high-ID categories
@@ -710,7 +710,7 @@ def get_posts():
             query = query.filter(PostsCategory.Category == category_name)
         
         # 4. Order and execute
-        posts = query.order_by(Post.DatePosted.desc()).all()
+        posts = query.order_by(Posts.DatePosted.desc()).all()
 
         posts_data = [{
             'PostID': p.PostID,
