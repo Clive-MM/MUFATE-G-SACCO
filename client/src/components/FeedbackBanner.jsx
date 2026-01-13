@@ -12,27 +12,22 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
+import { useSnackbar } from 'notistack'; // ✅ FIX: Import Notistack hook
 import './FeedbackBanner.css';
 
 const FeedbackBanner = () => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     Email: '',
     Subject: '',
     Message: ''
   });
 
-  const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success'
-  });
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { enqueueSnackbar } = useSnackbar(); // ✅ Notistack hook
+
+  const { enqueueSnackbar } = useSnackbar(); // ✅ FIX: Now useSnackbar is defined
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,12 +35,19 @@ const FeedbackBanner = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
-      enqueueSnackbar(res.data.message, { variant: 'success' }); // ✅ Success message
+      const res = await axios.post(
+        'https://mufate-g-sacco.onrender.com/feedback',
+        formData
+      );
+
+      enqueueSnackbar(res.data.message || "✅ Feedback submitted successfully!", {
+        variant: 'success'
+      });
+
       setOpen(false);
       setFormData({ Email: '', Subject: '', Message: '' });
     } catch (err) {
-      enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' }); // ✅ Error message
+      enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' });
     }
   };
 
@@ -185,18 +187,6 @@ const FeedbackBanner = () => {
           </IconButton>
         </DialogContent>
       </Dialog>
-
-      {/* Snackbar Notification */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={5000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert severity={snackbar.severity} onClose={handleSnackbarClose} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
