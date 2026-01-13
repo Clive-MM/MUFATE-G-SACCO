@@ -160,9 +160,9 @@ const NewsFeed = () => {
                             </Button>
                         </Box>
 
-                        <Typography variant="caption" sx={{ textAlign: 'center', fontWeight: 700, opacity: 0.8 }}>
+                        {/* <Typography variant="caption" sx={{ textAlign: 'center', fontWeight: 700, opacity: 0.8 }}>
                             © MUFATE-G SACCO 2024
-                        </Typography>
+                        </Typography> */}
                     </Box>
                 </Box>
 
