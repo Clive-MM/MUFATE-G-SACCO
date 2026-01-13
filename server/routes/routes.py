@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
 from datetime import datetime
-from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket
+from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Posts, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket, PostsCategory
 import cloudinary.uploader
 import re
 import traceback
@@ -727,57 +727,57 @@ def create_post():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create post.', 'error': str(e)}), 500
 
-# viewing posts
 
 
-@routes.route('/posts', methods=['GET'])
-def get_all_posts():
+#Fetching the posts in the news page
+@routes.route('/news/posts', methods=['GET'])
+def get_posts():
     try:
-        posts = Post.query.order_by(Post.DatePosted.desc()).all()
-        post_list = []
+        # Get category from query parameters (e.g., ?category=Financial Reports)
+        category_name = request.args.get('category')
+        
+        query = Posts.query.join(PostsCategory)
+        
+        if category_name:
+            query = query.filter(PostsCategory.Category == category_name)
+        
+        # Order by newest first
+        posts = query.order_by(Posts.DatePosted.desc()).all()
 
-        for post in posts:
-            post_list.append({
-                'PostID': post.PostID,
-                'Title': post.Title,
-                'Content': post.Content,
-                'CoverImage': post.CoverImage,
-                'DatePosted': post.DatePosted.strftime("%Y-%m-%d %H:%M:%S")
-            })
+        posts_data = [{
+            'PostID': p.PostID,
+            'Title': p.Title,
+            'Content': p.Content,
+            'CoverImage': p.CoverImage,
+            'DatePosted': p.DatePosted.strftime('%Y-%m-%d %H:%M:%S'),
+            'Category': p.category.Category # Accessing backref from your model
+        } for p in posts]
 
-        return jsonify({'posts': post_list}), 200
+        return jsonify({'posts': posts_data}), 200
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch posts.', 'error': str(e)}), 500
-
-# Route for viewing a post details
-
-
-@routes.route('/posts/<int:post_id>', methods=['GET'])
-def get_single_post(post_id):
+    
+#Fetching the hero image in the News pages  
+@routes.route('/posts/hero', methods=['GET'])
+def get_hero_posts():
     try:
-        post = Post.query.get(post_id)
-        if not post:
-            return jsonify({'message': '❌ Post not found.'}), 404
+        # Fetch the top 5 most recent posts in the 'HeroImage' category
+        hero_posts = Posts.query.join(PostsCategory)\
+            .filter(PostsCategory.Category == 'HeroImage')\
+            .order_by(Posts.DatePosted.desc())\
+            .limit(5).all()
 
-        post_data = {
-            'PostID': post.PostID,
-            'Title': post.Title,
-            'Content': post.Content,
-            'CoverImage': post.CoverImage,
-            'DatePosted': post.DatePosted.strftime('%Y-%m-%d %H:%M:%S')
-        }
+        hero_data = [{
+            'Title': p.Title,
+            'Content': p.Content,
+            'CoverImage': p.CoverImage,
+            'PostID': p.PostID
+        } for p in hero_posts]
 
-        return jsonify({'post': post_data}), 200
-
+        return jsonify({'hero': hero_data}), 200
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': '❌ Failed to retrieve post.', 'error': str(e)}), 500
-
-
+        return jsonify({'error': str(e)}), 500
 # Route for creating the products offered by a sacco
 @routes.route('/products/create', methods=['POST'])
 @jwt_required()
