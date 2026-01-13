@@ -1,6 +1,7 @@
+// AboutUs.jsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography, IconButton } from '@mui/material';
 import RoomIcon from '@mui/icons-material/Room';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { motion } from 'framer-motion';
@@ -13,42 +14,59 @@ const AboutUs = () => {
   const [coreValues, setCoreValues] = useState([]);
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/branches')
+    axios
+      .get('https://mufate-g-sacco.onrender.com/branches')
       .then(res => setBranches(res.data.branches || []))
-      .catch(error => console.error("Error fetching branches:", error));
+      .catch(error => console.error('Error fetching branches:', error));
   }, []);
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/corevalues')
+    axios
+      .get('https://mufate-g-sacco.onrender.com/corevalues')
       .then(res => setCoreValues(res.data.core_values || []))
-      .catch(error => console.error("Error fetching core values:", error));
+      .catch(error => console.error('Error fetching core values:', error));
   }, []);
+
+  // Brand colors used inline (keeps component self-contained)
+  const COLORS = {
+    deepGreen: '#011407',      // very dark
+    deepGreen2: '#01240F',     // mid dark
+    gold: '#FFD700',
+    deepGold: '#E6C200',
+    softGold: '#FFF4B5',
+    bodyText: '#EDE7D6',       // visible on deep green
+  };
 
   return (
     <>
       {/* Hero Image */}
       <div style={{ overflow: 'hidden', width: '100%' }}>
         <img
-          src="https://res.cloudinary.com/djydkcx01/image/upload/v1747331947/ChatGPT_Image_May_15_2025_08_58_50_PM_uwznuh.png"
+          src="https://res.cloudinary.com/djydkcx01/image/upload/v1752730090/IMG_9698_nwftoq.jpg"
           alt="About Us Hero"
-          style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }}
+          style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
         />
       </div>
 
       <AboutUsSection />
 
       {/* Branches & Core Values Section */}
-      <section style={{ background: 'linear-gradient(135deg, #e8f5e9, #f1f8e9)', padding: '4rem 1.5rem' }}>
+      <section
+        style={{
+          background: 'linear-gradient(135deg,#e8f5e9,#f1f8e9)',
+          padding: '4rem 1.5rem',
+        }}
+      >
         <Typography
           variant="h3"
           sx={{
-            fontWeight: '800',
+            fontWeight: 800,
             fontSize: { xs: '2rem', md: '2.4rem' },
-            color: '#1b5e20',
+            color: COLORS.deepGreen2,
             textAlign: { xs: 'center', md: 'left' },
             mb: 6,
             letterSpacing: 2,
-            textShadow: '0 2px 3px rgba(0,0,0,0.1)',
+            textShadow: '0 2px 3px rgba(0,0,0,0.06)',
             ml: { md: '12%' },
           }}
         >
@@ -62,17 +80,19 @@ const AboutUs = () => {
             gap: 4,
             maxWidth: '1200px',
             margin: '0 auto',
+            alignItems: 'stretch',
           }}
         >
+          {/* map branches then final card showing core values */}
           {[...branches, { CoreValues: true }].map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.96 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
+              transition={{ duration: 0.45, delay: index * 0.12 }}
             >
               <Card
-                elevation={6}
+                elevation={8}
                 sx={{
                   width: '100%',
                   minHeight: '320px',
@@ -80,60 +100,105 @@ const AboutUs = () => {
                   flexDirection: 'column',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderRadius: '20px',
-                  background: item.CoreValues
-                    ? 'linear-gradient(to bottom right, #003c3c, #004d40)'
-                    : 'linear-gradient(to bottom right, #004d40, #00695c)',
-                  color: '#ffffff',
-                  textAlign: 'center',
-                  py: 4,
+                  borderRadius: '18px',
                   px: 3,
-                  boxShadow: '0 12px 20px rgba(0, 0, 0, 0.3)',
-                  transition: 'all 0.4s ease-in-out',
+                  py: 4,
+                  // Deep-green glass card
+                  background:
+                    'linear-gradient(180deg, rgba(1,20,10,0.78), rgba(1,20,10,0.9))',
+                  border: `1.5px solid ${COLORS.gold}33`,
+                  color: COLORS.softGold,
+                  textAlign: 'center',
+                  boxShadow: `0 18px 36px rgba(0,0,0,0.45), 0 0 26px ${COLORS.gold}20`,
+                  transition: 'all 0.38s ease-in-out',
                   '&:hover': {
-                    transform: 'scale(1.05) translateY(-6px)',
-                    boxShadow: '0 18px 30px rgba(0, 0, 0, 0.4)',
-                    border: item.CoreValues ? '2px solid #64dd17' : '2px solid #76ff03',
+                    transform: 'translateY(-8px)',
+                    boxShadow: `0 30px 70px rgba(0,0,0,0.6), 0 0 40px ${COLORS.gold}55`,
+                    border: `1.5px solid ${COLORS.gold}`,
                   },
                 }}
               >
-                <CardContent>
+                <CardContent sx={{ width: '100%' }}>
                   {item.CoreValues ? (
                     <>
-                      <FavoriteIcon sx={{ fontSize: 50, color: '#ff7043', mb: 2 }} />
-                      <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', fontSize: '1.4rem' }}>
+                      <FavoriteIcon sx={{ fontSize: 48, color: COLORS.deepGold, mb: 2 }} />
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          mb: 2,
+                          fontWeight: 900,
+                          fontSize: '1.4rem',
+                          color: COLORS.softGold,
+                          background: `linear-gradient(to right, ${COLORS.gold}, ${COLORS.softGold})`,
+                          WebkitBackgroundClip: 'text',
+                          color: 'transparent',
+                          textShadow: `0 0 10px ${COLORS.gold}55`,
+                        }}
+                      >
                         Our Core Values
                       </Typography>
+
                       <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                        {coreValues.map((value, i) => (
-                          <motion.li
-                            key={i}
-                            initial={{ opacity: 0, x: -10 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.05 * i }}
-                          >
-                            <Typography variant="body2" sx={{ mb: 1, fontSize: '1rem' }}>
-                              {value.CoreValueName}
-                            </Typography>
-                          </motion.li>
-                        ))}
+                        {coreValues.length === 0 ? (
+                          <Typography sx={{ color: COLORS.bodyText }}>No values found</Typography>
+                        ) : (
+                          coreValues.map((value, i) => (
+                            <motion.li
+                              key={i}
+                              initial={{ opacity: 0, x: -8 }}
+                              whileInView={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.05 * i }}
+                            >
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  mb: 1,
+                                  fontSize: '1rem',
+                                  color: COLORS.softGold,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {value.CoreValueName}
+                              </Typography>
+                            </motion.li>
+                          ))
+                        )}
                       </Box>
                     </>
                   ) : (
                     <>
-                      <RoomIcon sx={{ fontSize: 50, color: '#76ff03', mb: 2 }} />
-                      <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, fontSize: '1.4rem' }}>
-                        {item.BranchName}
+                      <RoomIcon sx={{ fontSize: 48, color: COLORS.gold, mb: 2 }} />
+
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 900,
+                          mb: 1,
+                          fontSize: '1.25rem',
+                          color: COLORS.softGold,
+                          WebkitBackgroundClip: 'text',
+                        }}
+                      >
+                        {item.BranchName || 'Branch'}
                       </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '1rem', mb: 1 }}>
-                        {item.Location}
+
+                      <Typography
+                        variant="body2"
+                        sx={{ fontSize: '1rem', mb: 1, color: COLORS.bodyText }}
+                      >
+                        {item.Location || 'Location not available'}
                       </Typography>
-                      <Typography variant="body2" sx={{ fontSize: '1rem' }}>
-                        <strong>Contact:</strong> {item.ContactNumber}
+
+                      <Typography variant="body2" sx={{ fontSize: '1rem', color: COLORS.bodyText }}>
+                        <strong style={{ color: COLORS.gold }}>Contact:</strong>{' '}
+                        <span style={{ color: COLORS.bodyText }}>{item.ContactNumber || 'N/A'}</span>
                       </Typography>
+
                       <Box
                         component="a"
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.GoogleMapURL)}`}
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                          item.GoogleMapURL || item.Location || ''
+                        )}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         sx={{
@@ -143,22 +208,23 @@ const AboutUs = () => {
                           mt: 2,
                           px: 2,
                           py: 1,
-                          backgroundColor: '#ffffff',
-                          color: '#004d40',
-                          borderRadius: '20px',
-                          fontWeight: 'bold',
-                          fontSize: '0.85rem',
+                          background: COLORS.gold,
+                          color: '#000',
+                          borderRadius: '999px',
+                          fontWeight: '700',
+                          fontSize: '0.9rem',
                           textDecoration: 'none',
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-                          transition: 'all 0.3s ease-in-out',
+                          boxShadow: `0 8px 30px ${COLORS.gold}33`,
+                          transition: 'all 0.25s ease-in-out',
                           '&:hover': {
-                            backgroundColor: '#64dd17',
-                            color: '#fff',
-                            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                            transform: 'translateY(-3px)',
+                            boxShadow: `0 18px 45px ${COLORS.gold}55`,
+                            background: COLORS.deepGold,
+                            color: '#000',
                           },
                         }}
                       >
-                        <RoomIcon sx={{ fontSize: 20 }} />
+                        <RoomIcon sx={{ fontSize: 18 }} />
                         <span>Google Map</span>
                       </Box>
                     </>

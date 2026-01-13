@@ -1,35 +1,43 @@
-# ✅ Base image
-FROM python:3.11-slim
+# ✅ Base image pinned to Debian 12 (bookworm)
+FROM python:3.11-slim-bookworm
 
-# ✅ Prevent .pyc files and enable unbuffered logging
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+# ✅ Python/runtime env
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DEBIAN_FRONTEND=noninteractive \
+    PIP_NO_CACHE_DIR=1
 
-# ✅ Install ODBC + system dependencies
-RUN apt-get update && \
+# ✅ System deps + unixODBC + Microsoft repo (no apt-key)
+RUN set -eux; \
+    apt-get update; \
     apt-get install -y --no-install-recommends \
-    gcc g++ gnupg curl unixodbc-dev unixodbc \
-    libpq-dev apt-transport-https ca-certificates && \
-    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
-    apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17 && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+      build-essential \
+      curl \
+      gnupg2 \
+      ca-certificates \
+      unixodbc \
+      unixodbc-dev \
+      libpq-dev; \
+    # Add Microsoft repo key via keyring (bookworm)
+    curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
+      | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg; \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/debian/12/prod bookworm main" \
+      > /etc/apt/sources.list.d/microsoft-prod.list; \
+    apt-get update; \
+    ACCEPT_EULA=Y apt-get install -y msodbcsql18; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*
 
-# ✅ Set working directory
+# ✅ App
 WORKDIR /app
-
-# ✅ Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
-# ✅ Copy rest of the project
 COPY . .
 
-# ✅ Set environment variable for Flask
+# ✅ Flask / Gunicorn
 ENV FLASK_APP=app.py
 
-# ✅ Expose Flask port
-EXPOSE 5000
-
-# ✅ Start server using Gunicorn (production-ready)
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+# 🔴 IMPORTANT CHANGE: Let Render decide the port via $PORT
+# Render sets PORT env variable, so bind gunicorn to that.
+# Use shell form so $PORT is expanded.
+CMD gunicorn --bind 0.0.0.0:${PORT:-5000} app:app

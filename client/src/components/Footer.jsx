@@ -4,12 +4,13 @@ import {
 } from '@mui/material';
 import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
-  Facebook, Instagram, X
+  Facebook, X
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa'; // ✅ WhatsApp Icon
 import axios from 'axios';
 import './Footer.css';
+import SupportChatWidget from "./SupportChatWidget";
 
 const Footer = () => {
   const [postImages, setPostImages] = useState([]);
@@ -30,14 +31,13 @@ const Footer = () => {
         {/* Column 1: Logo + Description + Socials */}
         <Box className="footer-column">
           <img
-            src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
-            alt="Mufate Logo"
+            src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
+            alt="GOLDEN GENERATION DT Logo"
             className="footer-logo"
           />
-          <Typography className="footer-title">INVEST HERE REAP HERE</Typography>
+          <Typography className="footer-title">WALKING WITH YOU</Typography>
           <Typography className="footer-description">
-            Mufate ‘G’ Sacco society limited is a Sacco that started in 1987 and provides financial
-            services to farmers, business community and other institutions.
+            Golden Generation DT Sacco, formerly Mufate G Sacco, has undergone rebranding to expand, modernize, and serve more members effectively. The rights, benefits, and privileges of our farmers remain fully protected and unchanged.
           </Typography>
           <Box className="footer-icons">
             <IconButton
@@ -48,14 +48,7 @@ const Footer = () => {
             >
               <X />
             </IconButton>
-            <IconButton
-              component="a"
-              href="https://www.instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Instagram />
-            </IconButton>
+
             <IconButton
               component="a"
               href="https://www.facebook.com/share/1CLhxfKxb2/"
@@ -144,9 +137,10 @@ const Footer = () => {
 
       <Box className="footer-bottom">
         <Typography variant="body2">
-          Mufate G Sacco Society Limited © 2025. All Rights Reserved.
+          GOLDEN GENERATION DEPOSIT TAKING SACCO © 2025. All Rights Reserved.
         </Typography>
       </Box>
+      <SupportChatWidget />
     </Box>
   );
 };

@@ -8,9 +8,7 @@ import {
   DialogContent,
   IconButton,
   useTheme,
-  useMediaQuery,
-  Snackbar,
-  Alert
+  useMediaQuery
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
@@ -18,6 +16,7 @@ import './FeedbackBanner.css';
 
 const FeedbackBanner = () => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     Email: '',
     Subject: '',
@@ -33,44 +32,21 @@ const FeedbackBanner = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { enqueueSnackbar } = useSnackbar(); // ✅ Notistack hook
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    if (!formData.Email || !formData.Subject || !formData.Message) {
-      setSnackbar({
-        open: true,
-        message: '❌ Please fill in all fields.',
-        severity: 'warning'
-      });
-      return;
-    }
-
-    setLoading(true);
     try {
       const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
-      setSnackbar({
-        open: true,
-        message: res.data.message,
-        severity: 'success'
-      });
+      enqueueSnackbar(res.data.message, { variant: 'success' }); // ✅ Success message
       setOpen(false);
       setFormData({ Email: '', Subject: '', Message: '' });
     } catch (err) {
-      setSnackbar({
-        open: true,
-        message: err?.response?.data?.message || '❌ Failed to submit feedback.',
-        severity: 'error'
-      });
-    } finally {
-      setLoading(false);
+      enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' }); // ✅ Error message
     }
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -79,14 +55,18 @@ const FeedbackBanner = () => {
         <Typography className="feedback-title">
           We Value Your Feedback
         </Typography>
+
         <Typography className="feedback-text">
-          Your opinion matters to us! Help us serve you better by sharing your thoughts, suggestions, or experiences with Mufate "G" Sacco.
+          Your opinion matters to us! Help us serve you better by sharing your thoughts,
+          suggestions, or experiences with GOLDEN GENERATION DT Sacco.
         </Typography>
+
         <Button className="feedback-button" onClick={() => setOpen(true)}>
-          Click Here
+          <strong>CLICK HERE</strong>
         </Button>
       </Box>
 
+      {/* ===================== POPUP ===================== */}
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
@@ -94,11 +74,10 @@ const FeedbackBanner = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            width: '100%',
-            maxWidth: isMobile ? '95%' : '700px',
+            background: 'linear-gradient(135deg, #011407, #01240F)',
+            color: '#FFD700',
             borderRadius: 3,
-            mx: 'auto',
-            my: 2,
+            boxShadow: "0 0 35px rgba(255,215,0,0.25)"
           }
         }}
       >
@@ -106,45 +85,46 @@ const FeedbackBanner = () => {
           sx={{
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'stretch',
             gap: isMobile ? 3 : 5,
             p: isMobile ? 2 : 4,
-            position: 'relative',
-            width: '100%',
-            boxSizing: 'border-box'
+            position: 'relative'
           }}
         >
           {/* Left Section */}
-          <Box sx={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: isMobile ? 'center' : 'left'
+            }}
+          >
             <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
               <img
-                src="https://res.cloudinary.com/djydkcx01/image/upload/v1746061572/Mufate_Logo_jnnh7x.png"
+                src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
                 alt="MUFATE G SACCO logo"
-                style={{ height: isMobile ? '80px' : '100px', objectFit: 'contain' }}
+                style={{ height: isMobile ? '80px' : '100px' }}
               />
             </Box>
 
-            <Typography
-              variant={isMobile ? 'h6' : 'h5'}
-              sx={{ mt: 2, fontWeight: 'bold', color: '#003B2F' }}
-            >
+            <Typography className="feedback-modal-title">
               We’d Love to Hear from You
             </Typography>
 
-            <Typography
-              sx={{
-                mt: 1,
-                fontSize: isMobile ? '14px' : '15px',
-                color: '#333',
-                lineHeight: 1.7
-              }}
-            >
-              Your feedback helps us improve our services and serve you better. Please take a moment to share your thoughts, experiences, or suggestions with Mufate G Sacco. All responses are confidential and appreciated.
+            <Typography className="feedback-modal-text">
+              Your feedback helps us improve our services and serve you better.
+              Please share your thoughts or suggestions.
+              All responses are confidential and appreciated.
             </Typography>
           </Box>
 
           {/* Right Section - Form */}
-          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2
+            }}
+          >
             <TextField
               label="Email"
               name="Email"
@@ -152,7 +132,10 @@ const FeedbackBanner = () => {
               onChange={handleChange}
               fullWidth
               size="small"
+              InputLabelProps={{ className: 'gold-label' }}
+              InputProps={{ className: 'gold-input' }}
             />
+
             <TextField
               label="Subject"
               name="Subject"
@@ -160,7 +143,10 @@ const FeedbackBanner = () => {
               onChange={handleChange}
               fullWidth
               size="small"
+              InputLabelProps={{ className: 'gold-label' }}
+              InputProps={{ className: 'gold-input' }}
             />
+
             <TextField
               label="Message"
               name="Message"
@@ -170,10 +156,12 @@ const FeedbackBanner = () => {
               rows={4}
               fullWidth
               size="small"
+              InputLabelProps={{ className: 'gold-label' }}
+              InputProps={{ className: 'gold-input' }}
             />
+
             <Button
               onClick={handleSubmit}
-              disabled={loading}
               sx={{
                 backgroundColor: '#003B2F',
                 color: '#fff',
@@ -183,27 +171,17 @@ const FeedbackBanner = () => {
                 }
               }}
             >
-              {loading ? 'Submitting...' : 'SUBMIT'}
+              SUBMIT
             </Button>
           </Box>
 
-          {/* Close Button */}
+          {/* CLOSE ICON */}
           <IconButton
             onClick={() => setOpen(false)}
-            sx={{
-              position: 'absolute',
-              top: 12,
-              right: 12,
-              backgroundColor: '#fff',
-              border: '1px solid #ccc',
-              width: 32,
-              height: 32,
-              '&:hover': {
-                backgroundColor: '#ffe0b2'
-              }
-            }}
+            className="feedback-close-btn"
+            sx={{ position: 'absolute', top: 12, right: 12 }}
           >
-            <CloseIcon sx={{ color: '#ef6c00', fontSize: '20px' }} />
+            <CloseIcon />
           </IconButton>
         </DialogContent>
       </Dialog>

@@ -16,23 +16,29 @@ const StrategicPartners = () => {
   const [partners, setPartners] = useState([]);
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/partnerships')
-      .then(res => setPartners(res.data.partnerships))
-      .catch(err => console.error('Error fetching partners:', err));
+    axios
+      .get('https://mufate-g-sacco.onrender.com/partnerships')
+      .then((res) => setPartners(res.data.partnerships))
+      .catch((err) => console.error('Error fetching partners:', err));
   }, []);
 
   return (
-    // ✅ Soft radial background and animation container
     <motion.div
       initial={{ opacity: 0, scale: 0.98 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <Box sx={{ background: 'radial-gradient(circle at top, #f0f4f8, #e3eaf1)' }}>
-        <Box sx={{ pt: 6, pb: 6, px: { xs: 2, md: 10 } }}>
-
-          {/* ✅ Animated headline */}
+      {/* 🌟 Deep Green + Gold Luxury Background */}
+      <Box
+        sx={{
+          background: 'linear-gradient(135deg, #011407, #01240F)',
+          py: 8,
+        }}
+      >
+        <Box sx={{ px: { xs: 2, md: 10 } }}>
+          
+          {/* 🌟 GOLD TITLE (Underline Removed) */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -41,48 +47,47 @@ const StrategicPartners = () => {
             <Typography
               variant="h4"
               sx={{
-                fontWeight: 800,
-                fontSize: { xs: '1.8rem', md: '2.2rem' },
+                fontWeight: 900,
+                fontSize: { xs: '1.9rem', md: '2.4rem' },
                 textAlign: 'center',
-                color: '#003b5c',
-                letterSpacing: '0.5px',
-                mb: 1,
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                mb: 6, // adjusted spacing after removing underline
               }}
             >
-              Our Strategic Partners
+              Trusted Partners in Growth
             </Typography>
-
-            <Box
-              sx={{
-                height: '4px',
-                width: '70px',
-                backgroundColor: '#0077cc',
-                mx: 'auto',
-                borderRadius: '8px',
-                mb: 5,
-              }}
-            />
           </motion.div>
 
+          {/* 💼 PARTNERS GRID */}
           <Grid container spacing={4} justifyContent="center" sx={{ mb: 4 }}>
             {partners.map((partner, idx) => (
               <Grid item xs={12} sm={6} md={4} key={idx}>
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.92 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: idx * 0.1 }}
                 >
                   <Card
                     sx={{
-                      maxWidth: 345,
+                      maxWidth: 360,
                       mx: 'auto',
-                      borderRadius: 3,
-                      boxShadow: 3,
-                      transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                      borderRadius: '20px',
+                      background: '#01240F',
+                      border: '1px solid rgba(255,215,0,0.2)',
+                      boxShadow:
+                        '0 10px 25px rgba(0,0,0,0.4), 0 0 25px rgba(255,215,0,0.15)',
+                      transition:
+                        'transform 0.35s ease, box-shadow 0.35s ease, border 0.35s ease',
                       '&:hover': {
-                        transform: 'translateY(-6px)',
-                        boxShadow: '0 8px 25px rgba(0, 123, 255, 0.3)',
+                        transform: 'translateY(-10px)',
+                        border: '1px solid #FFD700',
+                        boxShadow:
+                          '0 18px 35px rgba(0,0,0,0.5), 0 0 35px rgba(255,215,0,0.4)',
                       },
                     }}
                   >
@@ -90,33 +95,43 @@ const StrategicPartners = () => {
                       {partner.LogoImageURL && (
                         <CardMedia
                           component="img"
-                          height="180"
                           image={partner.LogoImageURL}
                           alt={partner.PartnerName}
                           sx={{
-                            objectFit: 'cover',
-                            backgroundColor: '#fff',
-                            filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.15))',
+                            height: 180,
+                            objectFit: 'contain',
+                            backgroundColor: '#ffffff',
+                            p: 2,
+                            borderBottom: '1px solid rgba(255,215,0,0.2)',
+                            filter:
+                              'drop-shadow(0 0 10px rgba(0,0,0,0.25))',
                           }}
                         />
                       )}
+
                       <CardContent>
                         <Typography
                           variant="h6"
                           sx={{
-                            fontWeight: 700,
-                            color: '#003b5c',
+                            fontWeight: 800,
                             textAlign: 'center',
+                            background:
+                              'linear-gradient(to right, #FFD700, #FFF4B5)',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            mb: 1,
+                            letterSpacing: '0.5px',
                           }}
                         >
                           {partner.PartnerName}
                         </Typography>
+
                         <Typography
                           variant="body2"
                           sx={{
-                            color: 'text.secondary',
+                            color: '#FFF4B5',
                             textAlign: 'center',
-                            mt: 1,
+                            lineHeight: 1.6,
                           }}
                         >
                           {partner.Description}
@@ -130,10 +145,7 @@ const StrategicPartners = () => {
           </Grid>
         </Box>
 
-        {/* 🔽 Footer with no margin conflict */}
-        <Box sx={{ mt: '-24px' }}>
-          <Footer />
-        </Box>
+        <Footer />
       </Box>
     </motion.div>
   );

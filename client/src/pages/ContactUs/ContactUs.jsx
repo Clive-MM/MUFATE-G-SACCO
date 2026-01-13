@@ -1,69 +1,131 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Container, useMediaQuery, useTheme } from '@mui/material';
+import { motion } from 'framer-motion';
 import ContactDetails from './ContactDetails';
-import FeedbackForm from './FeedbackForm';
-import Footer from '../../components/Footer';
 
+const BRAND = {
+  gold: '#EC9B14',
+  dark: '#02150F',
+  light: '#F4F4F4',
+};
 
 const ContactUs = () => {
+  const theme = useTheme();
+  const isSmallPhone = useMediaQuery('(max-width:360px)');
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
-    <>
-      {/* Hero Section */}
+    <Box
+      sx={{
+        backgroundColor: BRAND.dark,
+        minHeight: '100vh',
+        position: 'relative',
+        overflowX: 'hidden',
+        /* FIX: Set background to 'contain' on mobile so it shows the whole 
+           image proportionally without zooming in.
+        */
+        backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: { xs: 'contain', md: 'cover' },
+        backgroundPosition: { xs: 'top center', md: 'center center' },
+        backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+      }}
+    >
+      {/* OVERLAY FIX: We use a lighter gradient at the top for mobile 
+          so the "narrow" image is clearly visible behind the text.
+      */}
       <Box
         sx={{
-          height: { xs: '80vh', md: '120vh' },
-          position: 'relative',
-          backgroundImage:
-            'url(https://res.cloudinary.com/djydkcx01/image/upload/v1748438814/ChatGPT_Image_May_28_2025_04_25_45_PM_vedkd0.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: { xs: '70% center', md: 'center' },
-          backgroundRepeat: 'no-repeat',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          // Adjust vertical alignment to start from the top
-          justifyContent: 'flex-start', // Changed from 'center'
-          px: { xs: 3, md: 8 },
-          py: { xs: 4, md: 6 },
-          color: '#fff',
+          position: 'fixed',
+          inset: 0,
+          background: isMobile 
+            ? `linear-gradient(to bottom, rgba(2,21,15,0.4) 0%, ${BRAND.dark} 40%, ${BRAND.dark} 100%)`
+            : `linear-gradient(to bottom, rgba(2,21,15,0.7) 0%, ${BRAND.dark} 100%)`,
+          zIndex: 1,
         }}
-      >
-        <Typography
-          sx={{
-            fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.5rem' },
-            fontWeight: 'bold',
-            textShadow: '2px 2px 8px rgba(0,0,0,0.6)',
-            zIndex: 1,
-            
-            mt: { xs: '55vh', sm: '60vh', md: '65vh' }, 
-          }}
-        >
-          Let’s Get In Touch
-        </Typography>
+      />
 
-        <Typography
+      <Box sx={{ position: 'relative', zIndex: 2 }}>
+        
+        {/* Hero Section - Height adjusted for mobile to match the narrow image */}
+        <Box
           sx={{
-            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' },
-            mt: 2,
-            maxWidth: { xs: '100%', sm: '90%', md: '600px' },
-            fontWeight: 'normal',
-            textShadow: '1px 1px 6px rgba(0,0,0,0.4)',
-            lineHeight: 1.6,
-            fontStyle: 'italic',
-            wordWrap: 'break-word',
-            zIndex: 1,
+            height: { xs: '40vh', md: '65vh' }, 
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            px: 2,
+            pt: { xs: 5, md: 0 }
           }}
         >
-          Have any questions or need support? Our team is ready to help you with anything you need.
-        </Typography>
+          <Container maxWidth="lg">
+            <Box
+              component={motion.div}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: 900,
+                  textTransform: 'uppercase',
+                  fontSize: { xs: isSmallPhone ? '2.2rem' : '2.8rem', sm: '4rem', md: '5rem' },
+                  color: BRAND.gold,
+                  letterSpacing: { xs: '0.05em', md: '0.15em' },
+                  mb: 2,
+                  lineHeight: 1.1,
+                  filter: 'drop-shadow(0 10px 10px rgba(0,0,0,0.8))',
+                }}
+              >
+                Get In {isMobile && <br />} Touch
+              </Typography>
+
+              <Typography
+                sx={{
+                  fontSize: { xs: '1rem', md: '1.25rem' },
+                  color: BRAND.light,
+                  maxWidth: '700px',
+                  mx: 'auto',
+                  lineHeight: { xs: 1.6, md: 1.8 },
+                  opacity: 0.95,
+                  fontWeight: 500,
+                  textShadow: '0 2px 10px rgba(0,0,0,0.8)',
+                  px: { xs: 2, md: 0 }
+                }}
+              >
+                Your financial growth is our priority. Whether you have questions 
+                about membership or need technical support, our team is here.
+              </Typography>
+            </Box>
+          </Container>
+        </Box>
+
+        {/* Contact Details - Positioning fixed for mobile view */}
+        <Box sx={{ 
+          mt: { xs: 2, md: -15 }, 
+          pb: 10,
+          px: { xs: 1, md: 0 } 
+        }}>
+          <ContactDetails />
+        </Box>
+
+        {/* FOOTER */}
+        <Box sx={{ py: 6, textAlign: 'center' }}>
+          <Typography
+            sx={{
+              color: BRAND.gold,
+              letterSpacing: '3px',
+              fontWeight: 900,
+              textTransform: 'uppercase',
+              fontSize: { xs: '0.9rem', md: '1.35rem' }
+            }}
+          >
+            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+          </Typography>
+        </Box>
       </Box>
-
-      {/* Contact Info Section */}
-      <ContactDetails />
-      <FeedbackForm/>
-      <Footer/>
-      
-    </>
+    </Box>
   );
 };
 

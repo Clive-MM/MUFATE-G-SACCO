@@ -1,5 +1,7 @@
 # === Database Configuration ===
-DATABASE_URL=mssql+pyodbc://mufate-g-sacco:AZiza%402812@34.70.201.145:1433/MUFATE_G_SACCO?driver=ODBC+Driver+17+for+SQL+Server&Encrypt=no&TrustServerCertificate=yes
+DATABASE_URL=mssql+pyodbc://sa:H%40rd2Cr%40ck%21@197.248.185.209,1435/MUFATE_G_SACCO_WEB?driver=ODBC+Driver+18+for+SQL+Server&Encrypt=yes&TrustServerCertificate=yes
+
+
 
 # === JWT Secret ===
 JWT_SECRET_KEY=GYwNuK5IA72w8sH_fVxYcOWtY0RJ9wBrP5B93RvBEG06NC5ETopjLjRSNQJnr2LUXTWfBBKZU-F6Q3K3kKNu8w
@@ -13,6 +15,7 @@ CLOUDINARY_API_SECRET=yn0Sp1Wynf7EfLG_PJeUb5kul1E
 MAIL_SERVER=host26.safaricombusiness.co.ke
 MAIL_PORT=587
 MAIL_USE_TLS=True
+MAIL_USE_SSL= False
 MAIL_USERNAME=maderumoyia@mudetesacco.co.ke
 MAIL_PASSWORD=AZiza@2812
 MAIL_DEFAULT_SENDER=maderumoyia@mudetesacco.co.ke

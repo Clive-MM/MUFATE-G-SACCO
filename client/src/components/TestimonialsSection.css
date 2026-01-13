@@ -1,121 +1,130 @@
+/* ===== BRAND COLORS ===== */
+:root {
+  --gold: #FFD700;
+  --light-gold: #FFE066;
+  --deep-green: #006400;
+  --deep-green-700: #013716;
+  --deep-green-900: #021409;
+  --white: #ffffff;
+  --radius-xl: 18px;
+}
+
+/* ===== SECTION WRAPPER ===== */
 .testimonials-section {
-  background-color: #ffffff;
-  padding: 4rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--deep-green-900),
+    var(--deep-green-700) 45%,
+    #000a06 100%
+  );
+  padding: 9rem 1.5rem 4rem;   /* Increased for perfect vertical alignment */
   text-align: center;
-}
-
-
-.testimonial-title {
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  color: #002d5a;
-  font-weight: bold;
-  letter-spacing: 1.5px;
-  margin-bottom: 2.5rem;
+  color: var(--white);
   position: relative;
-  animation: fadeInGlow 1.2s ease forwards;
-  transition: all 0.3s ease;
-  cursor: default;
 }
 
-.testimonial-title:hover {
-  color: #1e7f18;
-  text-shadow: 0 0 8px #64dd17, 0 0 16px #64dd17;
-  transform: scale(1.03);
-}
-
-
+/* ================================================
+      ⭐ MATCHES EXACTLY the OUR PRODUCTS Heading
+   ================================================ */
 .testimonial-title {
-  background-color: #ffffff;
-  display: inline-block;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  color: #002d5a;
-  font-size: 1.3rem;
+  margin-top: -4.5rem;  /* Positions it like Products title */
+  margin-bottom: 4rem;
+
+  font-weight: 900;
   text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 1.5px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 3rem;
-  transition: all 0.3s ease-in-out;
-  animation: fadeInGlow 1.2s ease forwards;
+  letter-spacing: 1.6px;
+
+  /* Gradient Gold Text */
+  background-image: linear-gradient(to right, var(--gold), var(--light-gold));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  font-size: 2.6rem;     /* SAME size as OUR PRODUCTS */
+  line-height: 1.1;
+  text-shadow: 0 0 18px rgba(255, 215, 0, 0.75);
+
+  transition: all 0.3s ease;
 }
 
 .testimonial-title:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(100, 221, 23, 0.25);
-  color: #1e7f18;
-  text-shadow: 0 0 6px #64dd17;
+  text-shadow: 0 0 30px rgba(255,215,0,1);
 }
 
-
-@keyframes fadeInGlow {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px);
-    text-shadow: none;
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-    text-shadow: 0 0 5px #64dd17;
-  }
+/* ERROR ALERT */
+.testimonial-alert {
+  max-width: 960px;
+  margin: 0 auto 1.5rem;
 }
 
-
-
+/* ===== GRID ===== */
 .testimonials-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-@media (min-width: 768px) {
-  .testimonials-grid {
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 3rem;
-  }
-}
-
-
+/* ===== CARD ===== */
 .testimonial-card {
-  max-width: 320px;
-  padding: 2rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #f8f8f8;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 2.3rem 2rem;
+
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45));
+  backdrop-filter: blur(14px);
+
+  border-top: 3px solid var(--gold);
+  border-left: 1px solid rgba(255, 215, 0, 0.12);
+  border-right: 1px solid rgba(255, 215, 0, 0.12);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.12);
+
+  box-shadow:
+      0 18px 45px rgba(0, 0, 0, 0.55),
+      0 0 22px rgba(255, 215, 0, 0.18);
+
+  transition: all 0.35s ease;
 }
 
 .testimonial-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-10px);
+  border-color: rgba(255,215,0,0.55);
+  box-shadow:
+      0 28px 70px rgba(0,0,0,0.75),
+      0 0 28px rgba(255,215,0,0.4);
 }
 
-
+/* ===== QUOTE ===== */
 .testimonial-quote {
-  font-size: 2rem;
-  color: #333;
+  font-size: 1.15rem;
   font-style: italic;
-  line-height: 1.6;
-  margin-bottom: 1rem;
-  padding: 0 1rem;
+  line-height: 1.85;
+  margin: 0 0 1.5rem;
+  padding: 0 2rem;
+  color: var(--light-gold);
+  position: relative;
 }
 
-/* ==== Name ==== */
-.testimonial-name {
-  color: #1e7f18;
-  font-weight: bold;
-  font-size: 1.05rem;
+.testimonial-quote::before {
+  content: "“";
+  font-size: 3.4rem;
+  color: var(--gold);
+  position: absolute;
+  left: 8px;
+  top: -14px;
+  opacity: 1;
 }
-.testimonial-quote-box {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(6px);
-  padding: 1.2rem;
-  border-radius: 12px;
+
+/* ===== CLIENT NAME ===== */
+.testimonial-name {
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 1.12rem;
+  letter-spacing: 0.6px;
+  text-shadow: 0 0 8px rgba(255,215,0,0.6);
 }

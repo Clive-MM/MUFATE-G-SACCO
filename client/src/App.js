@@ -16,6 +16,11 @@ import FAQs from './more/FAQs';
 import ContactUs from './pages/ContactUs/ContactUs';
 import Careers from './pages/Careers/Careers';
 import News from './more/News';
+import SaccoGallery from './more/saccogallery'; // Duplicate removed below
+import MemberRegistration from "./pages/MemberRegistration";
+import LoanCalculator from './pages/Products/LoanCalculator';
+import SupportChatWidget from "./components/SupportChatWidget";
+import Videos from './more/Videos';
 
 function App({ toggleTheme, mode }) {
   return (
@@ -28,24 +33,30 @@ function App({ toggleTheme, mode }) {
       }}
     >
       <BrowserRouter>
-        <Navbar  />
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-
-          {/* ✅ NEW ROUTE ) */}
           <Route path="/about/who-we-are" element={<AboutUs />} />
           <Route path="/about/board-of-directors" element={<BoardOfDirectors />} />
-           <Route path="/about/management" element={<ManagementTeam />} />
-           <Route path="/products/fosa" element={<FosaProducts />} />
-           <Route path="/products/bosa" element={<BosaProducts />} />
-           <Route path="/products/savings" element={<Savings />} />
-           <Route path="/services" element={<Services />} />
+          <Route path="/about/management" element={<ManagementTeam />} />
+          <Route path="/products/fosa" element={<FosaProducts />} />
+          <Route path="/products/bosa" element={<BosaProducts />} />
+          <Route path="/products/savings" element={<Savings />} />
+          <Route path="/services" element={<Services />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/careers" element={<Careers />} />
-          <Route path="/news" element={<News />} />
+          
+          {/* ✅ MEDIA NESTED ROUTES */}
+          <Route path="/media/gallery" element={<SaccoGallery />} />
+          <Route path="/media/videos" element={<Videos />} />
+          <Route path="/media/blogs" element={<News />} />
+          
+          <Route path="/customer_registration" element={<MemberRegistration />} />
+          <Route path="/products/loanCalculator" element={<LoanCalculator />} />
+          <Route path="/mufategsaccosupport" element={<SupportChatWidget />} />
         </Routes>
       </BrowserRouter>
     </Box>

@@ -1,11 +1,17 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
 from datetime import datetime
-from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Post, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources
+from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Posts, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket, PostsCategory
 import cloudinary.uploader
+import re
+import traceback
+from datetime import date, timedelta
+from calendar import monthrange
+
+from flask_mail import Message
 
 
 # ✅ Initialize Blueprint and Flask extensions
@@ -20,17 +26,22 @@ mail = None
 # ✅ Placeholder for mail - will be assigned later from app.py
 mail = None
 
+
 # ✅ Register mail instance
 def register_mail_instance(mail_instance):
     global mail
     mail = mail_instance
 
 # ✅ Test route
+
+
 @routes.route('/test', methods=['GET'])
 def test_route():
     return jsonify({"message": "Test route working successfully!"}), 200
 
 # ✅ Login route
+
+
 @routes.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -57,6 +68,8 @@ def login():
     }), 200
 
 # ✅ Admin-only Career creation route
+
+
 @routes.route('/careers/create', methods=['POST'])
 @jwt_required()
 def create_career():
@@ -101,8 +114,10 @@ def create_career():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ An error occurred.', 'error': str(e)}), 500
-    
-# ✅Admin updating a career post    
+
+# ✅Admin updating a career post
+
+
 @routes.route('/careers/update/<int:career_id>', methods=['PUT'])
 @jwt_required()
 def update_career(career_id):
@@ -141,7 +156,8 @@ def update_career(career_id):
             career.JobType = job_type
         if deadline_str:
             try:
-                career.Deadline = datetime.strptime(deadline_str, "%Y-%m-%d").date()
+                career.Deadline = datetime.strptime(
+                    deadline_str, "%Y-%m-%d").date()
             except ValueError:
                 return jsonify({'message': '❌ Deadline must be in YYYY-MM-DD format.'}), 400
         if application_instructions:
@@ -160,14 +176,14 @@ def update_career(career_id):
         return jsonify({'message': '❌ An error occurred while updating career.', 'error': str(e)}), 500
 
 
-#Route for viewing career posts
 # ✅ Public route to view all active career posts
 @routes.route('/careers', methods=['GET'])
 def view_careers():
     try:
-        careers = Career.query.filter_by(IsActiveID=1).all()  # Only show active posts
+        careers = Career.query.filter_by(
+            IsActiveID=1).all()  # Only show active posts
         if not careers:
-            return jsonify({'message': 'ℹ️ No active career posts found.'}), 404
+            return jsonify({'message': 'ℹ️ No vacancies career posts found.'}), 404
 
         career_list = []
         for career in careers:
@@ -227,14 +243,15 @@ def create_core_value():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create core value', 'error': str(e)}), 500
-    
 
-#Route for viewing the core_values 
+
+# Route for viewing the core_values
 # ✅ Public route to view all active core values
 @routes.route('/corevalues', methods=['GET'])
 def view_core_values():
     try:
-        core_values = CoreValue.query.filter_by(IsActiveID=1).all()  # Only show active core values
+        core_values = CoreValue.query.filter_by(
+            IsActiveID=1).all()  # Only show active core values
         if not core_values:
             return jsonify({'message': 'ℹ️ No active core values found.'}), 404
 
@@ -254,13 +271,13 @@ def view_core_values():
         traceback.print_exc()
         return jsonify({'message': '❌ An error occurred while fetching core values.', 'error': str(e)}), 500
 
-    
-#upload image urls
+
+# upload image urls
 @routes.route('/upload_image', methods=['POST'])
 @jwt_required()
 def upload_image():
     try:
-        file = request.files['image']  
+        file = request.files['image']
         upload_result = cloudinary.uploader.upload(file)
         image_url = upload_result['secure_url']
 
@@ -273,16 +290,13 @@ def upload_image():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to upload image.', 'error': str(e)}), 500
-    
-#upload a resource.
+
+# upload a resource.
+
+
 @routes.route('/resources/upload', methods=['POST'])
-@jwt_required()
 def upload_resource():
     try:
-        current_user = get_jwt_identity()
-        if current_user['role'].lower() != 'admin':
-            return jsonify({'message': '❌ Access denied! Only admins can upload resources.'}), 403
-
         title = request.form.get('Title')
         file = request.files.get('file')
         is_active_id = request.form.get('IsActiveID')
@@ -290,24 +304,32 @@ def upload_resource():
         if not title or not file or not is_active_id:
             return jsonify({'message': '❌ Title, file, and IsActiveID are required!'}), 400
 
-        # Extract file extension
         filename = file.filename
-        extension = filename.split('.')[-1]
+        extension = filename.split('.')[-1].lower()
 
-        # Upload to Cloudinary as raw file type
-        upload_result = cloudinary.uploader.upload(file, resource_type='raw')
+        # FIX: Use auto resource type
+        upload_result = cloudinary.uploader.upload(
+            file,
+            resource_type="auto",
+            overwrite=True,
+            use_filename=True,
+            unique_filename=False
+        )
 
-        # Defensive: check if secure_url exists
-        if 'public_id' not in upload_result or 'version' not in upload_result:
-            return jsonify({'message': '❌ Upload failed.', 'cloudinary_response': upload_result}), 500
+        # Defensive check
+        if "public_id" not in upload_result:
+            return jsonify({
+                'message': '❌ Upload failed.',
+                'cloudinary_response': upload_result
+            }), 500
 
-        public_id = upload_result['public_id']
-        version = upload_result['version']
+        public_id = upload_result["public_id"]
+        format = upload_result.get("format", extension)
 
-        # Force download link (fl_attachment adds download prompt)
-        file_url = f"https://res.cloudinary.com/djydkcx01/raw/upload/fl_attachment:{public_id}/v{version}/{public_id}.{extension}"
+        # Force download URL
+        file_url = f"https://res.cloudinary.com/djydkcx01/raw/upload/fl_attachment/{public_id}.{format}"
 
-        # Save to database
+        # Save in DB
         new_resource = Resources(
             Title=title,
             FilePath=file_url,
@@ -316,19 +338,24 @@ def upload_resource():
         db.session.add(new_resource)
         db.session.commit()
 
-        return jsonify({'message': '✅ Resource uploaded successfully!', 'file_url': file_url}), 201
+        return jsonify({
+            'message': '✅ Resource uploaded successfully!',
+            'file_url': file_url
+        }), 201
 
     except Exception as e:
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to upload resource.', 'error': str(e)}), 500
 
-
 # Viewing resources with download links
+
+
 @routes.route('/resources', methods=['GET'])
 def list_resources():
     try:
-        resources = Resources.query.filter_by(IsActiveID=1).order_by(Resources.UploadedAt.desc()).all()
+        resources = Resources.query.filter_by(
+            IsActiveID=1).order_by(Resources.UploadedAt.desc()).all()
         resource_list = []
 
         for res in resources:
@@ -402,13 +429,16 @@ def create_faq():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create FAQ', 'error': str(e)}), 500
-    
+
 # ✅ Public route to view FAQs
+
+
 @routes.route('/faqs', methods=['GET'])
 def list_faqs():
     try:
         # Fetch FAQs where IsActiveID = 1 (Active)
-        faqs = FAQ.query.filter_by(IsActiveID=1).order_by(FAQ.CreatedDate.desc()).all()
+        faqs = FAQ.query.filter_by(IsActiveID=1).order_by(
+            FAQ.CreatedDate.desc()).all()
 
         faq_list = []
         for faq in faqs:
@@ -425,8 +455,10 @@ def list_faqs():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch FAQs.', 'error': str(e)}), 500
-    
-#Route for viewing the feedbacks for the admin only   
+
+# Route for viewing the feedbacks for the admin only
+
+
 @routes.route('/admin/feedbacks', methods=['GET'])
 @jwt_required()
 def get_all_feedbacks():
@@ -450,7 +482,7 @@ def get_all_feedbacks():
     return jsonify({'feedbacks': results}), 200
 
 
-#Admin creating a route for creating mobile banking details 
+# Admin creating a route for creating mobile banking details
 @routes.route('/mobile-banking/create', methods=['POST'])
 @jwt_required()
 def create_mobile_banking_info():
@@ -492,12 +524,13 @@ def create_mobile_banking_info():
         return jsonify({'message': '❌ Failed to create mobile banking info.', 'error': str(e)}), 500
 
 
-#Route for viewing mobile banking information
+# Route for viewing mobile banking information
 @routes.route('/mobile-banking', methods=['GET'])
 def view_mobile_banking_info():
     try:
         # Only fetch active entries (IsActiveID = 1)
-        entries = MobileBankingInfo.query.filter_by(IsActiveID=1).order_by(MobileBankingInfo.CreatedAt.desc()).all()
+        entries = MobileBankingInfo.query.filter_by(IsActiveID=1).order_by(
+            MobileBankingInfo.CreatedAt.desc()).all()
 
         results = []
         for entry in entries:
@@ -514,7 +547,9 @@ def view_mobile_banking_info():
     except Exception as e:
         return jsonify({'message': '❌ Failed to fetch mobile banking info.', 'error': str(e)}), 500
 
-#route for creating the operational hours 
+# route for creating the operational hours
+
+
 @routes.route('/operation-hours/create', methods=['POST'])
 @jwt_required()
 def create_operation_hours():
@@ -555,11 +590,12 @@ def create_operation_hours():
         return jsonify({'message': '❌ Failed to create operation hours', 'error': str(e)}), 500
 
 
-#View operational Hours
+# View operational Hours
 @routes.route('/operation-hours', methods=['GET'])
 def get_operation_hours():
     try:
-        timelines = OperationTimeline.query.order_by(OperationTimeline.CreatedAt.asc()).all()
+        timelines = OperationTimeline.query.order_by(
+            OperationTimeline.CreatedAt.asc()).all()
 
         hours_list = []
         for timeline in timelines:
@@ -575,7 +611,7 @@ def get_operation_hours():
         return jsonify({'message': '❌ Failed to fetch operation hours.', 'error': str(e)}), 500
 
 
-#Creating partners linking with the sacco
+# Creating partners linking with the sacco
 @routes.route('/partnerships/create', methods=['POST'])
 @jwt_required()
 def create_partnership():
@@ -627,12 +663,13 @@ def create_partnership():
         return jsonify({'message': '❌ Failed to create partnership', 'error': str(e)}), 500
 
 
-#Route for fetching active partners
+# Route for fetching active partners
 @routes.route('/partnerships', methods=['GET'])
 def get_partnerships():
     try:
         # Fetch partnerships that are marked as active (IsActiveID = 1)
-        partnerships = Partnership.query.filter_by(IsActiveID=1).order_by(Partnership.CreatedAt.desc()).all()
+        partnerships = Partnership.query.filter_by(
+            IsActiveID=1).order_by(Partnership.CreatedAt.desc()).all()
 
         partner_list = []
         for partner in partnerships:
@@ -652,92 +689,64 @@ def get_partnerships():
         return jsonify({'message': '❌ Failed to fetch partnerships.', 'error': str(e)}), 500
 
 
-#Route creating a post
-@routes.route('/posts/create', methods=['POST'])
-@jwt_required()
-def create_post():
-    try:
-        # Authenticate user
-        current_user = get_jwt_identity()
-        role = current_user['role']
 
-        if role.lower() != 'admin':
-            return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
 
-        # Extract form data
-        title = request.json.get('Title')
-        content = request.json.get('Content')
-        cover_image_url = request.json.get('CoverImage')
-
-        # Validate input
-        if not title or not content or not cover_image_url:
-            return jsonify({'message': '❌ Title, Content, and CoverImage URL are required!'}), 400
-
-        # Create and save new post
-        new_post = Post(
-            Title=title,
-            Content=content,
-            CoverImage=cover_image_url
-        )
-
-        db.session.add(new_post)
-        db.session.commit()
-
-        return jsonify({'message': '✅ Post created successfully!'}), 201
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': '❌ Failed to create post.', 'error': str(e)}), 500
-
-#viewing posts 
+#Fetching the posts in the news page
 @routes.route('/posts', methods=['GET'])
-def get_all_posts():
+def get_posts():
     try:
-        posts = Post.query.order_by(Post.DatePosted.desc()).all()
-        post_list = []
+        # Get category from query parameters (e.g., ?category=Financial Reports)
+        category_name = request.args.get('category')
+        
+        # 1. Start query and join with Categories
+        query = Posts.query.join(PostsCategory)
+        
+        # 2. MANDATORY FILTER: Only fetch Categories 1 through 4
+        # This explicitly excludes 'HeroImage' and any other high-ID categories
+        query = query.filter(PostsCategory.PostsCategoryID.between(1, 4))
+        
+        # 3. OPTIONAL FILTER: If user clicked a specific tab (e.g., 'Financial Reports')
+        if category_name:
+            query = query.filter(PostsCategory.Category == category_name)
+        
+        # 4. Order and execute
+        posts = query.order_by(Posts.DatePosted.desc()).all()
 
-        for post in posts:
-            post_list.append({
-                'PostID': post.PostID,
-                'Title': post.Title,
-                'Content': post.Content,
-                'CoverImage': post.CoverImage,
-                'DatePosted': post.DatePosted.strftime("%Y-%m-%d %H:%M:%S")
-            })
+        posts_data = [{
+            'PostID': p.PostID,
+            'Title': p.Title,
+            'Content': p.Content,
+            'CoverImage': p.CoverImage,
+            'DatePosted': p.DatePosted.strftime('%Y-%m-%d %H:%M:%S'),
+            'Category': p.category.Category 
+        } for p in posts]
 
-        return jsonify({'posts': post_list}), 200
+        return jsonify({'posts': posts_data}), 200
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch posts.', 'error': str(e)}), 500
-
-#Route for viewing a post details
-@routes.route('/posts/<int:post_id>', methods=['GET'])
-def get_single_post(post_id):
+    
+#Fetching the hero image in the News pages  
+@routes.route('/posts/hero', methods=['GET'])
+def get_hero_posts():
     try:
-        post = Post.query.get(post_id)
-        if not post:
-            return jsonify({'message': '❌ Post not found.'}), 404
+        # Fetch the top 5 most recent posts in the 'HeroImage' category
+        hero_posts = Posts.query.join(PostsCategory)\
+            .filter(PostsCategory.Category == 'HeroImage')\
+            .order_by(Posts.DatePosted.desc())\
+            .limit(5).all()
 
-        post_data = {
-            'PostID': post.PostID,
-            'Title': post.Title,
-            'Content': post.Content,
-            'CoverImage': post.CoverImage,
-            'DatePosted': post.DatePosted.strftime('%Y-%m-%d %H:%M:%S')
-        }
+        hero_data = [{
+            'Title': p.Title,
+            'Content': p.Content,
+            'CoverImage': p.CoverImage,
+            'PostID': p.PostID
+        } for p in hero_posts]
 
-        return jsonify({'post': post_data}), 200
-
+        return jsonify({'hero': hero_data}), 200
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': '❌ Failed to retrieve post.', 'error': str(e)}), 500
-
-
-#Route for creating the products offered by a sacco
+        return jsonify({'error': str(e)}), 500
+# Route for creating the products offered by a sacco
 @routes.route('/products/create', methods=['POST'])
 @jwt_required()
 def create_product():
@@ -776,7 +785,9 @@ def create_product():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create product.', 'error': str(e)}), 500
 
-# View products 
+# View products
+
+
 @routes.route('/products', methods=['GET'])
 def view_products():
     try:
@@ -804,8 +815,7 @@ def view_products():
         return jsonify({'message': '❌ Failed to fetch products.', 'error': str(e)}), 500
 
 
-
-#Viewing a particular product
+# Viewing a particular product
 @routes.route('/products/<int:product_id>', methods=['GET'])
 def view_product(product_id):
     try:
@@ -829,7 +839,7 @@ def view_product(product_id):
         return jsonify({'message': '❌ Failed to fetch product.', 'error': str(e)}), 500
 
 
-#Route for creating a sacco branch 
+# Route for creating a sacco branch
 @routes.route('/branches/create', methods=['POST'])
 @jwt_required()
 def create_branch():
@@ -868,11 +878,14 @@ def create_branch():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create branch.', 'error': str(e)}), 500
 
-#Viewing all the branches 
+# Viewing all the branches
+
+
 @routes.route('/branches', methods=['GET'])
 def view_all_branches():
     try:
-        branches = SaccoBranch.query.order_by(SaccoBranch.CreatedAt.desc()).all()
+        branches = SaccoBranch.query.order_by(
+            SaccoBranch.CreatedAt.desc()).all()
         branch_list = []
 
         for branch in branches:
@@ -893,7 +906,7 @@ def view_all_branches():
         return jsonify({'message': '❌ Failed to fetch branches.', 'error': str(e)}), 500
 
 
-#Creating a sacco profile
+# Creating a sacco profile
 @routes.route('/sacco-profile/create', methods=['POST'])
 @jwt_required()
 def create_sacco_profile():
@@ -906,12 +919,13 @@ def create_sacco_profile():
 
         data = request.get_json()
 
-        required_fields = ['SaccoName', 'LogoURL', 'Slogan', 'PhysicalAddress', 'ContactNumber', 
-                           'FacebookURL', 'TwitterURL', 'InstagramURL', 'LinkedInURL', 
+        required_fields = ['SaccoName', 'LogoURL', 'Slogan', 'PhysicalAddress', 'ContactNumber',
+                           'FacebookURL', 'TwitterURL', 'InstagramURL', 'LinkedInURL',
                            'SaccoHistory', 'MissionStatement', 'VisionStatement']
-        
+
         # Check for missing required fields
-        missing_fields = [field for field in required_fields if not data.get(field)]
+        missing_fields = [
+            field for field in required_fields if not data.get(field)]
         if missing_fields:
             return jsonify({'message': '❌ Missing required fields.', 'missing_fields': missing_fields}), 400
 
@@ -940,12 +954,15 @@ def create_sacco_profile():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create SACCO profile.', 'error': str(e)}), 500
 
-#Viewing Sacco_Profile
+# Viewing Sacco_Profile
+
+
 @routes.route('/sacco-profile', methods=['GET'])
 def view_sacco_profile():
     try:
         # Get the most recent SACCO profile (or the first one if only one exists)
-        sacco_profile = SaccoProfile.query.order_by(SaccoProfile.SaccoID.desc()).first()
+        sacco_profile = SaccoProfile.query.order_by(
+            SaccoProfile.SaccoID.desc()).first()
 
         if not sacco_profile:
             return jsonify({'message': '❌ No SACCO profile found.'}), 404
@@ -963,7 +980,7 @@ def view_sacco_profile():
             "SaccoHistory": sacco_profile.SaccoHistory,
             "MissionStatement": sacco_profile.MissionStatement,
             "VisionStatement": sacco_profile.VisionStatement,
-           
+
         }
 
         return jsonify(profile_data), 200
@@ -974,7 +991,7 @@ def view_sacco_profile():
         return jsonify({'message': '❌ Failed to fetch SACCO profile.', 'error': str(e)}), 500
 
 
-#Create a service
+# Create a service
 @routes.route('/services/create', methods=['POST'])
 @jwt_required()
 def create_service():
@@ -986,10 +1003,13 @@ def create_service():
             return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
 
         # Accept either form-data or JSON
-        service_name = request.form.get('ServiceName') or request.json.get('ServiceName')
-        description = request.form.get('Description') or request.json.get('Description')
+        service_name = request.form.get(
+            'ServiceName') or request.json.get('ServiceName')
+        description = request.form.get(
+            'Description') or request.json.get('Description')
         image_file = request.files.get('ImageFile')  # if uploaded
-        image_url = request.form.get('ImageURL') or request.json.get('ImageURL')  # if directly linked
+        image_url = request.form.get('ImageURL') or request.json.get(
+            'ImageURL')  # if directly linked
 
         if not service_name or not description:
             return jsonify({'message': '❌ ServiceName and Description are required!'}), 400
@@ -1019,13 +1039,15 @@ def create_service():
         import traceback
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create service.', 'error': str(e)}), 500
-    
+
 # Route for viewing the services offered by the SACCO
+
+
 @routes.route('/services', methods=['GET'])
 def view_services():
     try:
         services = Service.query.order_by(Service.CreatedAt.desc()).all()
-        
+
         service_list = []
         for svc in services:
             service_list.append({
@@ -1035,6 +1057,8 @@ def view_services():
                 'Description': svc.Description,
                 'ServiceCategory': svc.ServiceCategory,
                 'LoanFormURL': svc.LoanFormURL,
+                'Features': svc.Features,
+                'Benefits': svc.Benefits,
                 'CreatedAt': svc.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
             })
 
@@ -1045,7 +1069,8 @@ def view_services():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch services.', 'error': str(e)}), 500
 
-#Creating sacco clients 
+
+# Creating sacco clients
 @routes.route('/clients/create', methods=['POST'])
 @jwt_required()
 def create_client():
@@ -1089,12 +1114,15 @@ def create_client():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to create SACCO client.', 'error': str(e)}), 500
 
-#Route for viewing the SACCO Clients
+# Route for viewing the SACCO Clients
+
+
 @routes.route('/clients', methods=['GET'])
 def get_clients():
     try:
         # Get only active clients (IsActiveID = 1)
-        clients = SaccoClient.query.filter_by(IsActiveID=1).order_by(SaccoClient.CreatedAt.desc()).all()
+        clients = SaccoClient.query.filter_by(IsActiveID=1).order_by(
+            SaccoClient.CreatedAt.desc()).all()
 
         client_list = []
         for client in clients:
@@ -1113,7 +1141,9 @@ def get_clients():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch SACCO clients.', 'error': str(e)}), 500
 
-#Route for creating a sacco statistics 
+# Route for creating a sacco statistics
+
+
 @routes.route('/statistics/create', methods=['POST'])
 @jwt_required()
 def create_statistics():
@@ -1150,12 +1180,13 @@ def create_statistics():
         return jsonify({'message': '❌ Failed to create SACCO statistics.', 'error': str(e)}), 500
 
 
-#Route for viewing the Statistics
+# Route for viewing the Statistics
 @routes.route('/statistics', methods=['GET'])
 def get_latest_statistics():
     try:
         # Get the most recently created statistics entry
-        latest_stats = SaccoStatistics.query.order_by(SaccoStatistics.LastUpdated.desc()).first()
+        latest_stats = SaccoStatistics.query.order_by(
+            SaccoStatistics.LastUpdated.desc()).first()
 
         if not latest_stats:
             return jsonify({'message': 'ℹ️ No statistics found.'}), 404
@@ -1175,7 +1206,9 @@ def get_latest_statistics():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch statistics.', 'error': str(e)}), 500
 
-#Creating Homepage slides
+# Creating Homepage slides
+
+
 @routes.route('/slider/create', methods=['POST'])
 @jwt_required()
 def create_homepage_slider():
@@ -1250,125 +1283,166 @@ def view_homepage_sliders():
     except Exception as e:
         return jsonify({'message': '❌ Failed to fetch sliders.', 'error': str(e)}), 500
 
-    
-#Customer Registration
-@routes.route('/membership/register', methods=['POST'])
-def register_member():
+
+# ROUTE FOR REGISTERING A CUSTOMER (with email notifications + contact note)
+@routes.route("/membership-register", methods=["POST"])
+def register_membership():
     try:
-        # Get form data and files
-        full_name = request.form.get('FullName')
-        id_type = request.form.get('IDType')
-        id_number = request.form.get('IDNumber')
-        dob_str = request.form.get('DOB')
-        marital_status = request.form.get('MaritalStatus')
-        gender = request.form.get('Gender')
-        address = request.form.get('Address')
-        telephone = request.form.get('Telephone')
-        alt_phone = request.form.get('AlternatePhone')
-        kra_pin = request.form.get('KRAPin')
-        county = request.form.get('County')
-        sub_county = request.form.get('SubCounty')
-        email = request.form.get('Email')
-        contact_person = request.form.get('ContactPerson')
-        contact_phone = request.form.get('ContactPersonPhone')
-        nominee_name = request.form.get('NomineeName')
-        nominee_id = request.form.get('NomineeID')
-        nominee_contact = request.form.get('NomineeContact')
-        nominee_relation = request.form.get('NomineeRelation')
+        data = request.get_json()
+        if not data:
+            return jsonify({"message": "❌ No JSON data received"}), 400
 
-        # Required uploads
-        id_back_file = request.files.get('IDBackURL')
-        id_front_file = request.files.get('IDFrontURL')
-        signature_file = request.files.get('SignatureURL')
-        passport_file = request.files.get('PASSPORTURL')
+        # ✅ Required fields
+        required_fields = [
+            "FullName", "Salutation", "IDType", "IDNumber", "DOB",
+            "MaritalStatus", "Gender", "County", "District",
+            "MobileNumber", "NomineeName", "NomineeIDNumber",
+            "NomineePhoneNumber", "NomineeRelation"
+        ]
+        missing = [f for f in required_fields if not data.get(f)]
+        if missing:
+            return jsonify({"message": "❌ Missing required fields", "missing_fields": missing}), 400
 
-        if not all([id_back_file, id_front_file, signature_file, passport_file]):
-            return jsonify({'message': '❌ All ID, signature, and passport files are required.'}), 400
+        # ✅ Phone number validation (2547XXXXXXXX)
+        phone_pattern = r"^2547\d{8}$"
+        for label, number in {
+            "MobileNumber": data.get("MobileNumber"),
+            "AlternateMobileNumber": data.get("AlternateMobileNumber"),
+            "NomineePhoneNumber": data.get("NomineePhoneNumber")
+        }.items():
+            if number and not re.fullmatch(phone_pattern, number):
+                return jsonify({"message": f"❌ {label} must be in 2547XXXXXXXX format"}), 400
 
-        # Parse date of birth
+        # ✅ DOB format and age check
         try:
-            dob = datetime.strptime(dob_str, '%Y-%m-%d').date()
-        except Exception:
-            return jsonify({'message': '❌ DOB must be in YYYY-MM-DD format'}), 400
+            dob = datetime.strptime(data.get("DOB"), "%Y-%m-%d").date()
+        except ValueError:
+            return jsonify({"message": "❌ DOB must be in YYYY-MM-DD format"}), 400
 
-        # Upload files to Cloudinary
-        id_back_url = cloudinary.uploader.upload(id_back_file)['secure_url']
-        id_front_url = cloudinary.uploader.upload(id_front_file)['secure_url']
-        signature_url = cloudinary.uploader.upload(signature_file)['secure_url']
-        passport_url = cloudinary.uploader.upload(passport_file)['secure_url']
+        today = datetime.today()
+        age = today.year - dob.year - \
+            ((today.month, today.day) < (dob.month, dob.day))
+        if age < 18:
+            return jsonify({"message": "❌ You must be at least 18 years old to register."}), 400
 
-        # Save to database
-        new_member = Membership(
-            FullName=full_name,
-            IDType=id_type,
-            IDNumber=id_number,
+        # ✅ Check for duplicate ID number
+        if Membership.query.filter_by(IDNumber=data.get("IDNumber")).first():
+            return jsonify({"message": "❌ A member with this ID Number already exists."}), 400
+
+        # ✅ Save to DB
+        member = Membership(
+            FullName=data.get("FullName"),
+            Salutation=data.get("Salutation"),
+            IDType=data.get("IDType"),
+            IDNumber=data.get("IDNumber"),
+            KRAPin=data.get("KRAPin"),
             DOB=dob,
-            MaritalStatus=marital_status,
-            Gender=gender,
-            Address=address,
-            Telephone=telephone,
-            AlternatePhone=alt_phone,
-            KRAPin=kra_pin,
-            County=county,
-            SubCounty=sub_county,
-            Email=email,
-            ContactPerson=contact_person,
-            ContactPersonPhone=contact_phone,
-            NomineeName=nominee_name,
-            NomineeID=nominee_id,
-            NomineeContact=nominee_contact,
-            NomineeRelation=nominee_relation,
-            IDBackURL=id_back_url,
-            IDFrontURL=id_front_url,
-            SignatureURL=signature_url,
-            PASSPORTURL=passport_url
+            MaritalStatus=data.get("MaritalStatus"),
+            Gender=data.get("Gender"),
+            County=data.get("County"),
+            District=data.get("District"),
+            Division=data.get("Division"),
+            Address=data.get("Address"),
+            PostalCode=data.get("PostalCode"),
+            PhysicalAddress=data.get("PhysicalAddress"),
+            MobileNumber=data.get("MobileNumber"),
+            AlternateMobileNumber=data.get("AlternateMobileNumber"),
+            Email=data.get("Email"),
+            Profession=data.get("Profession"),
+            ProfessionSector=data.get("ProfessionSector"),
+            NomineeName=data.get("NomineeName"),
+            NomineeIDNumber=data.get("NomineeIDNumber"),
+            NomineePhoneNumber=data.get("NomineePhoneNumber"),
+            NomineeRelation=data.get("NomineeRelation"),
         )
 
-        db.session.add(new_member)
+        # Optional: set pending status if your model supports it
+        if hasattr(member, "Status") and member.Status is None:
+            member.Status = "PendingPayment"
+
+        db.session.add(member)
         db.session.commit()
 
-        return jsonify({'message': '✅ Member registered successfully!'}), 201
+        # ===== EMAIL NOTIFICATIONS =====
+        email_errors = None
+        try:
+            # Notify admin
+            admin_msg = Message(
+                subject="📥 New Membership Submitted - Pending Payment (KES 1,500)",
+                recipients=["maderumoyia@mudetesacco.co.ke"],
+                body=f"""Hello Admin,
+
+A new membership has been submitted and is ready to finalize after payment.
+
+Name: {member.FullName}
+ID Number: {member.IDNumber}
+Mobile: {member.MobileNumber}
+Email: {member.Email or 'N/A'}
+Submitted At: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+Next step: Await KES 1,500 registration payment confirmation (M-PESA Paybill 506492) to proceed with activation.
+
+-- MUFATE G SACCO Website
+"""
+            )
+            if mail:
+                mail.send(admin_msg)
+
+            # Acknowledge applicant (only if email provided)
+            if member.Email:
+                user_msg = Message(
+                    subject="✅ MUFATE G SACCO Registration Received – Next Step (KES 1,500)",
+                    recipients=[member.Email],
+                    body=f"""Dear {member.FullName},
+
+Thank you for registering with MUFATE G SACCO.
+
+✅ We have received your application.
+
+🧾 NEXT STEP:
+Please complete registration by paying the KES 1,500 registration fee via M-PESA Paybill 506492.
+Once payment is confirmed, our team will contact you to finalize your membership.
+
+If you have any questions, reply to this email or contact us:
+maderumoyia@mudetesacco.co.ke
+
+Warm regards,
+MUFA​TE G SACCO Team
+"""
+                )
+                if mail:
+                    mail.send(user_msg)
+
+        except Exception as e:
+            traceback.print_exc()
+            email_errors = str(e)
+
+        # Frontend-friendly response with the next step
+        resp = {
+            "message": "✅ Registration successful! You will be contacted to complete your registration.",
+            "next_step": "Complete payment of KES 1,500 to finalize registration.",
+            "payment": {
+                "required": True,
+                "amount": 1500,
+                "channel": "M-PESA Paybill",
+                "paybill": "506492",
+                "account_hint": "SHOULD THE SACCO ASSIGNED ACCOUNT NUMBER"
+            },
+            "member_id": getattr(member, "MemberID", None) or getattr(member, "id", None)
+        }
+        if email_errors:
+            resp["email_warning"] = "⚠️ Registration saved, but failed to send one or more emails."
+            resp["email_error_detail"] = email_errors
+
+        return jsonify(resp), 201
 
     except Exception as e:
-        import traceback
         traceback.print_exc()
-        return jsonify({'message': '❌ Registration failed.', 'error': str(e)}), 500
+        return jsonify({"message": "❌ Registration failed", "error": str(e)}), 500
 
-#Viewing the list of registered members
-@routes.route('/admin/members', methods=['GET'])
-@jwt_required()
-def view_registered_members():
-    try:
-        current_user = get_jwt_identity()
-        if current_user['role'].lower() != 'admin':
-            return jsonify({'message': '❌ Access denied. Admins only!'}), 403
-
-        members = Membership.query.order_by(Membership.RegisteredAt.desc()).all()
-        member_list = []
-
-        for member in members:
-            member_list.append({
-                'MemberID': member.MemberID,
-                'FullName': member.FullName,
-                'IDType': member.IDType,
-                'IDNumber': member.IDNumber,
-                'DOB': member.DOB.strftime('%Y-%m-%d'),
-                'Telephone': member.Telephone,
-                'Email': member.Email,
-                'County': member.County,
-                'SubCounty': member.SubCounty,
-                'RegisteredAt': member.RegisteredAt.strftime('%Y-%m-%d %H:%M:%S')
-            })
-
-        return jsonify({'members': member_list}), 200
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': '❌ Failed to fetch members.', 'error': str(e)}), 500
+# Viewing the BOD Members
 
 
-#Viewing the BOD Members
 @routes.route('/bod/view', methods=['GET'])
 def view_bod():
     bod_list = BOD.query.all()
@@ -1383,7 +1457,9 @@ def view_bod():
     ]
     return jsonify(result), 200
 
-#VIEW MANAGEMENT TEAM
+# VIEW MANAGEMENT TEAM
+
+
 @routes.route('/management/view', methods=['GET'])
 def view_management():
     management_list = Management.query.all()
@@ -1399,23 +1475,16 @@ def view_management():
     return jsonify(result), 200
 
 
-#view resources
+# view active resources (recent first)
 @routes.route('/resources/recent', methods=['GET'])
 def get_recent_resources():
     try:
-        recent_titles = [
-            "Institutions Loan Application Form",
-            "Member Application Document",
-            "Mobile Banking Application",
-            "MUFATE G SACCO Bronchure",
-            "Specimen Capture Form"
-        ]
-
-        # Only fetch active and recently added resources
-        resources = Resources.query.filter(
-            Resources.IsActiveID == 1,
-            Resources.Title.in_(recent_titles)
-        ).order_by(Resources.UploadedAt.desc()).all()
+        resources = (
+            Resources.query
+            .filter(Resources.IsActiveID == 1)
+            .order_by(Resources.UploadedAt.desc())
+            .all()
+        )
 
         resource_list = []
         for resource in resources:
@@ -1423,23 +1492,27 @@ def get_recent_resources():
                 'ResourceID': resource.ResourceID,
                 'Title': resource.Title,
                 'FilePath': resource.FilePath,
-                'UploadedAt': resource.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
+                'UploadedAt': (
+                    resource.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
+                    if resource.UploadedAt else None
+                )
             })
 
         return jsonify({'resources': resource_list}), 200
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': '❌ Failed to fetch recent resources.', 'error': str(e)}), 500
+        return jsonify({
+            'message': '❌ Failed to fetch resources.',
+            'error': str(e)
+        }), 500
 
 
 # Route to fetch career hero image
 @routes.route('/career-hero', methods=['GET'])
 def get_career_hero_image():
     try:
-        # Query the image with ImageID = 5
-        image = HomepageSlider.query.filter_by(ImageID=5, IsActiveID=1).first()
+        # Query the image with ImageID = 4
+        image = HomepageSlider.query.filter_by(ImageID=4, IsActiveID=1).first()
 
         if not image:
             return jsonify({'message': 'No active career hero image found.'}), 404
@@ -1464,11 +1537,11 @@ def get_career_hero_image():
 @routes.route('/career-hero-2', methods=['GET'])
 def get_career_hero_image_2():
     try:
-        # Query the image with ImageID = 6
-        image = HomepageSlider.query.filter_by(ImageID=6, IsActiveID=1).first()
+        # Query the image with ImageID = 5
+        image = HomepageSlider.query.filter_by(ImageID=5, IsActiveID=1).first()
 
         if not image:
-            return jsonify({'message': 'No active image found with ImageID = 6'}), 404
+            return jsonify({'message': 'No active image found with ImageID = 5'}), 404
 
         image_data = {
             'ImageID': image.ImageID,
@@ -1483,8 +1556,7 @@ def get_career_hero_image_2():
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({'message': '❌ Error fetching ImageID = 6.', 'error': str(e)}), 500
-
+        return jsonify({'message': '❌ Error fetching ImageID = 5.', 'error': str(e)}), 500
 
 
 @routes.route('/posts/images', methods=['GET'])
@@ -1494,7 +1566,8 @@ def get_post_images():
         posts = Post.query.order_by(Post.DatePosted.desc()).limit(4).all()
 
         # Only extract CoverImage URLs
-        images = [{'PostID': post.PostID, 'CoverImage': post.CoverImage} for post in posts if post.CoverImage]
+        images = [{'PostID': post.PostID, 'CoverImage': post.CoverImage}
+                  for post in posts if post.CoverImage]
 
         return jsonify({'images': images}), 200
 
@@ -1503,7 +1576,9 @@ def get_post_images():
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch post images.', 'error': str(e)}), 500
 
-#Return the holiday
+# Return the holiday
+
+
 @routes.route('/holiday/message', methods=['GET'])
 def get_holiday_message():
     from datetime import datetime
@@ -1520,83 +1595,505 @@ def get_holiday_message():
             'message': holiday.Message
         }), 200
     else:
-        return jsonify({ 'message': None }), 200
+        return jsonify({'message': None}), 200
 
-# ✅ Public route to submit feedback
+#  ✅ Public route to submit feedback
+from flask import request, jsonify, current_app
+import traceback
+from flask_mail import Message
+
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
-        data = request.get_json()
+        # 1️⃣ Get and validate data
+        data = request.get_json(silent=True)
+        if not data:
+            return jsonify({'message': '❌ Invalid JSON payload.'}), 400
+
         email = data.get('Email')
+        phone = data.get('PhoneNumber')
         subject = data.get('Subject')
         message = data.get('Message')
 
-        # ✅ Validate input
         if not email or not subject or not message:
-            return jsonify({'message': '❌ Email, Subject, and Message are required!'}), 400
+            return jsonify({
+                'message': '❌ Email, Subject, and Message are required!'
+            }), 400
 
-        # ✅ Save feedback to the database
-        new_feedback = Feedback(
+        # 2️⃣ Save feedback to database
+        feedback = Feedback(
             Email=email,
+            PhoneNumber=phone.strip().replace(' ', '') if phone else None,
             Subject=subject,
             Message=message,
-            StatusID=1  # Default to "Unread"
+            StatusID=1  # Unread
         )
-        db.session.add(new_feedback)
+        db.session.add(feedback)
         db.session.commit()
 
-        # ✅ Prepare email to SACCO admin
+        # 3️⃣ Prepare admin email
         admin_msg = Message(
-            subject=f"📥 New Feedback: {subject}",
+            subject=f"📥 New Website Feedback: {subject}",
+            sender=current_app.config['MAIL_USERNAME'],
             recipients=["maderumoyia@mudetesacco.co.ke"],
-            body=f"""You have received new feedback from {email}.
+            body=f"""
+New feedback received via the website.
 
+From: {email}
+Phone: {phone or 'N/A'}
 Subject: {subject}
+
 Message:
 {message}
 
--- MUFATE G SACCO Website"""
+Submitted At: {feedback.SubmittedAt.strftime('%Y-%m-%d %H:%M:%S')}
+"""
         )
 
-        # ✅ Prepare acknowledgment email to user
+        # 4️⃣ Prepare user acknowledgement email
         user_msg = Message(
-            subject="✅ Thank You for Your Feedback - MUFATE G SACCO",
+            subject="✅ Thank you for contacting Golden Generation DT SACCO",
+            sender=current_app.config['MAIL_USERNAME'],
             recipients=[email],
-            body=f"""Dear Member,
+            body=f"""
+Dear Member,
 
-Thank you for reaching out to MUFATE G SACCO. We have received your message:
+Thank you for contacting Golden Generation DT SACCO.
 
+We have successfully received your message regarding:
 "{subject}"
 
-Our team will review it and get back to you as necessary.
+Our team is currently reviewing your inquiry and you will hear from us very soon.
 
-Warm regards,  
-MUFA​TE G SACCO Team  
-maderumoyia@mudetesacco.co.ke"""
+If your matter is urgent, you may reach us via:
+📞 +254 791 331 932,+254 794 515 407
+📧 info@mudetesacco.co.ke
+
+Warm regards,
+Golden Generation DT SACCO
+"Walking With You"
+"""
         )
 
-        # ✅ Try sending emails
-        try:
+        # 5️⃣ Send emails
+        if mail:
             mail.send(admin_msg)
             mail.send(user_msg)
-        except Exception as email_error:
-            import traceback
-            traceback.print_exc()
-            return jsonify({
-                'message': '⚠️ Feedback saved, but email failed to send.',
-                'error': str(email_error)
-            }), 500
 
+        # 6️⃣ Return success response
         return jsonify({
-            'message': '😊 Thank you for your feedback!',
-            'feedback_id': new_feedback.FeedbackID
+            'message': '😊 Thank you! Your feedback has been received.',
+            'feedback_id': feedback.FeedbackID
         }), 201
 
     except Exception as e:
-        import traceback
+        db.session.rollback()
         traceback.print_exc()
         return jsonify({
             'message': '❌ Failed to submit feedback.',
             'error': str(e)
         }), 500
 
+
+
+
+# ✅Route to fetch active gallery photos
+@routes.route('/gallery', methods=['GET'])
+def get_gallery_photos():
+    try:
+        photos = GalleryPhoto.query.filter_by(IsActive=True).order_by(
+            GalleryPhoto.UploadedAt.desc()).all()
+
+        gallery_list = []
+        for photo in photos:
+            gallery_list.append({
+                'PhotoID': photo.PhotoID,
+                'Title': photo.Title,
+                'Description': photo.Description,
+                'ImageURL': photo.ImageURL,
+                'UploadedAt': photo.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'gallery': gallery_list}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch gallery photos.', 'error': str(e)}), 500
+
+# =========================
+# LOAN PRODUCTS & SCHEDULE
+# =========================
+
+# ---- helpers (dates, rounding) ----
+
+
+def _parse_date(iso):
+    if not iso:
+        return date.today()
+    y, m, d = map(int, iso.split("-"))
+    return date(y, m, d)
+
+
+def _end_of_month(d):
+    return date(d.year, d.month, monthrange(d.year, d.month)[1])
+
+
+def _add_months(d, months, first_due_rule="same_day_next_month"):
+    # base add
+    y = d.year + (d.month - 1 + months) // 12
+    m = (d.month - 1 + months) % 12 + 1
+    day = min(d.day, monthrange(y, m)[1])
+    new_d = date(y, m, day)
+    if first_due_rule == "end_of_month":
+        return _end_of_month(new_d)
+    return new_d
+
+
+def _add_days(d, days):
+    return d + timedelta(days=days)
+
+
+def _adjust_business_day(d, rule):
+    # weekend handling only; (optional) extend with holiday calendar
+    if rule == "exact":
+        return d
+    wd = d.weekday()  # 0=Mon..6=Sun
+    if rule == "next_business_day":
+        if wd == 5:   # Sat
+            return _add_days(d, 2)
+        if wd == 6:   # Sun
+            return _add_days(d, 1)
+        return d
+    if rule == "previous_business_day":
+        if wd == 5:
+            return _add_days(d, -1)
+        if wd == 6:
+            return _add_days(d, -2)
+        return d
+    return d
+
+
+def _round_unit(x, unit):
+    try:
+        unit = float(unit or 1)
+    except Exception:
+        unit = 1.0
+    if unit <= 0:
+        return round(float(x), 2)
+    return round(float(x) / unit) * unit
+
+
+def _product_to_dict(p: LoanProduct):
+    return {
+        "ProductKey": p.ProductKey,
+        "LoanName": p.LoanName,
+        "InterestType": p.InterestType,
+        "MonthlyInterestRate": float(p.MonthlyInterestRate),
+        "DefaultTermMonths": p.DefaultTermMonths,
+        "MinTermMonths": p.MinTermMonths,
+        "MaxTermMonths": p.MaxTermMonths,
+        "MinPrincipal": float(p.MinPrincipal) if p.MinPrincipal is not None else None,
+        "MaxPrincipal": float(p.MaxPrincipal) if p.MaxPrincipal is not None else None,
+        "RepaymentPeriod": p.RepaymentPeriod,
+        "FirstDueRule": p.FirstDueRule,
+        "HolidayRule": p.HolidayRule,
+        "RoundingUnit": float(p.RoundingUnit),
+        "MaximumGuarantors": p.MaximumGuarantors,
+        "IsActive": bool(p.IsActive),
+    }
+
+# ---- schedules (reducing-balance engines) ----
+
+
+def _schedule_equal_principal(P, r_m, n, start_date, unit, first_due_rule, holiday_rule):
+    rows = []
+    bal = float(P)
+    fixed_pr = round(P / n, 10)  # high precision; last row will adjust
+    total_i = total_p = 0.0
+
+    for k in range(1, n + 1):
+        due = _add_months(start_date, k, first_due_rule)
+        due = _adjust_business_day(due, holiday_rule)
+
+        interest = bal * r_m
+        principal = fixed_pr if k < n else bal  # last row clears residue
+        payment = principal + interest
+        bal = max(0.0, bal - principal)
+
+        rows.append({
+            "period": k,
+            "date": due.isoformat(),
+            "principal": _round_unit(principal, unit),
+            "interest": _round_unit(interest, unit),
+            "total": _round_unit(payment, unit),
+            "balance": _round_unit(bal, unit),
+        })
+        total_i += interest
+        total_p += principal
+
+    return rows, total_p, total_i
+
+
+def _schedule_emi(P, r_m, n, start_date, unit, first_due_rule, holiday_rule):
+    rows = []
+    bal = float(P)
+    if r_m == 0:
+        emi = P / n
+    else:
+        emi = P * r_m / (1 - (1 + r_m) ** (-n))
+    total_i = total_p = 0.0
+
+    for k in range(1, n + 1):
+        due = _add_months(start_date, k, first_due_rule)
+        due = _adjust_business_day(due, holiday_rule)
+
+        interest = bal * r_m
+        principal = emi - interest if k < n else bal  # last row clears residue
+        payment = interest + principal
+        bal = max(0.0, bal - principal)
+
+        rows.append({
+            "period": k,
+            "date": due.isoformat(),
+            "principal": _round_unit(principal, unit),
+            "interest": _round_unit(interest, unit),
+            "total": _round_unit(payment, unit),
+            "balance": _round_unit(bal, unit),
+        })
+        total_i += interest
+        total_p += principal
+
+    return rows, total_p, total_i
+
+# =====================
+# PUBLIC LOAN ENDPOINTS
+# =====================
+
+# List active products
+
+
+@routes.route('/loan/products', methods=['GET'])
+def loan_list_products():
+    try:
+        items = LoanProduct.query.filter_by(IsActive=True)\
+                                 .order_by(LoanProduct.LoanName.asc())\
+                                 .all()
+        return jsonify({"items": [_product_to_dict(p) for p in items]}), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"message": "❌ Failed to list products.", "error": str(e)}), 500
+
+# Get a single product by ProductKey
+
+
+@routes.route('/loan/products/<product_key>', methods=['GET'])
+def loan_get_product(product_key):
+    try:
+        p = LoanProduct.query.filter_by(
+            ProductKey=product_key, IsActive=True).first()
+        if not p:
+            return jsonify({"message": "❌ Product not found or inactive."}), 404
+        return jsonify(_product_to_dict(p)), 200
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"message": "❌ Failed to fetch product.", "error": str(e)}), 500
+
+# Calculate repayment schedule (reducing balance)
+
+
+@routes.route('/loan/calc', methods=['POST'])
+def loan_calc_schedule():
+
+    try:
+        data = request.get_json(force=True)
+
+        product_key = (data.get("product_key") or "").strip()
+        principal = float(data.get("principal", 0))
+        start = _parse_date(data.get("start_date"))
+        term_override = data.get("term_months")
+
+        if not product_key:
+            return jsonify({"message": "❌ 'product_key' is required."}), 400
+        if principal <= 0:
+            return jsonify({"message": "❌ 'principal' must be > 0."}), 400
+
+        # Load product
+        p = LoanProduct.query.filter_by(
+            ProductKey=product_key, IsActive=True).first()
+        if not p:
+            return jsonify({"message": "❌ Product not found or inactive."}), 404
+
+        # Principal bounds
+        if p.MinPrincipal is not None and principal < float(p.MinPrincipal):
+            return jsonify({"message": f"❌ Principal below minimum ({float(p.MinPrincipal):,.2f})."}), 400
+        if p.MaxPrincipal is not None and principal > float(p.MaxPrincipal):
+            return jsonify({"message": f"❌ Principal exceeds maximum ({float(p.MaxPrincipal):,.2f})."}), 400
+
+        # Term
+        n = int(term_override) if term_override else int(
+            p.DefaultTermMonths or 0)
+        if n <= 0:
+            return jsonify({"message": "❌ 'term_months' must be > 0."}), 400
+        if p.MinTermMonths is not None and n < int(p.MinTermMonths):
+            return jsonify({"message": f"❌ term_months below minimum ({p.MinTermMonths})."}), 400
+        if p.MaxTermMonths is not None and n > int(p.MaxTermMonths):
+            return jsonify({"message": f"❌ term_months exceeds maximum ({p.MaxTermMonths})."}), 400
+
+        # Rate & method
+        r = float(p.MonthlyInterestRate)          # monthly nominal
+        method = (p.InterestType or "equal_principal").lower()
+        unit = float(p.RoundingUnit or 1)
+        first_due_rule = (p.FirstDueRule or "same_day_next_month").lower()
+        holiday_rule = (p.HolidayRule or "next_business_day").lower()
+
+        # Build schedule
+        if method == "emi":
+            rows, total_p, total_i = _schedule_emi(
+                principal, r, n, start, unit, first_due_rule, holiday_rule)
+            emi_value = rows[0]["total"] if rows else 0
+            monthly_principal = None
+        else:
+            # default to constant-principal reducing balance (your CBS style)
+            rows, total_p, total_i = _schedule_equal_principal(
+                principal, r, n, start, unit, first_due_rule, holiday_rule)
+            emi_value = None
+            monthly_principal = _round_unit(principal / n, unit)
+
+        summary = {
+            "ProductKey": p.ProductKey,
+            "LoanName": p.LoanName,
+            "Method": method,
+            "MonthlyInterestRate": r,
+            "TermMonths": n,
+            "Principal": _round_unit(principal, unit),
+            "MonthlyPrincipal": monthly_principal,
+            "EMI": emi_value,
+            "FirstMonthInterest": rows[0]["interest"] if rows else 0,
+            "TotalInterest": _round_unit(total_i, unit),
+            "TotalPrincipal": _round_unit(total_p, unit),
+            "TotalPayable": _round_unit(total_p + total_i, unit)
+        }
+
+        return jsonify({"summary": summary, "schedule": rows}), 200
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"message": "❌ Failed to calculate schedule.", "error": str(e)}), 500
+
+
+# =========================
+# SUPPORT TICKET ROUTES
+# =========================
+
+@routes.route('/support/ticket', methods=['POST'])
+def submit_support_ticket():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'message': '❌ No JSON data received'}), 400
+
+        # Extract fields
+        email = (data.get('Email') or '').strip()
+        # NEW: optional alternative
+        phone = (data.get('PhoneNumber') or '').strip()
+        message = (data.get('Message') or '').strip()
+        page_url = (data.get('PageUrl') or '').strip()
+
+        # Auto-capture from headers
+        user_agent = request.headers.get('User-Agent')
+
+        # ✅ Validation
+        # Require at least one contact method
+        if not email and not phone:
+            return jsonify({'message': '❌ Provide at least Email or PhoneNumber.'}), 400
+
+        if len(message) < 10:
+            return jsonify({'message': '❌ Message must be at least 10 characters long!'}), 400
+
+        # Simple KE mobile format check: 2547XXXXXXXX (optional, adjust as needed)
+        if phone:
+            if not phone.isdigit():
+                return jsonify({'message': '❌ PhoneNumber must contain digits only (e.g., 2547XXXXXXXX).'}), 400
+            if not phone.startswith('2547') or len(phone) != 12:
+                return jsonify({'message': '❌ PhoneNumber must be in format 2547XXXXXXXX.'}), 400
+
+        # ✅ Save to DB
+        new_ticket = SupportTicket(
+            Email=email or None,
+            PhoneNumber=phone or None,   # NEW
+            Message=message,
+            PageUrl=page_url,
+            UserAgent=user_agent,
+            Status="Open",
+            CreatedAt=datetime.utcnow()
+        )
+        db.session.add(new_ticket)
+        db.session.commit()
+
+        # ✅ Prepare email to SACCO admin (always send)
+        admin_body = f"""Hello Admin,
+
+You have received a new support ticket.
+
+From: {email or 'No email provided'}
+Phone: {phone or 'No phone provided'}
+Message:
+{message}
+
+Page: {page_url or "N/A"}
+User-Agent: {user_agent or "N/A"}
+Ticket ID: {new_ticket.Id}
+Submitted At: {new_ticket.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')}
+
+-- MUFATE G SACCO Website"""
+        admin_msg = Message(
+            subject=f"📥 New Support Ticket #{new_ticket.Id}",
+            recipients=["maderumoyia@mudetesacco.co.ke"],  # admin email
+            body=admin_body
+        )
+
+        # ✅ Optional acknowledgment email to user (only if email provided)
+        user_msg = None
+        if email:
+            user_msg = Message(
+                subject="✅ MUFATE G SACCO - Ticket Received",
+                recipients=[email],
+                body=f"""Dear Member,
+
+Thank you for contacting MUFATE G SACCO.
+Your support ticket has been created successfully.
+
+🎟️ Ticket ID: {new_ticket.Id}
+
+Our team will review it and contact you via this email.
+
+Warm regards,
+MUFATE G SACCO Support Team
+maderumoyia@mudetesacco.co.ke"""
+            )
+
+        # ✅ Try sending emails
+        try:
+            if mail:
+                mail.send(admin_msg)
+                if user_msg:
+                    mail.send(user_msg)
+        except Exception as email_error:
+            traceback.print_exc()
+            return jsonify({
+                'message': '⚠️ Ticket saved, but email failed to send.',
+                'ticket_id': new_ticket.Id,
+                'error': str(email_error)
+            }), 500
+
+        # ✅ Success response
+        return jsonify({
+            'message': '✅ Your ticket has been submitted! We will contact you.',
+            'ticket_id': new_ticket.Id,
+            'status': new_ticket.Status
+        }), 201
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to submit ticket.', 'error': str(e)}), 500

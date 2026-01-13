@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
-import SmartphoneIcon from '@mui/icons-material/Smartphone'; 
+import SmartphoneIcon from '@mui/icons-material/Smartphone';
 
 const MobileBanking = () => {
     return (
@@ -9,18 +9,19 @@ const MobileBanking = () => {
             sx={{
                 position: 'relative',
                 display: 'flex',
-                flexDirection: { xs: 'column-reverse', md: 'row' }, 
+                flexDirection: { xs: 'column-reverse', md: 'row' },
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 px: { xs: 2, md: 10 },
                 py: 10,
                 gap: 6,
-                backgroundColor: '#fff',
+                backgroundColor: '#011407',           // 🌑 Deep green brand background
                 overflow: 'hidden',
                 minHeight: { md: '480px' },
             }}
         >
-            {/* ✅ Gradient Green Background Patch */}
+
+            {/* ✅ Right-side deep-green → gold gradient background patch */}
             <Box
                 sx={{
                     position: 'absolute',
@@ -29,14 +30,14 @@ const MobileBanking = () => {
                     transform: 'translateY(-50%)',
                     width: { xs: '100%', md: '50%' },
                     height: '240px',
-                    background: 'linear-gradient(135deg, #004d40, #00695c)', // ✅ Gradient
+                    background: 'linear-gradient(135deg, #01240F, #014d1d)', // 🌑 Deep greens
                     borderTopLeftRadius: '30px',
                     borderBottomLeftRadius: '30px',
                     zIndex: 0,
                 }}
             />
 
-            {/* ✅ Soft Glow Overlay */}
+            {/* ✅ Gold soft glow overlay */}
             <Box
                 sx={{
                     position: 'absolute',
@@ -45,55 +46,64 @@ const MobileBanking = () => {
                     transform: 'translate(50%, -50%)',
                     width: 300,
                     height: 300,
-                    backgroundColor: '#ffffff33',
+                    backgroundColor: 'rgba(255,215,0,0.20)',  // 🌟 Soft gold glow
                     borderRadius: '50%',
-                    filter: 'blur(60px)',
+                    filter: 'blur(70px)',
                     zIndex: 1,
                 }}
             />
 
-            {/* ✅ Left Text Content */}
+            {/* ================= LEFT TEXT ================= */}
             <Box sx={{ flex: 1, zIndex: 2 }}>
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
                 >
+
+                    {/* TITLE */}
                     <Typography
                         variant="h4"
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            fontWeight: 800,
-                            color: '#003b2f',
+                            fontWeight: 900,
                             textTransform: 'uppercase',
                             letterSpacing: '1.5px',
                             mb: 3,
+                            background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',         // ✨ Gold gradient title
+                            textShadow: '0 0 12px rgba(255,215,0,0.3)',
                         }}
                     >
-                        <SmartphoneIcon sx={{ mr: 1 }} />
+                        <SmartphoneIcon sx={{ mr: 1, color: '#FFD700' }} /> {/* Gold icon */}
                         M-Banking Services
                     </Typography>
 
+                    {/* TEXT */}
                     <Typography
                         variant="body1"
                         sx={{
                             fontSize: '1.1rem',
                             lineHeight: 2,
-                            color: '#333',
+                            color: '#FFF4B5',             // Soft gold text
                             maxWidth: '90%',
                             mb: 2,
+                            textShadow: '0 0 10px rgba(0,0,0,0.6)',
                         }}
                     >
-                        Experience the ease of banking from anywhere with Mufate G’s M-Banking services.
-                        From checking balances and transferring funds to paying bills and accessing mini-statements,
-                        our mobile platform puts the power of banking in your hands — securely and conveniently.
-                        Use <strong>*882*51#</strong> to access your account.
+                        Experience the ease of banking from anywhere with Golden Generation DT Sacco’s
+                        M-Banking services. From checking balances and transferring funds to paying bills
+                        and accessing mini-statements, our mobile platform puts the power of banking in
+                        your hands — securely and conveniently.
+                        Use <strong style={{ color: '#FFD700' }}>*882*51#</strong> to access your account.
+                        Deposit money using Paybill <strong style={{ color: '#FFD700' }}>506492</strong>.
                     </Typography>
                 </motion.div>
             </Box>
 
-            {/* ✅ Phones / Illustrations */}
+            {/* ================= PHONE IMAGES ================= */}
             <Box
                 sx={{
                     display: 'flex',
@@ -117,7 +127,7 @@ const MobileBanking = () => {
                             width: '250px',
                             height: 'auto',
                             borderRadius: '20px',
-                            boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)', 
+                            boxShadow: '0 10px 25px rgba(0,0,0,0.35)', // Slightly stronger shadow for dark bg
                         }}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}

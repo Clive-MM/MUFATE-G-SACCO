@@ -6,7 +6,7 @@ const SalaryProcessing = () => {
     return (
         <Box
             sx={{
-                backgroundColor: '#003b5c',
+                backgroundColor: '#FFD700',   // 🟡 Gold brand background
                 display: 'flex',
                 flexDirection: { xs: 'column', md: 'row' },
                 alignItems: 'center',
@@ -19,7 +19,8 @@ const SalaryProcessing = () => {
                 gap: 6,
             }}
         >
-            
+
+            {/* ================= IMAGE SIDE ================= */}
             <Box
                 sx={{
                     position: 'relative',
@@ -28,14 +29,17 @@ const SalaryProcessing = () => {
                 }}
             >
                 <motion.img
-                    src="https://res.cloudinary.com/djydkcx01/image/upload/v1746211988/Withdraw_Mobile_Money_jwlafv.jpg"
+                    src="https://res.cloudinary.com/djydkcx01/image/upload/v1754911013/ChatGPT_Image_Aug_11_2025_02_02_22_PM_sbscrx.png"
                     alt="Salary Processing"
                     style={{
                         width: '100%',
                         maxWidth: '500px',
                         height: 'auto',
                         borderRadius: '20px',
-                        boxShadow: '0 0 25px rgba(0, 255, 200, 0.25), 0 10px 30px rgba(0,0,0,0.2)',
+
+                        // 🌟 Glow on gold background changed to deeper shadow for contrast
+                        boxShadow:
+                            '0 0 25px rgba(0,0,0,0.35), 0 8px 20px rgba(0,0,0,0.45)',
                         transition: 'transform 0.3s ease',
                         cursor: 'pointer',
                     }}
@@ -47,8 +51,8 @@ const SalaryProcessing = () => {
                 />
             </Box>
 
-        
-            <Box sx={{ color: '#fff', maxWidth: '600px', zIndex: 2 }}>
+            {/* ================= TEXT CONTENT ================= */}
+            <Box sx={{ color: '#003018', maxWidth: '600px', zIndex: 2 }}>
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -57,10 +61,16 @@ const SalaryProcessing = () => {
                     <Typography
                         variant="h5"
                         sx={{
-                            fontWeight: 700,
+                            fontWeight: 900,
                             textTransform: 'uppercase',
                             letterSpacing: '1px',
                             mb: 3,
+
+                            // 🟢 Deep green title for contrast on gold
+                            background: 'linear-gradient(to right, #003018, #01240F)',
+                            WebkitBackgroundClip: 'text',
+                            color: 'transparent',
+                            textShadow: '0 0 8px rgba(0,0,0,0.25)',
                         }}
                     >
                         Salary Processing
@@ -68,13 +78,20 @@ const SalaryProcessing = () => {
 
                     <Typography
                         variant="body1"
-                        sx={{ lineHeight: 1.8, fontSize: '1.05rem' }}
+                        sx={{
+                            lineHeight: 1.8,
+                            fontSize: '1.08rem',
+                            color: '#003018',   // 🟢 Deep green readable text on gold
+                            fontWeight: 500,
+                            textShadow: '0 0 4px rgba(255,255,255,0.4)',
+                        }}
                     >
-                        With Mufate G’s salary processing service, members can have their salaries channeled
-                        directly through the SACCO—ensuring timely payments and unlocking a host of benefits.
-                        By routing your income through Mufate G, you gain seamless access to loan facilities
-                        and benefit from faster approvals tailored to support your personal needs and development.
-                        It’s a smart, secure way to manage your income while enjoying the full value of SACCO membership.
+                        With GOLDEN GENERATION DT SACCO's salary processing service, members can have 
+                        their salaries channeled directly through the SACCO—ensuring timely payments 
+                        and unlocking a host of benefits. By routing your income through the SACCO, 
+                        you gain seamless access to loan facilities and benefit from faster approvals 
+                        tailored to support your personal needs and development. It’s a secure, smart 
+                        way to manage your income while enjoying the full value of SACCO membership.
                     </Typography>
                 </motion.div>
             </Box>

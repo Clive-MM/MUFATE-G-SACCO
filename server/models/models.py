@@ -3,12 +3,13 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+
 class User(db.Model):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(30), nullable=False, unique=True)
-    password = db.Column(db.String(128), nullable=False)  
-    role = db.Column(db.String(20), nullable=False, default='admin')  
+    password = db.Column(db.String(128), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default='admin')
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
@@ -29,6 +30,7 @@ class SaccoProfile(db.Model):
     MissionStatement = db.Column(db.String(300))
     VisionStatement = db.Column(db.String(300))
 
+
 class HomepageSlider(db.Model):
     __tablename__ = 'Homepage_Slider'
 
@@ -40,6 +42,7 @@ class HomepageSlider(db.Model):
     IsActiveID = db.Column(db.Integer, db.ForeignKey('IsActive.ID'))
     is_active = db.relationship('IsActive', backref='homepage_sliders')
 
+
 class CoreValue(db.Model):
     __tablename__ = 'Core_Values'
 
@@ -50,16 +53,19 @@ class CoreValue(db.Model):
     is_active = db.relationship('IsActive', backref='core_values')
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
 
+
 class MobileBankingInfo(db.Model):
     __tablename__ = 'Mobile_Banking_Info'
 
-    MobileBankingID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    MobileBankingID = db.Column(
+        db.Integer, primary_key=True, autoincrement=True)
     USSDCode = db.Column(db.String(20), nullable=False)
     PaybillNumber = db.Column(db.String(20))
     Description = db.Column(db.String(200))
     IsActiveID = db.Column(db.Integer, db.ForeignKey('IsActive.ID'))
     is_active = db.relationship('IsActive', backref='mobile_banking')
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class SaccoBranch(db.Model):
     __tablename__ = 'Sacco_Branch'
@@ -71,6 +77,7 @@ class SaccoBranch(db.Model):
     GoogleMapURL = db.Column(db.String(255))
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
 
+
 class OperationTimeline(db.Model):
     __tablename__ = 'Operation_Timeline'
 
@@ -80,16 +87,18 @@ class OperationTimeline(db.Model):
     ClosingTime = db.Column(db.Time, nullable=False)
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
 
+
 class Product(db.Model):
     __tablename__ = 'Product'
 
     ProductID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     ProductName = db.Column(db.String(100), nullable=False)
-    Intro = db.Column(db.String(1000))             
-    Features = db.Column(db.String(1000))           
-    Benefits = db.Column(db.String(1000))           
+    Intro = db.Column(db.String(1000))
+    Features = db.Column(db.String(1000))
+    Benefits = db.Column(db.String(1000))
     ImageURL = db.Column(db.String(255))
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class Service(db.Model):
     __tablename__ = 'Services'
@@ -99,8 +108,11 @@ class Service(db.Model):
     ImageURL = db.Column(db.String(255))
     Description = db.Column(db.String(1000))
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
-    ServiceCategory = db.Column(db.String(50))  
-    LoanFormURL = db.Column(db.String(255))     
+    ServiceCategory = db.Column(db.String(50))
+    LoanFormURL = db.Column(db.String(255))
+    Features = db.Column(db.String(1000))
+    Benefits = db.Column(db.String(1000))
+
 
 class SaccoStatistics(db.Model):
     __tablename__ = 'Sacco_Statistics'
@@ -111,6 +123,7 @@ class SaccoStatistics(db.Model):
     BranchCount = db.Column(db.Integer)
     YearsOfService = db.Column(db.Integer)
     LastUpdated = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class Partnership(db.Model):
     __tablename__ = 'Partnership'
@@ -123,34 +136,65 @@ class Partnership(db.Model):
     is_active = db.relationship('IsActive', backref='partnerships')
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
 
+
 class Membership(db.Model):
     __tablename__ = 'Membership'
 
     MemberID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    # ✅ Basic Info
     FullName = db.Column(db.String(150), nullable=False)
-    IDType = db.Column(db.String(50), nullable=False)
-    IDNumber = db.Column(db.String(50), nullable=False)
+    Salutation = db.Column(db.String(10), nullable=False)
+
+    # ✅ ID Information
+    IDType = db.Column(db.Enum(
+        "ID Card",
+        "Certificate of Incorp",
+        "Group Registration Certificate",
+        "Passport",
+        name="id_type_enum"
+    ), nullable=False)
+    IDNumber = db.Column(db.String(50), nullable=False, unique=True)
+    KRAPin = db.Column(db.String(20), nullable=True)
+
+    # ✅ Personal Details
     DOB = db.Column(db.Date, nullable=False)
-    MaritalStatus = db.Column(db.String(50), nullable=False)
-    Gender = db.Column(db.String(20))
-    Address = db.Column(db.String(200))
-    Telephone = db.Column(db.String(20), nullable=False)
-    AlternatePhone = db.Column(db.String(20))
-    KRAPin = db.Column(db.String(20))
+    MaritalStatus = db.Column(db.Enum(
+        "Single", "Married", "Divorce", "Separated",
+        name="marital_status_enum"
+    ), nullable=False)
+    Gender = db.Column(db.Enum(
+        "Male", "Female", "Others",
+        name="gender_enum"
+    ), nullable=False)
+
+    # ✅ Location Details
     County = db.Column(db.String(100), nullable=False)
-    SubCounty = db.Column(db.String(100), nullable=False)
-    Email = db.Column(db.String(100))
-    ContactPerson = db.Column(db.String(100), nullable=False)
-    ContactPersonPhone = db.Column(db.String(20), nullable=False)
-    NomineeName = db.Column(db.String(100))
-    NomineeID = db.Column(db.String(50))
-    NomineeContact = db.Column(db.String(20))
-    NomineeRelation = db.Column(db.String(50))
-    IDBackURL = db.Column(db.String(255), nullable=False)
-    IDFrontURL = db.Column(db.String(255), nullable=False)
-    SignatureURL = db.Column(db.String(255), nullable=False)
-    PASSPORTURL = db.Column(db.String(255), nullable=False)
+    District = db.Column(db.String(100), nullable=False)
+    Division = db.Column(db.String(100), nullable=True)
+    Address = db.Column(db.String(200), nullable=True)
+    PostalCode = db.Column(db.String(20), nullable=True)
+    PhysicalAddress = db.Column(db.String(200), nullable=True)
+
+    # ✅ Contact Info
+    MobileNumber = db.Column(db.String(20), nullable=False)
+    AlternateMobileNumber = db.Column(
+        db.String(20), nullable=True)  # Now optional
+    Email = db.Column(db.String(100), nullable=True)
+
+    # ✅ Profession Info
+    Profession = db.Column(db.String(100), nullable=True)
+    ProfessionSector = db.Column(db.String(100), nullable=True)
+
+    # ✅ Nominee Info
+    NomineeName = db.Column(db.String(100), nullable=False)
+    NomineeIDNumber = db.Column(db.String(50), nullable=False)
+    NomineePhoneNumber = db.Column(db.String(20), nullable=False)
+    NomineeRelation = db.Column(db.String(50), nullable=False)
+
+    # ✅ Registration Timestamp
     RegisteredAt = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class FeedbackStatus(db.Model):
     __tablename__ = 'Feedback_Status'
@@ -158,16 +202,19 @@ class FeedbackStatus(db.Model):
     StatusID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     StatusName = db.Column(db.String(50), nullable=False, unique=True)
 
+
 class Feedback(db.Model):
     __tablename__ = 'Feedback'
 
     FeedbackID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Email = db.Column(db.String(100))
+    PhoneNumber = db.Column(db.String(20))   # ✅ NEW
     Subject = db.Column(db.String(200))
     Message = db.Column(db.Text)
     StatusID = db.Column(db.Integer, db.ForeignKey('Feedback_Status.StatusID'))
     status = db.relationship('FeedbackStatus', backref='feedbacks')
     SubmittedAt = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class FAQ(db.Model):
     __tablename__ = 'FAQs'
@@ -179,11 +226,13 @@ class FAQ(db.Model):
     IsActiveID = db.Column(db.Integer, db.ForeignKey('IsActive.ID'))
     is_active = db.relationship('IsActive', backref='faqs')
 
+
 class IsActive(db.Model):
     __tablename__ = 'IsActive'
 
     ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Status = db.Column(db.String(50), nullable=False, unique=True)
+
 
 class Career(db.Model):
     __tablename__ = 'Career'
@@ -199,6 +248,7 @@ class Career(db.Model):
     is_active = db.relationship('IsActive', backref='careers')
     PostedDate = db.Column(db.DateTime, default=datetime.utcnow)
 
+
 class Resources(db.Model):
     __tablename__ = 'Resources'
 
@@ -209,14 +259,18 @@ class Resources(db.Model):
     is_active = db.relationship('IsActive', backref='resources')
     UploadedAt = db.Column(db.DateTime, default=datetime.utcnow)
 
-class Post(db.Model):
-    __tablename__ = 'Posts'
 
-    PostID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+class Posts(db.Model):
+    __tablename__ = "Posts"
+
+    PostID = db.Column(db.Integer, primary_key=True)
     Title = db.Column(db.String(200), nullable=False)
-    Content = db.Column(db.Text, nullable=False)
-    CoverImage = db.Column(db.String(255))
+    Content = db.Column(db.Text, nullable=False) 
+    CoverImage = db.Column(db.String(255), nullable=False)
     DatePosted = db.Column(db.DateTime, default=datetime.utcnow)
+    PostsCategoryID = db.Column(db.Integer, db.ForeignKey('PostsCategory.PostsCategoryID'), nullable=False)
+    isActiveID = db.Column(db.Integer)
+
 
 class SaccoClient(db.Model):
     __tablename__ = 'Sacco_Clients'
@@ -237,6 +291,7 @@ class BOD(db.Model):
     Designation = db.Column(db.String(100))
     ImageURL = db.Column(db.Text)
 
+
 class Management(db.Model):
     __tablename__ = 'Management'
     MGTID = db.Column(db.Integer, primary_key=True)
@@ -251,10 +306,99 @@ class HolidayMessage(db.Model):
     HolidayID = db.Column(db.Integer, primary_key=True)
     HolidayName = db.Column(db.String(100), nullable=False)
     Message = db.Column(db.String(255), nullable=False)
-    IsActive = db.Column(db.Integer, nullable=False, default=1)  # maps to IsActive table
+    IsActive = db.Column(db.Integer, nullable=False, default=1)
     CreatedAt = db.Column(db.DateTime)
     Month = db.Column(db.Integer, nullable=False)
     Day = db.Column(db.Integer, nullable=False)
 
 
+class GalleryPhoto(db.Model):
+    __tablename__ = 'GalleryPhotos'
 
+    PhotoID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Title = db.Column(db.String(100))
+    Description = db.Column(db.Text)
+    ImageURL = db.Column(db.String(500), nullable=False)
+    UploadedAt = db.Column(db.DateTime, default=datetime.utcnow)
+    IsActive = db.Column(db.Boolean, default=True)
+
+
+class LoanProduct(db.Model):
+    __tablename__ = 'LoanProduct'
+
+    LoanProductID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ProductKey = db.Column(db.String(50), nullable=False,
+                           unique=True)     # e.g. 'development'
+    # e.g. 'Development Loan'
+    LoanName = db.Column(db.String(120), nullable=False)
+
+    # Repayment method (all are reducing-balance styles in your setup)
+    # 'equal_principal' (constant principal), 'emi' (fixed installment), 'interest_only' (balloon)
+    InterestType = db.Column(
+        db.String(20), nullable=False, default='equal_principal')
+
+    # Monthly nominal rate, e.g. 0.015 for 1.5% per month
+    MonthlyInterestRate = db.Column(db.Numeric(9, 6), nullable=False)
+
+    # Default repayment period (months); UI can allow overrides
+    DefaultTermMonths = db.Column(db.Integer, nullable=False)
+
+    # Optional bounds for overrides
+    MinTermMonths = db.Column(db.Integer)
+    MaxTermMonths = db.Column(db.Integer)
+
+    # Optional principal limits
+    MinPrincipal = db.Column(db.Numeric(18, 2))
+    MaxPrincipal = db.Column(db.Numeric(18, 2))
+
+    # Period granularity (you’re using monthly)
+    RepaymentPeriod = db.Column(
+        db.String(12), nullable=False, default='monthly')
+
+    # Due-date rules
+    FirstDueRule = db.Column(
+        db.String(40), nullable=False, default='same_day_next_month')
+    HolidayRule = db.Column(db.String(40), nullable=False,
+                            default='next_business_day')
+
+    # Display/rounding unit (KES); usually 1
+    RoundingUnit = db.Column(db.Numeric(9, 2), nullable=False, default=1)
+
+    MaximumGuarantors = db.Column(db.Integer)
+
+    IsActive = db.Column(db.Boolean, nullable=False, default=True)
+    CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
+    UpdatedAt = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<LoanProduct {self.ProductKey} - {self.LoanName}>"
+
+
+# SupportTicket
+class SupportTicket(db.Model):
+    __tablename__ = "SupportTickets"
+
+    Id = db.Column(db.Integer, primary_key=True)
+    Email = db.Column(db.String(255), nullable=True,
+                      index=True)  # <-- change to True
+    # <-- keep optional
+    PhoneNumber = db.Column(db.String(20))
+    Message = db.Column(db.Text, nullable=False)
+    PageUrl = db.Column(db.String(1024))
+    UserAgent = db.Column(db.String(512))
+    Status = db.Column(db.String(32), default="Open")
+    CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class PostsCategory(db.Model):
+    __tablename__ = "PostsCategory"
+
+    PostsCategoryID = db.Column(db.Integer, primary_key=True)
+
+    Category = db.Column(db.String(50), nullable=False)
+
+    CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
+    IsActive = db.Column(db.Boolean, default=True)
+
+    posts = db.relationship('Posts', backref='category', lazy=True)
