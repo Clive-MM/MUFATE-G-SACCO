@@ -4,6 +4,9 @@ import Slider from 'react-slick';
 import { motion } from 'framer-motion';
 import { Box, Typography, Container, CircularProgress, Stack } from '@mui/material';
 
+// Import your new component
+import NewsFeed from './NewsFeed';
+
 // Slick Slider CSS
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -61,9 +64,8 @@ const News = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: BRAND.dark, width: '100%', minHeight: '100vh', overflow: 'hidden' }}>
-
-      {/* 1. Page Heading - Styled with Brand Gold Typography */}
+    <Box sx={{ bgcolor: BRAND.dark, width: '100%', minHeight: '100vh' }}>
+      {/* 1. Page Heading */}
       <Container maxWidth="xl" sx={{ pt: 6, pb: 4 }}>
         <Stack alignItems="center" spacing={1}>
           <Typography
@@ -87,13 +89,11 @@ const News = () => {
         </Stack>
       </Container>
 
-      {/* 2. Actualized Hero Slider Section */}
-      <Box sx={{ width: '100%', position: 'relative', height: { xs: '60vh', md: '75vh' } }}>
+      {/* 2. Hero Slider Section */}
+      <Box sx={{ width: '100%', position: 'relative', height: { xs: '60vh', md: '75vh' }, mb: 4 }}>
         <Slider {...settings}>
           {heroPosts.map((slide, index) => (
             <Box key={slide.PostID || index} sx={{ position: 'relative', height: { xs: '60vh', md: '75vh' } }}>
-
-              {/* Background Layer */}
               <Box
                 sx={{
                   width: '100%',
@@ -107,8 +107,6 @@ const News = () => {
                   backgroundPosition: 'center',
                 }}
               />
-
-              {/* Text Content Overlay */}
               <Container maxWidth="lg" sx={{
                 position: 'absolute',
                 top: '50%',
@@ -134,7 +132,6 @@ const News = () => {
                   }}>
                     {slide.Title}
                   </Typography>
-
                   <Typography variant="h6" sx={{
                     color: BRAND.light,
                     maxWidth: "600px",
@@ -152,6 +149,9 @@ const News = () => {
           ))}
         </Slider>
       </Box>
+
+      {/* 3. News Feed Section (Categories & Cards) */}
+      <NewsFeed />
     </Box>
   );
 };
