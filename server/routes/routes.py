@@ -689,44 +689,6 @@ def get_partnerships():
         return jsonify({'message': '❌ Failed to fetch partnerships.', 'error': str(e)}), 500
 
 
-# Route creating a post
-@routes.route('/posts/create', methods=['POST'])
-@jwt_required()
-def create_post():
-    try:
-        # Authenticate user
-        current_user = get_jwt_identity()
-        role = current_user['role']
-
-        if role.lower() != 'admin':
-            return jsonify({'message': '❌ Unauthorized. Admins only.'}), 403
-
-        # Extract form data
-        title = request.json.get('Title')
-        content = request.json.get('Content')
-        cover_image_url = request.json.get('CoverImage')
-
-        # Validate input
-        if not title or not content or not cover_image_url:
-            return jsonify({'message': '❌ Title, Content, and CoverImage URL are required!'}), 400
-
-        # Create and save new post
-        new_post = Post(
-            Title=title,
-            Content=content,
-            CoverImage=cover_image_url
-        )
-
-        db.session.add(new_post)
-        db.session.commit()
-
-        return jsonify({'message': '✅ Post created successfully!'}), 201
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': '❌ Failed to create post.', 'error': str(e)}), 500
-
 
 
 #Fetching the posts in the news page
