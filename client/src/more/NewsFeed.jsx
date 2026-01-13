@@ -11,7 +11,7 @@ import HomeIcon from '@mui/icons-material/Home';
 const BRAND = {
     gold: "#EC9B14",
     dark: "#02150F",
-    cardBg: "rgba(255, 255, 255, 0.03)", // Subtle dark glass
+    cardBg: "rgba(255, 255, 255, 0.03)",
     textMuted: "rgba(244, 244, 244, 0.7)",
 };
 
@@ -37,14 +37,15 @@ const NewsFeed = () => {
     };
 
     return (
-        <Container maxWidth="xl" sx={{ pb: 10 }}>
-            <Grid container spacing={4} alignItems="flex-start">
+        <Container maxWidth="xl" sx={{ pb: 10, mt: 4 }}>
+            {/* Parent Grid to keep Content and Sidebar side-by-side */}
+            <Grid container spacing={3}>
 
-                {/* Main Content Area: Now using md=8 or 9 to keep sidebar on the right */}
+                {/* LEFT SIDE: POSTS (75% width on desktop) */}
                 <Grid item xs={12} md={8} lg={9}>
 
-                    {/* Tabs Navigation */}
-                    <Box sx={{ mb: 4 }}>
+                    {/* Category Tabs */}
+                    <Box sx={{ mb: 3 }}>
                         <Tabs
                             value={activeTab}
                             onChange={(e, v) => setActiveTab(v)}
@@ -53,19 +54,13 @@ const NewsFeed = () => {
                                 '& .MuiTabs-indicator': { display: 'none' },
                                 '& .MuiTab-root': {
                                     color: '#FFF',
-                                    border: '1px solid rgba(255,255,255,0.3)',
-                                    mr: 1.5,
-                                    mb: 1,
+                                    border: '1px solid rgba(255,255,255,0.2)',
+                                    mr: 1,
                                     borderRadius: '4px',
                                     fontWeight: 700,
-                                    fontSize: '0.85rem',
-                                    minWidth: 'auto',
-                                    transition: '0.3s',
-                                    '&.Mui-selected': {
-                                        bgcolor: BRAND.gold,
-                                        color: BRAND.dark,
-                                        borderColor: BRAND.gold
-                                    }
+                                    fontSize: '0.75rem',
+                                    minHeight: '36px',
+                                    '&.Mui-selected': { bgcolor: BRAND.gold, color: BRAND.dark, borderColor: BRAND.gold }
                                 }
                             }}
                         >
@@ -73,49 +68,44 @@ const NewsFeed = () => {
                         </Tabs>
                     </Box>
 
-                    {/* Posts Grid: Using md=4 to create 3 cards per row in the main area */}
+                    {/* Posts Small Square Grid */}
                     <Grid container spacing={2}>
                         <AnimatePresence mode="wait">
                             {posts.map((post) => (
-                                <Grid item xs={12} sm={6} md={4} key={post.PostID}>
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        <Card sx={{
-                                            bgcolor: BRAND.cardBg,
-                                            borderRadius: '12px',
-                                            border: `1px solid rgba(236, 155, 20, 0.2)`,
-                                            height: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            '&:hover': { borderColor: BRAND.gold }
-                                        }}>
-                                            {/* Square Image container with objectFit: contain to avoid cropping */}
-                                            <Box sx={{ p: 1, width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
-                                                <CardMedia
-                                                    component="img"
-                                                    image={post.CoverImage || 'https://via.placeholder.com/300'}
-                                                    alt={post.Title}
-                                                    sx={{
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        objectFit: 'contain', // Fits the image without cropping
-                                                        borderRadius: '8px',
-                                                        bgcolor: 'rgba(0,0,0,0.2)'
-                                                    }}
-                                                />
-                                            </Box>
+                                <Grid item xs={12} sm={6} key={post.PostID}>
+                                    <Card sx={{
+                                        bgcolor: BRAND.cardBg,
+                                        borderRadius: '12px',
+                                        border: `1px solid rgba(236, 155, 20, 0.3)`,
+                                        display: 'flex', // Horizontal layout for smaller cards
+                                        height: '160px', // Fixed height for uniformity
+                                        overflow: 'hidden',
+                                        '&:hover': { borderColor: BRAND.gold }
+                                    }}>
+                                        {/* Small Square Image - No Cropping */}
+                                        <Box sx={{ width: '140px', minWidth: '140px', p: 1, bgcolor: 'rgba(0,0,0,0.2)' }}>
+                                            <CardMedia
+                                                component="img"
+                                                image={post.CoverImage || 'https://via.placeholder.com/150'}
+                                                alt={post.Title}
+                                                sx={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'contain', // Entire image fits inside
+                                                    borderRadius: '8px'
+                                                }}
+                                            />
+                                        </Box>
 
-                                            <CardContent sx={{ p: 2, flexGrow: 1 }}>
-                                                <Typography variant="subtitle1" sx={{
+                                        {/* Compact Content */}
+                                        <CardContent sx={{ p: 1.5, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%' }}>
+                                            <Box>
+                                                <Typography variant="subtitle2" sx={{
                                                     color: '#FFF',
-                                                    fontWeight: 700,
-                                                    lineHeight: 1.3,
-                                                    mb: 1,
-                                                    fontSize: '0.95rem',
+                                                    fontWeight: 800,
+                                                    fontSize: '0.85rem',
+                                                    lineHeight: 1.2,
+                                                    mb: 0.5,
                                                     display: '-webkit-box',
                                                     WebkitLineClamp: 2,
                                                     WebkitBoxOrient: 'vertical',
@@ -123,62 +113,60 @@ const NewsFeed = () => {
                                                 }}>
                                                     {post.Title}
                                                 </Typography>
-
-                                                <Typography variant="body2" sx={{
+                                                <Typography variant="caption" sx={{
                                                     color: BRAND.textMuted,
-                                                    fontSize: '0.8rem',
+                                                    fontSize: '0.7rem',
                                                     display: '-webkit-box',
-                                                    WebkitLineClamp: 3,
+                                                    WebkitLineClamp: 2,
                                                     WebkitBoxOrient: 'vertical',
-                                                    overflow: 'hidden',
-                                                    mb: 2
+                                                    overflow: 'hidden'
                                                 }}>
                                                     {post.Content.replace(/<[^>]*>/g, '')}
                                                 </Typography>
+                                            </Box>
 
-                                                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                                    <Stack direction="row" alignItems="center" spacing={0.5} sx={{ color: BRAND.gold }}>
-                                                        <AccessTimeIcon sx={{ fontSize: '0.9rem' }} />
-                                                        <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>3 min read</Typography>
-                                                    </Stack>
-                                                    <IconButton size="small" sx={{ color: BRAND.gold, p: 0 }}>
-                                                        <HomeIcon sx={{ fontSize: '1.1rem' }} />
-                                                    </IconButton>
+                                            <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                                <Stack direction="row" alignItems="center" spacing={0.5} sx={{ color: BRAND.gold }}>
+                                                    <AccessTimeIcon sx={{ fontSize: '0.8rem' }} />
+                                                    <Typography sx={{ fontSize: '0.65rem', fontWeight: 600 }}>3 min read</Typography>
                                                 </Stack>
-                                            </CardContent>
-                                        </Card>
-                                    </motion.div>
+                                                <HomeIcon sx={{ color: BRAND.gold, fontSize: '1rem' }} />
+                                            </Stack>
+                                        </CardContent>
+                                    </Card>
                                 </Grid>
                             ))}
                         </AnimatePresence>
                     </Grid>
                 </Grid>
 
-                {/* Sidebar: Now properly aligned on the right for desktop (lg=3) */}
-                <Grid item xs={12} md={4} lg={3} sx={{ position: { md: 'sticky' }, top: 20 }}>
+                {/* RIGHT SIDE: SIDEBAR (25% width on desktop) */}
+                <Grid item xs={12} md={4} lg={3}>
                     <Box sx={{
                         p: 3,
                         borderRadius: '12px',
                         border: '1px solid rgba(255,255,255,0.1)',
-                        bgcolor: 'rgba(255,255,255,0.03)',
-                        backdropFilter: 'blur(10px)'
+                        bgcolor: 'rgba(255,255,255,0.02)',
+                        position: 'sticky', // Keeps it visible while scrolling posts
+                        top: '20px'
                     }}>
-                        <Typography variant="h6" sx={{ color: '#FFF', fontWeight: 800, fontSize: '0.9rem', mb: 0.5 }}>NEWSLETTER</Typography>
-                        <Typography variant="h5" sx={{ color: '#FFF', fontWeight: 900, fontSize: '1.2rem', mb: 2 }}>SUBSCRIPTION</Typography>
-                        <Typography variant="body2" sx={{ color: BRAND.textMuted, mb: 3, fontSize: '0.8rem' }}>
+                        <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 900, letterSpacing: 2 }}>Newsletter</Typography>
+                        <Typography variant="h5" sx={{ color: '#FFF', fontWeight: 900, fontSize: '1.2rem', mb: 1 }}>SUBSCRIPTION</Typography>
+                        <Typography variant="body2" sx={{ color: BRAND.textMuted, fontSize: '0.75rem', mb: 3 }}>
                             Stay updated with our latest financial tips and official notices.
                         </Typography>
+
                         <TextField
                             fullWidth
                             placeholder="Email or Phone"
-                            variant="outlined"
                             sx={{
                                 bgcolor: '#FFF',
                                 borderRadius: '4px',
                                 mb: 2,
-                                '& .MuiOutlinedInput-root': { height: '40px', fontSize: '0.85rem' }
+                                '& .MuiOutlinedInput-root': { height: '40px', fontSize: '0.8rem' }
                             }}
                         />
+
                         <Button
                             fullWidth
                             variant="contained"
@@ -186,8 +174,7 @@ const NewsFeed = () => {
                                 bgcolor: BRAND.gold,
                                 color: BRAND.dark,
                                 fontWeight: 900,
-                                fontSize: '0.85rem',
-                                py: 1,
+                                fontSize: '0.8rem',
                                 '&:hover': { bgcolor: '#d48a12' }
                             }}
                         >
