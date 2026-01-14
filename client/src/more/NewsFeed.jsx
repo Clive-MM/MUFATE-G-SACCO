@@ -5,7 +5,7 @@ import {
     Box, Typography, Container, Grid, Card, CardContent, CardMedia,
     Tabs, Tab, Stack, TextField, Button, CardActionArea, CircularProgress
 } from '@mui/material';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'; // Replaced AccessTime
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HomeIcon from '@mui/icons-material/Home';
 
 const BRAND = {
@@ -34,7 +34,6 @@ const NewsFeed = () => {
             .catch(err => console.error(err));
     };
 
-    // Helper to format date as DDMMYYYY
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
         const date = new Date(dateString);
@@ -62,6 +61,97 @@ const NewsFeed = () => {
         }
     };
 
+    // Helper component for individual post cards to manage expansion state
+    const PostCard = ({ post }) => {
+        const [expanded, setExpanded] = useState(false);
+
+        return (
+            <Grid item xs={12} md={6}>
+                <motion.div
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <Card sx={{
+                        maxWidth: 420,
+                        width: '100%',
+                        bgcolor: BRAND.cardBg,
+                        borderRadius: '16px',
+                        border: `1.5px solid rgba(236, 155, 20, 0.15)`,
+                        height: 'auto',
+                        transition: 'all 0.3s ease-in-out',
+                        '&:hover': {
+                            borderColor: BRAND.gold,
+                            boxShadow: `0 0 20px ${BRAND.gold}44`
+                        }
+                    }}>
+                        <CardActionArea onClick={() => setExpanded(!expanded)} sx={{ alignItems: 'flex-start' }}>
+                            <CardMedia
+                                component="img"
+                                height="370"
+                                image={post.CoverImage || 'https://via.placeholder.com/320x140'}
+                                sx={{
+                                    objectFit: 'cover',
+                                    p: 0,
+                                    bgcolor: 'rgba(255,255,255,0.03)',
+                                    objectPosition: 'center'
+                                }}
+                            />
+                            <CardContent sx={{ p: 2.5 }}>
+                                <Typography variant="h6" sx={{
+                                    color: '#FFF',
+                                    fontWeight: 800,
+                                    fontSize: '1.1rem',
+                                    height: 'auto',
+                                    mb: 1.5
+                                }}>
+                                    {post.Title}
+                                </Typography>
+
+                                <Typography variant="body2" sx={{
+                                    color: BRAND.textMuted,
+                                    fontSize: '0.85rem',
+                                    lineHeight: 1.6,
+                                    height: 'auto',
+                                    mb: 1,
+                                    display: expanded ? 'block' : '-webkit-box',
+                                    WebkitLineClamp: expanded ? 'none' : 3,
+                                    WebkitBoxOrient: 'vertical',
+                                    overflow: 'hidden',
+                                }}>
+                                    {post.Content.replace(/<[^>]*>/g, '')}
+                                </Typography>
+
+                                <Typography sx={{ 
+                                    color: BRAND.gold, 
+                                    fontSize: '0.75rem', 
+                                    fontWeight: 800, 
+                                    mb: 3,
+                                    cursor: 'pointer',
+                                    textTransform: 'uppercase'
+                                }}>
+                                    {expanded ? "Show Less ▲" : "Read More ▼"}
+                                </Typography>
+
+                                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                                    <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
+                                        <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
+                                        <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
+                                            {formatDate(post.DatePosted)}
+                                        </Typography>
+                                    </Stack>
+                                    <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
+                                </Stack>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </motion.div>
+            </Grid>
+        );
+    };
+
     return (
         <Container maxWidth="xl" sx={{ pb: 10, mt: 4 }}>
             <Box sx={{ mb: 4 }}>
@@ -85,82 +175,9 @@ const NewsFeed = () => {
             <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>
                 <Box sx={{ flex: 1 }}>
                     <Grid container spacing={3}>
-                        <AnimatePresence mode="wait">
+                        <AnimatePresence mode="popLayout">
                             {posts.map((post) => (
-                                <Grid item xs={12} md={6} key={post.PostID}>
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        whileHover={{ scale: 1.03 }} // Zooms out/expands on hover
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        <Card sx={{
-                                            maxWidth: 420,
-                                            width: '100%',// Slightly increased width
-                                            bgcolor: BRAND.cardBg,
-                                            borderRadius: '16px',
-                                            border: `1.5px solid rgba(236, 155, 20, 0.15)`,
-                                            height: 'auto', // Changed from 100% to allow expansion
-                                            transition: 'all 0.3s ease-in-out',
-                                            '&:hover': {
-                                                borderColor: BRAND.gold,
-                                                boxShadow: `0 0 20px ${BRAND.gold}44` // Glow effect
-                                            }
-                                        }}>
-                                            <CardActionArea>
-                                                <CardMedia
-                                                    component="img"
-                                                    /* 1. Increased height from 160 to 220 or 240 for a more vertical/prominent look */
-                                                    height="370"
-                                                    image={post.CoverImage || 'https://via.placeholder.com/320x140'}
-                                                    sx={{
-                                                        /* 2. Changed 'contain' to 'cover' to fill the entire space */
-                                                        objectFit: 'cover',
-                                                        /* 3. Removed p: 2 (padding) so the image touches the edges of the card */
-                                                        p: 0,
-                                                        bgcolor: 'rgba(255,255,255,0.03)',
-                                                        /* 4. Optional: ensures the most important part of the image (center) is visible */
-                                                        objectPosition: 'center'
-                                                    }}
-                                                />
-                                                <CardContent sx={{ p: 2.5 }}>
-                                                    {/* Title */}
-                                                    <Typography variant="h6" sx={{
-                                                        color: '#FFF',
-                                                        fontWeight: 800,
-                                                        fontSize: '1rem',
-                                                        height: 'auto',
-                                                        mb: 1.5
-                                                    }}>
-                                                        {post.Title}
-                                                    </Typography>
-
-                                                    {/* Content */}
-                                                    <Typography variant="body2" sx={{
-                                                        color: BRAND.textMuted,
-                                                        fontSize: '0.85rem',
-                                                        lineHeight: 1.6,
-                                                        height: 'auto',
-                                                        mb: 3
-                                                    }}>
-                                                        {post.Content.replace(/<[^>]*>/g, '')}
-                                                    </Typography>
-
-                                                    {/* Footer info (Date and Home Icon) */}
-                                                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                                        <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
-                                                            <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
-                                                            <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
-                                                                {formatDate(post.DatePosted)}
-                                                            </Typography>
-                                                        </Stack>
-                                                        <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
-                                                    </Stack>
-                                                </CardContent>
-                                            </CardActionArea>
-                                        </Card>
-                                    </motion.div>
-                                </Grid>
+                                <PostCard key={post.PostID} post={post} />
                             ))}
                         </AnimatePresence>
                     </Grid>
