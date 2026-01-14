@@ -110,7 +110,7 @@ const NewsFeed = () => {
     <CardMedia
         component="img"
         /* 1. Increased height from 160 to 220 or 240 for a more vertical/prominent look */
-        height="250" 
+        height="300" 
         image={post.CoverImage || 'https://via.placeholder.com/320x140'}
         sx={{ 
             /* 2. Changed 'contain' to 'cover' to fill the entire space */
