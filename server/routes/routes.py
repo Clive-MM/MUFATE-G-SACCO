@@ -10,7 +10,7 @@ import re
 import traceback
 from datetime import date, timedelta
 from calendar import monthrange
-
+from sqlalchemy.exc import IntegrityError
 import traceback
 
 
@@ -2083,6 +2083,9 @@ maderumoyia@mudetesacco.co.ke"""
         return jsonify({'message': '❌ Failed to submit ticket.', 'error': str(e)}), 500
 
 #Newsletter subscription
+from sqlalchemy.exc import IntegrityError
+
+#Newsletter subscription
 @routes.route('/subscribe', methods=['POST'])
 def subscribe():
     try:
@@ -2090,11 +2093,9 @@ def subscribe():
         if not data:
             return jsonify({'message': '❌ Invalid payload.'}), 400
 
-        contact = data.get('contact')
+        contact = (data.get('contact') or "").strip()
         if not contact:
             return jsonify({'message': '❌ Email or Phone information is required.'}), 400
-
-        contact = contact.strip()
 
         # ✅ save subscription first
         new_sub = NewsletterSubscription(ContactInfo=contact)
@@ -2103,9 +2104,11 @@ def subscribe():
 
         # ✅ email sending should NOT break subscription
         try:
+            sender_email = current_app.config.get('MAIL_USERNAME') or "noreply@mufate-g-sacco.co.ke"
+
             admin_msg = Message(
                 subject="🔔 New Newsletter Subscriber",
-                sender=current_app.config.get('MAIL_USERNAME') or "noreply@mufate-g-sacco.co.ke",
+                sender=sender_email,
                 recipients=["maderumoyia@mudetesacco.co.ke"],
                 body=f"""
 Hello Admin,
@@ -2124,7 +2127,7 @@ Subscription Date: {new_sub.SubscribedAt.strftime('%Y-%m-%d %H:%M:%S')}
                 if "@" in contact:
                     user_msg = Message(
                         subject="✅ Welcome to GOLDEN GENERATION DT SACCO Newsletter",
-                        sender=current_app.config.get('MAIL_USERNAME') or "noreply@mufate-g-sacco.co.ke",
+                        sender=sender_email,
                         recipients=[contact],
                         body=f"""
 Dear Member,
@@ -2134,27 +2137,27 @@ Thank you for subscribing to the GOLDEN GENERATION DT SACCO newsletter!
 You will now receive updates and announcements.
 
 Warm regards,
-GOLDEN GENERATION DT SACCO
+Golden Generation DT SACCO
 """
                     )
                     mail.send(user_msg)
 
         except Exception as email_error:
+            # ✅ Subscription already saved; email failed only
             traceback.print_exc()
             return jsonify({
-                'message': '✅ Subscribed successfully, but email failed to send.',
-                'warning': str(email_error)
+                "message": "✅ Subscribed successfully! (Email notification failed)",
+                "warning": str(email_error)
             }), 201
 
         return jsonify({'message': '✅ Successfully subscribed!'}), 201
 
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({'message': 'ℹ️ You are already subscribed to our newsletter!'}), 409
+
     except Exception as e:
         db.session.rollback()
-
-        err = str(e).lower()
-        if "duplicate" in err or "already exists" in err or "unique constraint" in err:
-            return jsonify({'message': 'ℹ️ You are already subscribed to our newsletter!'}), 409
-
         traceback.print_exc()
         return jsonify({
             'message': '❌ Failed to process subscription.',
