@@ -15,7 +15,7 @@ const BRAND = {
     textMuted: "rgba(244, 244, 244, 0.7)",
 };
 
-const CATEGORIES = ["Latest News", "Financial Reports", "Announcements", "Calendar"];
+const CATEGORIES = ["Latest News", "Financial Reports", "Announcement", "Upcoming Event"];
 
 const NewsFeed = () => {
     const [posts, setPosts] = useState([]);
