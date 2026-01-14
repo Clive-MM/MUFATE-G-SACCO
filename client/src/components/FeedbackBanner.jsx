@@ -8,17 +8,16 @@ import {
   DialogContent,
   IconButton,
   useTheme,
-  useMediaQuery,
-  CircularProgress
+  useMediaQuery
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
-import { useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack'; // ✅ FIX: Import Notistack hook
 import './FeedbackBanner.css';
 
 const FeedbackBanner = () => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     Email: '',
     Subject: '',
@@ -27,23 +26,28 @@ const FeedbackBanner = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { enqueueSnackbar } = useSnackbar();
+
+  const { enqueueSnackbar } = useSnackbar(); // ✅ FIX: Now useSnackbar is defined
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
     try {
-      const res = await axios.post('https://mufate-g-sacco.onrender.com/feedback', formData);
-      enqueueSnackbar(res.data.message, { variant: 'success' });
+      const res = await axios.post(
+        'https://mufate-g-sacco.onrender.com/feedback',
+        formData
+      );
+
+      enqueueSnackbar(res.data.message || "✅ Feedback submitted successfully!", {
+        variant: 'success'
+      });
+
       setOpen(false);
       setFormData({ Email: '', Subject: '', Message: '' });
     } catch (err) {
       enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -88,9 +92,13 @@ const FeedbackBanner = () => {
             position: 'relative'
           }}
         >
-
-          {/* LEFT SIDE — GOLD TEXT */}
-          <Box sx={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
+          {/* Left Section */}
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: isMobile ? 'center' : 'left'
+            }}
+          >
             <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
               <img
                 src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
@@ -105,14 +113,20 @@ const FeedbackBanner = () => {
 
             <Typography className="feedback-modal-text">
               Your feedback helps us improve our services and serve you better.
-              Please share your thoughts or suggestions.  
+              Please share your thoughts or suggestions.
               All responses are confidential and appreciated.
             </Typography>
           </Box>
 
-          {/* RIGHT SIDE — FORM */}
-          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-
+          {/* Right Section - Form */}
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2
+            }}
+          >
             <TextField
               label="Email"
               name="Email"
@@ -150,17 +164,16 @@ const FeedbackBanner = () => {
 
             <Button
               onClick={handleSubmit}
-              disabled={loading}
-              className="submit-button"
+              sx={{
+                backgroundColor: '#003B2F',
+                color: '#fff',
+                fontWeight: 600,
+                '&:hover': {
+                  backgroundColor: '#2e7d32'
+                }
+              }}
             >
-              {loading ? (
-                <>
-                  <CircularProgress size={20} sx={{ color: '#000', mr: 1 }} />
-                  SUBMITTING...
-                </>
-              ) : (
-                'SUBMIT'
-              )}
+              SUBMIT
             </Button>
           </Box>
 
