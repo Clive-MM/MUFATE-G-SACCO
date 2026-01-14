@@ -141,7 +141,7 @@ const News = () => {
                     display: { xs: 'none', md: 'block' },
                     textShadow: "2px 2px 10px rgba(0,0,0,0.8)"
                   }}>
-                    {slide.Content.replace(/<[^>]*>/g, '').substring(0, 500)}...
+                    {slide.Content.replace(/<[^>]*>/g, '').substring(0, 500)}.
                   </Typography>
                 </motion.div>
               </Container>
