@@ -107,47 +107,56 @@ const NewsFeed = () => {
                                             }
                                         }}>
                                             <CardActionArea>
-                                                <CardMedia
-                                                    component="img"
-                                                    height="250" // Increased image height
-                                                    image={post.CoverImage || 'https://via.placeholder.com/320x140'}
-                                                    sx={{ objectFit: 'contain', p: 2, bgcolor: 'rgba(255,255,255,0.03)' }}
-                                                />
-                                                <CardContent sx={{ p: 2.5 }}>
-                                                    {/* Title: Fixed height removed, overflow set to visible */}
-                                                    <Typography variant="h6" sx={{ 
-                                                        color: '#FFF', 
-                                                        fontWeight: 800, 
-                                                        fontSize: '1rem', 
-                                                        height: 'auto', 
-                                                        mb: 1.5 
-                                                    }}>
-                                                        {post.Title}
-                                                    </Typography>
+    <CardMedia
+        component="img"
+        /* 1. Increased height from 160 to 220 or 240 for a more vertical/prominent look */
+        height="250" 
+        image={post.CoverImage || 'https://via.placeholder.com/320x140'}
+        sx={{ 
+            /* 2. Changed 'contain' to 'cover' to fill the entire space */
+            objectFit: 'cover', 
+            /* 3. Removed p: 2 (padding) so the image touches the edges of the card */
+            p: 0, 
+            bgcolor: 'rgba(255,255,255,0.03)',
+            /* 4. Optional: ensures the most important part of the image (center) is visible */
+            objectPosition: 'center' 
+        }}
+    />
+    <CardContent sx={{ p: 2.5 }}>
+        {/* Title */}
+        <Typography variant="h6" sx={{ 
+            color: '#FFF', 
+            fontWeight: 800, 
+            fontSize: '1rem', 
+            height: 'auto', 
+            mb: 1.5 
+        }}>
+            {post.Title}
+        </Typography>
 
-                                                    {/* Content: Character limit and hidden overflow removed */}
-                                                    <Typography variant="body2" sx={{ 
-                                                        color: BRAND.textMuted, 
-                                                        fontSize: '0.85rem', 
-                                                        lineHeight: 1.6,
-                                                        height: 'auto', 
-                                                        mb: 3 
-                                                    }}>
-                                                        {post.Content.replace(/<[^>]*>/g, '')}
-                                                    </Typography>
+        {/* Content */}
+        <Typography variant="body2" sx={{ 
+            color: BRAND.textMuted, 
+            fontSize: '0.85rem', 
+            lineHeight: 1.6,
+            height: 'auto', 
+            mb: 3 
+        }}>
+            {post.Content.replace(/<[^>]*>/g, '')}
+        </Typography>
 
-                                                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                                        <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
-                                                            {/* Changed Icon and text to Date format */}
-                                                            <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
-                                                            <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
-                                                                {formatDate(post.DatePosted)}
-                                                            </Typography>
-                                                        </Stack>
-                                                        <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
-                                                    </Stack>
-                                                </CardContent>
-                                            </CardActionArea>
+        {/* Footer info (Date and Home Icon) */}
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
+                <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
+                <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
+                    {formatDate(post.DatePosted)}
+                </Typography>
+            </Stack>
+            <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
+        </Stack>
+    </CardContent>
+</CardActionArea>
                                         </Card>
                                     </motion.div>
                                 </Grid>
