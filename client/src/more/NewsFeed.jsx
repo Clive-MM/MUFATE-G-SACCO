@@ -95,7 +95,8 @@ const NewsFeed = () => {
                                         transition={{ duration: 0.3 }}
                                     >
                                         <Card sx={{
-                                            maxWidth: 420, // Slightly increased width
+                                            maxWidth: 420, 
+                                            width: '100%',// Slightly increased width
                                             bgcolor: BRAND.cardBg,
                                             borderRadius: '16px',
                                             border: `1.5px solid rgba(236, 155, 20, 0.15)`,
