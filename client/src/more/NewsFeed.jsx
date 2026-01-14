@@ -109,7 +109,7 @@ const NewsFeed = () => {
                                             <CardActionArea>
                                                 <CardMedia
                                                     component="img"
-                                                    height="200" // Increased image height
+                                                    height="250" // Increased image height
                                                     image={post.CoverImage || 'https://via.placeholder.com/320x140'}
                                                     sx={{ objectFit: 'contain', p: 2, bgcolor: 'rgba(255,255,255,0.03)' }}
                                                 />
