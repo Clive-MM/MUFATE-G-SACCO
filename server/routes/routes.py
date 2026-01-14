@@ -11,7 +11,9 @@ import traceback
 from datetime import date, timedelta
 from calendar import monthrange
 
-from flask_mail import Message
+import traceback
+
+
 
 
 # ✅ Initialize Blueprint and Flask extensions
@@ -1557,22 +1559,7 @@ def get_career_hero_image_2():
         return jsonify({'message': '❌ Error fetching ImageID = 5.', 'error': str(e)}), 500
 
 
-@routes.route('/posts/images', methods=['GET'])
-def get_post_images():
-    try:
-        # Fetch the latest 4 posts ordered by DatePosted (descending)
-        posts = Post.query.order_by(Post.DatePosted.desc()).limit(4).all()
 
-        # Only extract CoverImage URLs
-        images = [{'PostID': post.PostID, 'CoverImage': post.CoverImage}
-                  for post in posts if post.CoverImage]
-
-        return jsonify({'images': images}), 200
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': '❌ Failed to fetch post images.', 'error': str(e)}), 500
 
 # Return the holiday
 
@@ -1596,9 +1583,8 @@ def get_holiday_message():
         return jsonify({'message': None}), 200
 
 #  ✅ Public route to submit feedback
-from flask import request, jsonify, current_app
-import traceback
-from flask_mail import Message
+
+
 
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
@@ -2097,18 +2083,82 @@ maderumoyia@mudetesacco.co.ke"""
         return jsonify({'message': '❌ Failed to submit ticket.', 'error': str(e)}), 500
 
 #Newsletter subscription
+
 @routes.route('/subscribe', methods=['POST'])
 def subscribe():
-    data = request.json
-    contact = data.get('contact') # This can be email or phone from the frontend
-    
-    if not contact:
-        return jsonify({'message': 'Contact information is required.'}), 400
-        
     try:
-        new_sub = NewsletterSubscription(ContactInfo=contact)
+        # 1️⃣ Get and validate data
+        data = request.get_json(silent=True)
+        if not data:
+            return jsonify({'message': '❌ Invalid payload.'}), 400
+
+        contact = data.get('contact')
+        if not contact:
+            return jsonify({'message': '❌ Email or Phone information is required.'}), 400
+
+        # 2️⃣ Save subscription to database
+        new_sub = NewsletterSubscription(ContactInfo=contact.strip())
         db.session.add(new_sub)
         db.session.commit()
+
+        # 3️⃣ Prepare admin notification email
+        admin_msg = Message(
+            subject="🔔 New Newsletter Subscriber",
+            sender=current_app.config['MAIL_USERNAME'],
+            recipients=["maderumoyia@mudetesacco.co.ke"],
+            body=f"""
+Hello Admin,
+
+A new user has subscribed to the Golden Generation DT SACCO Newsletter.
+
+Subscriber Contact: {contact}
+Subscription Date: {new_sub.SubscribedAt.strftime('%Y-%m-%d %H:%M:%S')}
+
+Please ensure they are included in future member announcements.
+"""
+        )
+
+        # 4️⃣ Send emails
+        if mail:
+            mail.send(admin_msg)
+            
+            # 5️⃣ Optional: Send acknowledgement only if contact is an email
+            if "@" in contact:
+                user_msg = Message(
+                    subject=" Welcome to Golden Generation Newsletter",
+                    sender=current_app.config['MAIL_USERNAME'],
+                    recipients=[contact.strip()],
+                    body=f"""
+Dear Member,
+
+Thank you for subscribing to the Golden Generation DT SACCO newsletter!
+
+You will now receive updates on:
+- Latest Financial Reports
+- Sacco Announcements
+- Upcoming Events
+- Exclusive Member Tips
+
+We are glad to have you with us.
+
+Warm regards,
+Golden Generation DT SACCO
+"Walking With You"
+"""
+                )
+                mail.send(user_msg)
+
         return jsonify({'message': '✅ Successfully subscribed to Golden Generation updates!'}), 201
-    except Exception:
-        return jsonify({'message': 'You are already subscribed!'}), 409
+
+    except Exception as e:
+        db.session.rollback()
+        # Handle duplicate entry error (IntegrityError) specifically if needed
+        if "Duplicate entry" in str(e) or "already exists" in str(e).lower():
+            return jsonify({'message': 'ℹ️ You are already subscribed to our newsletter!'}), 409
+        
+        traceback.print_exc()
+        return jsonify({
+            'message': '❌ Failed to process subscription.',
+            'error': str(e)
+        }), 500
+    
