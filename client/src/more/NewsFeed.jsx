@@ -31,7 +31,7 @@ const NewsFeed = () => {
     }, [activeTab]);
 
     const fetchPosts = (category) => {
-        axios.get(`https://mufate-g-sacco.onrender.com/posts?category=${category}`)
+        axios.get(`https://mufate-g-sacco.onrender.com/news/posts?category=${category}`)
             .then(res => setPosts(res.data.posts || []))
             .catch(err => console.error(err));
     };
