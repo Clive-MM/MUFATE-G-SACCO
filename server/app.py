@@ -23,9 +23,15 @@ app = Flask(__name__)
 # CORS: allow Vercel frontend and main site to call this backend
 CORS(
     app,
-    resources={r"/*": {"origins": [
-        "https://mufate-g-sacco.vercel.app"
-    ]}}
+    resources={r"/*": {
+        "origins": [
+            "https://mufate-g-sacco.vercel.app",
+            "http://localhost:3000"
+        ],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }},
+    supports_credentials=True
 )
 
 # -----------------------------
