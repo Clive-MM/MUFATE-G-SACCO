@@ -88,76 +88,76 @@ const NewsFeed = () => {
                         <AnimatePresence mode="wait">
                             {posts.map((post) => (
                                 <Grid item xs={12} md={6} key={post.PostID}>
-                                    <motion.div 
-                                        initial={{ opacity: 0 }} 
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         whileHover={{ scale: 1.03 }} // Zooms out/expands on hover
                                         transition={{ duration: 0.3 }}
                                     >
                                         <Card sx={{
-                                            maxWidth: 420, 
+                                            maxWidth: 420,
                                             width: '100%',// Slightly increased width
                                             bgcolor: BRAND.cardBg,
                                             borderRadius: '16px',
                                             border: `1.5px solid rgba(236, 155, 20, 0.15)`,
                                             height: 'auto', // Changed from 100% to allow expansion
                                             transition: 'all 0.3s ease-in-out',
-                                            '&:hover': { 
+                                            '&:hover': {
                                                 borderColor: BRAND.gold,
                                                 boxShadow: `0 0 20px ${BRAND.gold}44` // Glow effect
                                             }
                                         }}>
                                             <CardActionArea>
-    <CardMedia
-        component="img"
-        /* 1. Increased height from 160 to 220 or 240 for a more vertical/prominent look */
-        height="370" 
-        image={post.CoverImage || 'https://via.placeholder.com/320x140'}
-        sx={{ 
-            /* 2. Changed 'contain' to 'cover' to fill the entire space */
-            objectFit: 'cover', 
-            /* 3. Removed p: 2 (padding) so the image touches the edges of the card */
-            p: 0, 
-            bgcolor: 'rgba(255,255,255,0.03)',
-            /* 4. Optional: ensures the most important part of the image (center) is visible */
-            objectPosition: 'center' 
-        }}
-    />
-    <CardContent sx={{ p: 2.5 }}>
-        {/* Title */}
-        <Typography variant="h6" sx={{ 
-            color: '#FFF', 
-            fontWeight: 800, 
-            fontSize: '1rem', 
-            height: 'auto', 
-            mb: 1.5 
-        }}>
-            {post.Title}
-        </Typography>
+                                                <CardMedia
+                                                    component="img"
+                                                    /* 1. Increased height from 160 to 220 or 240 for a more vertical/prominent look */
+                                                    height="370"
+                                                    image={post.CoverImage || 'https://via.placeholder.com/320x140'}
+                                                    sx={{
+                                                        /* 2. Changed 'contain' to 'cover' to fill the entire space */
+                                                        objectFit: 'cover',
+                                                        /* 3. Removed p: 2 (padding) so the image touches the edges of the card */
+                                                        p: 0,
+                                                        bgcolor: 'rgba(255,255,255,0.03)',
+                                                        /* 4. Optional: ensures the most important part of the image (center) is visible */
+                                                        objectPosition: 'center'
+                                                    }}
+                                                />
+                                                <CardContent sx={{ p: 2.5 }}>
+                                                    {/* Title */}
+                                                    <Typography variant="h6" sx={{
+                                                        color: '#FFF',
+                                                        fontWeight: 800,
+                                                        fontSize: '1rem',
+                                                        height: 'auto',
+                                                        mb: 1.5
+                                                    }}>
+                                                        {post.Title}
+                                                    </Typography>
 
-        {/* Content */}
-        <Typography variant="body2" sx={{ 
-            color: BRAND.textMuted, 
-            fontSize: '0.85rem', 
-            lineHeight: 1.6,
-            height: 'auto', 
-            mb: 3 
-        }}>
-            {post.Content.replace(/<[^>]*>/g, '')}
-        </Typography>
+                                                    {/* Content */}
+                                                    <Typography variant="body2" sx={{
+                                                        color: BRAND.textMuted,
+                                                        fontSize: '0.85rem',
+                                                        lineHeight: 1.6,
+                                                        height: 'auto',
+                                                        mb: 3
+                                                    }}>
+                                                        {post.Content.replace(/<[^>]*>/g, '')}
+                                                    </Typography>
 
-        {/* Footer info (Date and Home Icon) */}
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
-                <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
-                <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
-                    {formatDate(post.DatePosted)}
-                </Typography>
-            </Stack>
-            <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
-        </Stack>
-    </CardContent>
-</CardActionArea>
+                                                    {/* Footer info (Date and Home Icon) */}
+                                                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                                                        <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
+                                                            <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
+                                                            <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
+                                                                {formatDate(post.DatePosted)}
+                                                            </Typography>
+                                                        </Stack>
+                                                        <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
+                                                    </Stack>
+                                                </CardContent>
+                                            </CardActionArea>
                                         </Card>
                                     </motion.div>
                                 </Grid>
@@ -167,7 +167,7 @@ const NewsFeed = () => {
                 </Box>
 
                 <Box sx={{
-                    width: '260px',
+                    width: '320px',
                     minWidth: '260px',
                     position: 'sticky',
                     top: 20,
@@ -212,12 +212,12 @@ const NewsFeed = () => {
                                     '& input': { fontWeight: 700, color: BRAND.dark }
                                 }}
                             />
-                            <Typography sx={{ 
-                                fontSize: '0.7rem', 
-                                height: '20px', 
-                                fontWeight: 800, 
-                                mb: 1, 
-                                color: statusMessage.includes('❌') ? 'firebrick' : BRAND.dark 
+                            <Typography sx={{
+                                fontSize: '0.7rem',
+                                height: '20px',
+                                fontWeight: 800,
+                                mb: 1,
+                                color: statusMessage.includes('❌') ? 'firebrick' : BRAND.dark
                             }}>
                                 {statusMessage}
                             </Typography>
