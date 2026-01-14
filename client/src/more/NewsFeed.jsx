@@ -5,7 +5,7 @@ import {
     Box, Typography, Container, Grid, Card, CardContent, CardMedia,
     Tabs, Tab, Stack, TextField, Button, CardActionArea, CircularProgress
 } from '@mui/material';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'; // Replaced AccessTime
 import HomeIcon from '@mui/icons-material/Home';
 
 const BRAND = {
@@ -20,8 +20,6 @@ const CATEGORIES = ["Latest News", "Financial Reports", "Announcement", "Upcomin
 const NewsFeed = () => {
     const [posts, setPosts] = useState([]);
     const [activeTab, setActiveTab] = useState(0);
-
-    // --- NEW STATE FOR FUNCTIONALITY ---
     const [contact, setContact] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [statusMessage, setStatusMessage] = useState("");
@@ -36,30 +34,36 @@ const NewsFeed = () => {
             .catch(err => console.error(err));
     };
 
-    // --- NEW HANDLER FOR SUBSCRIPTION ---
+    // Helper to format date as DDMMYYYY
+    const formatDate = (dateString) => {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}${month}${year}`;
+    };
+
     const handleSubscribe = async () => {
         if (!contact.trim()) return;
         setIsSubmitting(true);
         setStatusMessage("");
-
         try {
             const res = await axios.post('https://mufate-g-sacco.onrender.com/subscribe', {
                 contact: contact.trim()
             });
             setStatusMessage(res.data.message);
-            setContact(""); // Clear field on success
+            setContact("");
         } catch (err) {
             setStatusMessage(err.response?.data?.message || "❌ Failed to subscribe.");
         } finally {
             setIsSubmitting(false);
-            // Clear status message after 5 seconds
             setTimeout(() => setStatusMessage(""), 5000);
         }
     };
 
     return (
         <Container maxWidth="xl" sx={{ pb: 10, mt: 4 }}>
-            {/* Category Tabs at the Top */}
             <Box sx={{ mb: 4 }}>
                 <Tabs
                     value={activeTab}
@@ -78,44 +82,69 @@ const NewsFeed = () => {
                 </Tabs>
             </Box>
 
-            {/* Content Area */}
             <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>
-
-                {/* LEFT COLUMN: 2 Cards per Row */}
                 <Box sx={{ flex: 1 }}>
                     <Grid container spacing={3}>
                         <AnimatePresence mode="wait">
                             {posts.map((post) => (
                                 <Grid item xs={12} md={6} key={post.PostID}>
-                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                    <motion.div 
+                                        initial={{ opacity: 0 }} 
+                                        animate={{ opacity: 1 }}
+                                        whileHover={{ scale: 1.03 }} // Zooms out/expands on hover
+                                        transition={{ duration: 0.3 }}
+                                    >
                                         <Card sx={{
-                                            maxWidth: 320,
+                                            maxWidth: 350, // Slightly increased width
                                             bgcolor: BRAND.cardBg,
                                             borderRadius: '16px',
                                             border: `1.5px solid rgba(236, 155, 20, 0.15)`,
-                                            height: '100%',
-                                            '&:hover': { borderColor: BRAND.gold }
+                                            height: 'auto', // Changed from 100% to allow expansion
+                                            transition: 'all 0.3s ease-in-out',
+                                            '&:hover': { 
+                                                borderColor: BRAND.gold,
+                                                boxShadow: `0 0 20px ${BRAND.gold}44` // Glow effect
+                                            }
                                         }}>
                                             <CardActionArea>
                                                 <CardMedia
                                                     component="img"
-                                                    height="140"
+                                                    height="160" // Increased image height
                                                     image={post.CoverImage || 'https://via.placeholder.com/320x140'}
                                                     sx={{ objectFit: 'contain', p: 2, bgcolor: 'rgba(255,255,255,0.03)' }}
                                                 />
                                                 <CardContent sx={{ p: 2.5 }}>
-                                                    <Typography variant="h6" sx={{ color: '#FFF', fontWeight: 800, fontSize: '0.95rem', height: '2.4em', overflow: 'hidden', mb: 1 }}>
+                                                    {/* Title: Fixed height removed, overflow set to visible */}
+                                                    <Typography variant="h6" sx={{ 
+                                                        color: '#FFF', 
+                                                        fontWeight: 800, 
+                                                        fontSize: '1rem', 
+                                                        height: 'auto', 
+                                                        mb: 1.5 
+                                                    }}>
                                                         {post.Title}
                                                     </Typography>
-                                                    <Typography variant="body2" sx={{ color: BRAND.textMuted, fontSize: '0.75rem', height: '3em', overflow: 'hidden', mb: 2 }}>
+
+                                                    {/* Content: Character limit and hidden overflow removed */}
+                                                    <Typography variant="body2" sx={{ 
+                                                        color: BRAND.textMuted, 
+                                                        fontSize: '0.85rem', 
+                                                        lineHeight: 1.6,
+                                                        height: 'auto', 
+                                                        mb: 3 
+                                                    }}>
                                                         {post.Content.replace(/<[^>]*>/g, '')}
                                                     </Typography>
+
                                                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                                                         <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
-                                                            <AccessTimeIcon sx={{ fontSize: '0.8rem' }} />
-                                                            <Typography variant="caption" sx={{ fontWeight: 700 }}>3 min read</Typography>
+                                                            {/* Changed Icon and text to Date format */}
+                                                            <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
+                                                            <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
+                                                                {formatDate(post.CreatedAt)}
+                                                            </Typography>
                                                         </Stack>
-                                                        <HomeIcon sx={{ fontSize: '1rem', color: BRAND.gold }} />
+                                                        <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
                                                     </Stack>
                                                 </CardContent>
                                             </CardActionArea>
@@ -127,7 +156,6 @@ const NewsFeed = () => {
                     </Grid>
                 </Box>
 
-                {/* RIGHT COLUMN: The Full Gold Newsletter Pillar */}
                 <Box sx={{
                     width: '260px',
                     minWidth: '260px',
@@ -174,8 +202,6 @@ const NewsFeed = () => {
                                     '& input': { fontWeight: 700, color: BRAND.dark }
                                 }}
                             />
-                            
-                            {/* Notification Message */}
                             <Typography sx={{ 
                                 fontSize: '0.7rem', 
                                 height: '20px', 
@@ -207,7 +233,6 @@ const NewsFeed = () => {
                 </Box>
             </Box>
 
-            {/* FOOTER */}
             <Box sx={{ py: 6, textAlign: 'center', mt: 4 }}>
                 <Typography
                     sx={{
