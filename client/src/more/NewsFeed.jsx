@@ -141,7 +141,7 @@ const NewsFeed = () => {
                                                             {/* Changed Icon and text to Date format */}
                                                             <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
                                                             <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
-                                                                {formatDate(post.CreatedAt)}
+                                                                {formatDate(post.DatePosted)}
                                                             </Typography>
                                                         </Stack>
                                                         <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
