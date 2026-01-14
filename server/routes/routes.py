@@ -2083,11 +2083,9 @@ maderumoyia@mudetesacco.co.ke"""
         return jsonify({'message': '❌ Failed to submit ticket.', 'error': str(e)}), 500
 
 #Newsletter subscription
-
 @routes.route('/subscribe', methods=['POST'])
 def subscribe():
     try:
-        # 1️⃣ Get and validate data
         data = request.get_json(silent=True)
         if not data:
             return jsonify({'message': '❌ Invalid payload.'}), 400
@@ -2096,69 +2094,69 @@ def subscribe():
         if not contact:
             return jsonify({'message': '❌ Email or Phone information is required.'}), 400
 
-        # 2️⃣ Save subscription to database
-        new_sub = NewsletterSubscription(ContactInfo=contact.strip())
+        contact = contact.strip()
+
+        # ✅ save subscription first
+        new_sub = NewsletterSubscription(ContactInfo=contact)
         db.session.add(new_sub)
         db.session.commit()
 
-        # 3️⃣ Prepare admin notification email
-        admin_msg = Message(
-            subject="🔔 New Newsletter Subscriber",
-            sender=current_app.config['MAIL_USERNAME'],
-            recipients=["maderumoyia@mudetesacco.co.ke"],
-            body=f"""
+        # ✅ email sending should NOT break subscription
+        try:
+            admin_msg = Message(
+                subject="🔔 New Newsletter Subscriber",
+                sender=current_app.config.get('MAIL_USERNAME') or "noreply@mufate-g-sacco.co.ke",
+                recipients=["maderumoyia@mudetesacco.co.ke"],
+                body=f"""
 Hello Admin,
 
-A new user has subscribed to the Golden Generation DT SACCO Newsletter.
+A new user has subscribed to the Newsletter.
 
 Subscriber Contact: {contact}
 Subscription Date: {new_sub.SubscribedAt.strftime('%Y-%m-%d %H:%M:%S')}
-
-Please ensure they are included in future member announcements.
 """
-        )
+            )
 
-        # 4️⃣ Send emails
-        if mail:
-            mail.send(admin_msg)
-            
-            # 5️⃣ Optional: Send acknowledgement only if contact is an email
-            if "@" in contact:
-                user_msg = Message(
-                    subject=" Welcome to Golden Generation Newsletter",
-                    sender=current_app.config['MAIL_USERNAME'],
-                    recipients=[contact.strip()],
-                    body=f"""
+            if mail:
+                mail.send(admin_msg)
+
+                # send acknowledgement only if email
+                if "@" in contact:
+                    user_msg = Message(
+                        subject="✅ Welcome to GOLDEN GENERATION DT SACCO Newsletter",
+                        sender=current_app.config.get('MAIL_USERNAME') or "noreply@mufate-g-sacco.co.ke",
+                        recipients=[contact],
+                        body=f"""
 Dear Member,
 
-Thank you for subscribing to the Golden Generation DT SACCO newsletter!
+Thank you for subscribing to the GOLDEN GENERATION DT SACCO newsletter!
 
-You will now receive updates on:
-- Latest Financial Reports
-- Sacco Announcements
-- Upcoming Events
-- Exclusive Member Tips
-
-We are glad to have you with us.
+You will now receive updates and announcements.
 
 Warm regards,
-Golden Generation DT SACCO
-"Walking With You"
+GOLDEN GENERATION DT SACCO
 """
-                )
-                mail.send(user_msg)
+                    )
+                    mail.send(user_msg)
 
-        return jsonify({'message': '✅ Successfully subscribed to Golden Generation updates!'}), 201
+        except Exception as email_error:
+            traceback.print_exc()
+            return jsonify({
+                'message': '✅ Subscribed successfully, but email failed to send.',
+                'warning': str(email_error)
+            }), 201
+
+        return jsonify({'message': '✅ Successfully subscribed!'}), 201
 
     except Exception as e:
         db.session.rollback()
-        # Handle duplicate entry error (IntegrityError) specifically if needed
-        if "Duplicate entry" in str(e) or "already exists" in str(e).lower():
+
+        err = str(e).lower()
+        if "duplicate" in err or "already exists" in err or "unique constraint" in err:
             return jsonify({'message': 'ℹ️ You are already subscribed to our newsletter!'}), 409
-        
+
         traceback.print_exc()
         return jsonify({
             'message': '❌ Failed to process subscription.',
             'error': str(e)
         }), 500
-    
