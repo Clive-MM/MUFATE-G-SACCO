@@ -95,7 +95,7 @@ const NewsFeed = () => {
                                         transition={{ duration: 0.3 }}
                                     >
                                         <Card sx={{
-                                            maxWidth: 350, // Slightly increased width
+                                            maxWidth: 420, // Slightly increased width
                                             bgcolor: BRAND.cardBg,
                                             borderRadius: '16px',
                                             border: `1.5px solid rgba(236, 155, 20, 0.15)`,
@@ -110,7 +110,7 @@ const NewsFeed = () => {
     <CardMedia
         component="img"
         /* 1. Increased height from 160 to 220 or 240 for a more vertical/prominent look */
-        height="300" 
+        height="320" 
         image={post.CoverImage || 'https://via.placeholder.com/320x140'}
         sx={{ 
             /* 2. Changed 'contain' to 'cover' to fill the entire space */
