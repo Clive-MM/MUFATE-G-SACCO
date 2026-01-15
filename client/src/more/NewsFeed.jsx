@@ -61,12 +61,11 @@ const NewsFeed = () => {
         }
     };
 
-    // Helper component for individual post cards to manage expansion state
     const PostCard = ({ post }) => {
         const [expanded, setExpanded] = useState(false);
 
         return (
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} sm={6} xl={4}> {/* Adaptive Grid: 1 col mobile, 2 col tablet/laptop, 3 col desktop */}
                 <motion.div
                     layout
                     initial={{ opacity: 0 }}
@@ -75,12 +74,13 @@ const NewsFeed = () => {
                     transition={{ duration: 0.3 }}
                 >
                     <Card sx={{
-                        maxWidth: 420,
+                        maxWidth: { xs: '100%', md: 420 }, // Full width on mobile
                         width: '100%',
                         bgcolor: BRAND.cardBg,
                         borderRadius: '16px',
                         border: `1.5px solid rgba(236, 155, 20, 0.15)`,
                         height: 'auto',
+                        mx: 'auto',
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': {
                             borderColor: BRAND.gold,
@@ -90,20 +90,21 @@ const NewsFeed = () => {
                         <CardActionArea onClick={() => setExpanded(!expanded)} sx={{ alignItems: 'flex-start' }}>
                             <CardMedia
                                 component="img"
-                                height="370"
-                                image={post.CoverImage || 'https://via.placeholder.com/320x140'}
+                                // Responsive height: shorter on mobile, original on desktop
                                 sx={{
+                                    height: { xs: 220, sm: 280, md: 370 },
                                     objectFit: 'cover',
                                     p: 0,
                                     bgcolor: 'rgba(255,255,255,0.03)',
                                     objectPosition: 'center'
                                 }}
+                                image={post.CoverImage || 'https://via.placeholder.com/320x140'}
                             />
-                            <CardContent sx={{ p: 2.5 }}>
+                            <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
                                 <Typography variant="h6" sx={{
                                     color: '#FFF',
                                     fontWeight: 800,
-                                    fontSize: '1.1rem',
+                                    fontSize: { xs: '1rem', md: '1.1rem' },
                                     height: 'auto',
                                     mb: 1.5
                                 }}>
@@ -153,17 +154,19 @@ const NewsFeed = () => {
     };
 
     return (
-        <Container maxWidth="xl" sx={{ pb: 10, mt: 4 }}>
+        <Container maxWidth="xl" sx={{ pb: 10, mt: 4, px: { xs: 2, md: 4 } }}>
             <Box sx={{ mb: 4 }}>
                 <Tabs
                     value={activeTab}
                     onChange={(e, v) => setActiveTab(v)}
                     variant="scrollable"
+                    scrollButtons="auto"
                     sx={{
                         '& .MuiTabs-indicator': { display: 'none' },
                         '& .MuiTab-root': {
                             color: '#FFF', border: '1px solid rgba(255,255,255,0.2)',
                             mr: 1.5, borderRadius: '4px', fontWeight: 700, fontSize: '0.8rem',
+                            minHeight: '40px',
                             '&.Mui-selected': { bgcolor: BRAND.gold, color: BRAND.dark, borderColor: BRAND.gold }
                         }
                     }}
@@ -172,8 +175,9 @@ const NewsFeed = () => {
                 </Tabs>
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>
-                <Box sx={{ flex: 1 }}>
+            {/* Layout Change: Column on mobile (xs), Row on Desktop (lg) */}
+            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 4, alignItems: 'flex-start' }}>
+                <Box sx={{ flex: 1, width: '100%' }}>
                     <Grid container spacing={3}>
                         <AnimatePresence mode="popLayout">
                             {posts.map((post) => (
@@ -183,12 +187,13 @@ const NewsFeed = () => {
                     </Grid>
                 </Box>
 
+                {/* Sidebar: Sticky on desktop, static full-width on mobile */}
                 <Box sx={{
-                    width: '320px',
-                    minWidth: '260px',
-                    position: 'sticky',
+                    width: { xs: '100%', lg: '320px' },
+                    minWidth: { lg: '260px' },
+                    position: { xs: 'relative', lg: 'sticky' },
                     top: 20,
-                    alignSelf: 'stretch'
+                    mb: { xs: 4, lg: 0 }
                 }}>
                     <Box sx={{
                         p: 3,
@@ -198,7 +203,8 @@ const NewsFeed = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
-                        height: '480px',
+                        height: { xs: 'auto', lg: '480px' },
+                        minHeight: { xs: '350px', lg: '480px' },
                         boxShadow: '0 10px 30px rgba(236, 155, 20, 0.2)'
                     }}>
                         <Box>
@@ -210,7 +216,7 @@ const NewsFeed = () => {
                             </Typography>
                         </Box>
 
-                        <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.85rem', lineHeight: 1.5 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.85rem', lineHeight: 1.5, my: 2 }}>
                             Join our community to receive the latest financial reports, SACCO announcements, and exclusive member tips.
                         </Typography>
 
@@ -267,7 +273,7 @@ const NewsFeed = () => {
                         letterSpacing: '3px',
                         fontWeight: 900,
                         textTransform: 'uppercase',
-                        fontSize: { xs: '0.9rem', md: '1.35rem' }
+                        fontSize: { xs: '0.8rem', md: '1.35rem' }
                     }}
                 >
                     GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}

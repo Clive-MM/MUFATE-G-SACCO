@@ -3,11 +3,8 @@ import axios from 'axios';
 import Slider from 'react-slick';
 import { motion } from 'framer-motion';
 import { Box, Typography, Container, CircularProgress, Stack } from '@mui/material';
-
-// Import your new component
 import NewsFeed from './NewsFeed';
 
-// Slick Slider CSS
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -42,13 +39,13 @@ const News = () => {
     fade: true,
     arrows: false,
     appendDots: dots => (
-      <Box sx={{ position: 'absolute', bottom: 40, width: '100%' }}>
+      <Box sx={{ position: 'absolute', bottom: { xs: 20, md: 40 }, width: '100%' }}>
         <ul style={{ margin: "0px", padding: "0px", display: "flex", justifyContent: "center" }}> {dots} </ul>
       </Box>
     ),
     customPaging: i => (
       <Box sx={{
-        width: 12, height: 12, bgcolor: "rgba(236, 155, 20, 0.3)",
+        width: { xs: 8, md: 12 }, height: { xs: 8, md: 12 }, bgcolor: "rgba(236, 155, 20, 0.3)",
         borderRadius: "50%", mx: 0.5, transition: '0.3s',
         '&:hover': { bgcolor: BRAND.gold }
       }} />
@@ -64,9 +61,8 @@ const News = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: BRAND.dark, width: '100%', minHeight: '100vh' }}>
-      {/* 1. Page Heading */}
-      <Container maxWidth="xl" sx={{ pt: 6, pb: 4 }}>
+    <Box sx={{ bgcolor: BRAND.dark, width: '100%', minHeight: '100vh', overflowX: 'hidden' }}>
+      <Container maxWidth="xl" sx={{ pt: { xs: 4, md: 6 }, pb: 4 }}>
         <Stack alignItems="center" spacing={1}>
           <Typography
             variant="h2"
@@ -78,8 +74,9 @@ const News = () => {
               color: BRAND.gold,
               fontWeight: 900,
               textTransform: 'uppercase',
-              fontSize: { xs: "2.5rem", md: "4.5rem" },
-              letterSpacing: "0.1em",
+              // Fluid Typography
+              fontSize: { xs: "2rem", sm: "3.5rem", md: "4.5rem" },
+              letterSpacing: { xs: "0.05em", md: "0.1em" },
               textAlign: 'center',
               filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.5))'
             }}
@@ -89,11 +86,11 @@ const News = () => {
         </Stack>
       </Container>
 
-      {/* 2. Hero Slider Section */}
-      <Box sx={{ width: '100%', position: 'relative', height: { xs: '60vh', md: '75vh' }, mb: 4 }}>
+      {/* Hero Slider Responsive Height */}
+      <Box sx={{ width: '100%', position: 'relative', height: { xs: '50vh', sm: '65vh', md: '75vh' }, mb: 4 }}>
         <Slider {...settings}>
           {heroPosts.map((slide, index) => (
-            <Box key={slide.PostID || index} sx={{ position: 'relative', height: { xs: '60vh', md: '75vh' } }}>
+            <Box key={slide.PostID || index} sx={{ position: 'relative', height: { xs: '50vh', sm: '65vh', md: '75vh' } }}>
               <Box
                 sx={{
                   width: '100%',
@@ -112,6 +109,7 @@ const News = () => {
                 top: '50%',
                 transform: 'translateY(-50%)',
                 left: { xs: 0, md: '5%' },
+                px: { xs: 3, md: 0 }, // Prevent text from touching edges on mobile
                 zIndex: 2
               }}>
                 <motion.div
@@ -128,7 +126,8 @@ const News = () => {
                     mb: 2,
                     lineHeight: 1.1,
                     textShadow: "4px 4px 15px rgba(0,0,0,0.9)",
-                    fontSize: { xs: '2.2rem', md: '4rem' }
+                    // Responsive Heading
+                    fontSize: { xs: '1.6rem', sm: '2.5rem', md: '4rem' }
                   }}>
                     {slide.Title}
                   </Typography>
@@ -138,10 +137,10 @@ const News = () => {
                     fontWeight: 400,
                     lineHeight: 1.6,
                     opacity: 0.9,
-                    display: { xs: 'none', md: 'block' },
+                    display: { xs: 'none', md: 'block' }, // Hide long text on mobile to keep it clean
                     textShadow: "2px 2px 10px rgba(0,0,0,0.8)"
                   }}>
-                    {slide.Content.replace(/<[^>]*>/g, '').substring(0, 500)}.
+                    {slide.Content.replace(/<[^>]*>/g, '').substring(0, 300)}...
                   </Typography>
                 </motion.div>
               </Container>
@@ -150,7 +149,6 @@ const News = () => {
         </Slider>
       </Box>
 
-      {/* 3. News Feed Section (Categories & Cards) */}
       <NewsFeed />
     </Box>
   );
