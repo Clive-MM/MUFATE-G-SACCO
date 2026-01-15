@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   AppBar, Toolbar, Box, Button, Link, Stack, Paper, IconButton,
-  Typography, useTheme, useMediaQuery, Drawer,
+  Typography, useTheme, useMediaQuery, Drawer, Collapse, List, ListItemButton, ListItemText
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PhoneIcon from '@mui/icons-material/Phone';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import { motion } from 'framer-motion';
 
 const BRAND_GOLD = '#EC9B14';
-const BRAND_DARK = '#02150F'; 
+const BRAND_DARK = '#02150F';
 const BRAND_TEXT_LIGHT = '#F4F4F4';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [mobileOpenMenu, setMobileOpenMenu] = useState(''); // Tracks which sub-menu is open on mobile
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const location = useLocation();
@@ -34,16 +37,46 @@ const Navbar = () => {
     }
   };
 
+  // Helper to toggle mobile sub-menus
+  const handleMobileMenuToggle = (label) => {
+    setMobileOpenMenu(mobileOpenMenu === label ? '' : label);
+  };
+
+  // Centralized Data Structure for both Desktop and Mobile
   const navLinks = [
     { to: '/', label: 'Home' },
-    { to: '/about', label: 'About Us' },
-    { to: '/products', label: 'Products' },
+    { 
+      label: 'About Us', 
+      to: '/about',
+      items: [
+        { to: '/about/who-we-are', label: 'Profile' },
+        { to: '/about/board-of-directors', label: 'Board' },
+        { to: '/about/management', label: 'Management' }
+      ] 
+    },
+    { 
+      label: 'Products', 
+      to: '/products',
+      items: [
+        { to: '/products/fosa', label: 'FOSA' },
+        { to: '/products/bosa', label: 'BOSA' },
+        { to: '/products/savings', label: 'Savings' }
+      ] 
+    },
     { to: '/services', label: 'Services' },
     { to: '/resources', label: 'Resources' },
     { to: '/careers', label: 'Careers' },
     { to: '/membership', label: 'Membership' },
     { to: '/faqs', label: 'FAQs' },
-    { to: '/media', label: 'Media' }, // Parent Label
+    { 
+      label: 'Media', 
+      to: '/media',
+      items: [
+        { to: '/media/blogs', label: 'News' },
+        { to: '/media/gallery', label: 'Gallery' },
+        { to: '/media/videos', label: 'Golden Insights' }
+      ] 
+    },
   ];
 
   const premiumButtonStyle = {
@@ -130,23 +163,9 @@ const Navbar = () => {
             <Stack direction="row" spacing={3} sx={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
               {navLinks.map((item) => {
                 const isActive = location.pathname.startsWith(item.to) && (item.to !== '/' || location.pathname === '/');
-                if (item.label === 'About Us') return <NavDropdown key="about" label="About Us" isActive={isActive} items={[{ to: '/about/who-we-are', label: 'Profile' }, { to: '/about/board-of-directors', label: 'Board' }, { to: '/about/management', label: 'Management' }]} />;
-                if (item.label === 'Products') return <NavDropdown key="products" label="Products" isActive={isActive} items={[{ to: '/products/fosa', label: 'FOSA' }, { to: '/products/bosa', label: 'BOSA' }, { to: '/products/savings', label: 'Savings' }]} />;
-                
-                {/* ✅ CORRECTED MEDIA DROPDOWN */}
-                if (item.label === 'Media') return (
-                  <NavDropdown 
-                    key="media" 
-                    label="Media" 
-                    isActive={isActive} 
-                    items={[
-                      { to: '/media/blogs', label: 'News' },
-                      { to: '/media/gallery', label: 'Gallery' }, 
-                      { to: '/media/videos', label: 'Golden Insights' } 
-                    ]} 
-                  />
-                );
-
+                if (item.items) {
+                    return <NavDropdown key={item.label} label={item.label} isActive={isActive} items={item.items} />;
+                }
                 return <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(isActive)}>{item.label}</Link>;
               })}
               <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register Here</Button>
@@ -160,15 +179,52 @@ const Navbar = () => {
           <IconButton onClick={() => setDrawerOpen(true)}><MenuIcon sx={{ color: BRAND_GOLD }} /></IconButton>
         )}
 
-        <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ '& .MuiDrawer-paper': { width: '80%', padding: 2, backgroundColor: BRAND_DARK, color: BRAND_TEXT_LIGHT } }}>
+        <Drawer 
+            anchor="left" 
+            open={drawerOpen} 
+            onClose={() => setDrawerOpen(false)} 
+            sx={{ '& .MuiDrawer-paper': { width: '80%', padding: 2, backgroundColor: BRAND_DARK, color: BRAND_TEXT_LIGHT } }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, pb: 1, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
              <Box component="img" src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png" sx={{ height: 40, mr: 1 }} />
              <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, color: BRAND_GOLD }}>GOLDEN GENERATION DT SACCO</Typography>
           </Box>
-          <Stack spacing={2}>
+          
+          <List sx={{ width: '100%', mb: 2 }}>
             {navLinks.map((item) => (
-              <Link key={item.to} component={RouterLink} to={item.to} onClick={() => setDrawerOpen(false)} underline="none" sx={{ color: BRAND_TEXT_LIGHT, py: 0.5 }}>{item.label}</Link>
+              <React.Fragment key={item.label}>
+                {item.items ? (
+                  <>
+                    <ListItemButton onClick={() => handleMobileMenuToggle(item.label)} sx={{ py: 1, px: 0 }}>
+                      <ListItemText primary={item.label} primaryTypographyProps={{ sx: { color: BRAND_TEXT_LIGHT, fontWeight: 500 } }} />
+                      {mobileOpenMenu === item.label ? <ExpandLess sx={{ color: BRAND_GOLD }} /> : <ExpandMore sx={{ color: BRAND_GOLD }} />}
+                    </ListItemButton>
+                    <Collapse in={mobileOpenMenu === item.label} timeout="auto" unmountOnExit>
+                      <List component="div" disablePadding>
+                        {item.items.map((subItem) => (
+                          <ListItemButton 
+                            key={subItem.to} 
+                            component={RouterLink} 
+                            to={subItem.to} 
+                            onClick={() => setDrawerOpen(false)}
+                            sx={{ pl: 4, py: 1 }}
+                          >
+                            <ListItemText primary={subItem.label} primaryTypographyProps={{ sx: { color: BRAND_GOLD, fontSize: '0.9rem' } }} />
+                          </ListItemButton>
+                        ))}
+                      </List>
+                    </Collapse>
+                  </>
+                ) : (
+                  <ListItemButton component={RouterLink} to={item.to} onClick={() => setDrawerOpen(false)} sx={{ py: 1, px: 0 }}>
+                    <ListItemText primary={item.label} primaryTypographyProps={{ sx: { color: BRAND_TEXT_LIGHT, fontWeight: 500 } }} />
+                  </ListItemButton>
+                )                }
+              </React.Fragment>
             ))}
+          </List>
+
+          <Stack spacing={2}>
             <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle} fullWidth onClick={() => setDrawerOpen(false)}>Register Here</Button>
             <Button onClick={handleContactClick} startIcon={<PhoneIcon />} sx={premiumButtonStyle} fullWidth>Contact Us</Button>
           </Stack>
