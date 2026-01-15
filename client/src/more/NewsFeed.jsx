@@ -92,7 +92,7 @@ const NewsFeed = () => {
                                 component="img"
                                 // Responsive height: shorter on mobile, original on desktop
                                 sx={{
-                                    height: { xs: 220, sm: 280, md: 370 },
+                                    height: { xs: 300, sm: 280, md: 370 },
                                     objectFit: 'cover',
                                     p: 0,
                                     bgcolor: 'rgba(255,255,255,0.03)',
