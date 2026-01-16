@@ -118,7 +118,7 @@ const SaccoGallery = () => {
             textShadow: "0 10px 30px rgba(0,0,0,0.7)",
             lineHeight: 1.1
           }}>
-            GOLDEN <span style={{ color: BRAND.gold }}>GALLERY</span>
+            GOLDEN <span style={{ color: BRAND.gold }}>MOMENTS</span>
           </Typography>
         </Stack>
 
