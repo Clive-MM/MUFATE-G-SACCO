@@ -63,7 +63,7 @@ const SaccoGallery = () => {
   }, []);
 
   const filteredPhotos = useMemo(() => {
-    return photos.filter(p => 
+    return photos.filter(p =>
       p.Title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.Description?.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -80,26 +80,26 @@ const SaccoGallery = () => {
 
   return (
     <Box sx={{
-      minHeight: "100vh", 
-      py: 10, 
-      position: "relative", 
+      minHeight: "100vh",
+      py: 10,
+      position: "relative",
       bgcolor: BRAND.dark,
       backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768163060/camera_4_si2lla.png)`,
-      backgroundSize: "cover", 
-      backgroundPosition: "center", 
+      backgroundSize: "cover",
+      backgroundPosition: "center",
       backgroundAttachment: "fixed",
       "&::before": {
-        content: '""', 
-        position: "absolute", 
+        content: '""',
+        position: "absolute",
         inset: 0,
         // Adjusted: 0.4 center alpha shows more camera detail; 0.9 edges keep focus
         background: `radial-gradient(circle at center, rgba(2, 21, 15, 0.4) 0%, rgba(2, 21, 15, 0.9) 100%)`,
         zIndex: 1
       }
     }}>
-      
+
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 2 }}>
-        
+
         {/* Elite Header */}
         <Stack alignItems="center" spacing={2} sx={{ mb: 6, textAlign: "center" }}>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -111,19 +111,19 @@ const SaccoGallery = () => {
             </Stack>
           </motion.div>
 
-          <Typography variant="h1" sx={{ 
-            color: "#FFF", fontWeight: 900, 
-            fontSize: { xs: "1.7rem", md: "3rem" }, 
+          <Typography variant="h1" sx={{
+            color: "#FFF", fontWeight: 900,
+            fontSize: { xs: "1.7rem", md: "3rem" },
             textShadow: "0 10px 20px rgba(0,0,0,0.5)"
           }}>
             GOLDEN <span style={{ color: BRAND.gold }}>GALLERY</span>
           </Typography>
 
           {/* Polished Glassmorphism Search Bar */}
-          <Stack direction="row" justifyContent="center" sx={{ mt: 4, width: '100%' }}>
-            <TextField 
-              sx={{ 
-                maxWidth: '600px', 
+          {/* <Stack direction="row" justifyContent="center" sx={{ mt: 4, width: '100%' }}>
+            <TextField
+              sx={{
+                maxWidth: '600px',
                 width: '100%',
                 backdropFilter: "blur(12px)",
                 borderRadius: '15px',
@@ -138,22 +138,22 @@ const SaccoGallery = () => {
                     <FilterIcon sx={{ color: BRAND.gold, ml: 1 }} />
                   </InputAdornment>
                 ),
-                sx: { 
-                  color: '#FFF', 
-                  bgcolor: 'rgba(255, 255, 255, 0.08)', 
+                sx: {
+                  color: '#FFF',
+                  bgcolor: 'rgba(255, 255, 255, 0.08)',
                   '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.4)' },
                   '&:hover fieldset': { borderColor: BRAND.gold },
                   '&.Mui-focused fieldset': { borderColor: BRAND.gold, borderWidth: '2px' },
                 }
               }}
             />
-          </Stack>
+          </Stack> */}
         </Stack>
 
         {/* Main Gallery Grid */}
-        <LightGallery 
-          speed={500} 
-          plugins={[lgZoom, lgThumbnail, lgAutoplay]} 
+        <LightGallery
+          speed={500}
+          plugins={[lgZoom, lgThumbnail, lgAutoplay]}
           elementClassNames="gallery-wrapper"
         >
           <Grid container spacing={4}>
@@ -167,9 +167,9 @@ const SaccoGallery = () => {
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.4, delay: idx * 0.05 }}
                   >
-                    <a 
-                        href={photo.ImageURL} 
-                        data-sub-html={`<div style="padding:10px;">
+                    <a
+                      href={photo.ImageURL}
+                      data-sub-html={`<div style="padding:10px;">
                             <h3 style="color:${BRAND.gold}; margin-bottom:5px;">${photo.Title}</h3>
                             <p style="color:#eee;">${photo.Description || ''}</p>
                         </div>`}
@@ -181,26 +181,38 @@ const SaccoGallery = () => {
                           alt={photo.Title}
                           sx={{ height: "100%", width: "100%", objectFit: "cover", transition: "0.6s ease-in-out" }}
                         />
-                        
-                        <Box className="card-overlay" sx={{ 
+
+                        <Box className="card-overlay" sx={{
                           position: "absolute", bottom: 0, inset: 0,
                           background: "linear-gradient(to top, rgba(2, 21, 15, 1) 0%, rgba(2, 21, 15, 0.4) 50%, transparent 100%)",
                           p: 4, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                           transform: "translateY(20px)", opacity: 0, transition: "0.4s ease"
                         }}>
-                          <Typography variant="h6" sx={{ color: "#FFF", fontWeight: 800 }}>{photo.Title}</Typography>
-                          
-                          <Typography variant="caption" sx={{ color: BRAND.textMuted, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', mb: 2 }}>
+                          <Typography variant="h6" sx={{ color: BRAND.gold, fontWeight: 800 }}>
+                            {photo.Title}
+                          </Typography>
+
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: BRAND.textMuted,
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden',
+                              mb: 2
+                            }}
+                          >
                             {photo.Description}
                           </Typography>
 
                           <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Typography variant="caption" sx={{ color: BRAND.gold, fontWeight: 700, letterSpacing: 1 }}>
+                            {/* <Typography variant="caption" sx={{ color: BRAND.gold, fontWeight: 700, letterSpacing: 1 }}>
                                VIEW DETAILS
-                            </Typography>
-                            <IconButton sx={{ bgcolor: BRAND.gold, color: BRAND.dark }}>
+                            </Typography> */}
+                            {/* <IconButton sx={{ bgcolor: BRAND.gold, color: BRAND.dark }}>
                               <ZoomIcon fontSize="small" />
-                            </IconButton>
+                            </IconButton> */}
                           </Stack>
                         </Box>
                       </Box>
@@ -213,11 +225,19 @@ const SaccoGallery = () => {
         </LightGallery>
 
         {/* Footer Accent */}
-        <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 10, opacity: 0.2 }} spacing={3}>
-           <Divider sx={{ width: 100, borderColor: BRAND.gold }} />
-           <GalleryIcon sx={{ color: BRAND.gold, fontSize: "2.5rem" }} />
-           <Divider sx={{ width: 100, borderColor: BRAND.gold }} />
-        </Stack>
+        <Box sx={{ py: 6, textAlign: 'center', mt: 4 }}>
+          <Typography
+            sx={{
+              color: BRAND.gold,
+              letterSpacing: '3px',
+              fontWeight: 900,
+              textTransform: 'uppercase',
+              fontSize: { xs: '0.8rem', md: '1.35rem' }
+            }}
+          >
+            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+          </Typography>
+        </Box>
       </Container>
     </Box>
   );
