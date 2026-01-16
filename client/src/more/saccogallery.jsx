@@ -181,11 +181,19 @@ const SaccoGallery = () => {
         </LightGallery>
 
         {/* Brand Footer */}
-        <Box sx={{ mt: 10, pb: 4, textAlign: 'center', opacity: 0.6 }}>
-          <Typography sx={{ color: BRAND.gold, letterSpacing: '4px', fontWeight: 700, fontSize: '0.75rem' }}>
-            GOLDEN GENERATION DT SACCO &copy; {new Date().getFullYear()}
-          </Typography>
-        </Box>
+        <Box sx={{ py: 6, textAlign: 'center', mt: 4 }}>
+                <Typography
+                    sx={{
+                        color: BRAND.gold,
+                        letterSpacing: '3px',
+                        fontWeight: 900,
+                        textTransform: 'uppercase',
+                        fontSize: { xs: '0.8rem', md: '1.35rem' }
+                    }}
+                >
+                    GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+                </Typography>
+            </Box>
       </Container>
     </Box>
   );
