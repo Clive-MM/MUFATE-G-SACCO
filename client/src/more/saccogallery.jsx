@@ -48,7 +48,6 @@ const GlassCard = styled(motion.div)(({ theme }) => ({
       transform: "scale(1.1)" 
     }
   },
-  // On mobile, keep overlay slightly visible so users see the titles
   [theme.breakpoints.down('sm')]: {
     "& .card-overlay": { 
       opacity: 0.9, 
@@ -92,7 +91,7 @@ const SaccoGallery = () => {
       backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768163060/camera_4_si2lla.png)`,
       backgroundSize: "cover", 
       backgroundPosition: "center", 
-      backgroundAttachment: isMobile ? "scroll" : "fixed", // Performance boost for mobile
+      backgroundAttachment: isMobile ? "scroll" : "fixed",
       "&::before": {
         content: '""', position: "absolute", inset: 0,
         background: `radial-gradient(circle at center, rgba(2, 21, 15, 0.4) 0%, rgba(2, 21, 15, 0.9) 100%)`,
@@ -101,7 +100,6 @@ const SaccoGallery = () => {
     }}>
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 2 }}>
         
-        {/* Elite Header */}
         <Stack alignItems="center" spacing={isMobile ? 1 : 2} sx={{ mb: { xs: 4, md: 8 }, textAlign: "center" }}>
           <Stack direction="row" spacing={1} alignItems="center">
             <SparkleIcon sx={{ color: BRAND.gold, fontSize: isMobile ? "0.9rem" : "1.2rem" }} />
@@ -122,8 +120,16 @@ const SaccoGallery = () => {
           </Typography>
         </Stack>
 
-        {/* Gallery Grid */}
-        <LightGallery speed={500} plugins={[lgZoom, lgThumbnail, lgAutoplay]} elementClassNames="gallery-wrapper">
+        {/* CRITICAL FIX: key={photos.length} forces LightGallery to re-initialize 
+          once the photos are loaded from the API. 
+        */}
+        <LightGallery 
+          key={photos.length}
+          speed={500} 
+          plugins={[lgZoom, lgThumbnail, lgAutoplay]} 
+          elementClassNames="gallery-wrapper"
+          mobileSettings={{ controls: true, showCloseIcon: true, download: false }}
+        >
           <Grid container spacing={isMobile ? 2 : 3}>
             <AnimatePresence mode="popLayout">
               {photos.map((photo, idx) => (
@@ -137,9 +143,11 @@ const SaccoGallery = () => {
                   >
                     <a
                       href={photo.ImageURL}
+                      className="gallery-item"
+                      data-src={photo.ImageURL}
                       data-sub-html={`<div style="padding:10px; text-align:center;">
-                          <h3 style="color:${BRAND.gold}; font-weight:800;">${photo.Title}</h3>
-                          <p style="color:#F4F4F4; opacity:0.8;">${photo.Description || ''}</p>
+                          <h3 style="color:${BRAND.gold}; font-weight:800; margin:0;">${photo.Title}</h3>
+                          <p style="color:#F4F4F4; opacity:0.8; margin-top:5px;">${photo.Description || ''}</p>
                         </div>`}
                     >
                       <Box sx={{ position: "relative", height: { xs: 280, sm: 320, md: 380 }, overflow: "hidden" }}>
@@ -157,7 +165,7 @@ const SaccoGallery = () => {
                           display: 'flex', 
                           flexDirection: 'column', 
                           justifyContent: 'flex-end',
-                          transform: { xs: "none", md: "translateY(30px)" }, // Disable slide-up on mobile for better visibility
+                          transform: { xs: "none", md: "translateY(30px)" },
                           opacity: { xs: 1, md: 0 }, 
                           transition: "0.4s ease"
                         }}>
@@ -177,7 +185,6 @@ const SaccoGallery = () => {
           </Grid>
         </LightGallery>
 
-        {/* Brand Footer */}
         <Box sx={{ py: 6, textAlign: 'center', mt: 4 }}>
           <Typography
             sx={{
