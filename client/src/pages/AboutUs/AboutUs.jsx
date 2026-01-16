@@ -1,7 +1,7 @@
 // AboutUs.jsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box, Card, CardContent, Typography, IconButton } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import RoomIcon from '@mui/icons-material/Room';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { motion } from 'framer-motion';

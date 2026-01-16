@@ -14,7 +14,7 @@ import {
   Twitter as TwitterIcon,
   WhatsApp as WhatsAppIcon,
   MarkEmailRead as MailIcon,
-  LocationOn as MapPinIcon
+  
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
@@ -32,7 +32,7 @@ const toEmbedMap = (location) =>
 const ContactDetails = () => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const scrollRef = useRef(null);
   const isInView = useInView(scrollRef, { once: true, margin: '-100px' });
 
