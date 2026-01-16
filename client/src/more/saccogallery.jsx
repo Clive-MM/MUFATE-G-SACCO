@@ -138,9 +138,7 @@ const SaccoGallery = () => {
                           <Typography variant="caption" sx={{ color: BRAND.textMuted, mb: 1.5, opacity: 0.9 }}>
                             {photo.Description}
                           </Typography>
-                          <Typography sx={{ color: BRAND.gold, fontSize: '0.65rem', fontWeight: 800, letterSpacing: 2 }}>
-                            VIEW FULL IMAGE
-                          </Typography>
+                          
                         </Box>
                       </Box>
                     </a>
