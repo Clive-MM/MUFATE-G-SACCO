@@ -16,37 +16,32 @@ import "lightgallery/css/lg-thumbnail.css";
 // Material UI
 import {
   Container, Typography, Grid, CardMedia, CircularProgress,
-  Box, Stack, TextField, InputAdornment
+  Box, Stack, TextField
 } from "@mui/material";
-import {
-  AutoAwesome as SparkleIcon,
-  FilterList as FilterIcon
-} from "@mui/icons-material";
+import { AutoAwesome as SparkleIcon } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 
-// Standardized Brand Colors from News/NewsFeed
 const BRAND = {
   gold: "#EC9B14",
   dark: "#02150F",
-  light: "#F4F4F4",
-  glass: "rgba(255, 255, 255, 0.05)", // Matches NewsFeed cardBg
+  glass: "rgba(255, 255, 255, 0.05)",
   textMuted: "rgba(244, 244, 244, 0.7)",
 };
 
 const GlassCard = styled(motion.div)({
   background: BRAND.glass,
   backdropFilter: "blur(15px)",
-  borderRadius: "16px", // Standardized with NewsFeed cards
-  border: `1.5px solid rgba(236, 155, 20, 0.15)`, // Standardized border
+  borderRadius: "16px",
+  border: `1.5px solid rgba(236, 155, 20, 0.15)`,
   overflow: "hidden",
   position: "relative",
   cursor: "pointer",
-  transition: "all 0.3s ease-in-out",
+  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
   "&:hover": {
     borderColor: BRAND.gold,
-    boxShadow: `0 0 20px ${BRAND.gold}44`,
+    boxShadow: `0 0 25px ${BRAND.gold}33`,
     "& .card-overlay": { opacity: 1, transform: "translateY(0)" },
-    "& img": { transform: "scale(1.08)" }
+    "& img": { transform: "scale(1.1)" }
   }
 });
 
@@ -66,9 +61,10 @@ const SaccoGallery = () => {
   }, []);
 
   const filteredPhotos = useMemo(() => {
+    const query = searchQuery.toLowerCase();
     return photos.filter(p =>
-      p.Title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.Description?.toLowerCase().includes(searchQuery.toLowerCase())
+      p.Title?.toLowerCase().includes(query) ||
+      p.Description?.toLowerCase().includes(query)
     );
   }, [searchQuery, photos]);
 
@@ -83,64 +79,46 @@ const SaccoGallery = () => {
 
   return (
     <Box sx={{
-      minHeight: "100vh",
-      py: 10,
-      position: "relative",
-      bgcolor: BRAND.dark,
+      minHeight: "100vh", py: 10, position: "relative", bgcolor: BRAND.dark,
       backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768163060/camera_4_si2lla.png)`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundAttachment: "fixed",
+      backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed",
       "&::before": {
-        content: '""',
-        position: "absolute",
-        inset: 0,
+        content: '""', position: "absolute", inset: 0,
         background: `radial-gradient(circle at center, rgba(2, 21, 15, 0.4) 0%, rgba(2, 21, 15, 0.9) 100%)`,
         zIndex: 1
       }
     }}>
-
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 2 }}>
-
+        
         {/* Elite Header */}
         <Stack alignItems="center" spacing={2} sx={{ mb: 6, textAlign: "center" }}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <Stack direction="row" spacing={1} alignItems="center" justifyContent="center">
-              <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
-              <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 800, letterSpacing: 6 }}>
-                THE OFFICIAL ARCHIVE
-              </Typography>
-            </Stack>
-          </motion.div>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
+            <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 800, letterSpacing: 6 }}>
+              THE OFFICIAL ARCHIVE
+            </Typography>
+          </Stack>
 
           <Typography variant="h1" sx={{
-            color: "#FFF", 
-            fontWeight: 900,
-            fontSize: { xs: "2rem", md: "4rem" },
-            textTransform: 'uppercase',
-            textShadow: "0 10px 20px rgba(0,0,0,0.5)"
+            color: "#FFF", fontWeight: 900, fontSize: { xs: "2.5rem", md: "4.5rem" },
+            textTransform: 'uppercase', textShadow: "0 10px 30px rgba(0,0,0,0.7)"
           }}>
             GOLDEN <span style={{ color: BRAND.gold }}>GALLERY</span>
           </Typography>
 
-          {/* Integrated Search Bar Styled like NewsFeed elements */}
-          <Box sx={{ mt: 4, width: '100%', maxWidth: '600px' }}>
+          <Box sx={{ mt: 2, width: '100%', maxWidth: '500px' }}>
             <TextField
               fullWidth
-              placeholder="Search milestones or events..."
+              variant="outlined"
+              placeholder="Search milestones..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <FilterIcon sx={{ color: BRAND.gold }} />
-                  </InputAdornment>
-                ),
-                sx: {
+              sx={{
+                bgcolor: 'rgba(255, 255, 255, 0.03)',
+                borderRadius: '12px',
+                '& .MuiOutlinedInput-root': {
                   color: '#FFF',
-                  bgcolor: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: '12px',
-                  '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.3)' },
+                  '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.2)' },
                   '&:hover fieldset': { borderColor: BRAND.gold },
                   '&.Mui-focused fieldset': { borderColor: BRAND.gold },
                 }
@@ -149,66 +127,48 @@ const SaccoGallery = () => {
           </Box>
         </Stack>
 
-        {/* Main Gallery Grid */}
-        <LightGallery
-          speed={500}
-          plugins={[lgZoom, lgThumbnail, lgAutoplay]}
-          elementClassNames="gallery-wrapper"
-        >
+        {/* Gallery Grid */}
+        <LightGallery speed={500} plugins={[lgZoom, lgThumbnail, lgAutoplay]} elementClassNames="gallery-wrapper">
           <Grid container spacing={3}>
             <AnimatePresence mode="popLayout">
               {filteredPhotos.map((photo, idx) => (
                 <Grid item xs={12} sm={6} md={4} key={photo.PhotoID}>
                   <GlassCard
                     layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.4, delay: idx * 0.05 }}
+                    transition={{ duration: 0.4, delay: idx * 0.03 }}
                   >
                     <a
                       href={photo.ImageURL}
                       data-sub-html={`<div style="padding:10px; text-align:center;">
-                            <h3 style="color:${BRAND.gold}; font-weight:800;">${photo.Title}</h3>
-                            <p style="color:#F4F4F4; opacity:0.8;">${photo.Description || ''}</p>
+                          <h3 style="color:${BRAND.gold}; font-weight:800;">${photo.Title}</h3>
+                          <p style="color:#F4F4F4; opacity:0.8;">${photo.Description || ''}</p>
                         </div>`}
                     >
-                      <Box sx={{ position: "relative", height: { xs: 350, md: 400 }, overflow: "hidden" }}>
+                      <Box sx={{ position: "relative", height: { xs: 300, md: 380 }, overflow: "hidden" }}>
                         <CardMedia
                           component="img"
                           image={photo.ImageURL}
                           alt={photo.Title}
-                          sx={{ height: "100%", width: "100%", objectFit: "cover", transition: "0.6s ease-in-out" }}
+                          sx={{ height: "100%", width: "100%", objectFit: "cover", transition: "0.8s ease" }}
                         />
 
-                        {/* Overlay Content Styled like Newsroom Hover */}
                         <Box className="card-overlay" sx={{
                           position: "absolute", inset: 0,
-                          background: "linear-gradient(to top, rgba(2, 21, 15, 1) 0%, rgba(2, 21, 15, 0.4) 60%, transparent 100%)",
+                          background: "linear-gradient(to top, rgba(2, 21, 15, 0.95) 0%, transparent 70%)",
                           p: 3, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-                          transform: "translateY(20px)", opacity: 0, transition: "0.4s ease"
+                          transform: "translateY(30px)", opacity: 0, transition: "0.4s ease"
                         }}>
-                          <Typography variant="h6" sx={{ color: BRAND.gold, fontWeight: 900, mb: 1 }}>
+                          <Typography variant="h6" sx={{ color: BRAND.gold, fontWeight: 900, mb: 0.5 }}>
                             {photo.Title}
                           </Typography>
-
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              color: BRAND.textMuted,
-                              display: '-webkit-box',
-                              WebkitLineClamp: 2,
-                              WebkitBoxOrient: 'vertical',
-                              overflow: 'hidden',
-                              lineHeight: 1.4,
-                              mb: 1
-                            }}
-                          >
+                          <Typography variant="caption" sx={{ color: BRAND.textMuted, mb: 1.5, opacity: 0.9 }}>
                             {photo.Description}
                           </Typography>
-                          
-                          <Typography sx={{ color: BRAND.gold, fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase' }}>
-                            Click to Enlarge
+                          <Typography sx={{ color: BRAND.gold, fontSize: '0.65rem', fontWeight: 800, letterSpacing: 2 }}>
+                            VIEW FULL IMAGE
                           </Typography>
                         </Box>
                       </Box>
@@ -220,18 +180,10 @@ const SaccoGallery = () => {
           </Grid>
         </LightGallery>
 
-        {/* Standardized Brand Footer */}
-        <Box sx={{ py: 8, textAlign: 'center' }}>
-          <Typography
-            sx={{
-              color: BRAND.gold,
-              letterSpacing: '3px',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              fontSize: { xs: '0.8rem', md: '1.2rem' }
-            }}
-          >
-            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+        {/* Brand Footer */}
+        <Box sx={{ mt: 10, pb: 4, textAlign: 'center', opacity: 0.6 }}>
+          <Typography sx={{ color: BRAND.gold, letterSpacing: '4px', fontWeight: 700, fontSize: '0.75rem' }}>
+            GOLDEN GENERATION DT SACCO &copy; {new Date().getFullYear()}
           </Typography>
         </Box>
       </Container>
