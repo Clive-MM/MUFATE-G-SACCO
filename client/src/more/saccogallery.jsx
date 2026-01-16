@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import LightGallery from "lightgallery/react";
@@ -16,7 +16,7 @@ import "lightgallery/css/lg-thumbnail.css";
 // Material UI
 import {
   Container, Typography, Grid, CardMedia, CircularProgress,
-  Box, Stack, TextField
+  Box, Stack
 } from "@mui/material";
 import { AutoAwesome as SparkleIcon } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
@@ -48,7 +48,6 @@ const GlassCard = styled(motion.div)({
 const SaccoGallery = () => {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     axios.get("https://mufate-g-sacco.onrender.com/gallery")
@@ -59,14 +58,6 @@ const SaccoGallery = () => {
       })
       .catch(() => setLoading(false));
   }, []);
-
-  const filteredPhotos = useMemo(() => {
-    const query = searchQuery.toLowerCase();
-    return photos.filter(p =>
-      p.Title?.toLowerCase().includes(query) ||
-      p.Description?.toLowerCase().includes(query)
-    );
-  }, [searchQuery, photos]);
 
   if (loading) return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", bgcolor: BRAND.dark }}>
@@ -91,7 +82,7 @@ const SaccoGallery = () => {
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 2 }}>
         
         {/* Elite Header */}
-        <Stack alignItems="center" spacing={2} sx={{ mb: 6, textAlign: "center" }}>
+        <Stack alignItems="center" spacing={2} sx={{ mb: 8, textAlign: "center" }}>
           <Stack direction="row" spacing={1} alignItems="center">
             <SparkleIcon sx={{ color: BRAND.gold, fontSize: "1.2rem" }} />
             <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 800, letterSpacing: 6 }}>
@@ -105,33 +96,13 @@ const SaccoGallery = () => {
           }}>
             GOLDEN <span style={{ color: BRAND.gold }}>GALLERY</span>
           </Typography>
-
-          <Box sx={{ mt: 2, width: '100%', maxWidth: '500px' }}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Search milestones..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              sx={{
-                bgcolor: 'rgba(255, 255, 255, 0.03)',
-                borderRadius: '12px',
-                '& .MuiOutlinedInput-root': {
-                  color: '#FFF',
-                  '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.2)' },
-                  '&:hover fieldset': { borderColor: BRAND.gold },
-                  '&.Mui-focused fieldset': { borderColor: BRAND.gold },
-                }
-              }}
-            />
-          </Box>
         </Stack>
 
         {/* Gallery Grid */}
         <LightGallery speed={500} plugins={[lgZoom, lgThumbnail, lgAutoplay]} elementClassNames="gallery-wrapper">
           <Grid container spacing={3}>
             <AnimatePresence mode="popLayout">
-              {filteredPhotos.map((photo, idx) => (
+              {photos.map((photo, idx) => (
                 <Grid item xs={12} sm={6} md={4} key={photo.PhotoID}>
                   <GlassCard
                     layout
@@ -182,18 +153,18 @@ const SaccoGallery = () => {
 
         {/* Brand Footer */}
         <Box sx={{ py: 6, textAlign: 'center', mt: 4 }}>
-                <Typography
-                    sx={{
-                        color: BRAND.gold,
-                        letterSpacing: '3px',
-                        fontWeight: 900,
-                        textTransform: 'uppercase',
-                        fontSize: { xs: '0.8rem', md: '1.35rem' }
-                    }}
-                >
-                    GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
-                </Typography>
-            </Box>
+          <Typography
+            sx={{
+              color: BRAND.gold,
+              letterSpacing: '3px',
+              fontWeight: 900,
+              textTransform: 'uppercase',
+              fontSize: { xs: '0.8rem', md: '1.35rem' }
+            }}
+          >
+            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+          </Typography>
+        </Box>
       </Container>
     </Box>
   );
