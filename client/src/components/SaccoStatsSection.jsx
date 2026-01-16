@@ -18,7 +18,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 // Brand colors – same as AboutSection
 const GOLD = '#FFD700';
 const LIGHT_GOLD = '#FFE066';
-const DEEP_GREEN = '#006400';
+// const DEEP_GREEN = '#006400';
 const DARK_BG = 'linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)';
 
 const SaccoStatsSection = () => {

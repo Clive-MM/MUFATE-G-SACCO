@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -17,7 +17,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // Brand Colors
 const GOLD = '#FFD700';
 const LIGHT_GOLD = '#FFE066';
-const DEEP_GREEN = '#006400';
+// const DEEP_GREEN = '#006400';
 const DARK_BG =
   'linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)';
 

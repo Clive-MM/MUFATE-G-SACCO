@@ -128,15 +128,15 @@ const AboutUs = () => {
                           mb: 2,
                           fontWeight: 900,
                           fontSize: '1.4rem',
-                          color: COLORS.softGold,
                           background: `linear-gradient(to right, ${COLORS.gold}, ${COLORS.softGold})`,
                           WebkitBackgroundClip: 'text',
-                          color: 'transparent',
+                          WebkitTextFillColor: 'transparent', // ✅ correct gradient text approach
                           textShadow: `0 0 10px ${COLORS.gold}55`,
                         }}
                       >
                         Our Core Values
                       </Typography>
+
 
                       <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
                         {coreValues.length === 0 ? (

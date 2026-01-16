@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
   Box, Typography, Grid, Card, CardContent, CircularProgress,
-  Button, Stack, TextField, Container, IconButton, Tooltip, Skeleton,
-  useTheme, useMediaQuery
+  Button, Stack, TextField, Container, IconButton, Tooltip, Skeleton, useTheme, useMediaQuery
+
 } from '@mui/material';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import {
@@ -14,7 +14,7 @@ import {
   Twitter as TwitterIcon,
   WhatsApp as WhatsAppIcon,
   MarkEmailRead as MailIcon,
-  
+
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 
@@ -32,7 +32,7 @@ const toEmbedMap = (location) =>
 const ContactDetails = () => {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const scrollRef = useRef(null);
   const isInView = useInView(scrollRef, { once: true, margin: '-100px' });
 
@@ -109,15 +109,15 @@ const ContactDetails = () => {
 
   return (
     <Box sx={{ background: 'transparent', width: '100%', position: 'relative', zIndex: 1 }}>
-      <Container 
-        ref={scrollRef} 
-        maxWidth={false} 
-        sx={{ 
-            py: { xs: 6, md: 10 }, 
-            px: { xs: 2, md: 4 },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
+      <Container
+        ref={scrollRef}
+        maxWidth={false}
+        sx={{
+          py: { xs: 6, md: 10 },
+          px: isMobile ? 2 : 4,   // ✅ using isMobile here
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
       >
         <motion.div
@@ -127,14 +127,14 @@ const ContactDetails = () => {
           style={{ width: '100%', maxWidth: '1400px' }}
         >
           <Grid container spacing={3} justifyContent="center" alignItems="stretch">
-            
+
             {/* CARD 1: CONTACT (Restored Items) */}
             <Grid item xs={12} md={6} lg={5} component={motion.div} variants={itemVariants} sx={{ display: 'flex' }}>
               <Card sx={professionalCardStyle}>
                 <CardContent sx={{ p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', height: '100%' }}>
                   <Typography sx={megaInfoTitle}>Get in Touch</Typography>
                   <Stack spacing={3.5} sx={{ mt: 4, flexGrow: 1 }}>
-                    
+
                     <Box sx={infoIconBox}>
                       <MailIcon sx={iconStyle} />
                       <Box sx={{ flexGrow: 1 }}>
@@ -177,10 +177,10 @@ const ContactDetails = () => {
                         </Tooltip>
 
                         <Tooltip title="Chat with us on WhatsApp">
-                          <IconButton 
-                            component="a" 
-                            href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`} 
-                            target="_blank" 
+                          <IconButton
+                            component="a"
+                            href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
+                            target="_blank"
                             sx={{ ...socialIconStyle, '&:hover': { background: BRAND.success, color: '#FFF' } }}
                           >
                             <WhatsAppIcon />
@@ -310,7 +310,7 @@ const SuccessModal = ({ isOpen, onClose }) => (
           <Box sx={modalIconBox}><SuccessIcon sx={{ color: BRAND.dark, fontSize: '3rem' }} /></Box>
           <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '1.8rem', mb: 2 }}>MESSAGE RECEIVED</Typography>
           <Typography sx={{ color: BRAND.light, opacity: 0.8, lineHeight: 1.6, mb: 4 }}>
-            Thank you for reaching out to **Golden Generation DT SACCO**. 
+            Thank you for reaching out to **Golden Generation DT SACCO**.
             Our team will get back to you shortly.
           </Typography>
           <Button onClick={onClose} variant="contained" fullWidth sx={refinedGlowBtn}>RETURN TO PAGE</Button>

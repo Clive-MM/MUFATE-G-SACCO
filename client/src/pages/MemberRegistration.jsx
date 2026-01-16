@@ -100,12 +100,13 @@ const MemberRegistration = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
   // ✅ FIX: Bring back regMeta so setRegMeta exists (no layout/styling change)
-  const [regMeta, setRegMeta] = useState({
-    next_step: null,
-    payment: null,
-    member_id: null,
-    email_warning: null,
-  });
+  const [, setRegMeta] = useState({
+  next_step: null,
+  payment: null,
+  member_id: null,
+  email_warning: null,
+});
+
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
