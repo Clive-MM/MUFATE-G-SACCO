@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import {
-  AppBar, Toolbar, Box, Button, Link, Stack, Paper, IconButton,
+  AppBar, Toolbar, Box, Button, Link, Stack, IconButton, // Paper removed from here
   Typography, useTheme, useMediaQuery, Drawer, Collapse, List, ListItemButton, ListItemText
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -16,7 +16,7 @@ const BRAND_TEXT_LIGHT = '#F4F4F4';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [mobileOpenMenu, setMobileOpenMenu] = useState(''); // Tracks which sub-menu is open on mobile
+  const [mobileOpenMenu, setMobileOpenMenu] = useState(''); 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const location = useLocation();
@@ -132,12 +132,12 @@ const Navbar = () => {
 
   return (
     <AppBar 
-      position="fixed" // Changed to fixed to allow Hero to sit underneath
-      elevation={0}    // Removed heavy shadow for better transparency look
+      position="fixed" 
+      elevation={0}
       sx={{
-        backgroundColor: 'rgba(2, 21, 15, 0.75)', // Transparent background
+        backgroundColor: 'rgba(2, 21, 15, 0.75)', 
         backdropFilter: 'blur(10px)',
-        backgroundImage: 'none', // Removes MUI's default Paper overlay
+        backgroundImage: 'none', 
         borderBottom: '2px solid', 
         borderColor: BRAND_GOLD, 
         color: BRAND_TEXT_LIGHT,
@@ -225,7 +225,7 @@ const Navbar = () => {
                   <ListItemButton component={RouterLink} to={item.to} onClick={() => setDrawerOpen(false)} sx={{ py: 1, px: 0 }}>
                     <ListItemText primary={item.label} primaryTypographyProps={{ sx: { color: BRAND_TEXT_LIGHT, fontWeight: 500 } }} />
                   </ListItemButton>
-                )                }
+                )}
               </React.Fragment>
             ))}
           </List>
