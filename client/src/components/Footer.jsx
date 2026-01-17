@@ -62,7 +62,7 @@ const Footer = () => {
               href="https://wa.me/254791331932?text=Hello%20Mufate%20G%20Sacco%2C%20I%20would%20like%20to%20inquire%20about%20..."
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ color: '#25D366' }} // WhatsApp green
+              sx={{ color: '#25D366' }} 
             >
               <FaWhatsapp size={24} />
             </IconButton>

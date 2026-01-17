@@ -37,12 +37,10 @@ const Navbar = () => {
     }
   };
 
-  // Helper to toggle mobile sub-menus
   const handleMobileMenuToggle = (label) => {
     setMobileOpenMenu(mobileOpenMenu === label ? '' : label);
   };
 
-  // Centralized Data Structure for both Desktop and Mobile
   const navLinks = [
     { to: '/', label: 'Home' },
     { 
@@ -133,11 +131,19 @@ const Navbar = () => {
   );
 
   return (
-    <AppBar position="sticky" component={Paper} elevation={6} sx={{
-      backgroundColor: 'rgba(2, 21, 15, 0.92)', backdropFilter: 'blur(10px)',
-      borderBottom: '2px solid', borderColor: BRAND_GOLD, color: BRAND_TEXT_LIGHT,
-      zIndex: theme.zIndex.appBar,
-    }}>
+    <AppBar 
+      position="fixed" // Changed to fixed to allow Hero to sit underneath
+      elevation={0}    // Removed heavy shadow for better transparency look
+      sx={{
+        backgroundColor: 'rgba(2, 21, 15, 0.75)', // Transparent background
+        backdropFilter: 'blur(10px)',
+        backgroundImage: 'none', // Removes MUI's default Paper overlay
+        borderBottom: '2px solid', 
+        borderColor: BRAND_GOLD, 
+        color: BRAND_TEXT_LIGHT,
+        zIndex: theme.zIndex.appBar,
+      }}
+    >
       <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.6, md: 1.4 }, minHeight: { xs: 90, md: 120 } }}>
         
         <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
