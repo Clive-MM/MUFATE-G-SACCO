@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import {
-  AppBar, Toolbar, Box, Button, Link, Stack, IconButton, // Paper removed from here
+  AppBar, Toolbar, Box, Button, Link, Stack, IconButton,
   Typography, useTheme, useMediaQuery, Drawer, Collapse, List, ListItemButton, ListItemText
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -86,11 +86,11 @@ const Navbar = () => {
     textTransform: 'uppercase',
     letterSpacing: '1px',
     transition: 'all 0.3s ease',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+    boxShadow: 'none', // Removed green shadow
     '&:hover': {
       background: 'linear-gradient(to right, #0B8A4A, #04522F)',
       transform: 'scale(1.05)',
-      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6)',
+      boxShadow: 'none', // Removed hover shadow
       letterSpacing: '1.5px',
     },
   };
@@ -98,7 +98,7 @@ const Navbar = () => {
   const sharedLinkStyles = (isActive) => ({
     fontWeight: isActive ? 'bold' : 500,
     color: BRAND_GOLD,
-    textShadow: isActive ? '0 0 5px rgba(236, 155, 20, 0.6)' : 'none',
+    textShadow: 'none', // Removed text glow/shadow
     transform: isActive ? 'scale(1.03)' : 'scale(1)',
     textDecoration: 'none',
     cursor: 'pointer',
@@ -135,11 +135,9 @@ const Navbar = () => {
       position="fixed" 
       elevation={0}
       sx={{
-        backgroundColor: 'rgba(2, 21, 15, 0.75)', 
-        backdropFilter: 'blur(10px)',
+        backgroundColor: 'transparent', // Fully transparent
         backgroundImage: 'none', 
-        borderBottom: '2px solid', 
-        borderColor: BRAND_GOLD, 
+        borderBottom: 'none', // Removed the hard line
         color: BRAND_TEXT_LIGHT,
         zIndex: theme.zIndex.appBar,
       }}
