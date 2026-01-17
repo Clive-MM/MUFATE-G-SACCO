@@ -90,7 +90,6 @@ const Navbar = () => {
     '&:hover': {
       background: 'linear-gradient(to right, #0B8A4A, #04522F)',
       transform: 'scale(1.05)',
-      boxShadow: '0 6px 20px rgba(0,0,0,0.4)',
     },
   };
 
@@ -103,7 +102,7 @@ const Navbar = () => {
     textShadow: '1px 1px 3px rgba(0, 0, 0, 0.8)', 
     textDecoration: 'none',
     cursor: 'pointer',
-    padding: '10px 0', // Larger hit area
+    padding: '10px 0',
     display: 'flex',
     alignItems: 'center',
     gap: '4px',
@@ -125,10 +124,10 @@ const Navbar = () => {
       >
         <Link underline="none" sx={sharedLinkStyles(isActive)}>
           {label}
-          {items && <ExpandMore sx={{ fontSize: '1.1rem', transition: '0.3s', transform: isOpen ? 'rotate(180deg)' : 'none' }} />}
+          <ExpandMore sx={{ fontSize: '1.1rem', transition: '0.3s', transform: isOpen ? 'rotate(180deg)' : 'none' }} />
         </Link>
         
-        {/* The Safety Bridge: Invisible box that prevents menu from closing when moving mouse down */}
+        {/* The Safety Bridge */}
         <Box sx={{ position: 'absolute', top: '100%', left: 0, width: '100%', height: '15px' }} />
 
         <AnimatePresence>
@@ -138,14 +137,14 @@ const Navbar = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.2 }}
               sx={{
                 position: 'absolute',
-                top: 'calc(100% + 10px)',
+                top: 'calc(100% + 5px)',
                 left: '-10px',
                 display: 'flex',
                 flexDirection: 'column',
-                backgroundColor: 'rgba(2, 21, 15, 0.95)', // Solid dark with slight transparency
+                backgroundColor: 'rgba(2, 21, 15, 0.98)',
                 backdropFilter: 'blur(12px)',
                 borderRadius: '12px',
                 boxShadow: '0px 15px 35px rgba(0, 0, 0, 0.6)',
@@ -153,7 +152,6 @@ const Navbar = () => {
                 zIndex: 100,
                 py: 1.5,
                 border: `1px solid rgba(236, 155, 20, 0.3)`,
-                overflow: 'hidden'
               }}
             >
               {items.map((item) => (
@@ -163,19 +161,9 @@ const Navbar = () => {
                   to={item.to} 
                   underline="none"
                   sx={{ 
-                    px: 3, 
-                    py: 1.5, 
-                    fontWeight: 600, 
-                    fontSize: '0.9rem',
-                    color: BRAND_TEXT_LIGHT, 
-                    display: 'flex',
-                    alignItems: 'center',
+                    px: 3, py: 1.5, fontWeight: 600, fontSize: '0.9rem', color: BRAND_TEXT_LIGHT, 
                     transition: '0.2s',
-                    '&:hover': { 
-                      backgroundColor: 'rgba(236, 155, 20, 0.15)', 
-                      color: BRAND_GOLD,
-                      pl: 3.5 // Smooth slide-in effect
-                    } 
+                    '&:hover': { backgroundColor: 'rgba(236, 155, 20, 0.15)', color: BRAND_GOLD, pl: 3.5 } 
                   }}
                 >
                   {item.label}
@@ -201,25 +189,28 @@ const Navbar = () => {
     >
       <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.6, md: 1.4 }, px: { md: 4 }, minHeight: { xs: 90, md: 120 } }}>
         
-        {/* LOGO AREA */}
+        {/* LOGO AREA WITH RE-ADDED TAGLINE */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Link component={RouterLink} to="/" underline="none" sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}>
             <Box component="img" src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
                  sx={{ height: isMobile ? 55 : 85, width: 'auto', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))' }} />
-            <Stack spacing={0} sx={{ ml: 1.5 }}>
+            <Stack spacing={0.1} sx={{ ml: 1.5 }}>
               <Typography sx={{ fontSize: { xs: '0.85rem', md: '1.1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.12em', lineHeight: 1, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
                 Golden Generation
               </Typography>
               <Typography sx={{ fontSize: { xs: '0.75rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.25em', lineHeight: 1.2, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
                 DT SACCO
               </Typography>
+              {/* RE-ADDED TAGLINE BELOW */}
+              <Typography sx={{ display: { xs: 'none', sm: 'block' }, fontSize: { sm: '0.75rem', md: '0.95rem' }, fontWeight: 600, fontStyle: 'italic', color: '#FFF', lineHeight: 1.2, textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
+                Walking With You
+              </Typography>
             </Stack>
           </Link>
         </Box>
 
-        {/* DESKTOP NAV */}
         {!isMobile ? (
-          <Stack direction="row" spacing={3.5} alignItems="center">
+          <Stack direction="row" spacing={3} alignItems="center">
             {navLinks.map((item) => (
               item.items ? (
                 <NavDropdown key={item.label} label={item.label} items={item.items} isActive={location.pathname.startsWith(item.to)} />
@@ -246,14 +237,14 @@ const Navbar = () => {
             sx={{ '& .MuiDrawer-paper': { width: '85%', backgroundColor: BRAND_DARK, color: BRAND_TEXT_LIGHT } }}
         >
           <Box sx={{ p: 3, borderBottom: `1px solid rgba(236, 155, 20, 0.2)`, mb: 2 }}>
-             <Typography variant="h6" sx={{ color: BRAND_GOLD, fontWeight: 800 }}>MENU</Typography>
+             <Typography sx={{ color: BRAND_GOLD, fontWeight: 800, textTransform: 'uppercase' }}>Golden Generation DT Sacco</Typography>
           </Box>
           <List sx={{ px: 2 }}>
             {navLinks.map((item) => (
               <React.Fragment key={item.label}>
                 {item.items ? (
                   <>
-                    <ListItemButton onClick={() => handleMobileMenuToggle(item.label)} sx={{ borderRadius: '8px' }}>
+                    <ListItemButton onClick={() => handleMobileMenuToggle(item.label)}>
                       <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontWeight: 700, color: '#FFF' } }} />
                       {mobileOpenMenu === item.label ? <ExpandLess sx={{ color: BRAND_GOLD }} /> : <ExpandMore sx={{ color: BRAND_GOLD }} />}
                     </ListItemButton>
@@ -261,14 +252,14 @@ const Navbar = () => {
                       <List disablePadding>
                         {item.items.map((subItem) => (
                           <ListItemButton key={subItem.to} component={RouterLink} to={subItem.to} onClick={() => setDrawerOpen(false)} sx={{ pl: 4 }}>
-                            <ListItemText primary={subItem.label} primaryTypographyProps={{ sx: { color: BRAND_GOLD, fontWeight: 500 } }} />
+                            <ListItemText primary={subItem.label} primaryTypographyProps={{ sx: { color: BRAND_GOLD, fontWeight: 600 } }} />
                           </ListItemButton>
                         ))}
                       </List>
                     </Collapse>
                   </>
                 ) : (
-                  <ListItemButton component={RouterLink} to={item.to} onClick={() => setDrawerOpen(false)} sx={{ borderRadius: '8px' }}>
+                  <ListItemButton component={RouterLink} to={item.to} onClick={() => setDrawerOpen(false)}>
                     <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontWeight: 700, color: '#FFF' } }} />
                   </ListItemButton>
                 )}
