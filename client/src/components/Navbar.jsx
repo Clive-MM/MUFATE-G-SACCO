@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   AppBar, Toolbar, Box, Button, Link, Stack, IconButton,
-  Typography, useTheme, useMediaQuery, Drawer, Collapse, List, 
+  Typography, useTheme, useMediaQuery, Drawer, Collapse, List,
   ListItemButton, ListItemText, Tooltip
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -10,14 +10,14 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import { tooltipClasses } from '@mui/material/Tooltip';
 const BRAND_GOLD = '#EC9B14';
 const BRAND_DARK = '#02150F';
 const BRAND_TEXT_LIGHT = '#F4F4F4';
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [mobileOpenMenu, setMobileOpenMenu] = useState(''); 
+  const [mobileOpenMenu, setMobileOpenMenu] = useState('');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const location = useLocation();
@@ -42,39 +42,60 @@ const Navbar = () => {
     setMobileOpenMenu(mobileOpenMenu === label ? '' : label);
   };
 
+  // Add this constant for custom tooltip styling
+  const tooltipStyles = {
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: BRAND_DARK,
+      color: BRAND_GOLD,
+      border: `1px solid ${BRAND_GOLD}`,
+      fontSize: '0.75rem',
+      fontWeight: 800,
+      textTransform: 'uppercase',
+      letterSpacing: '1px',
+      padding: '8px 12px',
+      boxShadow: '0px 4px 15px rgba(236, 155, 20, 0.4)',
+    },
+    [`& .${tooltipClasses.arrow}`]: {
+      color: BRAND_DARK,
+      '&:before': {
+        border: `1px solid ${BRAND_GOLD}`,
+      },
+    },
+  };
+
   const navLinks = [
     { to: '/', label: 'Home' },
-    { 
-      label: 'About Us', 
+    {
+      label: 'About Us',
       to: '/about',
       items: [
         { to: '/about/who-we-are', label: 'Profile' },
         { to: '/about/board-of-directors', label: 'Board' },
         { to: '/about/management', label: 'Management' }
-      ] 
+      ]
     },
-    { 
-      label: 'Products', 
+    {
+      label: 'Products',
       to: '/products',
       items: [
         { to: '/products/fosa', label: 'FOSA' },
         { to: '/products/bosa', label: 'BOSA' },
         { to: '/products/savings', label: 'Savings' }
-      ] 
+      ]
     },
     { to: '/services', label: 'Services' },
     { to: '/resources', label: 'Resources' },
     { to: '/careers', label: 'Careers' },
     { to: '/membership', label: 'Membership' },
     { to: '/faqs', label: 'FAQs' },
-    { 
-      label: 'Media', 
+    {
+      label: 'Media',
       to: '/media',
       items: [
         { to: '/media/blogs', label: 'News' },
         { to: '/media/gallery', label: 'Gallery' },
         { to: '/media/videos', label: 'Golden Insights' }
-      ] 
+      ]
     },
   ];
 
@@ -100,7 +121,7 @@ const Navbar = () => {
     color: isActive ? '#FFF' : BRAND_GOLD,
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
-    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)', 
+    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
     textDecoration: 'none',
     cursor: 'pointer',
     padding: '10px 0',
@@ -108,7 +129,7 @@ const Navbar = () => {
     alignItems: 'center',
     gap: '2px',
     transition: 'all 0.3s ease',
-    '&:hover': { 
+    '&:hover': {
       color: '#FFF',
       transform: 'translateY(-1px)',
     },
@@ -118,7 +139,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <Box 
+      <Box
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
         sx={{ position: 'relative' }}
@@ -127,7 +148,7 @@ const Navbar = () => {
           {label}
           <ExpandMore sx={{ fontSize: '1.1rem', transition: '0.3s', transform: isOpen ? 'rotate(180deg)' : 'none' }} />
         </Link>
-        
+
         <Box sx={{ position: 'absolute', top: '100%', left: 0, width: '100%', height: '15px' }} />
 
         <AnimatePresence>
@@ -155,15 +176,15 @@ const Navbar = () => {
               }}
             >
               {items.map((item) => (
-                <Link 
-                  key={item.to} 
-                  component={RouterLink} 
-                  to={item.to} 
+                <Link
+                  key={item.to}
+                  component={RouterLink}
+                  to={item.to}
                   underline="none"
-                  sx={{ 
-                    px: 3, py: 1.2, fontWeight: 600, fontSize: '0.85rem', color: BRAND_TEXT_LIGHT, 
+                  sx={{
+                    px: 3, py: 1.2, fontWeight: 600, fontSize: '0.85rem', color: BRAND_TEXT_LIGHT,
                     transition: '0.2s',
-                    '&:hover': { backgroundColor: 'rgba(236, 155, 20, 0.15)', color: BRAND_GOLD, pl: 3.5 } 
+                    '&:hover': { backgroundColor: 'rgba(236, 155, 20, 0.15)', color: BRAND_GOLD, pl: 3.5 }
                   }}
                 >
                   {item.label}
@@ -177,26 +198,26 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar 
-      position="fixed" 
+    <AppBar
+      position="fixed"
       elevation={0}
       sx={{
         // Less transparent background
-        background: 'rgba(2, 21, 15, 0.96)', 
-        backgroundImage: 'none', 
+        background: 'rgba(2, 21, 15, 0.96)',
+        backgroundImage: 'none',
         // Golden generation shadow brand color
-        boxShadow: `0 4px 20px rgba(236, 155, 20, 0.15)`, 
+        boxShadow: `0 4px 20px rgba(236, 155, 20, 0.15)`,
         borderBottom: `1px solid rgba(236, 155, 20, 0.2)`,
         zIndex: theme.zIndex.appBar,
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.6, md: 1 }, px: { md: 4 }, minHeight: { xs: 80, md: 100 } }}>
-        
+
         {/* LOGO AREA */}
         <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
           <Link component={RouterLink} to="/" underline="none" sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}>
             <Box component="img" src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
-                 sx={{ height: isMobile ? 55 : 75, width: 'auto', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))' }} />
+              sx={{ height: isMobile ? 55 : 75, width: 'auto', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))' }} />
             <Stack spacing={0} sx={{ ml: 1.5 }}>
               <Typography sx={{ fontSize: { xs: '0.8rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.1em', lineHeight: 1.1 }}>
                 Golden Generation
@@ -224,25 +245,39 @@ const Navbar = () => {
               )
             ))}
             <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>
-            
+
             {/* Contact Icon with Hover Tooltip */}
-            <Tooltip title="Contact Us" arrow>
-                <IconButton 
-                    onClick={handleContactClick} 
-                    sx={{ 
-                        color: BRAND_GOLD, 
-                        border: `1.5px solid ${BRAND_GOLD}`, 
-                        ml: 1,
-                        transition: '0.3s',
-                        '&:hover': {
-                            backgroundColor: BRAND_GOLD,
-                            color: BRAND_DARK,
-                            transform: 'rotate(15deg)'
-                        }
-                    }}
-                >
-                <PhoneIcon fontSize="small" />
-                </IconButton>
+            <Tooltip
+              title="Contact Us"
+              arrow
+              placement="bottom"
+              sx={tooltipStyles} // Applies the golden theme to the popup
+            >
+              <IconButton
+                onClick={handleContactClick}
+                sx={{
+                  color: BRAND_GOLD,
+                  border: `2px solid ${BRAND_GOLD}`,
+                  ml: 2,
+                  position: 'relative',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  backgroundColor: 'rgba(236, 155, 20, 0.05)',
+                  // Subtle pulse effect
+                  boxShadow: '0 0 0 0 rgba(236, 155, 20, 0.4)',
+
+                  '&:hover': {
+                    backgroundColor: BRAND_GOLD,
+                    color: BRAND_DARK,
+                    transform: 'scale(1.1) rotate(15deg)',
+                    boxShadow: `0 0 20px 5px rgba(236, 155, 20, 0.3)`, // Golden Glow
+                  },
+                  '&:active': {
+                    transform: 'scale(0.95)',
+                  }
+                }}
+              >
+                <PhoneIcon sx={{ fontSize: '1.3rem' }} />
+              </IconButton>
             </Tooltip>
           </Stack>
         ) : (
@@ -250,14 +285,14 @@ const Navbar = () => {
         )}
 
         {/* MOBILE DRAWER (Layout preserved) */}
-        <Drawer 
-            anchor="left" 
-            open={drawerOpen} 
-            onClose={() => setDrawerOpen(false)} 
-            sx={{ '& .MuiDrawer-paper': { width: '85%', backgroundColor: BRAND_DARK, color: BRAND_TEXT_LIGHT } }}
+        <Drawer
+          anchor="left"
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          sx={{ '& .MuiDrawer-paper': { width: '85%', backgroundColor: BRAND_DARK, color: BRAND_TEXT_LIGHT } }}
         >
           <Box sx={{ p: 3, borderBottom: `1px solid rgba(236, 155, 20, 0.2)`, mb: 2 }}>
-             <Typography sx={{ color: BRAND_GOLD, fontWeight: 800, textTransform: 'uppercase' }}>Golden Generation DT Sacco</Typography>
+            <Typography sx={{ color: BRAND_GOLD, fontWeight: 800, textTransform: 'uppercase' }}>Golden Generation DT Sacco</Typography>
           </Box>
           <List sx={{ px: 2 }}>
             {navLinks.map((item) => (
