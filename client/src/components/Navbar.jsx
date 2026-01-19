@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   AppBar, Toolbar, Box, Button, Link, Stack, IconButton,
-  Typography, useTheme, useMediaQuery, Drawer, Collapse, List, ListItemButton, ListItemText
+  Typography, useTheme, useMediaQuery, Drawer, Collapse, List, 
+  ListItemButton, ListItemText, Tooltip
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -95,21 +96,21 @@ const Navbar = () => {
 
   const sharedLinkStyles = (isActive) => ({
     fontWeight: 700,
-    fontSize: '0.9rem',
-    color: BRAND_GOLD,
+    fontSize: '0.85rem',
+    color: isActive ? '#FFF' : BRAND_GOLD,
     textTransform: 'uppercase',
-    letterSpacing: '1px',
-    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.8)', 
+    letterSpacing: '0.5px',
+    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)', 
     textDecoration: 'none',
     cursor: 'pointer',
     padding: '10px 0',
     display: 'flex',
     alignItems: 'center',
-    gap: '4px',
+    gap: '2px',
     transition: 'all 0.3s ease',
     '&:hover': { 
       color: '#FFF',
-      textShadow: '2px 2px 5px rgba(0, 0, 0, 1)',
+      transform: 'translateY(-1px)',
     },
   });
 
@@ -127,7 +128,6 @@ const Navbar = () => {
           <ExpandMore sx={{ fontSize: '1.1rem', transition: '0.3s', transform: isOpen ? 'rotate(180deg)' : 'none' }} />
         </Link>
         
-        {/* The Safety Bridge */}
         <Box sx={{ position: 'absolute', top: '100%', left: 0, width: '100%', height: '15px' }} />
 
         <AnimatePresence>
@@ -148,7 +148,7 @@ const Navbar = () => {
                 backdropFilter: 'blur(12px)',
                 borderRadius: '12px',
                 boxShadow: '0px 15px 35px rgba(0, 0, 0, 0.6)',
-                minWidth: 240,
+                minWidth: 220,
                 zIndex: 100,
                 py: 1.5,
                 border: `1px solid rgba(236, 155, 20, 0.3)`,
@@ -161,7 +161,7 @@ const Navbar = () => {
                   to={item.to} 
                   underline="none"
                   sx={{ 
-                    px: 3, py: 1.5, fontWeight: 600, fontSize: '0.9rem', color: BRAND_TEXT_LIGHT, 
+                    px: 3, py: 1.2, fontWeight: 600, fontSize: '0.85rem', color: BRAND_TEXT_LIGHT, 
                     transition: '0.2s',
                     '&:hover': { backgroundColor: 'rgba(236, 155, 20, 0.15)', color: BRAND_GOLD, pl: 3.5 } 
                   }}
@@ -181,31 +181,30 @@ const Navbar = () => {
       position="fixed" 
       elevation={0}
       sx={{
-        background: 'linear-gradient(to bottom, rgba(2, 21, 15, 0.85) 0%, rgba(2, 21, 15, 0.4) 60%, transparent 100%)',
+        // Less transparent background
+        background: 'rgba(2, 21, 15, 0.96)', 
         backgroundImage: 'none', 
-        borderBottom: 'none', 
+        // Golden generation shadow brand color
+        boxShadow: `0 4px 20px rgba(236, 155, 20, 0.15)`, 
+        borderBottom: `1px solid rgba(236, 155, 20, 0.2)`,
         zIndex: theme.zIndex.appBar,
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.6, md: 1.4 }, px: { md: 4 }, minHeight: { xs: 90, md: 120 } }}>
+      <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.6, md: 1 }, px: { md: 4 }, minHeight: { xs: 80, md: 100 } }}>
         
-        {/* LOGO AREA WITH RE-ADDED TAGLINE */}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {/* LOGO AREA */}
+        <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
           <Link component={RouterLink} to="/" underline="none" sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}>
             <Box component="img" src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
-                 sx={{ height: isMobile ? 55 : 85, width: 'auto', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))' }} />
-            <Stack spacing={0.1} sx={{ ml: 1.5 }}>
-              <Typography sx={{ fontSize: { xs: '0.85rem', md: '1.1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.12em', lineHeight: 1, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
-                Golden 
+                 sx={{ height: isMobile ? 55 : 75, width: 'auto', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))' }} />
+            <Stack spacing={0} sx={{ ml: 1.5 }}>
+              <Typography sx={{ fontSize: { xs: '0.8rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.1em', lineHeight: 1.1 }}>
+                Golden Generation
               </Typography>
-                <Typography sx={{ fontSize: { xs: '0.85rem', md: '1.1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.12em', lineHeight: 1, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
-               Generation
-              </Typography>
-              <Typography sx={{ fontSize: { xs: '0.85rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.25em', lineHeight: 1.2, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
+              <Typography sx={{ fontSize: { xs: '0.8rem', md: '0.9rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.2em', lineHeight: 1.1 }}>
                 DT SACCO
               </Typography>
-              {/* RE-ADDED TAGLINE BELOW */}
-              <Typography sx={{ display: { xs: 'none', sm: 'block' }, fontSize: { sm: '0.75rem', md: '0.95rem' }, fontWeight: 600, fontStyle: 'italic', color: '#FFF', lineHeight: 1.2, textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
+              <Typography sx={{ display: { xs: 'none', sm: 'block' }, fontSize: { sm: '0.7rem', md: '0.8rem' }, fontWeight: 600, fontStyle: 'italic', color: '#FFF', opacity: 0.9 }}>
                 Walking With You
               </Typography>
             </Stack>
@@ -213,7 +212,8 @@ const Navbar = () => {
         </Box>
 
         {!isMobile ? (
-          <Stack direction="row" spacing={3} alignItems="center">
+          // Added ml: 4 to push links slightly to the right
+          <Stack direction="row" spacing={2.5} alignItems="center" sx={{ ml: 4 }}>
             {navLinks.map((item) => (
               item.items ? (
                 <NavDropdown key={item.label} label={item.label} items={item.items} isActive={location.pathname.startsWith(item.to)} />
@@ -224,15 +224,32 @@ const Navbar = () => {
               )
             ))}
             <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>
-            <IconButton onClick={handleContactClick} sx={{ color: BRAND_GOLD, border: `1.5px solid ${BRAND_GOLD}`, ml: 1 }}>
-              <PhoneIcon fontSize="small" />
-            </IconButton>
+            
+            {/* Contact Icon with Hover Tooltip */}
+            <Tooltip title="Contact Us" arrow>
+                <IconButton 
+                    onClick={handleContactClick} 
+                    sx={{ 
+                        color: BRAND_GOLD, 
+                        border: `1.5px solid ${BRAND_GOLD}`, 
+                        ml: 1,
+                        transition: '0.3s',
+                        '&:hover': {
+                            backgroundColor: BRAND_GOLD,
+                            color: BRAND_DARK,
+                            transform: 'rotate(15deg)'
+                        }
+                    }}
+                >
+                <PhoneIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
           </Stack>
         ) : (
           <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: BRAND_GOLD }}><MenuIcon fontSize="large" /></IconButton>
         )}
 
-        {/* MOBILE DRAWER */}
+        {/* MOBILE DRAWER (Layout preserved) */}
         <Drawer 
             anchor="left" 
             open={drawerOpen} 
