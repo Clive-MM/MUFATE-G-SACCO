@@ -19,7 +19,6 @@ const Navbar = () => {
   const [mobileOpenMenu, setMobileOpenMenu] = useState(''); 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -30,6 +29,8 @@ const Navbar = () => {
       const element = document.getElementById('contact-section');
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const firstInput = element.querySelector('input');
+        if (firstInput) firstInput.focus();
       }
     } else {
       navigate('/contact');
@@ -80,12 +81,10 @@ const Navbar = () => {
     background: 'linear-gradient(to right, #04522F, #0B8A4A)',
     color: BRAND_GOLD,
     fontWeight: 800,
-    px: isMobile ? 2 : 3,
-    py: 1,
+    px: 3, py: 1,
     borderRadius: '30px',
     textTransform: 'uppercase',
-    fontSize: isMobile ? '0.75rem' : '0.85rem',
-    letterSpacing: '1px',
+    letterSpacing: '1.2px',
     transition: 'all 0.3s ease',
     boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
     '&:hover': {
@@ -100,7 +99,7 @@ const Navbar = () => {
     color: BRAND_GOLD,
     textTransform: 'uppercase',
     letterSpacing: '1px',
-    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.9)', 
+    textShadow: '1px 1px 3px rgba(0, 0, 0, 0.8)', 
     textDecoration: 'none',
     cursor: 'pointer',
     padding: '10px 0',
@@ -116,13 +115,21 @@ const Navbar = () => {
 
   const NavDropdown = ({ label, items, isActive }) => {
     const [isOpen, setIsOpen] = useState(false);
+
     return (
-      <Box onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)} sx={{ position: 'relative' }}>
+      <Box 
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={() => setIsOpen(false)}
+        sx={{ position: 'relative' }}
+      >
         <Link underline="none" sx={sharedLinkStyles(isActive)}>
           {label}
           <ExpandMore sx={{ fontSize: '1.1rem', transition: '0.3s', transform: isOpen ? 'rotate(180deg)' : 'none' }} />
         </Link>
+        
+        {/* The Safety Bridge */}
         <Box sx={{ position: 'absolute', top: '100%', left: 0, width: '100%', height: '15px' }} />
+
         <AnimatePresence>
           {isOpen && (
             <Box
@@ -132,15 +139,33 @@ const Navbar = () => {
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
               sx={{
-                position: 'absolute', top: 'calc(100% + 5px)', left: '-10px', display: 'flex', flexDirection: 'column',
-                backgroundColor: 'rgba(2, 21, 15, 0.98)', backdropFilter: 'blur(12px)', borderRadius: '12px',
-                boxShadow: '0px 15px 35px rgba(0, 0, 0, 0.6)', minWidth: 240, zIndex: 100, py: 1.5,
+                position: 'absolute',
+                top: 'calc(100% + 5px)',
+                left: '-10px',
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: 'rgba(2, 21, 15, 0.98)',
+                backdropFilter: 'blur(12px)',
+                borderRadius: '12px',
+                boxShadow: '0px 15px 35px rgba(0, 0, 0, 0.6)',
+                minWidth: 240,
+                zIndex: 100,
+                py: 1.5,
                 border: `1px solid rgba(236, 155, 20, 0.3)`,
               }}
             >
               {items.map((item) => (
-                <Link key={item.to} component={RouterLink} to={item.to} underline="none"
-                  sx={{ px: 3, py: 1.5, fontWeight: 600, fontSize: '0.9rem', color: BRAND_TEXT_LIGHT, '&:hover': { backgroundColor: 'rgba(236, 155, 20, 0.15)', color: BRAND_GOLD, pl: 3.5, transition: '0.2s' } }}>
+                <Link 
+                  key={item.to} 
+                  component={RouterLink} 
+                  to={item.to} 
+                  underline="none"
+                  sx={{ 
+                    px: 3, py: 1.5, fontWeight: 600, fontSize: '0.9rem', color: BRAND_TEXT_LIGHT, 
+                    transition: '0.2s',
+                    '&:hover': { backgroundColor: 'rgba(236, 155, 20, 0.15)', color: BRAND_GOLD, pl: 3.5 } 
+                  }}
+                >
                   {item.label}
                 </Link>
               ))}
@@ -152,82 +177,81 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="fixed" elevation={0} sx={{ background: 'linear-gradient(to bottom, rgba(2, 21, 15, 0.9) 0%, rgba(2, 21, 15, 0.4) 70%, transparent 100%)', zIndex: theme.zIndex.appBar }}>
-      <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 1, md: 2 }, px: { xs: 2, md: 4 }, minHeight: { xs: 80, md: 110 } }}>
+    <AppBar 
+      position="fixed" 
+      elevation={0}
+      sx={{
+        background: 'linear-gradient(to bottom, rgba(2, 21, 15, 0.85) 0%, rgba(2, 21, 15, 0.4) 60%, transparent 100%)',
+        backgroundImage: 'none', 
+        borderBottom: 'none', 
+        zIndex: theme.zIndex.appBar,
+      }}
+    >
+      <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.6, md: 1.4 }, px: { md: 4 }, minHeight: { xs: 90, md: 120 } }}>
         
-        {/* LOGO AREA */}
+        {/* LOGO AREA WITH RE-ADDED TAGLINE */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Link component={RouterLink} to="/" underline="none" sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}>
             <Box component="img" src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
-                 sx={{ height: isSmallMobile ? 45 : isMobile ? 60 : 85, width: 'auto', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))' }} />
+                 sx={{ height: isMobile ? 55 : 85, width: 'auto', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))' }} />
             <Stack spacing={0.1} sx={{ ml: 1.5 }}>
-              <Typography sx={{ fontSize: { xs: '0.75rem', sm: '0.9rem', md: '1.1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.12em', lineHeight: 1, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
+              <Typography sx={{ fontSize: { xs: '0.85rem', md: '1.1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.12em', lineHeight: 1, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
                 Golden Generation
               </Typography>
-              <Typography sx={{ fontSize: { xs: '0.7rem', sm: '0.8rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.25em', lineHeight: 1.2, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
+              <Typography sx={{ fontSize: { xs: '0.75rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.25em', lineHeight: 1.2, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
                 DT SACCO
               </Typography>
-              <Typography sx={{ display: { xs: 'none', sm: 'block' }, fontSize: { sm: '0.7rem', md: '0.95rem' }, fontWeight: 600, fontStyle: 'italic', color: '#FFF', lineHeight: 1.2, textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
+              {/* RE-ADDED TAGLINE BELOW */}
+              <Typography sx={{ display: { xs: 'none', sm: 'block' }, fontSize: { sm: '0.75rem', md: '0.95rem' }, fontWeight: 600, fontStyle: 'italic', color: '#FFF', lineHeight: 1.2, textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
                 Walking With You
               </Typography>
             </Stack>
           </Link>
         </Box>
 
-        {/* DESKTOP NAV */}
         {!isMobile ? (
           <Stack direction="row" spacing={3} alignItems="center">
             {navLinks.map((item) => (
-              item.items ? <NavDropdown key={item.label} label={item.label} items={item.items} isActive={location.pathname.startsWith(item.to)} /> :
-              <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(location.pathname === item.to)}>{item.label}</Link>
+              item.items ? (
+                <NavDropdown key={item.label} label={item.label} items={item.items} isActive={location.pathname.startsWith(item.to)} />
+              ) : (
+                <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(location.pathname === item.to)}>
+                  {item.label}
+                </Link>
+              )
             ))}
             <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>
-            
-            {/* ENHANCED CONTACT ICON WITH HOVER REVEAL */}
-            <Box 
-              component={motion.div}
-              whileHover={{ width: '150px' }}
-              onClick={handleContactClick}
-              sx={{ 
-                width: '45px', height: '45px', border: `1.5px solid ${BRAND_GOLD}`, borderRadius: '25px', 
-                display: 'flex', alignItems: 'center', justifyContent: 'flex-start', cursor: 'pointer', 
-                overflow: 'hidden', color: BRAND_GOLD, transition: 'all 0.3s ease',
-                '&:hover': { backgroundColor: BRAND_GOLD, color: BRAND_DARK }
-              }}
-            >
-              <Stack direction="row" alignItems="center" spacing={1.5} sx={{ px: 1.2 }}>
-                <PhoneIcon sx={{ fontSize: '1.2rem', minWidth: '20px' }} />
-                <Typography sx={{ fontWeight: 800, fontSize: '0.8rem', whiteSpace: 'nowrap', textTransform: 'uppercase' }}>
-                  Contact Us
-                </Typography>
-              </Stack>
-            </Box>
+            <IconButton onClick={handleContactClick} sx={{ color: BRAND_GOLD, border: `1.5px solid ${BRAND_GOLD}`, ml: 1 }}>
+              <PhoneIcon fontSize="small" />
+            </IconButton>
           </Stack>
         ) : (
-          <Stack direction="row" spacing={1} alignItems="center">
-             <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>
-             <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: BRAND_GOLD }}><MenuIcon fontSize="large" /></IconButton>
-          </Stack>
+          <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: BRAND_GOLD }}><MenuIcon fontSize="large" /></IconButton>
         )}
 
         {/* MOBILE DRAWER */}
-        <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)} sx={{ '& .MuiDrawer-paper': { width: '85%', backgroundColor: BRAND_DARK, color: BRAND_TEXT_LIGHT } }}>
+        <Drawer 
+            anchor="left" 
+            open={drawerOpen} 
+            onClose={() => setDrawerOpen(false)} 
+            sx={{ '& .MuiDrawer-paper': { width: '85%', backgroundColor: BRAND_DARK, color: BRAND_TEXT_LIGHT } }}
+        >
           <Box sx={{ p: 3, borderBottom: `1px solid rgba(236, 155, 20, 0.2)`, mb: 2 }}>
-             <Typography sx={{ color: BRAND_GOLD, fontWeight: 800, textTransform: 'uppercase', fontSize: '1rem' }}>Golden Generation DT Sacco</Typography>
+             <Typography sx={{ color: BRAND_GOLD, fontWeight: 800, textTransform: 'uppercase' }}>Golden Generation DT Sacco</Typography>
           </Box>
           <List sx={{ px: 2 }}>
             {navLinks.map((item) => (
               <React.Fragment key={item.label}>
                 {item.items ? (
                   <>
-                    <ListItemButton onClick={() => handleMobileMenuToggle(item.label)} sx={{ py: 1.8 }}>
-                      <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontWeight: 700, fontSize: '1.1rem' } }} />
+                    <ListItemButton onClick={() => handleMobileMenuToggle(item.label)}>
+                      <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontWeight: 700, color: '#FFF' } }} />
                       {mobileOpenMenu === item.label ? <ExpandLess sx={{ color: BRAND_GOLD }} /> : <ExpandMore sx={{ color: BRAND_GOLD }} />}
                     </ListItemButton>
                     <Collapse in={mobileOpenMenu === item.label} timeout="auto">
-                      <List disablePadding sx={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+                      <List disablePadding>
                         {item.items.map((subItem) => (
-                          <ListItemButton key={subItem.to} component={RouterLink} to={subItem.to} onClick={() => setDrawerOpen(false)} sx={{ pl: 4, py: 1.5 }}>
+                          <ListItemButton key={subItem.to} component={RouterLink} to={subItem.to} onClick={() => setDrawerOpen(false)} sx={{ pl: 4 }}>
                             <ListItemText primary={subItem.label} primaryTypographyProps={{ sx: { color: BRAND_GOLD, fontWeight: 600 } }} />
                           </ListItemButton>
                         ))}
@@ -235,16 +259,12 @@ const Navbar = () => {
                     </Collapse>
                   </>
                 ) : (
-                  <ListItemButton component={RouterLink} to={item.to} onClick={() => setDrawerOpen(false)} sx={{ py: 1.8 }}>
-                    <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontWeight: 700, fontSize: '1.1rem' } }} />
+                  <ListItemButton component={RouterLink} to={item.to} onClick={() => setDrawerOpen(false)}>
+                    <ListItemText primary={item.label} primaryTypographyProps={{ sx: { fontWeight: 700, color: '#FFF' } }} />
                   </ListItemButton>
                 )}
               </React.Fragment>
             ))}
-            <ListItemButton onClick={handleContactClick} sx={{ mt: 3, py: 2, backgroundColor: 'rgba(236, 155, 20, 0.1)', borderRadius: '12px' }}>
-               <PhoneIcon sx={{ color: BRAND_GOLD, mr: 2 }} />
-               <ListItemText primary="CONTACT US" primaryTypographyProps={{ sx: { fontWeight: 800, color: BRAND_GOLD } }} />
-            </ListItemButton>
           </List>
         </Drawer>
       </Toolbar>
