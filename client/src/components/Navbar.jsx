@@ -196,9 +196,12 @@ const Navbar = () => {
                  sx={{ height: isMobile ? 55 : 85, width: 'auto', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))' }} />
             <Stack spacing={0.1} sx={{ ml: 1.5 }}>
               <Typography sx={{ fontSize: { xs: '0.85rem', md: '1.1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.12em', lineHeight: 1, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
-                Golden Generation
+                Golden 
               </Typography>
-              <Typography sx={{ fontSize: { xs: '0.75rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.25em', lineHeight: 1.2, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
+                <Typography sx={{ fontSize: { xs: '0.85rem', md: '1.1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.12em', lineHeight: 1, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
+               Generation
+              </Typography>
+              <Typography sx={{ fontSize: { xs: '0.85rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.25em', lineHeight: 1.2, textShadow: '2px 2px 4px rgba(0,0,0,0.6)' }}>
                 DT SACCO
               </Typography>
               {/* RE-ADDED TAGLINE BELOW */}
