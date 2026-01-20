@@ -49,64 +49,68 @@ const HomepageSlider = () => {
   );
 
   return (
-    <Box sx={{ width: '100%', bgcolor: BRAND.dark, overflow: 'hidden' }}>
+    <Box sx={{ 
+      width: '100%', 
+      bgcolor: BRAND.dark, 
+      overflow: 'hidden',
+      /* FIX: This pushes the slider below your fixed Navbar */
+      marginTop: { xs: '80px', md: '100px' } 
+    }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <Box key={index} sx={{ position: 'relative', width: '100%' }}>
             
-            {/* 1. FLEXIBLE IMAGE CONTAINER: Prevents vertical cropping */}
             <Box
               sx={{
                 width: '100%',
-                minHeight: { xs: '550px', md: '750px', lg: '850px' }, 
+                /* Adjust height so it doesn't cause excessive scrolling */
+                height: { xs: 'calc(100vh - 80px)', md: 'calc(100vh - 100px)' },
+                minHeight: { xs: '500px', md: '650px' }, 
                 backgroundImage: `
-                  linear-gradient(to right, ${BRAND.dark} 0%, rgba(2, 21, 15, 0.7) 40%, transparent 85%), 
-                  linear-gradient(to top, ${BRAND.dark} 10%, transparent 40%),
+                  linear-gradient(to right, ${BRAND.dark} 5%, rgba(2, 21, 15, 0.4) 50%, transparent 90%), 
+                  /* REDUCED SHADOW: Changed from 30% darkness to 15% for a lighter feel */
+                  linear-gradient(to top, ${BRAND.dark} 15%, transparent 40%),
                   url(${slide.ImagePath})
                 `,
                 backgroundSize: 'cover',
-                backgroundPosition: { xs: 'center right', md: 'center' },
+                backgroundPosition: 'center',
                 display: 'flex',
                 alignItems: 'center'
               }}
             >
               <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 } }}>
                 <motion.div
-                  initial={{ opacity: 0, x: -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  {/* 2. RESPONSIVE TITLE: Adjusted sizes to prevent overflow */}
                   <Typography variant="h1" sx={{
                     color: BRAND.gold,
                     fontWeight: 900,
                     textTransform: 'uppercase',
-                    maxWidth: { xs: "100%", md: "800px" },
+                    maxWidth: { xs: "100%", md: "900px" },
                     mb: 2,
                     lineHeight: { xs: 1.2, md: 1.1 },
-                    textShadow: "3px 3px 10px rgba(0,0,0,0.8)",
-                    fontSize: { xs: '1.8rem', sm: '2.8rem', md: '3.8rem', lg: '4.5rem' },
-                    wordBreak: 'keep-all' // Prevents awkward word splitting
+                    textShadow: "2px 2px 15px rgba(0,0,0,0.7)",
+                    fontSize: { xs: '2rem', sm: '3rem', md: '4rem', lg: '4.8rem' },
                   }}>
                     {slide.Title}
                   </Typography>
 
-                  {/* 3. DESCRIPTION: Uses opacity and shadow for clarity without a box */}
                   <Typography sx={{
                     color: BRAND.light,
-                    maxWidth: "600px",
+                    maxWidth: "650px",
                     fontWeight: 400,
                     lineHeight: 1.6,
-                    textShadow: "1px 1px 5px rgba(0,0,0,1)",
-                    fontSize: { xs: '0.95rem', md: '1.15rem' },
-                    mb: 4,
-                    opacity: 0.9
+                    textShadow: "1px 1px 8px rgba(0,0,0,0.8)",
+                    fontSize: { xs: '1rem', md: '1.2rem' },
+                    mb: 5,
+                    opacity: 0.95
                   }}>
                     {slide.Description?.replace(/<[^>]*>/g, '')}
                   </Typography>
 
-                  {/* 4. BUTTONS: Stacked on mobile, row on desktop */}
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: 'fit-content' }}>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3}>
                     <Button 
                       component={RouterLink} to="/membership" 
                       sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
@@ -136,25 +140,26 @@ const HomepageSlider = () => {
 };
 
 const ButtonStyle = {
-  fontWeight: 800,
-  px: { xs: 3, md: 5 },
-  py: 1.5,
+  fontWeight: 900,
+  px: 5,
+  py: 2,
   borderRadius: '4px',
-  fontSize: '0.85rem',
+  fontSize: '0.9rem',
   textTransform: 'uppercase',
-  transition: '0.3s ease',
-  '&:hover': { transform: 'translateY(-2px)' }
+  transition: '0.3s all ease-in-out',
+  boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
+  '&:hover': { transform: 'translateY(-3px)', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }
 };
 
 const NextArrow = ({ onClick }) => (
-  <IconButton onClick={onClick} sx={{ position: 'absolute', right: 15, top: '50%', zIndex: 5, color: BRAND.gold, bgcolor: 'rgba(0,0,0,0.3)', '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
-    <ArrowForwardIos fontSize="small" />
+  <IconButton onClick={onClick} sx={{ position: 'absolute', right: 25, top: '50%', zIndex: 10, color: BRAND.gold, bgcolor: 'rgba(2,21,15,0.4)', border: `1px solid ${BRAND.gold}`, '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
+    <ArrowForwardIos />
   </IconButton>
 );
 
 const PrevArrow = ({ onClick }) => (
-  <IconButton onClick={onClick} sx={{ position: 'absolute', left: 15, top: '50%', zIndex: 5, color: BRAND.gold, bgcolor: 'rgba(0,0,0,0.3)', '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
-    <ArrowBackIosNew fontSize="small" />
+  <IconButton onClick={onClick} sx={{ position: 'absolute', left: 25, top: '50%', zIndex: 10, color: BRAND.gold, bgcolor: 'rgba(2,21,15,0.4)', border: `1px solid ${BRAND.gold}`, '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
+    <ArrowBackIosNew />
   </IconButton>
 );
 
