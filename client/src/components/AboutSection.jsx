@@ -3,23 +3,24 @@ import {
   Box,
   Typography,
   Button,
+  Paper,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Container,
-  Grid,
-  Stack
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import AgricultureIcon from '@mui/icons-material/Agriculture';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import SavingsIcon from '@mui/icons-material/Savings';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 
-// Consistent Brand Colors - Uniform with Homepage Slider
-const BRAND = {
-  gold: "#EC9B14",
-  dark: "#02150F", // Deep SACCO Green
-  light: "#F4F4F4",
-};
+const GOLD = '#FFD700';
+const LIGHT_GOLD = '#FFE066';
+const DEEP_GREEN = '#006400';
+const DARK_BG = 'linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)';
 
 const AboutSection = () => {
   const images = [
@@ -35,180 +36,326 @@ const AboutSection = () => {
   useEffect(() => {
     const interval = setInterval(
       () => setCurrentIndex((prev) => (prev + 1) % images.length),
-      6000
+      5000
     );
     return () => clearInterval(interval);
   }, [images.length]);
 
   return (
-    <Box sx={{ bgcolor: BRAND.dark, py: { xs: 10, md: 15 }, overflow: 'hidden' }}>
-      <Container maxWidth="xl">
-        <Grid container spacing={8} alignItems="center">
-          
-          {/* LEFT SIDE: Clean Typography using your exact text */}
-          <Grid item xs={12} md={6}>
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+    <Box sx={{ background: DARK_BG, px: 1, py: 5 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <Paper
+          elevation={6}
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            borderRadius: 6,
+            overflow: 'hidden',
+            mx: 'auto',
+            width: '100%',
+            maxWidth: '1700px',
+            background: 'rgba(0, 0, 0, 0.72)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 215, 0, 0.25)',
+            boxShadow:
+              '0 26px 70px rgba(0,0,0,0.85), 0 0 30px rgba(255,215,0,0.15)',
+          }}
+        >
+          {/* LEFT SIDE CONTENT */}
+          <Box
+            sx={{
+              flex: 1,
+              p: { xs: 3, md: 5 },
+              background: DARK_BG, // 🔥 same background treatment as stats section
+              borderRight: {
+                xs: 'none',
+                md: '1px solid rgba(255,215,0,0.18)',
+              },
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 800,
+                color: 'transparent',
+                backgroundImage: 'linear-gradient(to right, #FFD700, #FFE066)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                mb: 3,
+                textTransform: 'uppercase',
+                letterSpacing: 1.5,
+                fontSize: { xs: '1.8rem', md: '2.3rem' },
+              }}
             >
-              <Typography
+              About Us
+            </Typography>
+
+            {/* SEO & Branding-focused intro */}
+            <Typography
+              variant="body1"
+              sx={{
+                color: '#f5f5f5',
+                fontSize: '1.06rem',
+                lineHeight: 1.9,
+                mb: 2.5,
+              }}
+            >
+              <strong>Golden Generation Deposit Taking SACCO</strong>{' '}
+              is a trusted, member-owned deposit taking SACCO serving{' '}
+              <strong>
+                tea farmers, salaried workers, teachers, pensioners, county staff
+                and business owners
+              </strong>{' '}
+              across Vihiga and Kakamega counties. Our rebrand reflects a
+              broader common bond – opening doors to more members while
+              preserving our strong roots in the tea-growing community.
+            </Typography>
+
+            <Typography
+              variant="body1"
+              sx={{
+                color: '#e6e6e6',
+                fontSize: '1.02rem',
+                lineHeight: 1.8,
+                mb: 3,
+              }}
+            >
+              We provide{' '}
+              <strong>safe, transparent and flexible financial solutions</strong>{' '}
+              – from everyday savings and salary processing to development loans
+              and digital banking – helping you{' '}
+              <strong>save, borrow and invest with confidence</strong>. When
+              someone searches for a reliable SACCO in Western Kenya, we want
+              them to find a partner that is <strong>walking with them</strong>{' '}
+              at every stage of life.
+            </Typography>
+
+            <List dense sx={{ pl: 0 }}>
+              <ListItem
                 sx={{
-                  color: BRAND.gold,
-                  fontWeight: 800,
-                  fontSize: '0.75rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.3em',
-                  mb: 1,
-                  display: 'block'
+                  transition: '0.3s',
+                  '&:hover': {
+                    transform: 'translateX(6px)',
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                  },
                 }}
               >
-                Our Heritage
-              </Typography>
-              
-              <Typography
-                variant="h2"
+                <ListItemIcon>
+                  <PaymentsIcon sx={{ color: GOLD }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: 700, color: LIGHT_GOLD }}>
+                      Salary Processing & Check-off
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography sx={{ color: '#d0d0d0', fontSize: '0.95rem' }}>
+                      Seamless check-off services for tea farmers, teachers,
+                      civil servants and private sector employees.
+                    </Typography>
+                  }
+                />
+              </ListItem>
+
+              <ListItem
                 sx={{
-                  color: BRAND.light,
-                  fontWeight: 900,
-                  fontSize: { xs: '1.8rem', md: '2.6rem' },
-                  lineHeight: 1.1,
-                  mb: 3,
-                  textTransform: 'uppercase'
+                  transition: '0.3s',
+                  '&:hover': {
+                    transform: 'translateX(6px)',
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                  },
                 }}
               >
-                Golden Generation <br /> 
-                <span style={{ color: BRAND.gold }}>DT SACCO</span>
-              </Typography>
+                <ListItemIcon>
+                  <AgricultureIcon sx={{ color: GOLD }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: 700, color: LIGHT_GOLD }}>
+                      Agricultural & Tea-Grower Support
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography sx={{ color: '#d0d0d0', fontSize: '0.95rem' }}>
+                      Tailored products for farmers and smallholder producers,
+                      supporting inputs, farm improvement and seasonal needs.
+                    </Typography>
+                  }
+                />
+              </ListItem>
 
-              <Typography
+              <ListItem
                 sx={{
-                  color: BRAND.light,
-                  fontSize: '0.8rem',
-                  lineHeight: 1.8,
-                  maxWidth: '500px',
-                  mb: 4,
-                  opacity: 0.85
+                  transition: '0.3s',
+                  '&:hover': {
+                    transform: 'translateX(6px)',
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                  },
                 }}
               >
-                A trusted, member-owned institution serving tea farmers, salaried workers, 
-                and entrepreneurs across Western Kenya. We preserve our strong roots 
-                while opening doors to a broader common bond.
-              </Typography>
+                <ListItemIcon>
+                  <TrendingUpIcon sx={{ color: GOLD }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: 700, color: LIGHT_GOLD }}>
+                      Business & Development Loans
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography sx={{ color: '#d0d0d0', fontSize: '0.95rem' }}>
+                      Competitive, well-structured credit for MSMEs, projects
+                      and personal development goals.
+                    </Typography>
+                  }
+                />
+              </ListItem>
 
-              <List sx={{ mb: 4 }}>
-                {[
-                  { title: "Salary Processing", desc: "Seamless check-off for tea farmers & civil servants." },
-                  { title: "Smart Savings", desc: "Goal-based accounts for long-term growth." },
-                  { title: "Digital Banking", desc: "24/7 access via USSD and Mobile App." }
-                ].map((item, i) => (
-                  <ListItem key={i} sx={{ px: 0, py: 1.2 }}>
-                    <ListItemIcon sx={{ minWidth: '30px' }}>
-                      <Box sx={{ width: 5, height: 5, bgcolor: BRAND.gold, borderRadius: '50%' }} />
-                    </ListItemIcon>
-                    <ListItemText 
-                      primary={
-                        <Typography sx={{ color: BRAND.gold, fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                          {item.title}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography sx={{ color: BRAND.light, fontSize: '0.75rem', opacity: 0.6, mt: 0.3 }}>
-                          {item.desc}
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                ))}
-              </List>
+              <ListItem
+                sx={{
+                  transition: '0.3s',
+                  '&:hover': {
+                    transform: 'translateX(6px)',
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                  },
+                }}
+              >
+                <ListItemIcon>
+                  <SavingsIcon sx={{ color: GOLD }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: 700, color: LIGHT_GOLD }}>
+                      Smart Savings & Investment Accounts
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography sx={{ color: '#d0d0d0', fontSize: '0.95rem' }}>
+                      Goal-based savings, fixed deposits and targeted products
+                      for education, emergencies and long-term growth.
+                    </Typography>
+                  }
+                />
+              </ListItem>
 
-              <Stack direction="row" spacing={3} alignItems="center">
-                <Button
-                  component={RouterLink}
-                  to="/about/who-we-are"
-                  sx={{
-                    bgcolor: BRAND.gold,
-                    color: BRAND.dark,
-                    fontWeight: 800,
-                    px: 4,
-                    py: 1.2,
-                    fontSize: '0.65rem',
-                    borderRadius: '2px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    transition: '0.3s all ease-in-out',
-                    '&:hover': { bgcolor: BRAND.light, transform: 'translateY(-2px)' }
-                  }}
-                >
-                  Learn More
-                </Button>
-                
-                <Typography
-                  sx={{
-                    fontStyle: 'italic',
-                    color: BRAND.gold,
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.1em'
-                  }}
-                >
-                  “Walking With You.”
-                </Typography>
-              </Stack>
-            </motion.div>
-          </Grid>
+              <ListItem
+                sx={{
+                  transition: '0.3s',
+                  '&:hover': {
+                    transform: 'translateX(6px)',
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                  },
+                }}
+              >
+                <ListItemIcon>
+                  <PhoneIphoneIcon sx={{ color: GOLD }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: 700, color: LIGHT_GOLD }}>
+                      Mobile & Digital Banking
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography sx={{ color: '#d0d0d0', fontSize: '0.95rem' }}>
+                      24/7 access to your SACCO account through our USSD and
+                      mobile platforms – deposit, withdraw and check balances
+                      from anywhere.
+                    </Typography>
+                  }
+                />
+              </ListItem>
+            </List>
 
-          {/* RIGHT SIDE: Frameless Image Slider with Refined Branding */}
-          <Grid item xs={12} md={6}>
-            <Box sx={{ position: 'relative', width: '100%', height: { xs: '400px', md: '580px' } }}>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentIndex}
-                  initial={{ opacity: 0, scale: 1.02 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1.2 }}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      backgroundImage: `url(${images[currentIndex]})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      borderRadius: '2px', 
-                      // Subtle gold block offset to replace generic shadow
-                      boxShadow: `30px 30px 0px -5px rgba(236, 155, 20, 0.07)`, 
-                    }}
-                  />
-                </motion.div>
-              </AnimatePresence>
-              
-              {/* Minimalist Corner Bracket */}
-              <Box 
-                sx={{ 
-                  position: 'absolute', 
-                  bottom: -15, 
-                  right: -15, 
-                  width: '80px', 
-                  height: '80px', 
-                  borderBottom: `1px solid ${BRAND.gold}`, 
-                  borderRight: `1px solid ${BRAND.gold}`,
-                  opacity: 0.4
-                }} 
-              />
-            </Box>
-          </Grid>
+            <Typography
+              variant="body1"
+              sx={{
+                color: '#e0e0e0',
+                fontSize: '1.02rem',
+                lineHeight: 1.8,
+                mb: 2.5,
+              }}
+            >
+              As <strong>Golden Generation DT SACCO</strong>, our vision is to
+              become a leading member-driven financial institution — providing
+              secure savings, affordable credit and digital banking solutions to
+              uplift communities and empower economic growth across the region
+              and beyond.
+            </Typography>
 
-        </Grid>
-      </Container>
+            <Button
+              component={RouterLink}
+              to="/about/who-we-are"
+              variant="contained"
+              size="medium"
+              sx={{
+                backgroundImage: `linear-gradient(135deg, ${GOLD}, ${LIGHT_GOLD})`,
+                color: '#111',
+                fontWeight: 'bold',
+                px: 3.5,
+                py: 1,
+                borderRadius: '999px',
+                fontSize: '0.95rem',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                transition: 'all 0.35s ease-in-out',
+                boxShadow: '0 0 18px rgba(255,215,0,0.85)',
+                '&:hover': {
+                  backgroundImage: `linear-gradient(135deg, ${DEEP_GREEN}, ${GOLD})`,
+                  color: '#fff',
+                  transform: 'translateY(-2px) scale(1.04)', // ✅ fixed quotes
+                  boxShadow:
+                    '0 18px 32px rgba(0,0,0,0.9), 0 0 22px rgba(255,215,0,0.95)', // ✅ this is fine
+                },
+              }}
+            >
+              Learn More
+            </Button>
+
+            <Typography
+              variant="subtitle2"
+              sx={{
+                mt: 3,
+                fontWeight: 800,
+                fontStyle: 'italic',
+                color: LIGHT_GOLD,
+                letterSpacing: 1.2,
+                textShadow: `
+                  0 0 6px rgba(255, 215, 0, 0.8),
+                  0 0 12px rgba(255, 215, 0, 0.6),
+                  0 0 18px rgba(255, 215, 0, 0.4)
+                `,
+                fontSize: { xs: '1rem', md: '1.15rem' },
+                textAlign: 'left',
+              }}
+            >
+              “Walking With You.”
+            </Typography>
+          </Box>
+
+          {/* RIGHT SIDE SLIDESHOW */}
+          <Box
+            sx={{
+              flex: 1.2,
+              minHeight: { xs: 300, md: 'auto' },
+              backgroundImage: `linear-gradient(
+                  to right,
+                  rgba(0,0,0,0.55),
+                  rgba(0,0,0,0.15)
+                ), url(${images[currentIndex]})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              transition: 'background-image 1s ease-in-out',
+            }}
+          />
+        </Paper>
+      </motion.div>
     </Box>
   );
 };
