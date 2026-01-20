@@ -10,7 +10,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 const BRAND = {
   gold: "#EC9B14",
-  dark: "#02150F", // Deep SACCO Green
+  dark: "#02150F", 
   light: "#F4F4F4",
 };
 
@@ -55,55 +55,55 @@ const HomepageSlider = () => {
                 width: '100%',
                 height: '100vh',
                 minHeight: { xs: '500px', md: '700px' }, 
-                /* 1. REMOVED DARK GRADIENT: Only the image is used now */
                 backgroundImage: `url(${slide.ImagePath})`,
-                /* 2. FIX CROPPING: Use 'contain' to see the whole photo, or '100% 100%' to force fill */
                 backgroundSize: 'contain', 
                 backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center right', // Keeps the people on the right visible
-                bgcolor: BRAND.dark, // Fills any gaps with brand color
+                backgroundPosition: { xs: 'center', md: 'right center' }, 
+                bgcolor: BRAND.dark, 
                 display: 'flex',
                 alignItems: 'center',
-                pt: { xs: '140px', md: '180px' } 
+                pt: { xs: '100px', md: '120px' } 
               }}
             >
-              <Container maxWidth="xl" sx={{ px: { xs: 2, md: 6 }, mx: 0 }}>
+              <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
                 <motion.div
-                  initial={{ opacity: 0, x: -30 }}
+                  initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  {/* 3. FURTHER REDUCED TITLE FONT SIZE */}
+                  {/* TITLE: Significantly reduced for an elegant look */}
                   <Typography variant="h1" sx={{
                     color: BRAND.gold,
-                    fontWeight: 900,
+                    fontWeight: 800,
                     textTransform: 'uppercase',
-                    maxWidth: { xs: "100%", md: "500px" },
+                    maxWidth: { xs: "100%", md: "420px" },
                     mb: 1,
                     lineHeight: 1.1,
-                    textShadow: "2px 2px 4px rgba(0,0,0,0.5)", // Softened shadow
-                    fontSize: { xs: '1.2rem', sm: '1.5rem', md: '2rem', lg: '2.4rem' },
+                    letterSpacing: '0.02em',
+                    textShadow: "1px 1px 3px rgba(0,0,0,0.4)",
+                    fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.6rem', lg: '1.8rem' },
                   }}>
                     {slide.Title}
                   </Typography>
 
-                  {/* 4. FURTHER REDUCED DESCRIPTION FONT SIZE */}
+                  {/* DESCRIPTION: Reduced to small-print/caption size */}
                   <Typography sx={{
                     color: BRAND.light,
-                    maxWidth: "400px",
+                    maxWidth: "340px",
                     fontWeight: 400,
-                    lineHeight: 1.4,
-                    textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
-                    fontSize: { xs: '0.75rem', md: '0.85rem' },
+                    lineHeight: 1.5,
+                    textShadow: "1px 1px 2px rgba(0,0,0,0.4)",
+                    fontSize: { xs: '0.7rem', md: '0.78rem' },
                     mb: 4,
-                    opacity: 0.9
+                    opacity: 0.85,
+                    letterSpacing: '0.01em'
                   }}>
                     {slide.Description?.replace(/<[^>]*>/g, '')}
                   </Typography>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction="row" spacing={1.5}>
                     <Button 
-                      component={RouterLink} to="/customer_registration" 
+                      component={RouterLink} to="/membership" 
                       sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
                     >
                       Join Us
@@ -112,7 +112,7 @@ const HomepageSlider = () => {
                       component={RouterLink} to="/products/bosa" 
                       sx={{ 
                         ...ButtonStyle, 
-                        border: `2px solid ${BRAND.gold}`, 
+                        border: `1.5px solid ${BRAND.gold}`, 
                         color: BRAND.gold,
                         '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
                       }}
@@ -131,13 +131,14 @@ const HomepageSlider = () => {
 };
 
 const ButtonStyle = {
-  fontWeight: 800,
+  fontWeight: 700,
   px: 2,
-  py: 0.8,
-  borderRadius: '4px',
-  fontSize: '0.7rem',
+  py: 0.6,
+  borderRadius: '2px',
+  fontSize: '0.65rem',
   textTransform: 'uppercase',
   transition: '0.3s all ease-in-out',
+  boxShadow: 'none',
 };
 
 export default HomepageSlider;
