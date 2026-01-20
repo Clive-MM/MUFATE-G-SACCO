@@ -14,7 +14,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// UNIFORM BRAND COLORS
+// Consistent Brand Colors - Uniform with Homepage Slider
 const BRAND = {
   gold: "#EC9B14",
   dark: "#02150F", // Deep SACCO Green
@@ -35,7 +35,7 @@ const AboutSection = () => {
   useEffect(() => {
     const interval = setInterval(
       () => setCurrentIndex((prev) => (prev + 1) % images.length),
-      5000
+      6000
     );
     return () => clearInterval(interval);
   }, [images.length]);
@@ -45,10 +45,10 @@ const AboutSection = () => {
       <Container maxWidth="xl">
         <Grid container spacing={8} alignItems="center">
           
-          {/* LEFT SIDE: Typography matching HomepageSlider hierarchy */}
+          {/* LEFT SIDE: Clean Typography using your exact text */}
           <Grid item xs={12} md={6}>
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
@@ -59,7 +59,8 @@ const AboutSection = () => {
                   fontSize: '0.75rem',
                   textTransform: 'uppercase',
                   letterSpacing: '0.3em',
-                  mb: 2,
+                  mb: 1,
+                  display: 'block'
                 }}
               >
                 Our Heritage
@@ -70,11 +71,10 @@ const AboutSection = () => {
                 sx={{
                   color: BRAND.light,
                   fontWeight: 900,
-                  fontSize: { xs: '1.5rem', md: '2.2rem' },
+                  fontSize: { xs: '1.8rem', md: '2.6rem' },
                   lineHeight: 1.1,
                   mb: 3,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.02em'
+                  textTransform: 'uppercase'
                 }}
               >
                 Golden Generation <br /> 
@@ -86,9 +86,9 @@ const AboutSection = () => {
                   color: BRAND.light,
                   fontSize: '0.8rem',
                   lineHeight: 1.8,
-                  maxWidth: '480px',
+                  maxWidth: '500px',
                   mb: 4,
-                  opacity: 0.8
+                  opacity: 0.85
                 }}
               >
                 A trusted, member-owned institution serving tea farmers, salaried workers, 
@@ -96,24 +96,24 @@ const AboutSection = () => {
                 while opening doors to a broader common bond.
               </Typography>
 
-              <List sx={{ mb: 5 }}>
+              <List sx={{ mb: 4 }}>
                 {[
                   { title: "Salary Processing", desc: "Seamless check-off for tea farmers & civil servants." },
                   { title: "Smart Savings", desc: "Goal-based accounts for long-term growth." },
                   { title: "Digital Banking", desc: "24/7 access via USSD and Mobile App." }
                 ].map((item, i) => (
-                  <ListItem key={i} sx={{ px: 0, py: 1.5 }}>
+                  <ListItem key={i} sx={{ px: 0, py: 1.2 }}>
                     <ListItemIcon sx={{ minWidth: '30px' }}>
                       <Box sx={{ width: 5, height: 5, bgcolor: BRAND.gold, borderRadius: '50%' }} />
                     </ListItemIcon>
                     <ListItemText 
                       primary={
-                        <Typography sx={{ color: BRAND.gold, fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        <Typography sx={{ color: BRAND.gold, fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                           {item.title}
                         </Typography>
                       }
                       secondary={
-                        <Typography sx={{ color: BRAND.light, fontSize: '0.75rem', opacity: 0.6, mt: 0.5 }}>
+                        <Typography sx={{ color: BRAND.light, fontSize: '0.75rem', opacity: 0.6, mt: 0.3 }}>
                           {item.desc}
                         </Typography>
                       }
@@ -126,7 +126,19 @@ const AboutSection = () => {
                 <Button
                   component={RouterLink}
                   to="/about/who-we-are"
-                  sx={ButtonStyle}
+                  sx={{
+                    bgcolor: BRAND.gold,
+                    color: BRAND.dark,
+                    fontWeight: 800,
+                    px: 4,
+                    py: 1.2,
+                    fontSize: '0.65rem',
+                    borderRadius: '2px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    transition: '0.3s all ease-in-out',
+                    '&:hover': { bgcolor: BRAND.light, transform: 'translateY(-2px)' }
+                  }}
                 >
                   Learn More
                 </Button>
@@ -137,8 +149,7 @@ const AboutSection = () => {
                     color: BRAND.gold,
                     fontSize: '0.75rem',
                     fontWeight: 600,
-                    letterSpacing: '0.1em',
-                    opacity: 0.9
+                    letterSpacing: '0.1em'
                   }}
                 >
                   “Walking With You.”
@@ -147,47 +158,52 @@ const AboutSection = () => {
             </motion.div>
           </Grid>
 
-          {/* RIGHT SIDE: Modern Frameless Image Layering */}
+          {/* RIGHT SIDE: Frameless Image Slider with Refined Branding */}
           <Grid item xs={12} md={6}>
-            <Box sx={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <Box sx={{ position: 'relative', width: { xs: '100%', md: '90%' }, height: { xs: '350px', md: '550px' } }}>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentIndex}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1 }}
-                    style={{ width: '100%', height: '100%' }}
-                  >
-                    <Box
-                      sx={{
-                        width: '100%',
-                        height: '100%',
-                        backgroundImage: `url(${images[currentIndex]})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        borderRadius: '2px',
-                        boxShadow: `40px 40px 0px -10px rgba(236, 155, 20, 0.05)`, // Subtle brand offset
-                      }}
-                    />
-                  </motion.div>
-                </AnimatePresence>
-                
-                {/* Minimalist Geometric Accent */}
-                <Box 
-                  sx={{ 
-                    position: 'absolute', 
-                    top: -15, 
-                    left: -15, 
-                    width: '60px', 
-                    height: '60px', 
-                    borderTop: `1px solid ${BRAND.gold}`, 
-                    borderLeft: `1px solid ${BRAND.gold}`,
-                    opacity: 0.5
-                  }} 
-                />
-              </Box>
+            <Box sx={{ position: 'relative', width: '100%', height: { xs: '400px', md: '580px' } }}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  initial={{ opacity: 0, scale: 1.02 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.2 }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      backgroundImage: `url(${images[currentIndex]})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      borderRadius: '2px', 
+                      // Subtle gold block offset to replace generic shadow
+                      boxShadow: `30px 30px 0px -5px rgba(236, 155, 20, 0.07)`, 
+                    }}
+                  />
+                </motion.div>
+              </AnimatePresence>
+              
+              {/* Minimalist Corner Bracket */}
+              <Box 
+                sx={{ 
+                  position: 'absolute', 
+                  bottom: -15, 
+                  right: -15, 
+                  width: '80px', 
+                  height: '80px', 
+                  borderBottom: `1px solid ${BRAND.gold}`, 
+                  borderRight: `1px solid ${BRAND.gold}`,
+                  opacity: 0.4
+                }} 
+              />
             </Box>
           </Grid>
 
@@ -195,24 +211,6 @@ const AboutSection = () => {
       </Container>
     </Box>
   );
-};
-
-// Button Style matching HomepageSlider for uniformity
-const ButtonStyle = {
-  bgcolor: BRAND.gold,
-  color: BRAND.dark,
-  fontWeight: 800,
-  px: 4,
-  py: 1.2,
-  fontSize: '0.65rem',
-  borderRadius: '2px',
-  textTransform: 'uppercase',
-  transition: '0.3s all ease-in-out',
-  '&:hover': { 
-    bgcolor: BRAND.light,
-    color: BRAND.dark,
-    transform: 'translateY(-2px)'
-  }
 };
 
 export default AboutSection;
