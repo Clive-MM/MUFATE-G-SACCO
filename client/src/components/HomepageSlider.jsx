@@ -40,143 +40,121 @@ const HomepageSlider = () => {
     arrows: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    appendDots: dots => (
-      <Box sx={{ position: 'absolute', bottom: 30, left: { xs: 0, md: '5%' }, width: 'fit-content' }}>
-        <ul style={{ margin: "0px", padding: "0px", display: "flex" }}> {dots} </ul>
-      </Box>
-    ),
-    customPaging: i => (
-      <Box className="custom-dot" sx={{
-        width: 12, height: 12, bgcolor: "rgba(236, 155, 20, 0.3)",
-        borderRadius: "50%", mx: 0.5, transition: '0.3s',
-        border: `1px solid ${BRAND.gold}`
-      }} />
-    )
   };
 
   if (loading) return (
-    <Box sx={{ height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
+    <Box sx={{ height: '600px', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
       <CircularProgress sx={{ color: BRAND.gold }} />
     </Box>
   );
 
   return (
-    <Box sx={{ width: '100%', position: 'relative', height: { xs: '75vh', md: '85vh' }, overflow: 'hidden' }}>
+    <Box sx={{ width: '100%', bgcolor: BRAND.dark, overflow: 'hidden' }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
-          <Box key={index} sx={{ position: 'relative', height: { xs: '75vh', md: '85vh' } }}>
-            {/* BACKGROUND LAYER */}
+          <Box key={index} sx={{ position: 'relative', width: '100%' }}>
+            
+            {/* 1. FLEXIBLE IMAGE CONTAINER: Prevents vertical cropping */}
             <Box
               sx={{
                 width: '100%',
-                height: '100%',
+                minHeight: { xs: '550px', md: '750px', lg: '850px' }, 
                 backgroundImage: `
-                  linear-gradient(to top, ${BRAND.dark} 30%, transparent 80%), 
-                  linear-gradient(to right, ${BRAND.dark} 10%, rgba(2, 21, 15, 0.6) 50%, transparent 90%), 
+                  linear-gradient(to right, ${BRAND.dark} 0%, rgba(2, 21, 15, 0.7) 40%, transparent 85%), 
+                  linear-gradient(to top, ${BRAND.dark} 10%, transparent 40%),
                   url(${slide.ImagePath})
                 `,
                 backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundPosition: { xs: 'center right', md: 'center' },
+                display: 'flex',
+                alignItems: 'center'
               }}
-            />
+            >
+              <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 } }}>
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  {/* 2. RESPONSIVE TITLE: Adjusted sizes to prevent overflow */}
+                  <Typography variant="h1" sx={{
+                    color: BRAND.gold,
+                    fontWeight: 900,
+                    textTransform: 'uppercase',
+                    maxWidth: { xs: "100%", md: "800px" },
+                    mb: 2,
+                    lineHeight: { xs: 1.2, md: 1.1 },
+                    textShadow: "3px 3px 10px rgba(0,0,0,0.8)",
+                    fontSize: { xs: '1.8rem', sm: '2.8rem', md: '3.8rem', lg: '4.5rem' },
+                    wordBreak: 'keep-all' // Prevents awkward word splitting
+                  }}>
+                    {slide.Title}
+                  </Typography>
 
-            {/* CONTENT LAYER - FULLY LEFT ALIGNED */}
-            <Container maxWidth="xl" sx={{
-              position: 'absolute',
-              top: '55%',
-              left: { xs: '5%', md: '5%' },
-              transform: 'translateY(-50%)',
-              zIndex: 2,
-              pointerEvents: 'none' // Allows clicks to pass to arrows if overlapping
-            }}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                style={{ pointerEvents: 'auto' }}
-              >
-                <Typography variant="h1" sx={{
-                  color: BRAND.gold,
-                  fontWeight: 900,
-                  textTransform: 'uppercase',
-                  maxWidth: "900px",
-                  mb: 1,
-                  lineHeight: 1,
-                  letterSpacing: '-0.02em',
-                  textShadow: "4px 4px 15px rgba(0,0,0,0.8)",
-                  fontSize: { xs: '2.2rem', sm: '3.5rem', md: '5rem' }
-                }}>
-                  {slide.Title}
-                </Typography>
+                  {/* 3. DESCRIPTION: Uses opacity and shadow for clarity without a box */}
+                  <Typography sx={{
+                    color: BRAND.light,
+                    maxWidth: "600px",
+                    fontWeight: 400,
+                    lineHeight: 1.6,
+                    textShadow: "1px 1px 5px rgba(0,0,0,1)",
+                    fontSize: { xs: '0.95rem', md: '1.15rem' },
+                    mb: 4,
+                    opacity: 0.9
+                  }}>
+                    {slide.Description?.replace(/<[^>]*>/g, '')}
+                  </Typography>
 
-                <Typography sx={{
-                  color: BRAND.light,
-                  maxWidth: "650px",
-                  fontWeight: 500,
-                  lineHeight: 1.5,
-                  textShadow: "2px 2px 8px rgba(0,0,0,0.9)",
-                  fontSize: { xs: '1rem', md: '1.2rem' },
-                  mb: 5,
-                  display: '-webkit-box',
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden'
-                }}>
-                  {/* Sanitizes HTML if description comes with tags */}
-                  {slide.Description?.replace(/<[^>]*>/g, '')}
-                </Typography>
-
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <Button 
-                    component={RouterLink} to="/membership" 
-                    sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark, '&:hover': { bgcolor: '#fff' } }}
-                  >
-                    Join Our Community
-                  </Button>
-                  <Button 
-                    component={RouterLink} to="/products/bosa" 
-                    sx={{ ...ButtonStyle, border: `2px solid ${BRAND.gold}`, color: BRAND.gold, '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}
-                  >
-                    Explore Our Products
-                  </Button>
-                </Stack>
-              </motion.div>
-            </Container>
+                  {/* 4. BUTTONS: Stacked on mobile, row on desktop */}
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: 'fit-content' }}>
+                    <Button 
+                      component={RouterLink} to="/membership" 
+                      sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
+                    >
+                      Join Our Community
+                    </Button>
+                    <Button 
+                      component={RouterLink} to="/products/bosa" 
+                      sx={{ 
+                        ...ButtonStyle, 
+                        border: `2px solid ${BRAND.gold}`, 
+                        color: BRAND.gold,
+                        '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
+                      }}
+                    >
+                      Explore Our Products
+                    </Button>
+                  </Stack>
+                </motion.div>
+              </Container>
+            </Box>
           </Box>
         ))}
       </Slider>
-
-      {/* Global CSS for Slick Active Dots */}
-      <style>{`
-        .slick-dots li.slick-active .custom-dot {
-          background-color: ${BRAND.gold} !important;
-          width: 30px !important;
-          border-radius: 10px !important;
-        }
-      `}</style>
     </Box>
   );
 };
 
 const ButtonStyle = {
-  fontWeight: 900,
-  px: 4,
-  py: 1.8,
-  borderRadius: '4px', // Squared off slightly to match the "Register" button in your header
-  fontSize: '0.9rem',
+  fontWeight: 800,
+  px: { xs: 3, md: 5 },
+  py: 1.5,
+  borderRadius: '4px',
+  fontSize: '0.85rem',
   textTransform: 'uppercase',
-  transition: '0.3s all',
+  transition: '0.3s ease',
+  '&:hover': { transform: 'translateY(-2px)' }
 };
 
 const NextArrow = ({ onClick }) => (
-  <IconButton onClick={onClick} sx={{ position: 'absolute', right: 20, top: '50%', zIndex: 10, color: BRAND.gold, bgcolor: 'rgba(2,21,15,0.5)', '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
-    <ArrowForwardIos />
+  <IconButton onClick={onClick} sx={{ position: 'absolute', right: 15, top: '50%', zIndex: 5, color: BRAND.gold, bgcolor: 'rgba(0,0,0,0.3)', '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
+    <ArrowForwardIos fontSize="small" />
   </IconButton>
 );
 
 const PrevArrow = ({ onClick }) => (
-  <IconButton onClick={onClick} sx={{ position: 'absolute', left: 20, top: '50%', zIndex: 10, color: BRAND.gold, bgcolor: 'rgba(2,21,15,0.5)', '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
-    <ArrowBackIosNew />
+  <IconButton onClick={onClick} sx={{ position: 'absolute', left: 15, top: '50%', zIndex: 5, color: BRAND.gold, bgcolor: 'rgba(0,0,0,0.3)', '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
+    <ArrowBackIosNew fontSize="small" />
   </IconButton>
 );
 
