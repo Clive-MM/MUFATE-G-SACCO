@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
 import { motion } from 'framer-motion';
-import { Box, Typography, Button, Container, CircularProgress, IconButton, Stack } from '@mui/material';
+import { Box, Typography, Button, Container, CircularProgress, Stack } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
@@ -37,9 +36,7 @@ const HomepageSlider = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
-    arrows: true,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    arrows: false, // REMOVED ARROWS as requested
   };
 
   if (loading) return (
@@ -53,8 +50,8 @@ const HomepageSlider = () => {
       width: '100%', 
       bgcolor: BRAND.dark, 
       overflow: 'hidden',
-      /* LINE THAT DROPS HERO SECTION LOWER */
-      marginTop: { xs: '80px', md: '100px' } 
+      /* DROPPED LOWER: Increased margin to push section further down */
+      marginTop: { xs: '140px', md: '180px' } 
     }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
@@ -63,11 +60,12 @@ const HomepageSlider = () => {
             <Box
               sx={{
                 width: '100%',
-                height: { xs: 'calc(100vh - 80px)', md: 'calc(100vh - 100px)' },
-                minHeight: { xs: '500px', md: '650px' }, 
+                /* Adjusted height to maintain full-screen feel with the larger margin */
+                height: { xs: 'calc(100vh - 140px)', md: 'calc(100vh - 180px)' },
+                minHeight: { xs: '450px', md: '600px' }, 
                 backgroundImage: `
-                  linear-gradient(to right, ${BRAND.dark} 20%, rgba(2, 21, 15, 0.2) 60%, transparent 95%), 
-                  linear-gradient(to top, ${BRAND.dark} 10%, transparent 30%),
+                  linear-gradient(to right, ${BRAND.dark} 35%, rgba(2, 21, 15, 0.1) 75%, transparent 100%), 
+                  linear-gradient(to top, ${BRAND.dark} 5%, transparent 20%),
                   url(${slide.ImagePath})
                 `,
                 backgroundSize: 'cover',
@@ -76,34 +74,35 @@ const HomepageSlider = () => {
                 alignItems: 'center'
               }}
             >
-              {/* Container padding reduced and maxWidth set to xl to allow content to hit the left edge further */}
-              <Container maxWidth="xl" sx={{ px: { xs: 2, md: 4, lg: 6 }, ml: { md: 2, lg: 4 } }}>
+              {/* PUSHED FURTHER LEFT: Removed left margin/padding to hit the edge */}
+              <Container maxWidth="xl" sx={{ px: { xs: 2, md: 4 }, mx: 0 }}>
                 <motion.div
-                  initial={{ opacity: 0, x: -40 }}
+                  initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  {/* REDUCED FONT SIZE: To prevent overshadowing the image */}
+                  {/* FURTHER REDUCED TITLE FONT SIZE */}
                   <Typography variant="h1" sx={{
                     color: BRAND.gold,
                     fontWeight: 900,
                     textTransform: 'uppercase',
-                    maxWidth: { xs: "100%", md: "750px" },
-                    mb: 1.5,
-                    lineHeight: { xs: 1.2, md: 1.1 },
-                    textShadow: "2px 2px 10px rgba(0,0,0,0.7)",
-                    fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3.2rem', lg: '3.8rem' },
+                    maxWidth: { xs: "100%", md: "600px" },
+                    mb: 1,
+                    lineHeight: 1.1,
+                    textShadow: "2px 2px 8px rgba(0,0,0,0.8)",
+                    fontSize: { xs: '1.4rem', sm: '1.8rem', md: '2.4rem', lg: '2.8rem' },
                   }}>
                     {slide.Title}
                   </Typography>
 
+                  {/* FURTHER REDUCED DESCRIPTION FONT SIZE */}
                   <Typography sx={{
                     color: BRAND.light,
-                    maxWidth: "550px",
+                    maxWidth: "450px",
                     fontWeight: 400,
-                    lineHeight: 1.5,
-                    textShadow: "1px 1px 5px rgba(0,0,0,0.8)",
-                    fontSize: { xs: '0.9rem', md: '1.05rem' },
+                    lineHeight: 1.4,
+                    textShadow: "1px 1px 4px rgba(0,0,0,0.9)",
+                    fontSize: { xs: '0.8rem', md: '0.95rem' },
                     mb: 4,
                     opacity: 0.9
                   }}>
@@ -115,7 +114,7 @@ const HomepageSlider = () => {
                       component={RouterLink} to="/membership" 
                       sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
                     >
-                      Join Our Community
+                      Join Us
                     </Button>
                     <Button 
                       component={RouterLink} to="/products/bosa" 
@@ -126,7 +125,7 @@ const HomepageSlider = () => {
                         '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
                       }}
                     >
-                      Our Products
+                      Products
                     </Button>
                   </Stack>
                 </motion.div>
@@ -141,25 +140,12 @@ const HomepageSlider = () => {
 
 const ButtonStyle = {
   fontWeight: 800,
-  px: 4,
-  py: 1.5,
+  px: 3,
+  py: 1,
   borderRadius: '4px',
-  fontSize: '0.85rem',
+  fontSize: '0.75rem',
   textTransform: 'uppercase',
   transition: '0.3s all ease-in-out',
-  '&:hover': { transform: 'translateY(-2px)' }
 };
-
-const NextArrow = ({ onClick }) => (
-  <IconButton onClick={onClick} sx={{ position: 'absolute', right: 20, top: '50%', zIndex: 10, color: BRAND.gold, bgcolor: 'rgba(2,21,15,0.4)', '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
-    <ArrowForwardIos fontSize="small" />
-  </IconButton>
-);
-
-const PrevArrow = ({ onClick }) => (
-  <IconButton onClick={onClick} sx={{ position: 'absolute', left: 20, top: '50%', zIndex: 10, color: BRAND.gold, bgcolor: 'rgba(2,21,15,0.4)', '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } }}>
-    <ArrowBackIosNew fontSize="small" />
-  </IconButton>
-);
 
 export default HomepageSlider;
