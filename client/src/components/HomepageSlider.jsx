@@ -36,7 +36,7 @@ const HomepageSlider = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
-    arrows: false, // REMOVED ARROWS as requested
+    arrows: false, 
   };
 
   if (loading) return (
@@ -46,42 +46,37 @@ const HomepageSlider = () => {
   );
 
   return (
-    <Box sx={{ 
-      width: '100%', 
-      bgcolor: BRAND.dark, 
-      overflow: 'hidden',
-      /* DROPPED LOWER: Increased margin to push section further down */
-      marginTop: { xs: '140px', md: '180px' } 
-    }}>
+    <Box sx={{ width: '100%', bgcolor: BRAND.dark, overflow: 'hidden' }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <Box key={index} sx={{ position: 'relative', width: '100%' }}>
-            
             <Box
               sx={{
                 width: '100%',
-                /* Adjusted height to maintain full-screen feel with the larger margin */
-                height: { xs: 'calc(100vh - 140px)', md: 'calc(100vh - 180px)' },
-                minHeight: { xs: '450px', md: '600px' }, 
+                /* HEIGHT: Set to 100vh to ensure the image fills the screen, no white space */
+                height: '100vh',
+                minHeight: { xs: '600px', md: '750px' }, 
                 backgroundImage: `
-                  linear-gradient(to right, ${BRAND.dark} 35%, rgba(2, 21, 15, 0.1) 75%, transparent 100%), 
-                  linear-gradient(to top, ${BRAND.dark} 5%, transparent 20%),
+                  /* GRADIENT: Reduced to quarter length (25%) and made lighter */
+                  linear-gradient(to right, ${BRAND.dark} 25%, rgba(2, 21, 15, 0.1) 60%, transparent 100%), 
+                  linear-gradient(to top, rgba(2, 21, 15, 0.4) 0%, transparent 15%),
                   url(${slide.ImagePath})
                 `,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                /* VERTICAL DROP: Replaced marginTop with paddingTop to keep image at the top */
+                pt: { xs: '140px', md: '180px' } 
               }}
             >
-              {/* PUSHED FURTHER LEFT: Removed left margin/padding to hit the edge */}
+              {/* CONTENT: Pushed to the far left margin */}
               <Container maxWidth="xl" sx={{ px: { xs: 2, md: 4 }, mx: 0 }}>
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  {/* FURTHER REDUCED TITLE FONT SIZE */}
                   <Typography variant="h1" sx={{
                     color: BRAND.gold,
                     fontWeight: 900,
@@ -95,7 +90,6 @@ const HomepageSlider = () => {
                     {slide.Title}
                   </Typography>
 
-                  {/* FURTHER REDUCED DESCRIPTION FONT SIZE */}
                   <Typography sx={{
                     color: BRAND.light,
                     maxWidth: "450px",
@@ -104,7 +98,7 @@ const HomepageSlider = () => {
                     textShadow: "1px 1px 4px rgba(0,0,0,0.9)",
                     fontSize: { xs: '0.8rem', md: '0.95rem' },
                     mb: 4,
-                    opacity: 0.9
+                    opacity: 0.95
                   }}>
                     {slide.Description?.replace(/<[^>]*>/g, '')}
                   </Typography>
