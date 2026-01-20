@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Box, Typography, Button, Container, CircularProgress, Stack } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -17,7 +17,6 @@ const BRAND = {
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/slider/view`)
@@ -31,14 +30,13 @@ const HomepageSlider = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 600, // Faster transition animation
+    speed: 500,
     autoplay: true,
-    autoplaySpeed: 4000, // Balanced interchange time
+    autoplaySpeed: 3000,
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
-    arrows: false,
-    beforeChange: (current, next) => setActiveSlide(next),
+    arrows: false, 
   };
 
   if (loading) return (
@@ -51,88 +49,78 @@ const HomepageSlider = () => {
     <Box sx={{ width: '100%', bgcolor: BRAND.dark, overflow: 'hidden' }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
-          <Box key={index} sx={{ outline: 'none' }}>
+          <Box key={index} sx={{ position: 'relative', width: '100%' }}>
             <Box
               sx={{
                 width: '100%',
-                height: { xs: '80vh', md: '100vh' },
-                minHeight: { xs: '500px', md: '600px' }, 
-                backgroundImage: `linear-gradient(to right, ${BRAND.dark} 0%, rgba(2, 21, 15, 0.4) 100%), url(${slide.ImagePath})`,
-                backgroundSize: 'cover', // Changed to cover for better filling on all screens
+                height: '100vh',
+                minHeight: { xs: '500px', md: '700px' }, 
+                backgroundImage: `url(${slide.ImagePath})`,
+                backgroundSize: 'contain', 
                 backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center center', 
+                backgroundPosition: { xs: 'center', md: 'right center' }, 
+                bgcolor: BRAND.dark, 
                 display: 'flex',
                 alignItems: 'center',
+                pt: { xs: '100px', md: '120px' } 
               }}
             >
-              <Container maxWidth="xl" sx={{ px: { xs: 3, sm: 6, md: 10 } }}>
-                <AnimatePresence mode="wait">
-                  {activeSlide === index && (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.5, ease: "easeOut" }} // Snappier motion
+              <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  {/* TITLE: Significantly reduced for an elegant look */}
+                  <Typography variant="h1" sx={{
+                    color: BRAND.gold,
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    maxWidth: { xs: "100%", md: "420px" },
+                    mb: 1,
+                    lineHeight: 1.1,
+                    letterSpacing: '0.02em',
+                    textShadow: "1px 1px 3px rgba(0,0,0,0.4)",
+                    fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.6rem', lg: '1.8rem' },
+                  }}>
+                    {slide.Title}
+                  </Typography>
+
+                  {/* DESCRIPTION: Reduced to small-print/caption size */}
+                  <Typography sx={{
+                    color: BRAND.light,
+                    maxWidth: "340px",
+                    fontWeight: 400,
+                    lineHeight: 1.5,
+                    textShadow: "1px 1px 2px rgba(0,0,0,0.4)",
+                    fontSize: { xs: '0.7rem', md: '0.78rem' },
+                    mb: 4,
+                    opacity: 0.85,
+                    letterSpacing: '0.01em'
+                  }}>
+                    {slide.Description?.replace(/<[^>]*>/g, '')}
+                  </Typography>
+
+                  <Stack direction="row" spacing={1.5}>
+                    <Button 
+                      component={RouterLink} to="/customer_registration" 
+                      sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
                     >
-                      <Typography 
-                        variant="h1" 
-                        sx={{
-                          color: BRAND.gold,
-                          fontWeight: 800,
-                          textTransform: 'uppercase',
-                          maxWidth: { xs: "100%", md: "600px", lg: "800px" },
-                          mb: 1,
-                          lineHeight: 1.1,
-                          letterSpacing: '0.02em',
-                          // Responsive Font Sizes for any laptop/screen size
-                          fontSize: { 
-                            xs: '1.5rem', 
-                            sm: '2rem', 
-                            md: '2.5rem', 
-                            lg: '3.5rem', 
-                            xl: '4rem' 
-                          },
-                        }}
-                      >
-                        {slide.Title}
-                      </Typography>
-
-                      <Typography sx={{
-                        color: BRAND.light,
-                        maxWidth: { xs: "100%", sm: "450px", md: "500px" },
-                        fontWeight: 400,
-                        lineHeight: 1.6,
-                        // Responsive description size
-                        fontSize: { xs: '0.85rem', md: '1rem' },
-                        mb: 4,
-                        opacity: 0.9,
-                      }}>
-                        {slide.Description?.replace(/<[^>]*>/g, '')}
-                      </Typography>
-
-                      <Stack direction="row" spacing={2}>
-                        <Button 
-                          component={RouterLink} to="/customer_registration" 
-                          sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
-                        >
-                          Join Us
-                        </Button>
-                        <Button 
-                          component={RouterLink} to="/products/bosa" 
-                          sx={{ 
-                            ...ButtonStyle, 
-                            border: `1.5px solid ${BRAND.gold}`, 
-                            color: BRAND.gold,
-                            '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
-                          }}
-                        >
-                          Products
-                        </Button>
-                      </Stack>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      Join Us
+                    </Button>
+                    <Button 
+                      component={RouterLink} to="/products/bosa" 
+                      sx={{ 
+                        ...ButtonStyle, 
+                        border: `1.5px solid ${BRAND.gold}`, 
+                        color: BRAND.gold,
+                        '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
+                      }}
+                    >
+                      Products
+                    </Button>
+                  </Stack>
+                </motion.div>
               </Container>
             </Box>
           </Box>
@@ -142,20 +130,15 @@ const HomepageSlider = () => {
   );
 };
 
-// Enhanced Button for all screen sizes
 const ButtonStyle = {
   fontWeight: 700,
-  px: { xs: 2, md: 4 },
-  py: { xs: 1, md: 1.5 },
-  borderRadius: '4px',
-  fontSize: { xs: '0.7rem', md: '0.85rem' },
+  px: 2,
+  py: 0.6,
+  borderRadius: '2px',
+  fontSize: '0.65rem',
   textTransform: 'uppercase',
-  transition: '0.4s all ease',
+  transition: '0.3s all ease-in-out',
   boxShadow: 'none',
-  '&:hover': {
-    transform: 'translateY(-2px)',
-    boxShadow: '0px 4px 15px rgba(236, 155, 20, 0.3)',
-  }
 };
 
 export default HomepageSlider;
