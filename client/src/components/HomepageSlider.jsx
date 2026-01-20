@@ -10,7 +10,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 const BRAND = {
   gold: "#EC9B14",
-  dark: "#02150F",
+  dark: "#02150F", // Deep SACCO Green
   light: "#F4F4F4",
 };
 
@@ -53,57 +53,55 @@ const HomepageSlider = () => {
             <Box
               sx={{
                 width: '100%',
-                /* HEIGHT: Set to 100vh to ensure the image fills the screen, no white space */
                 height: '100vh',
-                minHeight: { xs: '600px', md: '750px' }, 
-                backgroundImage: `
-                  /* GRADIENT: Reduced to quarter length (25%) and made lighter */
-                  linear-gradient(to right, ${BRAND.dark} 25%, rgba(2, 21, 15, 0.1) 60%, transparent 100%), 
-                  linear-gradient(to top, rgba(2, 21, 15, 0.4) 0%, transparent 15%),
-                  url(${slide.ImagePath})
-                `,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                minHeight: { xs: '500px', md: '700px' }, 
+                /* 1. REMOVED DARK GRADIENT: Only the image is used now */
+                backgroundImage: `url(${slide.ImagePath})`,
+                /* 2. FIX CROPPING: Use 'contain' to see the whole photo, or '100% 100%' to force fill */
+                backgroundSize: 'contain', 
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center right', // Keeps the people on the right visible
+                bgcolor: BRAND.dark, // Fills any gaps with brand color
                 display: 'flex',
                 alignItems: 'center',
-                /* VERTICAL DROP: Replaced marginTop with paddingTop to keep image at the top */
                 pt: { xs: '140px', md: '180px' } 
               }}
             >
-              {/* CONTENT: Pushed to the far left margin */}
-              <Container maxWidth="xl" sx={{ px: { xs: 2, md: 4 }, mx: 0 }}>
+              <Container maxWidth="xl" sx={{ px: { xs: 2, md: 6 }, mx: 0 }}>
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
                 >
+                  {/* 3. FURTHER REDUCED TITLE FONT SIZE */}
                   <Typography variant="h1" sx={{
                     color: BRAND.gold,
                     fontWeight: 900,
                     textTransform: 'uppercase',
-                    maxWidth: { xs: "100%", md: "600px" },
+                    maxWidth: { xs: "100%", md: "500px" },
                     mb: 1,
                     lineHeight: 1.1,
-                    textShadow: "2px 2px 8px rgba(0,0,0,0.8)",
-                    fontSize: { xs: '1.4rem', sm: '1.8rem', md: '2.4rem', lg: '2.8rem' },
+                    textShadow: "2px 2px 4px rgba(0,0,0,0.5)", // Softened shadow
+                    fontSize: { xs: '1.2rem', sm: '1.5rem', md: '2rem', lg: '2.4rem' },
                   }}>
                     {slide.Title}
                   </Typography>
 
+                  {/* 4. FURTHER REDUCED DESCRIPTION FONT SIZE */}
                   <Typography sx={{
                     color: BRAND.light,
-                    maxWidth: "450px",
+                    maxWidth: "400px",
                     fontWeight: 400,
                     lineHeight: 1.4,
-                    textShadow: "1px 1px 4px rgba(0,0,0,0.9)",
-                    fontSize: { xs: '0.8rem', md: '0.95rem' },
+                    textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
+                    fontSize: { xs: '0.75rem', md: '0.85rem' },
                     mb: 4,
-                    opacity: 0.95
+                    opacity: 0.9
                   }}>
                     {slide.Description?.replace(/<[^>]*>/g, '')}
                   </Typography>
 
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                  <Stack direction="row" spacing={2}>
                     <Button 
                       component={RouterLink} to="/membership" 
                       sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
@@ -134,10 +132,10 @@ const HomepageSlider = () => {
 
 const ButtonStyle = {
   fontWeight: 800,
-  px: 3,
-  py: 1,
+  px: 2,
+  py: 0.8,
   borderRadius: '4px',
-  fontSize: '0.75rem',
+  fontSize: '0.7rem',
   textTransform: 'uppercase',
   transition: '0.3s all ease-in-out',
 };
