@@ -103,7 +103,7 @@ const HomepageSlider = () => {
 
                   <Stack direction="row" spacing={2}>
                     <Button 
-                      component={RouterLink} to="/membership" 
+                      component={RouterLink} to="/customer_registration" 
                       sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
                     >
                       Join Us
