@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
   Button,
-  Paper,
+  Card,
+  CardContent,
+  CardActionArea,
   Grid,
   Stack,
 } from '@mui/material';
@@ -42,36 +44,38 @@ const ButtonStyle = {
 };
 
 const AboutSection = () => {
+  const [selectedCard, setSelectedCard] = useState(0);
+
   const services = [
     {
       title: "Salary Processing & Check-off",
       desc: "Seamless check-off services for tea farmers, teachers, civil servants and private sector employees.",
-      icon: <PaymentsIcon sx={{ fontSize: 40, color: BRAND.gold }} />
+      icon: <PaymentsIcon sx={{ fontSize: 40 }} />
     },
     {
       title: "Agricultural & Tea-Grower Support",
       desc: "Tailored products for farmers and smallholder producers, supporting inputs, farm improvement and seasonal needs.",
-      icon: <AgricultureIcon sx={{ fontSize: 40, color: BRAND.gold }} />
+      icon: <AgricultureIcon sx={{ fontSize: 40 }} />
     },
     {
       title: "Business & Development Loans",
       desc: "Competitive, well-structured credit for MSMEs, projects and personal development goals.",
-      icon: <TrendingUpIcon sx={{ fontSize: 40, color: BRAND.gold }} />
+      icon: <TrendingUpIcon sx={{ fontSize: 40 }} />
     },
     {
       title: "Smart Savings & Investment Accounts",
       desc: "Goal-based savings, fixed deposits and targeted products for education, emergencies and long-term growth.",
-      icon: <SavingsIcon sx={{ fontSize: 40, color: BRAND.gold }} />
+      icon: <SavingsIcon sx={{ fontSize: 40 }} />
     },
     {
       title: "Mobile & Digital Banking",
       desc: "24/7 access to your SACCO account through our USSD and mobile platforms – deposit, withdraw and check balances from anywhere.",
-      icon: <PhoneIphoneIcon sx={{ fontSize: 40, color: BRAND.gold }} />
+      icon: <PhoneIphoneIcon sx={{ fontSize: 40 }} />
     },
     {
       title: "Asset Financing",
       desc: "Get the machinery or equipment you need today with our asset financing. Repay comfortably over time, and enjoy full ownership once you complete payment.",
-      icon: <PrecisionManufacturingIcon sx={{ fontSize: 40, color: BRAND.gold }} />
+      icon: <PrecisionManufacturingIcon sx={{ fontSize: 40 }} />
     }
   ];
 
@@ -80,7 +84,7 @@ const AboutSection = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 }
+      transition: { staggerChildren: 0.1 }
     }
   };
 
@@ -119,7 +123,7 @@ const AboutSection = () => {
           </motion.div>
         </Box>
 
-        {/* GRID SECTION */}
+        {/* GRID SECTION WITH SELECT ACTION CARD LOGIC */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -130,47 +134,58 @@ const AboutSection = () => {
           <Grid container spacing={3}>
             {services.map((service, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <motion.div variants={itemVariants}>
-                  <Paper
+                <motion.div variants={itemVariants} style={{ height: '100%' }}>
+                  <Card 
                     elevation={0}
-                    sx={{
-                      p: 4,
-                      height: '100%',
-                      bgcolor: 'rgba(255, 255, 255, 0.03)',
+                    sx={{ 
+                      height: '100%', 
+                      bgcolor: 'transparent',
                       borderRadius: '16px',
-                      border: `1px solid rgba(236, 155, 20, 0.1)`,
-                      transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      textAlign: 'center',
-                      '&:hover': {
-                        bgcolor: 'rgba(255, 255, 255, 0.06)',
-                        borderColor: BRAND.gold,
-                        transform: 'translateY(-10px)',
-                      }
+                      border: `1px solid ${selectedCard === index ? BRAND.gold : 'rgba(236, 155, 20, 0.1)'}`,
+                      transition: '0.3s ease'
                     }}
                   >
-                    <Box sx={{ mb: 3 }}>
-                      {service.icon}
-                    </Box>
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        fontWeight: 700, 
-                        color: BRAND.gold, 
-                        mb: 2, 
-                        height: { md: '60px' },
-                        display: 'flex',
-                        alignItems: 'center'
+                    <CardActionArea
+                      onClick={() => setSelectedCard(index)}
+                      sx={{
+                        height: '100%',
+                        transition: '0.3s',
+                        bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.08)' : 'rgba(255, 255, 255, 0.02)',
+                        '&:hover': {
+                          bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.12)' : 'rgba(255, 255, 255, 0.05)',
+                        },
                       }}
                     >
-                      {service.title}
-                    </Typography>
-                    <Typography sx={{ color: '#d0d0d0', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                      {service.desc}
-                    </Typography>
-                  </Paper>
+                      <CardContent sx={{ p: 4, textAlign: 'center' }}>
+                        <Box sx={{ 
+                          mb: 3, 
+                          color: selectedCard === index ? BRAND.light : BRAND.gold,
+                          transition: '0.3s' 
+                        }}>
+                          {service.icon}
+                        </Box>
+                        
+                        <Typography 
+                          variant="h6" 
+                          sx={{ 
+                            fontWeight: 700, 
+                            color: BRAND.gold, 
+                            mb: 2,
+                            minHeight: { md: '60px' },
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          {service.title}
+                        </Typography>
+
+                        <Typography sx={{ color: '#d0d0d0', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                          {service.desc}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
                 </motion.div>
               </Grid>
             ))}
@@ -182,7 +197,7 @@ const AboutSection = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.4 }}
         >
           <Button 
             component={RouterLink} 
