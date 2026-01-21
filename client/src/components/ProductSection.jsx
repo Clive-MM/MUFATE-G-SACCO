@@ -30,21 +30,21 @@ const products = [
     title: 'Loan Products',
     description: 'Access affordable and flexible financing for personal growth, business expansion, and emergencies with member-friendly terms.',
     icon: <AccountBalanceIcon sx={{ fontSize: 50 }} />,
-    link: '/products/loan-products',
+    link: '/products/fosa',
   },
   {
     id: 1,
     title: 'Savings Products',
     description: 'Achieve financial stability with tailored savings plans designed to help you grow your wealth and prepare for future goals.',
     icon: <SavingsIcon sx={{ fontSize: 50 }} />,
-    link: '/products/savings-products',
+    link: '/products/savings',
   },
   {
     id: 2,
     title: 'Investment Solutions',
     description: 'Multiply your earnings through secure, high-yield investment opportunities that empower members to build long-term success.',
     icon: <TrendingUpIcon sx={{ fontSize: 50 }} />,
-    link: '/products/investment-solutions',
+    link: '/products/bosa',
   },
 ];
 
