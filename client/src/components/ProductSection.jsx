@@ -1,4 +1,4 @@
-import React, {  useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -6,6 +6,7 @@ import {
   CardContent,
   CardActionArea,
   Button,
+  Container,
 } from '@mui/material';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
@@ -13,166 +14,179 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Link as RouterLink } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-// Brand Colors
-const GOLD = '#FFD700';
-const LIGHT_GOLD = '#FFE066';
-// const DEEP_GREEN = '#006400';
-const DARK_BG =
-  'linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)';
+// Brand Colors (Aligned with Identity Section)
+const BRAND = {
+  gold: "#EC9B14",
+  lightGold: "#FFC25F",
+  dark: "#02150F",
+  light: "#F4F4F4",
+};
 
-// Product List
+const DARK_BG = 'linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)';
+
 const products = [
   {
-    id: 1,
+    id: 0,
     title: 'Loan Products',
-    description:
-      'Access affordable and flexible financing for personal growth, business expansion, and emergencies. Our loan solutions come with competitive rates and member-friendly repayment terms.',
-    icon: <AccountBalanceIcon sx={{ fontSize: 52, color: GOLD }} />,
+    description: 'Access affordable and flexible financing for personal growth, business expansion, and emergencies with member-friendly terms.',
+    icon: <AccountBalanceIcon sx={{ fontSize: 50 }} />,
     link: '/products/loan-products',
   },
   {
-    id: 2,
+    id: 1,
     title: 'Savings Products',
-    description:
-      'Achieve financial stability with our tailored savings plans designed to help you grow your wealth and prepare for future goals with confidence.',
-    icon: <SavingsIcon sx={{ fontSize: 52, color: GOLD }} />,
+    description: 'Achieve financial stability with tailored savings plans designed to help you grow your wealth and prepare for future goals.',
+    icon: <SavingsIcon sx={{ fontSize: 50 }} />,
     link: '/products/savings-products',
   },
   {
-    id: 3,
+    id: 2,
     title: 'Investment Solutions',
-    description:
-      'Multiply your earnings through secure, high-yield investment opportunities that empower members to build long-term financial success.',
-    icon: <TrendingUpIcon sx={{ fontSize: 52, color: GOLD }} />,
+    description: 'Multiply your earnings through secure, high-yield investment opportunities that empower members to build long-term success.',
+    icon: <TrendingUpIcon sx={{ fontSize: 50 }} />,
     link: '/products/investment-solutions',
   },
 ];
 
 const ProductsSection = () => {
+  const [selectedProduct, setSelectedProduct] = useState(0);
+
   useEffect(() => {
     AOS.init({ duration: 1200 });
   }, []);
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        py: 10,
-        px: { xs: 3, md: 8 },
-        background: DARK_BG,
-      }}
-    >
-      {/* Section Title */}
-      <Typography
-        variant="h4"
-        data-aos="fade-up"
-        sx={{
-          fontWeight: 800,
-          textAlign: 'center',
-          mb: 6,
-          textTransform: 'uppercase',
-          letterSpacing: 1.5,
-          color: 'transparent',
-          backgroundImage: `linear-gradient(to right, ${GOLD}, ${LIGHT_GOLD})`,
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          fontSize: { xs: '1.9rem', md: '2.4rem' },
-          textShadow: `0 0 12px ${GOLD}88`,
-        }}
-      >
-        Our Products
-      </Typography>
+    <Box sx={{ background: DARK_BG, py: { xs: 8, md: 12 }, width: '100%' }}>
+      <Container maxWidth="xl">
+        {/* Section Title */}
+        <Typography
+          variant="h2"
+          textAlign="center"
+          data-aos="fade-up"
+          sx={{
+            color: BRAND.gold,
+            fontWeight: 900,
+            mb: 10,
+            textTransform: 'uppercase',
+            fontSize: { xs: '2.2rem', md: '3.5rem' },
+            letterSpacing: '0.1rem'
+          }}
+        >
+          Our Products
+        </Typography>
 
-      {/* Products Grid */}
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 4,
-          gridTemplateColumns: {
-            xs: '1fr',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(3, 1fr)',
-          },
-        }}
-      >
-        {products.map((product) => (
-          <Card
-            key={product.id}
-            data-aos="zoom-in"
+        {/* Products Grid - Centered & Responsive */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(320px, 100%), 1fr))',
+            justifyContent: 'center',
+            gap: 4,
+            maxWidth: '1200px',
+            mx: 'auto',
+          }}
+        >
+          {products.map((product, index) => (
+            <Card
+              key={product.id}
+              component={motion.div}
+              whileHover={{ y: -10 }}
+              data-aos="zoom-in"
+              sx={{
+                bgcolor: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '24px',
+                color: BRAND.light,
+                transition: 'all 0.3s ease-in-out',
+                height: '100%',
+                display: 'flex',
+                overflow: 'hidden'
+              }}
+            >
+              <CardActionArea
+                onClick={() => setSelectedProduct(index)}
+                component={RouterLink}
+                to={product.link}
+                data-active={selectedProduct === index ? '' : undefined}
+                sx={{
+                  width: '100%',
+                  p: { xs: 2, md: 4 },
+                  '&[data-active]': {
+                    backgroundColor: 'rgba(236, 155, 20, 0.08)',
+                    borderColor: BRAND.gold,
+                    boxShadow: `0 0 20px rgba(236, 155, 20, 0.1)`,
+                  },
+                }}
+              >
+                <CardContent sx={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center', 
+                  textAlign: 'center',
+                  minHeight: { md: '300px' }
+                }}>
+                  <Box sx={{ color: BRAND.gold, mb: 3 }}>
+                    {product.icon}
+                  </Box>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 800,
+                      color: BRAND.gold,
+                      mb: 2,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05rem'
+                    }}
+                  >
+                    {product.title}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: BRAND.light,
+                      opacity: 0.8,
+                      lineHeight: 1.8,
+                      fontSize: '1rem',
+                    }}
+                  >
+                    {product.description}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          ))}
+        </Box>
+
+        {/* View More Button */}
+        <Box textAlign="center" mt={10} data-aos="fade-up">
+          <Button
+            component={RouterLink}
+            to="/products"
+            variant="contained"
             sx={{
-              background:
-                'linear-gradient(145deg, rgba(0,40,20,0.35), rgba(0,0,0,0.45))',
-              borderRadius: '18px',
-              border: `1.5px solid ${GOLD}44`,
-              boxShadow: `0 12px 22px rgba(0,0,0,0.65)`,
-              transition: '0.35s ease',
+              backgroundImage: `linear-gradient(135deg, ${BRAND.gold}, ${BRAND.lightGold})`,
+              color: BRAND.dark,
+              fontWeight: 800,
+              px: 6,
+              py: 2,
+              borderRadius: '50px',
+              fontSize: '1rem',
+              textTransform: 'uppercase',
+              letterSpacing: 2,
+              boxShadow: `0 8px 20px rgba(236, 155, 20, 0.3)`,
+              transition: '0.3s ease',
               '&:hover': {
-                transform: 'translateY(-8px)',
-                border: `1.5px solid ${GOLD}`,
-                boxShadow: `0 18px 38px rgba(0,0,0,0.9), 
-                            0 0 22px ${GOLD}AA`,
+                backgroundImage: `linear-gradient(135deg, ${BRAND.lightGold}, ${BRAND.gold})`,
+                boxShadow: `0 12px 25px ${BRAND.gold}66`,
+                transform: 'translateY(-3px)',
               },
             }}
           >
-            <CardActionArea component={RouterLink} to={product.link}>
-              <CardContent sx={{ textAlign: 'center', py: 4 }}>
-                <Box sx={{ mb: 2 }}>{product.icon}</Box>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: 700,
-                    color: GOLD,
-                    textShadow: `0 0 8px ${GOLD}55`,
-                    mb: 1,
-                  }}
-                >
-                  {product.title}
-                </Typography>
-                <Typography
-                  sx={{
-                    color: LIGHT_GOLD,
-                    opacity: 0.9,
-                    fontSize: '0.95rem',
-                  }}
-                >
-                  {product.description}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        ))}
-      </Box>
-
-      {/* View More Button */}
-      <Box textAlign="center" mt={6} data-aos="fade-up">
-        <Button
-          component={RouterLink}
-          to="/products"
-          variant="contained"
-          sx={{
-            backgroundImage: `linear-gradient(135deg, ${GOLD}, ${LIGHT_GOLD})`,
-            color: '#000',
-            fontWeight: 700,
-            px: 4,
-            py: 1.4,
-            borderRadius: '30px',
-            fontSize: '1rem',
-            textTransform: 'uppercase',
-            letterSpacing: 1,
-            boxShadow: `0 0 12px ${GOLD}99`,
-            transition: '0.3s ease',
-            '&:hover': {
-              backgroundImage: `linear-gradient(135deg, ${LIGHT_GOLD}, ${GOLD})`,
-              boxShadow: `0 0 22px ${GOLD}`,
-              transform: 'translateY(-3px)',
-            },
-          }}
-        >
-          Explore More
-        </Button>
-      </Box>
+            Explore All Products
+          </Button>
+        </Box>
+      </Container>
     </Box>
   );
 };
