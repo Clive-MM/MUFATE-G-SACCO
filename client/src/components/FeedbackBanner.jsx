@@ -7,27 +7,31 @@ import {
   Dialog,
   DialogContent,
   IconButton,
-  useTheme,
-  useMediaQuery
+  Container,
+  useMediaQuery,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
-import { useSnackbar } from 'notistack'; // ✅ FIX: Import Notistack hook
-import './FeedbackBanner.css';
+import { useSnackbar } from 'notistack';
+
+// Brand Palette - Identical to SaccoIdentitySection
+const BRAND = {
+  gold: "#EC9B14",
+  lightGold: "#FFC25F",
+  dark: "#02150F",
+  light: "#F4F4F4",
+};
 
 const FeedbackBanner = () => {
   const [open, setOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width:600px)');
+  const { enqueueSnackbar } = useSnackbar();
 
   const [formData, setFormData] = useState({
     Email: '',
     Subject: '',
     Message: ''
   });
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const { enqueueSnackbar } = useSnackbar(); // ✅ FIX: Now useSnackbar is defined
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,11 +43,9 @@ const FeedbackBanner = () => {
         'https://mufate-g-sacco.onrender.com/feedback',
         formData
       );
-
       enqueueSnackbar(res.data.message || "✅ Feedback submitted successfully!", {
         variant: 'success'
       });
-
       setOpen(false);
       setFormData({ Email: '', Subject: '', Message: '' });
     } catch (err) {
@@ -51,22 +53,79 @@ const FeedbackBanner = () => {
     }
   };
 
+  // Reusable TextField Styles for Uniformity
+  const textFieldStyles = {
+    mb: 2,
+    '& label': { color: 'rgba(255,255,255,0.6)' },
+    '& label.Mui-focused': { color: BRAND.gold },
+    '& .MuiOutlinedInput-root': {
+      color: BRAND.light,
+      '& fieldset': { borderColor: 'rgba(255,255,255,0.2)', borderRadius: '12px' },
+      '&:hover fieldset': { borderColor: BRAND.gold },
+      '&.Mui-focused fieldset': { borderColor: BRAND.gold },
+      bgcolor: 'rgba(255,255,255,0.03)',
+    },
+  };
+
   return (
-    <Box className="feedback-section">
-      <Box className="feedback-wrapper">
-        <Typography className="feedback-title">
-          We Value Your Feedback
-        </Typography>
+    <Box sx={{ bgcolor: BRAND.dark, py: { xs: 8, md: 10 }, borderTop: `1px solid rgba(255,255,255,0.05)` }}>
+      <Container maxWidth="lg">
+        <Box 
+          sx={{ 
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 3
+          }}
+        >
+          <Typography 
+            variant="h3" 
+            sx={{ 
+              color: BRAND.gold, 
+              fontWeight: 900, 
+              textTransform: 'uppercase',
+              fontSize: { xs: '1.8rem', md: '2.5rem' } 
+            }}
+          >
+            We Value Your Feedback
+          </Typography>
 
-        <Typography className="feedback-text">
-          Your opinion matters to us! Help us serve you better by sharing your thoughts,
-          suggestions, or experiences with GOLDEN GENERATION DT Sacco.
-        </Typography>
+          <Typography 
+            sx={{ 
+              color: BRAND.light, 
+              opacity: 0.8, 
+              maxWidth: '800px', 
+              lineHeight: 1.8,
+              fontSize: '1.1rem' 
+            }}
+          >
+            Your opinion matters to us! Help us serve you better by sharing your thoughts,
+            suggestions, or experiences with GOLDEN GENERATION DT Sacco.
+          </Typography>
 
-        <Button className="feedback-button" onClick={() => setOpen(true)}>
-          <strong>CLICK HERE</strong>
-        </Button>
-      </Box>
+          <Button 
+            variant="contained"
+            onClick={() => setOpen(true)}
+            sx={{
+              bgcolor: BRAND.gold,
+              color: BRAND.dark,
+              fontWeight: 800,
+              px: 6,
+              py: 1.5,
+              borderRadius: '50px',
+              fontSize: '1rem',
+              '&:hover': {
+                bgcolor: BRAND.lightGold,
+                transform: 'scale(1.05)',
+              },
+              transition: '0.3s'
+            }}
+          >
+            CLICK HERE TO SHARE
+          </Button>
+        </Box>
+      </Container>
 
       {/* ===================== POPUP ===================== */}
       <Dialog
@@ -76,115 +135,90 @@ const FeedbackBanner = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            background: 'linear-gradient(135deg, #011407, #01240F)',
-            color: '#FFD700',
-            borderRadius: 3,
-            boxShadow: "0 0 35px rgba(255,215,0,0.25)"
+            bgcolor: '#011A13', // Deepest dark for contrast
+            backgroundImage: 'none',
+            color: BRAND.light,
+            borderRadius: '28px',
+            border: `1px solid ${BRAND.gold}33`,
+            boxShadow: "0 20px 50px rgba(0,0,0,0.5)"
           }
         }}
       >
-        <DialogContent
-          sx={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            gap: isMobile ? 3 : 5,
-            p: isMobile ? 2 : 4,
-            position: 'relative'
-          }}
+        <IconButton
+          onClick={() => setOpen(false)}
+          sx={{ position: 'absolute', top: 16, right: 16, color: BRAND.gold, zIndex: 10 }}
         >
-          {/* Left Section */}
-          <Box
-            sx={{
-              flex: 1,
-              textAlign: isMobile ? 'center' : 'left'
-            }}
-          >
-            <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start' }}>
-              <img
-                src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
-                alt="MUFATE G SACCO logo"
-                style={{ height: isMobile ? '80px' : '100px' }}
-              />
+          <CloseIcon />
+        </IconButton>
+
+        <DialogContent sx={{ p: { xs: 3, md: 6 } }}>
+          <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 5 }}>
+            
+            {/* Left Content */}
+            <Box sx={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
+              <Box sx={{ mb: 3 }}>
+                <img
+                  src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
+                  alt="Logo"
+                  style={{ height: '80px', filter: 'drop-shadow(0 0 10px rgba(236,155,20,0.2))' }}
+                />
+              </Box>
+              <Typography variant="h4" sx={{ color: BRAND.gold, fontWeight: 800, mb: 2, textTransform: 'uppercase', fontSize: '1.5rem' }}>
+                We’d Love to Hear from You
+              </Typography>
+              <Typography sx={{ opacity: 0.7, lineHeight: 1.6 }}>
+                Your feedback helps us improve our services. All responses are confidential and highly appreciated.
+              </Typography>
             </Box>
 
-            <Typography className="feedback-modal-title">
-              We’d Love to Hear from You
-            </Typography>
+            {/* Right Form */}
+            <Box sx={{ flex: 1.2, display: 'flex', flexDirection: 'column' }}>
+              <TextField
+                label="Email"
+                name="Email"
+                value={formData.Email}
+                onChange={handleChange}
+                fullWidth
+                sx={textFieldStyles}
+              />
+              <TextField
+                label="Subject"
+                name="Subject"
+                value={formData.Subject}
+                onChange={handleChange}
+                fullWidth
+                sx={textFieldStyles}
+              />
+              <TextField
+                label="Message"
+                name="Message"
+                value={formData.Message}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                fullWidth
+                sx={textFieldStyles}
+              />
 
-            <Typography className="feedback-modal-text">
-              Your feedback helps us improve our services and serve you better.
-              Please share your thoughts or suggestions.
-              All responses are confidential and appreciated.
-            </Typography>
+              <Button
+                onClick={handleSubmit}
+                fullWidth
+                sx={{
+                  mt: 1,
+                  py: 1.5,
+                  borderRadius: '12px',
+                  backgroundColor: BRAND.gold,
+                  color: BRAND.dark,
+                  fontWeight: 700,
+                  '&:hover': {
+                    backgroundColor: BRAND.lightGold,
+                  }
+                }}
+              >
+                SUBMIT FEEDBACK
+              </Button>
+            </Box>
           </Box>
-
-          {/* Right Section - Form */}
-          <Box
-            sx={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2
-            }}
-          >
-            <TextField
-              label="Email"
-              name="Email"
-              value={formData.Email}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-              InputLabelProps={{ className: 'gold-label' }}
-              InputProps={{ className: 'gold-input' }}
-            />
-
-            <TextField
-              label="Subject"
-              name="Subject"
-              value={formData.Subject}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-              InputLabelProps={{ className: 'gold-label' }}
-              InputProps={{ className: 'gold-input' }}
-            />
-
-            <TextField
-              label="Message"
-              name="Message"
-              value={formData.Message}
-              onChange={handleChange}
-              multiline
-              rows={4}
-              fullWidth
-              size="small"
-              InputLabelProps={{ className: 'gold-label' }}
-              InputProps={{ className: 'gold-input' }}
-            />
-
-            <Button
-              onClick={handleSubmit}
-              sx={{
-                backgroundColor: '#003B2F',
-                color: '#fff',
-                fontWeight: 600,
-                '&:hover': {
-                  backgroundColor: '#2e7d32'
-                }
-              }}
-            >
-              SUBMIT
-            </Button>
-          </Box>
-
-          {/* CLOSE ICON */}
-          <IconButton
-            onClick={() => setOpen(false)}
-            className="feedback-close-btn"
-            sx={{ position: 'absolute', top: 12, right: 12 }}
-          >
-            <CloseIcon />
-          </IconButton>
         </DialogContent>
       </Dialog>
     </Box>
