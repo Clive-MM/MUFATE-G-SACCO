@@ -153,7 +153,7 @@ const ProductsSection = () => {
         <Box textAlign="center" mt={8} data-aos="fade-up">
           <Button
             component={RouterLink}
-            to="/products"
+            to="/products/bosa"
             variant="contained"
             sx={{
               bgcolor: BRAND.gold,
