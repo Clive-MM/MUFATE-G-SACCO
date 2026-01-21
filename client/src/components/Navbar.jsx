@@ -11,6 +11,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tooltipClasses } from '@mui/material/Tooltip';
+
 const BRAND_GOLD = '#EC9B14';
 const BRAND_DARK = '#02150F';
 const BRAND_TEXT_LIGHT = '#F4F4F4';
@@ -42,7 +43,6 @@ const Navbar = () => {
     setMobileOpenMenu(mobileOpenMenu === label ? '' : label);
   };
 
-  // Add this constant for custom tooltip styling
   const tooltipStyles = {
     [`& .${tooltipClasses.tooltip}`]: {
       backgroundColor: BRAND_DARK,
@@ -137,7 +137,6 @@ const Navbar = () => {
 
   const NavDropdown = ({ label, items, isActive }) => {
     const [isOpen, setIsOpen] = useState(false);
-
     return (
       <Box
         onMouseEnter={() => setIsOpen(true)}
@@ -148,9 +147,7 @@ const Navbar = () => {
           {label}
           <ExpandMore sx={{ fontSize: '1.1rem', transition: '0.3s', transform: isOpen ? 'rotate(180deg)' : 'none' }} />
         </Link>
-
         <Box sx={{ position: 'absolute', top: '100%', left: 0, width: '100%', height: '15px' }} />
-
         <AnimatePresence>
           {isOpen && (
             <Box
@@ -202,10 +199,8 @@ const Navbar = () => {
       position="fixed"
       elevation={0}
       sx={{
-        // Less transparent background
         background: 'rgba(2, 21, 15, 0.96)',
         backgroundImage: 'none',
-        // Golden generation shadow brand color
         boxShadow: `0 4px 20px rgba(236, 155, 20, 0.15)`,
         borderBottom: `1px solid rgba(236, 155, 20, 0.2)`,
         zIndex: theme.zIndex.appBar,
@@ -232,59 +227,62 @@ const Navbar = () => {
           </Link>
         </Box>
 
-        {!isMobile ? (
-          // Added ml: 4 to push links slightly to the right
-          <Stack direction="row" spacing={2.5} alignItems="center" sx={{ ml: 4 }}>
-            {navLinks.map((item) => (
-              item.items ? (
-                <NavDropdown key={item.label} label={item.label} items={item.items} isActive={location.pathname.startsWith(item.to)} />
-              ) : (
-                <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(location.pathname === item.to)}>
-                  {item.label}
-                </Link>
-              )
-            ))}
-            <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>
+        {/* NAVIGATION & ACTIONS CONTAINER */}
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          
+          {/* 1. LAPTOP NAVIGATION (Hidden on mobile) */}
+          {!isMobile && (
+            <Stack direction="row" spacing={2.5} alignItems="center" sx={{ mr: 2 }}>
+              {navLinks.map((item) => (
+                item.items ? (
+                  <NavDropdown key={item.label} label={item.label} items={item.items} isActive={location.pathname.startsWith(item.to)} />
+                ) : (
+                  <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(location.pathname === item.to)}>
+                    {item.label}
+                  </Link>
+                )
+              ))}
+              <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>
+            </Stack>
+          )}
 
-            {/* Contact Icon with Hover Tooltip */}
-            <Tooltip
-              title="Contact Us"
-              arrow
-              placement="bottom"
-              sx={tooltipStyles} // Applies the golden theme to the popup
+          {/* 2. CONTACT ICON (ALWAYS VISIBLE) */}
+          <Tooltip
+            title="Contact Us"
+            arrow
+            placement="bottom"
+            sx={tooltipStyles}
+          >
+            <IconButton
+              onClick={handleContactClick}
+              sx={{
+                color: BRAND_GOLD,
+                border: `2px solid ${BRAND_GOLD}`,
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                backgroundColor: 'rgba(236, 155, 20, 0.05)',
+                boxShadow: '0 0 0 0 rgba(236, 155, 20, 0.4)',
+                '&:hover': {
+                  backgroundColor: BRAND_GOLD,
+                  color: BRAND_DARK,
+                  transform: 'scale(1.1) rotate(15deg)',
+                  boxShadow: `0 0 20px 5px rgba(236, 155, 20, 0.3)`,
+                },
+                '&:active': { transform: 'scale(0.95)' }
+              }}
             >
-              <IconButton
-                onClick={handleContactClick}
-                sx={{
-                  color: BRAND_GOLD,
-                  border: `2px solid ${BRAND_GOLD}`,
-                  ml: 2,
-                  position: 'relative',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backgroundColor: 'rgba(236, 155, 20, 0.05)',
-                  // Subtle pulse effect
-                  boxShadow: '0 0 0 0 rgba(236, 155, 20, 0.4)',
+              <PhoneIcon sx={{ fontSize: '1.3rem' }} />
+            </IconButton>
+          </Tooltip>
 
-                  '&:hover': {
-                    backgroundColor: BRAND_GOLD,
-                    color: BRAND_DARK,
-                    transform: 'scale(1.1) rotate(15deg)',
-                    boxShadow: `0 0 20px 5px rgba(236, 155, 20, 0.3)`, // Golden Glow
-                  },
-                  '&:active': {
-                    transform: 'scale(0.95)',
-                  }
-                }}
-              >
-                <PhoneIcon sx={{ fontSize: '1.3rem' }} />
-              </IconButton>
-            </Tooltip>
-          </Stack>
-        ) : (
-          <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: BRAND_GOLD }}><MenuIcon fontSize="large" /></IconButton>
-        )}
+          {/* 3. MOBILE MENU BUTTON (Only visible on mobile) */}
+          {isMobile && (
+            <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: BRAND_GOLD }}>
+              <MenuIcon fontSize="large" />
+            </IconButton>
+          )}
+        </Stack>
 
-        {/* MOBILE DRAWER (Layout preserved) */}
+        {/* MOBILE DRAWER */}
         <Drawer
           anchor="left"
           open={drawerOpen}
