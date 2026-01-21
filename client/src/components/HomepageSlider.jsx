@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
 import { motion } from 'framer-motion';
-import { Box, Typography, Button, Container, CircularProgress, Stack } from '@mui/material';
+import { Box, Typography, Button, Container, CircularProgress, Stack, useTheme, useMediaQuery } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 import "slick-carousel/slick/slick.css"; 
@@ -17,6 +17,8 @@ const BRAND = {
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/slider/view`)
@@ -54,54 +56,51 @@ const HomepageSlider = () => {
               sx={{
                 width: '100%',
                 height: '100vh',
-                minHeight: { xs: '500px', md: '700px' }, 
+                minHeight: { xs: '600px', md: '700px' }, 
                 backgroundImage: `url(${slide.ImagePath})`,
-                backgroundSize: 'contain', 
+                // Keep 'contain' for laptop, but use 'cover' or '100% auto' for mobile to fill width
+                backgroundSize: { xs: '100% auto', md: 'contain' }, 
                 backgroundRepeat: 'no-repeat',
-                backgroundPosition: { xs: 'center', md: 'right center' }, 
+                // Position image at the bottom on mobile to leave the top shadow for text
+                backgroundPosition: { xs: 'center bottom', md: 'right center' }, 
                 bgcolor: BRAND.dark, 
                 display: 'flex',
-                alignItems: 'center',
-                pt: { xs: '100px', md: '120px' } 
+                // On mobile, align items to the top (flex-start)
+                alignItems: { xs: 'flex-start', md: 'center' },
+                pt: { xs: '120px', md: '0px' } 
               }}
             >
               <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
                 <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: -20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  {/* TITLE: Significantly reduced for an elegant look */}
                   <Typography variant="h1" sx={{
                     color: BRAND.gold,
-                    fontWeight: 800,
+                    fontWeight: 900,
                     textTransform: 'uppercase',
                     maxWidth: { xs: "100%", md: "420px" },
-                    mb: 1,
-                    lineHeight: 1.1,
-                    letterSpacing: '0.02em',
-                    textShadow: "1px 1px 3px rgba(0,0,0,0.4)",
-                    fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.6rem', lg: '1.8rem' },
+                    mb: 2,
+                    lineHeight: 1.2,
+                    fontSize: { xs: '1.3rem', sm: '1.5rem', md: '1.8rem' },
                   }}>
                     {slide.Title}
                   </Typography>
 
-                  {/* DESCRIPTION: Reduced to small-print/caption size */}
                   <Typography sx={{
                     color: BRAND.light,
-                    maxWidth: "340px",
+                    maxWidth: { xs: "100%", md: "340px" },
                     fontWeight: 400,
                     lineHeight: 1.5,
-                    textShadow: "1px 1px 2px rgba(0,0,0,0.4)",
-                    fontSize: { xs: '0.7rem', md: '0.78rem' },
+                    fontSize: { xs: '0.85rem', md: '0.78rem' },
                     mb: 4,
-                    opacity: 0.85,
-                    letterSpacing: '0.01em'
+                    opacity: 0.9,
                   }}>
                     {slide.Description?.replace(/<[^>]*>/g, '')}
                   </Typography>
 
-                  <Stack direction="row" spacing={1.5}>
+                  <Stack direction="row" spacing={2}>
                     <Button 
                       component={RouterLink} to="/customer_registration" 
                       sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
@@ -109,12 +108,11 @@ const HomepageSlider = () => {
                       Join Us
                     </Button>
                     <Button 
-                      component={RouterLink} to="/products/bosa" 
+                      component={RouterLink} to="/products" 
                       sx={{ 
                         ...ButtonStyle, 
                         border: `1.5px solid ${BRAND.gold}`, 
                         color: BRAND.gold,
-                        '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
                       }}
                     >
                       Products
@@ -132,13 +130,12 @@ const HomepageSlider = () => {
 
 const ButtonStyle = {
   fontWeight: 700,
-  px: 2,
-  py: 0.6,
-  borderRadius: '2px',
-  fontSize: '0.65rem',
+  px: 3,
+  py: 1,
+  borderRadius: '4px',
+  fontSize: '0.75rem',
   textTransform: 'uppercase',
   transition: '0.3s all ease-in-out',
-  boxShadow: 'none',
 };
 
 export default HomepageSlider;
