@@ -42,7 +42,8 @@ const SaccoStatsSection = () => {
   }, []);
 
   const iconStyle = {
-    fontSize: { xs: 40, md: 50 },
+    // Responsive icon sizes
+    fontSize: { xs: 35, sm: 40, md: 50 },
     color: BRAND.gold,
     mb: 2,
     filter: `drop-shadow(0 0 10px rgba(236, 155, 20, 0.4))`,
@@ -68,7 +69,7 @@ const SaccoStatsSection = () => {
     <Box
       sx={{
         bgcolor: BRAND.dark,
-        py: { xs: 10, md: 15 },
+        py: { xs: 8, md: 15 },
         width: '100%',
         overflow: 'hidden',
         position: 'relative',
@@ -79,10 +80,10 @@ const SaccoStatsSection = () => {
         position: 'absolute',
         top: '20%',
         left: '-5%',
-        width: '400px',
-        height: '400px',
+        width: { xs: '250px', md: '400px' }, // Smaller glow on mobile
+        height: { xs: '250px', md: '400px' },
         bgcolor: BRAND.gold,
-        filter: 'blur(150px)',
+        filter: 'blur(100px)',
         opacity: 0.05,
         borderRadius: '50%',
         zIndex: 0
@@ -90,7 +91,7 @@ const SaccoStatsSection = () => {
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
         {/* HEADER SECTION */}
-        <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 10 }, px: 2 }}>
+        <Box sx={{ textAlign: 'center', mb: { xs: 6, md: 10 }, px: 1 }}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -103,9 +104,10 @@ const SaccoStatsSection = () => {
                 color: BRAND.gold,
                 fontWeight: 900,
                 textTransform: 'uppercase',
-                fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4rem" },
-                letterSpacing: { xs: "0.05em", md: "0.1em" },
-                mb: 3
+                // Smoother scaling for mobile titles
+                fontSize: { xs: "1.8rem", sm: "2.8rem", md: "4rem" },
+                letterSpacing: { xs: "0.02em", md: "0.1em" },
+                mb: { xs: 2, md: 3 }
               }}
             >
               Our Impact In Numbers 
@@ -115,10 +117,11 @@ const SaccoStatsSection = () => {
                 color: BRAND.light, 
                 maxWidth: "850px", 
                 mx: 'auto', 
-                fontSize: { xs: "1rem", md: "1.15rem" }, 
+                fontSize: { xs: "0.9rem", md: "1.15rem" }, 
                 opacity: 0.85,
-                lineHeight: 1.8,
-                fontWeight: 300
+                lineHeight: { xs: 1.6, md: 1.8 },
+                fontWeight: 300,
+                px: { xs: 2, md: 0 }
               }}
             >
               Golden Generation DT SACCO continues to grow with our members—expanding 
@@ -127,7 +130,7 @@ const SaccoStatsSection = () => {
           </motion.div>
         </Box>
 
-        {/* STATS GRID - Implementation of Center Alignment */}
+        {/* STATS GRID */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
             <CircularProgress sx={{ color: BRAND.gold }} />
@@ -135,11 +138,12 @@ const SaccoStatsSection = () => {
         ) : (
           <Grid 
             container 
-            spacing={{ xs: 3, md: 4 }} 
-            justifyContent="center" // Centers the cards horizontally
+            spacing={{ xs: 2, sm: 3, md: 4 }}
+            justifyContent="center"
             alignItems="stretch"
           >
             {statItems.map((item, index) => (
+              // xs=12 (full width on phones), sm=6 (2 per row on tablets), md=3 (4 per row on desktop)
               <Grid item xs={12} sm={6} md={3} key={index} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Box
                   component={motion.div}
@@ -148,13 +152,13 @@ const SaccoStatsSection = () => {
                   whileHover={{ y: -10 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  sx={{ width: '100%', maxWidth: { xs: '400px', md: 'none' } }}
+                  sx={{ width: '100%', maxWidth: { xs: '320px', sm: '100%' } }} 
                 >
                   <Paper
                     elevation={0}
                     sx={{
-                      py: { xs: 6, md: 8 },
-                      px: 3,
+                      py: { xs: 4, md: 8 }, 
+                      px: { xs: 2, md: 3 },
                       height: '100%',
                       textAlign: 'center',
                       borderRadius: '24px',
@@ -172,7 +176,7 @@ const SaccoStatsSection = () => {
                       },
                     }}
                   >
-                    <Box sx={{ mb: 3 }}>
+                    <Box sx={{ mb: { xs: 1.5, md: 3 } }}>
                       {iconMap[index]}
                     </Box>
 
@@ -181,10 +185,10 @@ const SaccoStatsSection = () => {
                       sx={{
                         fontWeight: 900,
                         color: BRAND.gold,
-                        fontSize: { xs: '2.5rem', md: '3.2rem' }, // Slightly larger for serif
-                        mb: 1,
+                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3.2rem' }, 
+                        mb: 0.5,
                         letterSpacing: -1,
-                        fontFamily: 'serif', // Prestigious font style applied
+                        fontFamily: 'serif',
                       }}
                     >
                       <CountUp
@@ -200,9 +204,9 @@ const SaccoStatsSection = () => {
                       sx={{
                         color: BRAND.textMuted,
                         fontWeight: 700,
-                        letterSpacing: '0.15em',
+                        letterSpacing: '0.1em',
                         textTransform: 'uppercase',
-                        fontSize: { xs: '0.8rem', md: '0.9rem' },
+                        fontSize: { xs: '0.7rem', md: '0.9rem' }, 
                       }}
                     >
                       {item.label}
