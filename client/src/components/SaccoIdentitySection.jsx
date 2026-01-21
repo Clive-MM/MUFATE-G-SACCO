@@ -26,8 +26,6 @@ const SaccoIdentitySection = () => {
   const [vision, setVision] = useState('');
   const [coreValues, setCoreValues] = useState([]);
   const [loading, setLoading] = useState(true);
-  
-  // State for the interactive selection styling from your reference component
   const [selectedCard, setSelectedCard] = useState(0);
 
   useEffect(() => {
@@ -86,37 +84,41 @@ const SaccoIdentitySection = () => {
             sx={{
               width: '100%',
               display: 'grid',
-              // Applied the exact Grid logic from the reference component
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))',
-              gap: 4, // Spacing between cards
+              // Standardizes the card widths and wraps them
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              // Centers the grid items if they don't fill the whole row
+              justifyContent: 'center', 
+              gap: 4,
+              // Limits the total width on huge screens to keep things looking tight
+              maxWidth: '1200px',
+              mx: 'auto' 
             }}
           >
             {identityCards.map((card, index) => (
               <Card 
                 key={card.id}
                 component={motion.div}
-                whileHover={{ y: -5 }}
+                whileHover={{ y: -8 }}
                 sx={{ 
                   bgcolor: 'rgba(255, 255, 255, 0.03)', 
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '24px',
                   color: BRAND.light,
-                  transition: '0.3s'
+                  transition: 'all 0.3s ease-in-out',
+                  height: '100%',
+                  display: 'flex',
                 }}
               >
                 <CardActionArea
                   onClick={() => setSelectedCard(index)}
                   data-active={selectedCard === index ? '' : undefined}
                   sx={{
-                    height: '100%',
-                    p: 2,
-                    // Applied the exact [data-active] selection styling
+                    width: '100%',
+                    p: 3,
                     '&[data-active]': {
-                      backgroundColor: 'rgba(236, 155, 20, 0.1)', // Gold tint for active state
+                      backgroundColor: 'rgba(236, 155, 20, 0.08)',
                       borderColor: BRAND.gold,
-                      '&:hover': {
-                        backgroundColor: 'rgba(236, 155, 20, 0.15)',
-                      },
+                      boxShadow: `0 0 20px rgba(236, 155, 20, 0.1)`,
                     },
                   }}
                 >
@@ -125,18 +127,17 @@ const SaccoIdentitySection = () => {
                     flexDirection: 'column', 
                     alignItems: 'center', 
                     textAlign: 'center',
-                    minHeight: '250px' 
                   }}>
                     <Box sx={{ color: BRAND.gold, mb: 3 }}>
                       {card.icon}
                     </Box>
                     <Typography 
                       variant="h5" 
-                      sx={{ color: BRAND.gold, fontWeight: 800, mb: 3, textTransform: 'uppercase' }}
+                      sx={{ color: BRAND.gold, fontWeight: 800, mb: 3, textTransform: 'uppercase', letterSpacing: '0.1rem' }}
                     >
                       {card.title}
                     </Typography>
-                    <Box sx={{ opacity: 0.8, lineHeight: 1.8 }}>
+                    <Box sx={{ opacity: 0.8, lineHeight: 1.8, fontSize: '1.05rem' }}>
                       {card.content}
                     </Box>
                   </CardContent>
