@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
 import { motion } from 'framer-motion';
-import { Box, Typography, Button, Container, CircularProgress, Stack, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Typography, Button, Container, CircularProgress, Stack } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 import "slick-carousel/slick/slick.css"; 
@@ -17,8 +17,6 @@ const BRAND = {
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/slider/view`)
@@ -57,7 +55,7 @@ const HomepageSlider = () => {
                 width: '100%',
                 height: '100vh',
                 display: 'flex',
-                // MOBILE: Stack vertically | LAPTOP: Keep side-by-side
+                // Responsive layout logic
                 flexDirection: { xs: 'column', md: 'row' },
                 bgcolor: BRAND.dark,
               }}
@@ -71,7 +69,6 @@ const HomepageSlider = () => {
                   backgroundSize: { xs: 'cover', md: 'contain' },
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: { xs: 'center', md: 'right center' },
-                  // Keeps image fixed as the background layer for laptop
                   position: { md: 'absolute' },
                   right: 0,
                   top: 0,
