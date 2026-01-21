@@ -19,7 +19,7 @@ import News from './more/News';
 import SaccoGallery from './more/saccogallery'; // Duplicate removed below
 import MemberRegistration from "./pages/MemberRegistration";
 import LoanCalculator from './pages/Products/LoanCalculator';
-import SupportChatWidget from "./components/SupportChatWidget";
+
 import Videos from './more/Videos';
 
 function App({ toggleTheme, mode }) {
@@ -56,7 +56,7 @@ function App({ toggleTheme, mode }) {
           
           <Route path="/customer_registration" element={<MemberRegistration />} />
           <Route path="/products/loanCalculator" element={<LoanCalculator />} />
-          <Route path="/mufategsaccosupport" element={<SupportChatWidget />} />
+     
         </Routes>
       </BrowserRouter>
     </Box>
