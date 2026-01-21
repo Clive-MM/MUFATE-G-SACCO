@@ -90,7 +90,7 @@ const AboutSection = () => {
               >
                 About Us
               </Typography>
-              <Typography 
+              {/* <Typography 
                 sx={{ 
                   color: BRAND.light, 
                   maxWidth: "800px", 
@@ -101,7 +101,7 @@ const AboutSection = () => {
                 }}
               >
                 <strong style={{ color: BRAND.gold }}>Golden Generation Deposit Taking SACCO</strong> is a trusted, member-owned financial institution serving tea farmers, salaried workers, and entrepreneurs.
-              </Typography>
+              </Typography> */}
             </motion.div>
           </Box>
 
