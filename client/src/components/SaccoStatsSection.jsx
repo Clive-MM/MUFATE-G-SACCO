@@ -68,7 +68,7 @@ const SaccoStatsSection = () => {
     <Box
       sx={{
         bgcolor: BRAND.dark,
-        py: { xs: 10, md: 15 }, // Matching AboutSection vertical padding
+        py: { xs: 10, md: 15 },
         width: '100%',
         overflow: 'hidden',
         position: 'relative',
@@ -89,7 +89,7 @@ const SaccoStatsSection = () => {
       }} />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-        {/* HEADER SECTION - Centered text */}
+        {/* HEADER SECTION */}
         <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 10 }, px: 2 }}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -127,7 +127,7 @@ const SaccoStatsSection = () => {
           </motion.div>
         </Box>
 
-        {/* STATS GRID - Center aligned items */}
+        {/* STATS GRID - Implementation of Center Alignment */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
             <CircularProgress sx={{ color: BRAND.gold }} />
@@ -136,7 +136,7 @@ const SaccoStatsSection = () => {
           <Grid 
             container 
             spacing={{ xs: 3, md: 4 }} 
-            justifyContent="center" // This centers the cards horizontally
+            justifyContent="center" // Centers the cards horizontally
             alignItems="stretch"
           >
             {statItems.map((item, index) => (
@@ -181,9 +181,10 @@ const SaccoStatsSection = () => {
                       sx={{
                         fontWeight: 900,
                         color: BRAND.gold,
-                        fontSize: { xs: '2.5rem', md: '3rem' },
+                        fontSize: { xs: '2.5rem', md: '3.2rem' }, // Slightly larger for serif
                         mb: 1,
-                        letterSpacing: -1
+                        letterSpacing: -1,
+                        fontFamily: 'serif', // Prestigious font style applied
                       }}
                     >
                       <CountUp
