@@ -13,7 +13,7 @@ import StarIcon from '@mui/icons-material/Star';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import axios from 'axios';
 
-// Unified Brand Colors from previous component
+// Unified Brand Colors - synchronized with StatsSection
 const BRAND = {
   gold: "#EC9B14",
   lightGold: "#FFC25F",
@@ -48,12 +48,12 @@ const SaccoIdentitySection = () => {
   const identityCards = [
     {
       title: 'Our Mission',
-      icon: FlagIcon,
+      icon: <FlagIcon sx={{ fontSize: { xs: 35, md: 50 }, color: BRAND.gold }} />,
       content: mission,
     },
     {
       title: 'Our Values',
-      icon: StarIcon,
+      icon: <StarIcon sx={{ fontSize: { xs: 35, md: 50 }, color: BRAND.gold }} />,
       content: (
         <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
           {coreValues.map((v, i) => (
@@ -62,11 +62,10 @@ const SaccoIdentitySection = () => {
               component="li"
               sx={{
                 color: BRAND.lightGold,
-                textAlign: 'center',
-                mb: 1,
-                fontSize: { xs: '0.9rem', md: '0.95rem' },
-                textShadow: `0 0 8px rgba(236, 155, 20, 0.5)`,
-                fontWeight: 600
+                mb: 0.5,
+                fontSize: { xs: '0.9rem', md: '1rem' },
+                fontWeight: 500,
+                textShadow: `0 0 8px rgba(236, 155, 20, 0.3)`,
               }}
             >
               {v}
@@ -77,7 +76,7 @@ const SaccoIdentitySection = () => {
     },
     {
       title: 'Our Vision',
-      icon: VisibilityIcon,
+      icon: <VisibilityIcon sx={{ fontSize: { xs: 35, md: 50 }, color: BRAND.gold }} />,
       content: vision,
     },
   ];
@@ -86,29 +85,29 @@ const SaccoIdentitySection = () => {
     <Box
       sx={{
         bgcolor: BRAND.dark,
-        py: { xs: 10, md: 15 },
+        py: { xs: 8, md: 15 },
         width: '100%',
         overflow: 'hidden',
         position: 'relative',
       }}
     >
-      {/* Aesthetic Background Glow */}
+      {/* Background Decoration Glow - matches Stats style */}
       <Box sx={{
         position: 'absolute',
-        top: '15%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '80%',
-        height: '400px',
+        top: '20%',
+        right: '-5%',
+        width: { xs: '250px', md: '400px' },
+        height: { xs: '250px', md: '400px' },
         bgcolor: BRAND.gold,
-        filter: 'blur(180px)',
-        opacity: 0.03,
+        filter: 'blur(100px)',
+        opacity: 0.05,
+        borderRadius: '50%',
         zIndex: 0
       }} />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-        {/* HEADER SECTION */}
-        <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 12 } }}>
+        {/* HEADER SECTION - Styled exactly like "Our Impact In Numbers" */}
+        <Box sx={{ textAlign: 'center', mb: { xs: 6, md: 10 }, px: 1 }}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -121,19 +120,32 @@ const SaccoIdentitySection = () => {
                 color: BRAND.gold,
                 fontWeight: 900,
                 textTransform: 'uppercase',
-                fontSize: { xs: "2.5rem", md: "4rem" },
-                letterSpacing: "0.1em",
-                mb: 2,
-                textShadow: `0 0 15px rgba(236, 155, 20, 0.2)`,
+                fontSize: { xs: "1.8rem", sm: "2.8rem", md: "4rem" },
+                letterSpacing: { xs: "0.02em", md: "0.1em" },
+                mb: { xs: 2, md: 3 }
               }}
             >
               Our Identity
             </Typography>
-            <Box sx={{ width: '80px', height: '4px', bgcolor: BRAND.gold, mx: 'auto', borderRadius: '2px' }} />
+            <Typography 
+              sx={{ 
+                color: BRAND.light, 
+                maxWidth: "850px", 
+                mx: 'auto', 
+                fontSize: { xs: "0.9rem", md: "1.15rem" }, 
+                opacity: 0.85,
+                lineHeight: { xs: 1.6, md: 1.8 },
+                fontWeight: 300,
+                px: { xs: 2, md: 0 }
+              }}
+            >
+              Driven by purpose and guided by integrity, we stand as a beacon of 
+              financial empowerment for the Golden Generation.
+            </Typography>
           </motion.div>
         </Box>
 
-        {/* 3-CARD ROW LAYOUT */}
+        {/* 3-CARD ROW LAYOUT - Matches Stats grid logic */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
             <CircularProgress sx={{ color: BRAND.gold }} />
@@ -141,93 +153,78 @@ const SaccoIdentitySection = () => {
         ) : (
           <Grid 
             container 
-            spacing={{ xs: 4, md: 3, lg: 5 }} // Spacing between the 3 cards
+            spacing={{ xs: 2, sm: 3, md: 4 }}
             justifyContent="center"
             alignItems="stretch"
           >
-            {identityCards.map((card, index) => {
-              const IconComponent = card.icon;
-              return (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Box
-                    component={motion.div}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    whileHover={{ y: -12 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.2 }}
-                    sx={{ height: '100%' }}
+            {identityCards.map((card, index) => (
+              <Grid item xs={12} md={4} key={index} sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box
+                  component={motion.div}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -10 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  sx={{ width: '100%', maxWidth: { xs: '350px', md: '100%' } }} 
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      py: { xs: 5, md: 8 }, 
+                      px: { xs: 3, md: 4 },
+                      height: '100%',
+                      textAlign: 'center',
+                      borderRadius: '24px',
+                      backdropFilter: 'blur(10px)',
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                      '&:hover': {
+                        borderColor: BRAND.gold,
+                        bgcolor: 'rgba(236, 155, 20, 0.06)',
+                        boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(236, 155, 20, 0.1)`,
+                      },
+                    }}
                   >
-                    <Paper
-                      elevation={0}
+                    {/* Icon Box - Styled like Stats Icons */}
+                    <Box sx={{ mb: { xs: 2, md: 3 }, filter: `drop-shadow(0 0 10px rgba(236, 155, 20, 0.4))` }}>
+                      {card.icon}
+                    </Box>
+
+                    <Typography
+                      variant="h4"
                       sx={{
-                        py: { xs: 6, md: 8 },
-                        px: { xs: 3, md: 4 },
-                        height: '100%',
-                        textAlign: 'center',
-                        borderRadius: '32px', // More rounded for modern feel
-                        backdropFilter: 'blur(12px)',
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        transition: 'all 0.4s ease-in-out',
-                        '&:hover': {
-                          borderColor: BRAND.gold,
-                          bgcolor: 'rgba(236, 155, 20, 0.07)',
-                          boxShadow: `0 30px 60px rgba(0,0,0,0.6), 0 0 20px rgba(236, 155, 20, 0.1)`,
-                        },
+                        fontWeight: 900,
+                        color: BRAND.gold,
+                        fontSize: { xs: '1.2rem', md: '1.6rem' }, 
+                        mb: 2,
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase',
                       }}
                     >
-                      {/* Radial Badge from your style */}
-                      <Box
-                        sx={{
-                          width: 70,
-                          height: 70,
-                          borderRadius: '50%',
-                          background: `radial-gradient(circle, ${BRAND.lightGold}, ${BRAND.gold})`,
-                          boxShadow: `0 0 20px rgba(236, 155, 20, 0.5)`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          mb: 4,
-                        }}
-                      >
-                        <IconComponent sx={{ color: BRAND.dark, fontSize: 32 }} />
-                      </Box>
+                      {card.title}
+                    </Typography>
 
-                      <Typography
-                        variant="h5"
-                        sx={{
-                          fontWeight: 900,
-                          color: BRAND.gold,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.15em',
-                          fontSize: '1.4rem',
-                          mb: 3,
-                          textShadow: `0 0 10px rgba(236, 155, 20, 0.3)`,
-                        }}
-                      >
-                        {card.title}
-                      </Typography>
-
-                      <Box
-                        sx={{
-                          lineHeight: 1.9,
-                          fontSize: { xs: '1rem', md: '1.05rem' },
-                          color: BRAND.light,
-                          opacity: 0.85,
-                          textAlign: 'center',
-                        }}
-                      >
-                        {card.content}
-                      </Box>
-                    </Paper>
-                  </Box>
-                </Grid>
-              );
-            })}
+                    <Box
+                      sx={{
+                        lineHeight: 1.8,
+                        fontSize: { xs: '0.95rem', md: '1.05rem' },
+                        color: BRAND.light,
+                        opacity: 0.8,
+                        textAlign: 'center',
+                        fontWeight: 300,
+                      }}
+                    >
+                      {card.content}
+                    </Box>
+                  </Paper>
+                </Box>
+              </Grid>
+            ))}
           </Grid>
         )}
       </Container>
