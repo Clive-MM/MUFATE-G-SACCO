@@ -10,7 +10,7 @@ import {
   Container
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // ICONS
 import PaymentsIcon from '@mui/icons-material/Payments';
