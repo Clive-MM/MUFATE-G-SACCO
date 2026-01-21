@@ -16,7 +16,7 @@ import AgricultureIcon from '@mui/icons-material/Agriculture';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import SavingsIcon from '@mui/icons-material/Savings';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
-
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 const GOLD = '#FFD700';
 const LIGHT_GOLD = '#FFE066';
 const DEEP_GREEN = '#006400';
@@ -70,7 +70,7 @@ const AboutSection = () => {
             sx={{
               flex: 1,
               p: { xs: 3, md: 5 },
-              background: DARK_BG, // 🔥 same background treatment as stats section
+              background: DARK_BG,
               borderRight: {
                 xs: 'none',
                 md: '1px solid rgba(255,215,0,0.18)',
@@ -108,10 +108,10 @@ const AboutSection = () => {
               <strong>Golden Generation Deposit Taking SACCO</strong>{' '}
               is a trusted, member-owned deposit taking SACCO serving{' '}
               <strong>
-                tea farmers, salaried workers, teachers, pensioners, county staff
+                tea farmers across Vihiga and Kakamega counties, salaried workers, teachers, pensioners,county staff
                 and business owners
               </strong>{' '}
-              across Vihiga and Kakamega counties. Our rebrand reflects a
+              . Our rebrand reflects a
               broader common bond – opening doors to more members while
               preserving our strong roots in the tea-growing community.
             </Typography>
@@ -271,6 +271,34 @@ const AboutSection = () => {
                   }
                 />
               </ListItem>
+              <ListItem
+                sx={{
+                  transition: '0.3s',
+                  '&:hover': {
+                    transform: 'translateX(6px)',
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                  },
+                }}
+              >
+                <ListItemIcon>
+                  <PrecisionManufacturingIcon sx={{ color: GOLD }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: 700, color: LIGHT_GOLD }}>
+                      Asset Financing
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography sx={{ color: '#d0d0d0', fontSize: '0.95rem' }}>
+                      Get the machinery or equipment you need today with our asset
+                      financing. Repay comfortably over time, and enjoy full ownership
+                      once you complete payment.
+                    </Typography>
+                  }
+                />
+              </ListItem>
+
             </List>
 
             <Typography
