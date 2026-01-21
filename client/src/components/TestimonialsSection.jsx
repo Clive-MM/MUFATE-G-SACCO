@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Alert, Skeleton } from "@mui/material";
+import { Box, Typography, Alert, Skeleton, Container, Card, CardContent } from "@mui/material";
 import axios from "axios";
 import { motion } from "framer-motion";
 import "aos/dist/aos.css";
 import AOS from "aos";
-import "./TestimonialsSection.css";
 
 const API = "https://mufate-g-sacco.onrender.com/clients";
 
-// brand colors used in Products heading
-const GOLD = "#FFD700";
-const LIGHT_GOLD = "#FFE066";
-const DARK_BG =
-  "linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)";
+// Identical Brand Palette
+const BRAND = {
+  gold: "#EC9B14",
+  lightGold: "#FFC25F",
+  dark: "#02150F",
+  light: "#F4F4F4",
+};
 
 const TestimonialsSection = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -31,69 +32,126 @@ const TestimonialsSection = () => {
   }, []);
 
   return (
-    <Box
-      className="testimonials-section"
-      role="region"
-      aria-label="Member reviews"
-      sx={{ background: DARK_BG }}
+    <Box 
+      sx={{ 
+        bgcolor: BRAND.dark, 
+        py: { xs: 8, md: 12 }, 
+        width: '100%' 
+      }}
     >
-      {/* SECTION TITLE — styled exactly like the Products heading */}
-      <Typography
-        variant="h4"
-        data-aos="fade-up"
-        sx={{
-          fontWeight: 800,
-          textAlign: "center",
-          mb: 6,
-          textTransform: "uppercase",
-          letterSpacing: 1.5,
-          color: "transparent",
-          backgroundImage: `linear-gradient(to right, ${GOLD}, ${LIGHT_GOLD})`,
-          backgroundClip: "text",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          fontSize: { xs: "1.9rem", md: "2.4rem" },
-          textShadow: `0 0 12px ${GOLD}88`,
-          marginTop: "-0.5rem", // small upward nudge if needed to match vertical placement
-        }}
-      >
-        REVIEWS
-      </Typography>
+      <Container maxWidth="xl">
+        {/* SECTION TITLE — Matching Identity Section exactly */}
+        <Typography
+          variant="h2"
+          textAlign="center"
+          data-aos="fade-up"
+          sx={{
+            color: BRAND.gold,
+            fontWeight: 900,
+            mb: 10,
+            textTransform: "uppercase",
+            fontSize: { xs: "2.5rem", md: "3.75rem" },
+            letterSpacing: '0.1rem'
+          }}
+        >
+          Reviews
+        </Typography>
 
-      {error && (
-        <Alert severity="error" className="testimonial-alert">
-          {error}
-        </Alert>
-      )}
+        {error && (
+          <Container maxWidth="sm">
+            <Alert 
+              severity="error" 
+              sx={{ mb: 4, bgcolor: 'rgba(211, 47, 47, 0.1)', color: '#ff8a80' }}
+            >
+              {error}
+            </Alert>
+          </Container>
+        )}
 
-      <Box className="testimonials-grid">
-        {loading
-          ? Array.from({ length: 3 }).map((_, i) => (
-              <Box key={i} className="testimonial-card">
-                <Skeleton variant="text" height={90} />
-                <Skeleton variant="text" width="50%" />
-              </Box>
-            ))
-          : testimonials.map((client, index) => (
-              <motion.article
-                key={client.ClientID}
-                className="testimonial-card"
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.12 }}
-                whileHover={{ scale: 1.04 }}
-                viewport={{ once: true, amount: 0.2 }}
-              >
-                <blockquote className="testimonial-quote">
-                  {client.ClientStatistic}
-                </blockquote>
+        {/* Grid Layout — Matching Identity Section Logic */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            justifyContent: 'center',
+            gap: 4,
+            maxWidth: '1200px',
+            mx: 'auto'
+          }}
+        >
+          {loading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <Card 
+                  key={i} 
+                  sx={{ bgcolor: 'rgba(255, 255, 255, 0.03)', borderRadius: '24px', p: 2 }}
+                >
+                  <Skeleton variant="text" height={100} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
+                  <Skeleton variant="text" width="50%" sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
+                </Card>
+              ))
+            : testimonials.map((client, index) => (
+                <Card
+                  key={client.ClientID}
+                  component={motion.article}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.12 }}
+                  whileHover={{ y: -8 }}
+                  sx={{
+                    bgcolor: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '24px',
+                    color: BRAND.light,
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: '0.3s'
+                  }}
+                >
+                  <CardContent sx={{ p: 4, textAlign: 'center' }}>
+                    {/* Quote Text - White/Light with high opacity */}
+                    <Typography
+                      sx={{
+                        fontStyle: 'italic',
+                        fontSize: '1.1rem',
+                        lineHeight: 1.8,
+                        color: BRAND.light,
+                        opacity: 0.9,
+                        mb: 4,
+                        position: 'relative',
+                        '&::before': {
+                           content: '"“"',
+                           color: BRAND.gold,
+                           fontSize: '3rem',
+                           position: 'absolute',
+                           top: -20,
+                           left: -10,
+                           opacity: 0.3
+                        }
+                      }}
+                    >
+                      {client.ClientStatistic}
+                    </Typography>
 
-                <footer className="testimonial-name">
-                  {client.ClientName}
-                </footer>
-              </motion.article>
-            ))}
-      </Box>
+                    {/* Footer Name - Bold Gold */}
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: BRAND.gold,
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1rem',
+                        fontSize: '1rem'
+                      }}
+                    >
+                      {client.ClientName}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
+        </Box>
+      </Container>
     </Box>
   );
 };
