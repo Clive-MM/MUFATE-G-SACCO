@@ -56,70 +56,89 @@ const HomepageSlider = () => {
               sx={{
                 width: '100%',
                 height: '100vh',
-                minHeight: { xs: '600px', md: '700px' }, 
-                backgroundImage: `url(${slide.ImagePath})`,
-                // Keep 'contain' for laptop, but use 'cover' or '100% auto' for mobile to fill width
-                backgroundSize: { xs: '100% auto', md: 'contain' }, 
-                backgroundRepeat: 'no-repeat',
-                // Position image at the bottom on mobile to leave the top shadow for text
-                backgroundPosition: { xs: 'center bottom', md: 'right center' }, 
-                bgcolor: BRAND.dark, 
                 display: 'flex',
-                // On mobile, align items to the top (flex-start)
-                alignItems: { xs: 'flex-start', md: 'center' },
-                pt: { xs: '120px', md: '0px' } 
+                // MOBILE: Stack vertically | LAPTOP: Keep side-by-side
+                flexDirection: { xs: 'column', md: 'row' },
+                bgcolor: BRAND.dark,
               }}
             >
-              <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <Typography variant="h1" sx={{
-                    color: BRAND.gold,
-                    fontWeight: 900,
-                    textTransform: 'uppercase',
-                    maxWidth: { xs: "100%", md: "420px" },
-                    mb: 2,
-                    lineHeight: 1.2,
-                    fontSize: { xs: '1.3rem', sm: '1.5rem', md: '1.8rem' },
-                  }}>
-                    {slide.Title}
-                  </Typography>
+              {/* IMAGE SECTION (Top 60% on Mobile) */}
+              <Box
+                sx={{
+                  width: { xs: '100%', md: '100%' },
+                  height: { xs: '60%', md: '100vh' },
+                  backgroundImage: `url(${slide.ImagePath})`,
+                  backgroundSize: { xs: 'cover', md: 'contain' },
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: { xs: 'center', md: 'right center' },
+                  // Keeps image fixed as the background layer for laptop
+                  position: { md: 'absolute' },
+                  right: 0,
+                  top: 0,
+                  zIndex: 1
+                }}
+              />
 
-                  <Typography sx={{
-                    color: BRAND.light,
-                    maxWidth: { xs: "100%", md: "340px" },
-                    fontWeight: 400,
-                    lineHeight: 1.5,
-                    fontSize: { xs: '0.85rem', md: '0.78rem' },
-                    mb: 4,
-                    opacity: 0.9,
-                  }}>
-                    {slide.Description?.replace(/<[^>]*>/g, '')}
-                  </Typography>
+              {/* CONTENT SECTION (Bottom 40% on Mobile) */}
+              <Box sx={{ 
+                position: 'relative', 
+                zIndex: 2, 
+                width: '100%', 
+                height: { xs: '40%', md: '100vh' },
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                  >
+                    <Typography variant="h1" sx={{
+                      color: BRAND.gold,
+                      fontWeight: 900,
+                      textTransform: 'uppercase',
+                      maxWidth: { xs: "100%", md: "420px" },
+                      mb: { xs: 1, md: 2 },
+                      lineHeight: 1.1,
+                      fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.8rem' },
+                    }}>
+                      {slide.Title}
+                    </Typography>
 
-                  <Stack direction="row" spacing={2}>
-                    <Button 
-                      component={RouterLink} to="/customer_registration" 
-                      sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
-                    >
-                      Join Us
-                    </Button>
-                    <Button 
-                      component={RouterLink} to="/products" 
-                      sx={{ 
-                        ...ButtonStyle, 
-                        border: `1.5px solid ${BRAND.gold}`, 
-                        color: BRAND.gold,
-                      }}
-                    >
-                      Products
-                    </Button>
-                  </Stack>
-                </motion.div>
-              </Container>
+                    <Typography sx={{
+                      color: BRAND.light,
+                      maxWidth: { xs: "100%", md: "340px" },
+                      fontWeight: 400,
+                      lineHeight: 1.4,
+                      fontSize: { xs: '0.8rem', md: '0.78rem' },
+                      mb: { xs: 2, md: 4 },
+                      opacity: 0.9,
+                    }}>
+                      {slide.Description?.replace(/<[^>]*>/g, '')}
+                    </Typography>
+
+                    <Stack direction="row" spacing={2}>
+                      <Button 
+                        component={RouterLink} to="/customer_registration" 
+                        sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
+                      >
+                        Join Us
+                      </Button>
+                      <Button 
+                        component={RouterLink} to="/products" 
+                        sx={{ 
+                          ...ButtonStyle, 
+                          border: `1.5px solid ${BRAND.gold}`, 
+                          color: BRAND.gold,
+                        }}
+                      >
+                        Products
+                      </Button>
+                    </Stack>
+                  </motion.div>
+                </Container>
+              </Box>
             </Box>
           </Box>
         ))}
@@ -130,12 +149,11 @@ const HomepageSlider = () => {
 
 const ButtonStyle = {
   fontWeight: 700,
-  px: 3,
-  py: 1,
+  px: { xs: 2.5, md: 3 },
+  py: { xs: 0.8, md: 1 },
   borderRadius: '4px',
-  fontSize: '0.75rem',
+  fontSize: '0.7rem',
   textTransform: 'uppercase',
-  transition: '0.3s all ease-in-out',
 };
 
 export default HomepageSlider;
