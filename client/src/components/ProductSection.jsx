@@ -8,23 +8,21 @@ import {
   Button,
   Container,
 } from '@mui/material';
+import { motion } from 'framer-motion';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Link as RouterLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
-// Brand Colors (Aligned with Identity Section)
+// Identical Brand Palette
 const BRAND = {
   gold: "#EC9B14",
   lightGold: "#FFC25F",
   dark: "#02150F",
   light: "#F4F4F4",
 };
-
-const DARK_BG = 'linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)';
 
 const products = [
   {
@@ -58,51 +56,52 @@ const ProductsSection = () => {
   }, []);
 
   return (
-    <Box sx={{ background: DARK_BG, py: { xs: 8, md: 12 }, width: '100%' }}>
+    // Matching the background and padding of SaccoIdentitySection
+    <Box sx={{ bgcolor: BRAND.dark, py: { xs: 8, md: 12 }, width: '100%' }}>
       <Container maxWidth="xl">
-        {/* Section Title */}
-        <Typography
-          variant="h2"
-          textAlign="center"
+        {/* Section Title - Identical Styling */}
+        <Typography 
+          variant="h2" 
+          textAlign="center" 
           data-aos="fade-up"
-          sx={{
-            color: BRAND.gold,
-            fontWeight: 900,
-            mb: 10,
+          sx={{ 
+            color: BRAND.gold, 
+            fontWeight: 900, 
+            mb: 10, 
             textTransform: 'uppercase',
-            fontSize: { xs: '2.2rem', md: '3.5rem' },
-            letterSpacing: '0.1rem'
+            fontSize: { xs: '2.5rem', md: '3.75rem' } // Standardized size
           }}
         >
           Our Products
         </Typography>
 
-        {/* Products Grid - Centered & Responsive */}
+        {/* Products Grid - Using identical Grid logic */}
         <Box
           sx={{
+            width: '100%',
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(320px, 100%), 1fr))',
-            justifyContent: 'center',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            justifyContent: 'center', 
             gap: 4,
             maxWidth: '1200px',
-            mx: 'auto',
+            mx: 'auto' 
           }}
         >
           {products.map((product, index) => (
-            <Card
+            <Card 
               key={product.id}
               component={motion.div}
-              whileHover={{ y: -10 }}
+              whileHover={{ y: -8 }}
               data-aos="zoom-in"
-              sx={{
-                bgcolor: 'rgba(255, 255, 255, 0.03)',
+              sx={{ 
+                bgcolor: 'rgba(255, 255, 255, 0.03)', 
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '24px',
                 color: BRAND.light,
                 transition: 'all 0.3s ease-in-out',
                 height: '100%',
                 display: 'flex',
-                overflow: 'hidden'
+                boxShadow: 'none',
               }}
             >
               <CardActionArea
@@ -112,7 +111,7 @@ const ProductsSection = () => {
                 data-active={selectedProduct === index ? '' : undefined}
                 sx={{
                   width: '100%',
-                  p: { xs: 2, md: 4 },
+                  p: 3, // Matching SaccoIdentitySection padding
                   '&[data-active]': {
                     backgroundColor: 'rgba(236, 155, 20, 0.08)',
                     borderColor: BRAND.gold,
@@ -125,65 +124,54 @@ const ProductsSection = () => {
                   flexDirection: 'column', 
                   alignItems: 'center', 
                   textAlign: 'center',
-                  minHeight: { md: '300px' }
                 }}>
                   <Box sx={{ color: BRAND.gold, mb: 3 }}>
                     {product.icon}
                   </Box>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      fontWeight: 800,
-                      color: BRAND.gold,
-                      mb: 2,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05rem'
+                  <Typography 
+                    variant="h5" 
+                    sx={{ 
+                      color: BRAND.gold, 
+                      fontWeight: 800, 
+                      mb: 3, 
+                      textTransform: 'uppercase', 
+                      letterSpacing: '0.1rem' 
                     }}
                   >
                     {product.title}
                   </Typography>
-                  <Typography
-                    sx={{
-                      color: BRAND.light,
-                      opacity: 0.8,
-                      lineHeight: 1.8,
-                      fontSize: '1rem',
-                    }}
-                  >
+                  <Box sx={{ opacity: 0.8, lineHeight: 1.8, fontSize: '1.05rem' }}>
                     {product.description}
-                  </Typography>
+                  </Box>
                 </CardContent>
               </CardActionArea>
             </Card>
           ))}
         </Box>
 
-        {/* View More Button */}
-        <Box textAlign="center" mt={10} data-aos="fade-up">
+        {/* Action Button - Styled to match the brand identity */}
+        <Box textAlign="center" mt={8} data-aos="fade-up">
           <Button
             component={RouterLink}
             to="/products"
             variant="contained"
             sx={{
-              backgroundImage: `linear-gradient(135deg, ${BRAND.gold}, ${BRAND.lightGold})`,
+              bgcolor: BRAND.gold,
               color: BRAND.dark,
               fontWeight: 800,
-              px: 6,
-              py: 2,
+              px: 5,
+              py: 1.5,
               borderRadius: '50px',
               fontSize: '1rem',
               textTransform: 'uppercase',
-              letterSpacing: 2,
-              boxShadow: `0 8px 20px rgba(236, 155, 20, 0.3)`,
-              transition: '0.3s ease',
               '&:hover': {
-                backgroundImage: `linear-gradient(135deg, ${BRAND.lightGold}, ${BRAND.gold})`,
-                boxShadow: `0 12px 25px ${BRAND.gold}66`,
-                transform: 'translateY(-3px)',
+                bgcolor: BRAND.lightGold,
+                transform: 'translateY(-2px)',
+                boxShadow: `0 8px 20px ${BRAND.gold}44`,
               },
             }}
           >
-            Explore All Products
+            View All Products
           </Button>
         </Box>
       </Container>
