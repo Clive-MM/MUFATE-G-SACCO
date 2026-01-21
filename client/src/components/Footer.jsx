@@ -9,7 +9,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
 import axios from 'axios';
-import SupportChatWidget from "./SupportChatWidget";
+
 
 const BRAND = {
   gold: '#EC9B14',
@@ -229,7 +229,7 @@ const Footer = () => {
         <ArrowUpward fontSize="small" />
       </IconButton>
 
-      <SupportChatWidget />
+     
     </Box>
   );
 };
