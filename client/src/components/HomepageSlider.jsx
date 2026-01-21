@@ -30,9 +30,9 @@ const HomepageSlider = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 1000,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 3500,
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
