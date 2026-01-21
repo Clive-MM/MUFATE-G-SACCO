@@ -3,7 +3,7 @@ import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   AppBar, Toolbar, Box, Button, Link, Stack, IconButton,
   Typography, useTheme, useMediaQuery, Drawer, Collapse, List,
-  ListItemButton, ListItemText, Tooltip
+  ListItemButton, ListItemText, Tooltip, ListItemIcon
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -57,9 +57,7 @@ const Navbar = () => {
     },
     [`& .${tooltipClasses.arrow}`]: {
       color: BRAND_DARK,
-      '&:before': {
-        border: `1px solid ${BRAND_GOLD}`,
-      },
+      '&:before': { border: `1px solid ${BRAND_GOLD}` },
     },
   };
 
@@ -129,20 +127,13 @@ const Navbar = () => {
     alignItems: 'center',
     gap: '2px',
     transition: 'all 0.3s ease',
-    '&:hover': {
-      color: '#FFF',
-      transform: 'translateY(-1px)',
-    },
+    '&:hover': { color: '#FFF', transform: 'translateY(-1px)' },
   });
 
   const NavDropdown = ({ label, items, isActive }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
-      <Box
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-        sx={{ position: 'relative' }}
-      >
+      <Box onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)} sx={{ position: 'relative' }}>
         <Link underline="none" sx={sharedLinkStyles(isActive)}>
           {label}
           <ExpandMore sx={{ fontSize: '1.1rem', transition: '0.3s', transform: isOpen ? 'rotate(180deg)' : 'none' }} />
@@ -152,35 +143,18 @@ const Navbar = () => {
           {isOpen && (
             <Box
               component={motion.div}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
               sx={{
-                position: 'absolute',
-                top: 'calc(100% + 5px)',
-                left: '-10px',
-                display: 'flex',
-                flexDirection: 'column',
-                backgroundColor: 'rgba(2, 21, 15, 0.98)',
-                backdropFilter: 'blur(12px)',
-                borderRadius: '12px',
-                boxShadow: '0px 15px 35px rgba(0, 0, 0, 0.6)',
-                minWidth: 220,
-                zIndex: 100,
-                py: 1.5,
+                position: 'absolute', top: 'calc(100% + 5px)', left: '-10px', display: 'flex', flexDirection: 'column',
+                backgroundColor: 'rgba(2, 21, 15, 0.98)', backdropFilter: 'blur(12px)', borderRadius: '12px',
+                boxShadow: '0px 15px 35px rgba(0, 0, 0, 0.6)', minWidth: 220, zIndex: 100, py: 1.5,
                 border: `1px solid rgba(236, 155, 20, 0.3)`,
               }}
             >
               {items.map((item) => (
-                <Link
-                  key={item.to}
-                  component={RouterLink}
-                  to={item.to}
-                  underline="none"
+                <Link key={item.to} component={RouterLink} to={item.to} underline="none"
                   sx={{
                     px: 3, py: 1.2, fontWeight: 600, fontSize: '0.85rem', color: BRAND_TEXT_LIGHT,
-                    transition: '0.2s',
                     '&:hover': { backgroundColor: 'rgba(236, 155, 20, 0.15)', color: BRAND_GOLD, pl: 3.5 }
                   }}
                 >
@@ -195,98 +169,48 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar
-      position="fixed"
-      elevation={0}
-      sx={{
-        background: 'rgba(2, 21, 15, 0.96)',
-        backgroundImage: 'none',
-        boxShadow: `0 4px 20px rgba(236, 155, 20, 0.15)`,
-        borderBottom: `1px solid rgba(236, 155, 20, 0.2)`,
-        zIndex: theme.zIndex.appBar,
-      }}
-    >
+    <AppBar position="fixed" elevation={0} sx={{ background: 'rgba(2, 21, 15, 0.96)', borderBottom: `1px solid rgba(236, 155, 20, 0.2)`, zIndex: theme.zIndex.appBar }}>
       <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.6, md: 1 }, px: { md: 4 }, minHeight: { xs: 80, md: 100 } }}>
-
+        
         {/* LOGO AREA */}
-        <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Link component={RouterLink} to="/" underline="none" sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}>
             <Box component="img" src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
-              sx={{ height: isMobile ? 55 : 75, width: 'auto', filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.5))' }} />
+              sx={{ height: isMobile ? 55 : 75, width: 'auto' }} />
             <Stack spacing={0} sx={{ ml: 1.5 }}>
-              <Typography sx={{ fontSize: { xs: '0.8rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.1em', lineHeight: 1.1 }}>
-                Golden Generation
-              </Typography>
-              <Typography sx={{ fontSize: { xs: '0.8rem', md: '0.9rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase', letterSpacing: '0.2em', lineHeight: 1.1 }}>
-                DT SACCO
-              </Typography>
-              <Typography sx={{ display: { xs: 'none', sm: 'block' }, fontSize: { sm: '0.7rem', md: '0.8rem' }, fontWeight: 600, fontStyle: 'italic', color: '#FFF', opacity: 0.9 }}>
-                Walking With You
-              </Typography>
+              <Typography sx={{ fontSize: { xs: '0.8rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase' }}>Golden Generation</Typography>
+              <Typography sx={{ fontSize: { xs: '0.8rem', md: '0.9rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase' }}>DT SACCO</Typography>
             </Stack>
           </Link>
         </Box>
 
-        {/* NAVIGATION & ACTIONS CONTAINER */}
-        <Stack direction="row" spacing={1.5} alignItems="center">
-          
-          {/* 1. LAPTOP NAVIGATION (Hidden on mobile) */}
-          {!isMobile && (
-            <Stack direction="row" spacing={2.5} alignItems="center" sx={{ mr: 2 }}>
-              {navLinks.map((item) => (
-                item.items ? (
-                  <NavDropdown key={item.label} label={item.label} items={item.items} isActive={location.pathname.startsWith(item.to)} />
-                ) : (
-                  <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(location.pathname === item.to)}>
-                    {item.label}
-                  </Link>
-                )
-              ))}
-              <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>
-            </Stack>
-          )}
-
-          {/* 2. CONTACT ICON (ALWAYS VISIBLE) */}
-          <Tooltip
-            title="Contact Us"
-            arrow
-            placement="bottom"
-            sx={tooltipStyles}
-          >
-            <IconButton
-              onClick={handleContactClick}
-              sx={{
-                color: BRAND_GOLD,
-                border: `2px solid ${BRAND_GOLD}`,
-                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                backgroundColor: 'rgba(236, 155, 20, 0.05)',
-                boxShadow: '0 0 0 0 rgba(236, 155, 20, 0.4)',
-                '&:hover': {
-                  backgroundColor: BRAND_GOLD,
-                  color: BRAND_DARK,
-                  transform: 'scale(1.1) rotate(15deg)',
-                  boxShadow: `0 0 20px 5px rgba(236, 155, 20, 0.3)`,
-                },
-                '&:active': { transform: 'scale(0.95)' }
-              }}
-            >
-              <PhoneIcon sx={{ fontSize: '1.3rem' }} />
-            </IconButton>
-          </Tooltip>
-
-          {/* 3. MOBILE MENU BUTTON (Only visible on mobile) */}
-          {isMobile && (
-            <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: BRAND_GOLD }}>
-              <MenuIcon fontSize="large" />
-            </IconButton>
-          )}
-        </Stack>
+        {/* DESKTOP VIEW */}
+        {!isMobile ? (
+          <Stack direction="row" spacing={2.5} alignItems="center">
+            {navLinks.map((item) => (
+              item.items ? (
+                <NavDropdown key={item.label} label={item.label} items={item.items} isActive={location.pathname.startsWith(item.to)} />
+              ) : (
+                <Link key={item.to} component={RouterLink} to={item.to} underline="none" sx={sharedLinkStyles(location.pathname === item.to)}>{item.label}</Link>
+              )
+            ))}
+            <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>
+            
+            {/* Desktop Phone Icon */}
+            <Tooltip title="Contact Us" arrow placement="bottom" sx={tooltipStyles}>
+              <IconButton onClick={handleContactClick} sx={{ color: BRAND_GOLD, border: `2px solid ${BRAND_GOLD}`, ml: 2 }}>
+                <PhoneIcon sx={{ fontSize: '1.3rem' }} />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        ) : (
+          /* MOBILE HAMBURGER ONLY */
+          <IconButton onClick={() => setDrawerOpen(true)} sx={{ color: BRAND_GOLD }}><MenuIcon fontSize="large" /></IconButton>
+        )}
 
         {/* MOBILE DRAWER */}
         <Drawer
-          anchor="left"
-          open={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
+          anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}
           sx={{ '& .MuiDrawer-paper': { width: '85%', backgroundColor: BRAND_DARK, color: BRAND_TEXT_LIGHT } }}
         >
           <Box sx={{ p: 3, borderBottom: `1px solid rgba(236, 155, 20, 0.2)`, mb: 2 }}>
@@ -318,6 +242,12 @@ const Navbar = () => {
                 )}
               </React.Fragment>
             ))}
+
+            {/* MOBILE CONTACT LINK (Inside the list like you wanted) */}
+            <ListItemButton onClick={handleContactClick} sx={{ mt: 2, borderTop: `1px solid rgba(236, 155, 20, 0.1)` }}>
+              <ListItemIcon sx={{ minWidth: 40 }}><PhoneIcon sx={{ color: BRAND_GOLD }} /></ListItemIcon>
+              <ListItemText primary="Contact Us" primaryTypographyProps={{ sx: { fontWeight: 700, color: BRAND_GOLD } }} />
+            </ListItemButton>
           </List>
         </Drawer>
       </Toolbar>
