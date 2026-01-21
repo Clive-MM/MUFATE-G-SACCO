@@ -5,6 +5,7 @@ import {
   Grid,
   CircularProgress,
   Paper,
+  Container,
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
@@ -15,11 +16,13 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-// Brand colors – same as AboutSection
-const GOLD = '#FFD700';
-const LIGHT_GOLD = '#FFE066';
-// const DEEP_GREEN = '#006400';
-const DARK_BG = 'linear-gradient(135deg, #021409 0%, #013716 45%, #000a06 100%)';
+// Brand colors - unified with AboutSection
+const BRAND = {
+  gold: "#EC9B14",
+  dark: "#02150F",
+  light: "#F4F4F4",
+  textMuted: "rgba(244, 244, 244, 0.7)",
+};
 
 const SaccoStatsSection = () => {
   const [stats, setStats] = useState(null);
@@ -38,39 +41,18 @@ const SaccoStatsSection = () => {
       });
   }, []);
 
+  const iconStyle = {
+    fontSize: { xs: 40, md: 45 },
+    color: BRAND.gold,
+    mb: 2,
+    filter: `drop-shadow(0 0 10px rgba(236, 155, 20, 0.4))`,
+  };
+
   const iconMap = [
-    <CalendarTodayIcon
-      sx={{
-        fontSize: 42,
-        color: GOLD,
-        mb: 1.5,
-        filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.9))',
-      }}
-    />,
-    <GroupsIcon
-      sx={{
-        fontSize: 42,
-        color: GOLD,
-        mb: 1.5,
-        filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.9))',
-      }}
-    />,
-    <PhoneIphoneIcon
-      sx={{
-        fontSize: 42,
-        color: GOLD,
-        mb: 1.5,
-        filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.9))',
-      }}
-    />,
-    <LocationCityIcon
-      sx={{
-        fontSize: 42,
-        color: GOLD,
-        mb: 1.5,
-        filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.9))',
-      }}
-    />,
+    <CalendarTodayIcon sx={iconStyle} />,
+    <GroupsIcon sx={iconStyle} />,
+    <PhoneIphoneIcon sx={iconStyle} />,
+    <LocationCityIcon sx={iconStyle} />,
   ];
 
   const statItems = stats
@@ -85,140 +67,144 @@ const SaccoStatsSection = () => {
   return (
     <Box
       sx={{
-        background: DARK_BG, // same as AboutSection
-        py: 10,
-        px: { xs: 2, sm: 4, md: 8 },
+        bgcolor: BRAND.dark,
+        py: { xs: 8, md: 12 },
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      {/* Heading block */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: 900,
-            textAlign: 'center',
-            mb: 1.5,
-            fontSize: { xs: '1.9rem', md: '2.5rem' },
-            backgroundImage: 'linear-gradient(to right, #FFD700, #FFE066)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            letterSpacing: 1.5,
-            textTransform: 'uppercase',
-            textShadow: '0 0 18px rgba(0,0,0,0.8)',
-          }}
-        >
-          Our Impact in Numbers
-        </Typography>
+      {/* Background Glow - matches AboutSection style */}
+      <Box sx={{
+        position: 'absolute',
+        bottom: '-10%',
+        left: '-5%',
+        width: '300px',
+        height: '300px',
+        bgcolor: BRAND.gold,
+        filter: 'blur(120px)',
+        opacity: 0.04,
+        borderRadius: '50%',
+        zIndex: 0
+      }} />
 
-        <Typography
-          variant="subtitle2"
-          sx={{
-            textAlign: 'center',
-            mb: 3,
-            color: '#f3f3f3',
-            fontSize: { xs: '0.95rem', md: '1.05rem' },
-            letterSpacing: 0.6,
-            maxWidth: 900,
-            mx: 'auto',
-          }}
-        >
-          Golden Generation DT SACCO continues to grow with our members —
-          in service, reach and digital convenience.
-        </Typography>
+      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
+        {/* Heading block */}
+        <Box sx={{ mb: { xs: 6, md: 10 }, textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: 900,
+                color: BRAND.gold,
+                fontSize: { xs: '2rem', md: '3rem' },
+                letterSpacing: { xs: 1, md: 2 },
+                textTransform: 'uppercase',
+                mb: 2,
+              }}
+            >
+              Our Impact in Numbers
+            </Typography>
 
-        {/* NOTE: gold underline removed as requested */}
-      </motion.div>
-
-      {/* Content: loader or stats */}
-      {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress sx={{ color: GOLD }} />
+            <Typography
+              sx={{
+                color: BRAND.light,
+                fontSize: { xs: '0.95rem', md: '1.1rem' },
+                maxWidth: 700,
+                mx: 'auto',
+                opacity: 0.8,
+                lineHeight: 1.6,
+                fontWeight: 300
+              }}
+            >
+              Golden Generation DT SACCO continues to grow with our members — 
+              expanding our service, reach, and digital convenience across the region.
+            </Typography>
+          </motion.div>
         </Box>
-      ) : (
-        <Grid container spacing={4} justifyContent="center">
-          {statItems.map((item, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.06, y: -4 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.55, delay: index * 0.12 }}
-              >
-                <Paper
-                  elevation={0}
-                  sx={{
-                    py: 4,
-                    px: 2.5,
-                    textAlign: 'center',
-                    borderRadius: 5,
-                    backdropFilter: 'blur(18px)',
-                    background:
-                      'linear-gradient(145deg, rgba(0,0,0,0.8), rgba(1,40,18,0.9))',
-                    border: '1px solid rgba(255,215,0,0.28)',
-                    boxShadow:
-                      '0 26px 70px rgba(0,0,0,0.85), 0 0 26px rgba(255,215,0,0.2)',
-                    transition: 'all 0.3s ease-in-out',
-                    '&:hover': {
-                      borderColor: 'rgba(255,215,0,0.55)',
-                      boxShadow:
-                        '0 30px 80px rgba(0,0,0,0.95), 0 0 32px rgba(255,215,0,0.45)',
-                      background:
-                        'linear-gradient(145deg, rgba(1,55,22,0.95), rgba(0,0,0,0.9))',
-                    },
-                  }}
+
+        {/* Content: loader or stats */}
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
+            <CircularProgress sx={{ color: BRAND.gold }} />
+          </Box>
+        ) : (
+          <Grid container spacing={{ xs: 3, md: 4 }}>
+            {statItems.map((item, index) => (
+              <Grid item xs={12} sm={6} md={3} key={index}>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  {/* Icon */}
-                  {iconMap[index]}
-
-                  {/* Number */}
-                  <Typography
-                    variant="h4"
+                  <Paper
+                    elevation={0}
                     sx={{
-                      fontWeight: 900,
-                      color: GOLD,
-                      fontSize: { xs: '2.1rem', md: '2.7rem' },
-                      textShadow:
-                        '0 0 12px rgba(255,215,0,1), 0 0 26px rgba(0,0,0,0.9)',
-                      letterSpacing: 1,
-                      mb: 1,
+                      py: { xs: 5, md: 6 },
+                      px: 3,
+                      textAlign: 'center',
+                      borderRadius: '24px',
+                      backdropFilter: 'blur(12px)',
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                      '&:hover': {
+                        transform: 'translateY(-8px)',
+                        borderColor: BRAND.gold,
+                        background: 'rgba(236, 155, 20, 0.04)',
+                        boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 15px rgba(236, 155, 20, 0.1)`,
+                      },
                     }}
                   >
-                    <CountUp
-                      end={Number(item.value)}
-                      duration={2}
-                      separator=","
-                      suffix="+"
-                    />
-                  </Typography>
+                    {/* Icon */}
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                      {iconMap[index]}
+                    </Box>
 
-                  {/* Label */}
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      color: LIGHT_GOLD,
-                      mt: 0.5,
-                      fontWeight: 700,
-                      letterSpacing: 1,
-                      textTransform: 'uppercase',
-                      fontSize: { xs: '0.8rem', md: '0.95rem' },
-                    }}
-                  >
-                    {item.label}
-                  </Typography>
+                    {/* Number */}
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        fontWeight: 900,
+                        color: BRAND.gold,
+                        fontSize: { xs: '2.2rem', md: '2.8rem' },
+                        mb: 1,
+                        fontFamily: 'serif', // Gives a prestigious "financial" feel
+                      }}
+                    >
+                      <CountUp
+                        end={Number(item.value)}
+                        duration={2.5}
+                        separator=","
+                        suffix="+"
+                      />
+                    </Typography>
 
-                  {/* Subtle base line / accent removed as requested */}
-                </Paper>
-              </motion.div>
-            </Grid>
-          ))}
-        </Grid>
-      )}
+                    {/* Label */}
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        color: BRAND.textMuted,
+                        fontWeight: 700,
+                        letterSpacing: 1.5,
+                        textTransform: 'uppercase',
+                        fontSize: { xs: '0.75rem', md: '0.85rem' },
+                      }}
+                    >
+                      {item.label}
+                    </Typography>
+                  </Paper>
+                </motion.div>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Container>
     </Box>
   );
 };
