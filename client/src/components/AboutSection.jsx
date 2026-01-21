@@ -95,7 +95,7 @@ const AboutSection = () => {
             </Typography>
 
             <Typography sx={{ color: BRAND.light, fontSize: '1.05rem', lineHeight: 1.8, mb: 4, opacity: 0.9 }}>
-              <strong style={{ color: BRAND.gold }}>Golden Generation Deposit Taking SACCO</strong> is a trusted, member-owned financial institution serving tea farmers, salaried workers, and entrepreneurs across Western Kenya.
+              <strong style={{ color: BRAND.gold }}>Golden Generation Deposit Taking SACCO</strong> is a trusted, member-owned financial institution serving tea farmers, salaried workers,county workers and  enterprenuers.
             </Typography>
 
             <List dense sx={{ pl: 0, mb: 4 }}>
