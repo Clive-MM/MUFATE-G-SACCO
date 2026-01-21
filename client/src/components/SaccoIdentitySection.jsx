@@ -13,7 +13,7 @@ import StarIcon from '@mui/icons-material/Star';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import axios from 'axios';
 
-// Unified Brand Colors
+// Unified Brand Colors from previous component
 const BRAND = {
   gold: "#EC9B14",
   lightGold: "#FFC25F",
@@ -64,12 +64,12 @@ const SaccoIdentitySection = () => {
                 color: BRAND.lightGold,
                 textAlign: 'center',
                 mb: 1,
-                fontSize: { xs: '0.9rem', md: '1rem' },
-                textShadow: `0 0 8px rgba(236, 155, 20, 0.4)`,
-                fontWeight: 500
+                fontSize: { xs: '0.9rem', md: '0.95rem' },
+                textShadow: `0 0 8px rgba(236, 155, 20, 0.5)`,
+                fontWeight: 600
               }}
             >
-              • {v}
+              {v}
             </Typography>
           ))}
         </Box>
@@ -92,23 +92,23 @@ const SaccoIdentitySection = () => {
         position: 'relative',
       }}
     >
-      {/* Background Decoration Glow - Unified with Stats Section */}
+      {/* Aesthetic Background Glow */}
       <Box sx={{
         position: 'absolute',
-        top: '10%',
-        right: '-5%',
-        width: { xs: '300px', md: '500px' },
-        height: { xs: '300px', md: '500px' },
+        top: '15%',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '80%',
+        height: '400px',
         bgcolor: BRAND.gold,
-        filter: 'blur(150px)',
-        opacity: 0.04,
-        borderRadius: '50%',
+        filter: 'blur(180px)',
+        opacity: 0.03,
         zIndex: 0
       }} />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-        {/* SECTION HEADING */}
-        <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 10 }, px: 2 }}>
+        {/* HEADER SECTION */}
+        <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 12 } }}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -121,19 +121,19 @@ const SaccoIdentitySection = () => {
                 color: BRAND.gold,
                 fontWeight: 900,
                 textTransform: 'uppercase',
-                fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4rem" },
-                letterSpacing: { xs: "0.05em", md: "0.1em" },
+                fontSize: { xs: "2.5rem", md: "4rem" },
+                letterSpacing: "0.1em",
                 mb: 2,
-                textShadow: `0 0 20px rgba(236, 155, 20, 0.3)`,
+                textShadow: `0 0 15px rgba(236, 155, 20, 0.2)`,
               }}
             >
               Our Identity
             </Typography>
-            <Box sx={{ width: '60px', height: '4px', bgcolor: BRAND.gold, mx: 'auto', borderRadius: '2px' }} />
+            <Box sx={{ width: '80px', height: '4px', bgcolor: BRAND.gold, mx: 'auto', borderRadius: '2px' }} />
           </motion.div>
         </Box>
 
-        {/* LOADING */}
+        {/* 3-CARD ROW LAYOUT */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
             <CircularProgress sx={{ color: BRAND.gold }} />
@@ -141,22 +141,22 @@ const SaccoIdentitySection = () => {
         ) : (
           <Grid 
             container 
-            spacing={{ xs: 3, md: 4 }} 
+            spacing={{ xs: 4, md: 3, lg: 5 }} // Spacing between the 3 cards
             justifyContent="center"
             alignItems="stretch"
           >
             {identityCards.map((card, index) => {
               const IconComponent = card.icon;
               return (
-                <Grid item xs={12} md={4} key={index} sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Grid item xs={12} sm={6} md={4} key={index}>
                   <Box
                     component={motion.div}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    whileHover={{ y: -10 }}
+                    whileHover={{ y: -12 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.15 }}
-                    sx={{ width: '100%', maxWidth: { xs: '400px', md: 'none' } }}
+                    transition={{ duration: 0.6, delay: index * 0.2 }}
+                    sx={{ height: '100%' }}
                   >
                     <Paper
                       elevation={0}
@@ -165,36 +165,36 @@ const SaccoIdentitySection = () => {
                         px: { xs: 3, md: 4 },
                         height: '100%',
                         textAlign: 'center',
-                        borderRadius: '24px',
-                        backdropFilter: 'blur(10px)',
+                        borderRadius: '32px', // More rounded for modern feel
+                        backdropFilter: 'blur(12px)',
                         background: 'rgba(255, 255, 255, 0.02)',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                        transition: 'all 0.4s ease-in-out',
                         '&:hover': {
                           borderColor: BRAND.gold,
-                          bgcolor: 'rgba(236, 155, 20, 0.06)',
-                          boxShadow: `0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(236, 155, 20, 0.2)`,
+                          bgcolor: 'rgba(236, 155, 20, 0.07)',
+                          boxShadow: `0 30px 60px rgba(0,0,0,0.6), 0 0 20px rgba(236, 155, 20, 0.1)`,
                         },
                       }}
                     >
-                      {/* Radial Icon Badge - Modernized from your code */}
+                      {/* Radial Badge from your style */}
                       <Box
                         sx={{
-                          width: { xs: 60, md: 70 },
-                          height: { xs: 60, md: 70 },
+                          width: 70,
+                          height: 70,
                           borderRadius: '50%',
                           background: `radial-gradient(circle, ${BRAND.lightGold}, ${BRAND.gold})`,
-                          boxShadow: `0 0 20px rgba(236, 155, 20, 0.4)`,
+                          boxShadow: `0 0 20px rgba(236, 155, 20, 0.5)`,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           mb: 4,
                         }}
                       >
-                        <IconComponent sx={{ color: BRAND.dark, fontSize: { xs: 30, md: 35 } }} />
+                        <IconComponent sx={{ color: BRAND.dark, fontSize: 32 }} />
                       </Box>
 
                       <Typography
@@ -204,7 +204,7 @@ const SaccoIdentitySection = () => {
                           color: BRAND.gold,
                           textTransform: 'uppercase',
                           letterSpacing: '0.15em',
-                          fontSize: { xs: '1.2rem', md: '1.4rem' },
+                          fontSize: '1.4rem',
                           mb: 3,
                           textShadow: `0 0 10px rgba(236, 155, 20, 0.3)`,
                         }}
@@ -214,12 +214,11 @@ const SaccoIdentitySection = () => {
 
                       <Box
                         sx={{
-                          lineHeight: 1.8,
-                          fontSize: { xs: '0.95rem', md: '1.05rem' },
+                          lineHeight: 1.9,
+                          fontSize: { xs: '1rem', md: '1.05rem' },
                           color: BRAND.light,
-                          opacity: 0.9,
+                          opacity: 0.85,
                           textAlign: 'center',
-                          fontWeight: 300,
                         }}
                       >
                         {card.content}
