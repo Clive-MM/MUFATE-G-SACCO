@@ -44,83 +44,69 @@ const SaccoIdentitySection = () => {
   }, []);
 
   const identityCards = [
-    {
-      title: 'Our Mission',
-      icon: <FlagIcon sx={{ fontSize: { xs: 40, md: 50 }, color: BRAND.gold }} />,
-      content: mission,
-    },
+    { title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: 50, color: BRAND.gold }} />, content: mission },
     {
       title: 'Our Values',
-      icon: <StarIcon sx={{ fontSize: { xs: 40, md: 50 }, color: BRAND.gold }} />,
+      icon: <StarIcon sx={{ fontSize: 50, color: BRAND.gold }} />,
       content: (
         <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
           {coreValues.map((v, i) => (
-            <Typography key={i} component="li" sx={{ color: BRAND.lightGold, mb: 0.5, fontSize: "0.95rem", fontWeight: 500 }}>
+            <Typography key={i} component="li" sx={{ color: BRAND.lightGold, mb: 0.5, fontWeight: 500 }}>
               {v}
             </Typography>
           ))}
         </Box>
       ),
     },
-    {
-      title: 'Our Vision',
-      icon: <VisibilityIcon sx={{ fontSize: { xs: 40, md: 50 }, color: BRAND.gold }} />,
-      content: vision,
-    },
+    { title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: 50, color: BRAND.gold }} />, content: vision },
   ];
 
   return (
-    <Box sx={{ bgcolor: BRAND.dark, py: { xs: 10, md: 15 }, position: 'relative', overflow: 'hidden' }}>
-      <Container maxWidth="lg">
-        <Box sx={{ textAlign: 'center', mb: 8 }}>
-          <Typography variant="h2" sx={{ color: BRAND.gold, fontWeight: 900, textTransform: 'uppercase', fontSize: { xs: "2rem", md: "3.5rem" }, mb: 2 }}>
-            Our Identity
-          </Typography>
-        </Box>
+    <Box sx={{ bgcolor: BRAND.dark, py: { xs: 8, md: 12 }, width: '100%' }}>
+      <Container maxWidth="xl">
+        <Typography 
+          variant="h2" 
+          textAlign="center" 
+          sx={{ color: BRAND.gold, fontWeight: 900, mb: 10, textTransform: 'uppercase' }}
+        >
+          Our Identity
+        </Typography>
 
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
-            <CircularProgress sx={{ color: BRAND.gold }} />
-          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}><CircularProgress sx={{ color: BRAND.gold }} /></Box>
         ) : (
           <Grid 
             container 
-            spacing={4} // This creates the uniform gap shown in your first image
-            alignItems="stretch" // This ensures all cards are the same height
+            spacing={8} // Matches your screenshot selection
+            alignItems="stretch" // Forces all cards to have the same height
           >
             {identityCards.map((card, index) => (
               <Grid item xs={12} md={4} key={index} sx={{ display: 'flex' }}>
                 <Paper
-                  component={motion.div}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.2 }}
                   elevation={0}
+                  component={motion.div}
+                  whileHover={{ y: -10 }}
                   sx={{
-                    p: 4,
-                    width: '100%', // Fill the grid column width
+                    p: 5,
+                    width: '100%', // Ensures card fills the Grid column width
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     textAlign: 'center',
-                    borderRadius: '20px',
+                    borderRadius: '24px',
                     bgcolor: 'rgba(255, 255, 255, 0.03)',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
-                    transition: '0.3s',
-                    '&:hover': {
-                      borderColor: BRAND.gold,
-                      bgcolor: 'rgba(236, 155, 20, 0.05)',
-                    }
+                    transition: 'border-color 0.3s',
+                    '&:hover': { borderColor: BRAND.gold }
                   }}
                 >
                   <Box sx={{ mb: 3 }}>{card.icon}</Box>
-                  <Typography variant="h5" sx={{ color: BRAND.gold, fontWeight: 800, mb: 2, textTransform: 'uppercase' }}>
+                  <Typography variant="h5" sx={{ color: BRAND.gold, fontWeight: 800, mb: 3, textTransform: 'uppercase' }}>
                     {card.title}
                   </Typography>
-                  <Typography sx={{ color: BRAND.light, opacity: 0.8, lineHeight: 1.7 }}>
+                  <Box sx={{ color: BRAND.light, opacity: 0.8, lineHeight: 1.8 }}>
                     {card.content}
-                  </Typography>
+                  </Box>
                 </Paper>
               </Grid>
             ))}
