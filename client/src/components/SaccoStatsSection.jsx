@@ -108,7 +108,7 @@ const SaccoStatsSection = () => {
                 mb: 3
               }}
             >
-              Our Impact
+              Our Impact In Numbers 
             </Typography>
             <Typography 
               sx={{ 
