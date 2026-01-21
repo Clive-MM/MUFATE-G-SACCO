@@ -42,7 +42,7 @@ const SaccoStatsSection = () => {
   }, []);
 
   const iconStyle = {
-    fontSize: { xs: 40, md: 45 },
+    fontSize: { xs: 40, md: 50 },
     color: BRAND.gold,
     mb: 2,
     filter: `drop-shadow(0 0 10px rgba(236, 155, 20, 0.4))`,
@@ -68,113 +68,122 @@ const SaccoStatsSection = () => {
     <Box
       sx={{
         bgcolor: BRAND.dark,
-        py: { xs: 8, md: 12 },
-        position: 'relative',
+        py: { xs: 10, md: 15 }, // Matching AboutSection vertical padding
+        width: '100%',
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
-      {/* Background Glow - matches AboutSection style */}
+      {/* Background Decoration Glow */}
       <Box sx={{
         position: 'absolute',
-        bottom: '-10%',
+        top: '20%',
         left: '-5%',
-        width: '300px',
-        height: '300px',
+        width: '400px',
+        height: '400px',
         bgcolor: BRAND.gold,
-        filter: 'blur(120px)',
-        opacity: 0.04,
+        filter: 'blur(150px)',
+        opacity: 0.05,
         borderRadius: '50%',
         zIndex: 0
       }} />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Heading block */}
-        <Box sx={{ mb: { xs: 6, md: 10 }, textAlign: 'center' }}>
+        {/* HEADER SECTION - Centered text */}
+        <Box sx={{ textAlign: 'center', mb: { xs: 8, md: 10 }, px: 2 }}>
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
             <Typography
-              variant="h3"
+              variant="h2"
               sx={{
-                fontWeight: 900,
                 color: BRAND.gold,
-                fontSize: { xs: '2rem', md: '3rem' },
-                letterSpacing: { xs: 1, md: 2 },
+                fontWeight: 900,
                 textTransform: 'uppercase',
-                mb: 2,
+                fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4rem" },
+                letterSpacing: { xs: "0.05em", md: "0.1em" },
+                mb: 3
               }}
             >
-              Our Impact in Numbers
+              Our Impact
             </Typography>
-
-            <Typography
-              sx={{
-                color: BRAND.light,
-                fontSize: { xs: '0.95rem', md: '1.1rem' },
-                maxWidth: 700,
-                mx: 'auto',
-                opacity: 0.8,
-                lineHeight: 1.6,
+            <Typography 
+              sx={{ 
+                color: BRAND.light, 
+                maxWidth: "850px", 
+                mx: 'auto', 
+                fontSize: { xs: "1rem", md: "1.15rem" }, 
+                opacity: 0.85,
+                lineHeight: 1.8,
                 fontWeight: 300
               }}
             >
-              Golden Generation DT SACCO continues to grow with our members — 
-              expanding our service, reach, and digital convenience across the region.
+              Golden Generation DT SACCO continues to grow with our members—expanding 
+              our service, reach, and digital convenience across the region.
             </Typography>
           </motion.div>
         </Box>
 
-        {/* Content: loader or stats */}
+        {/* STATS GRID - Center aligned items */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
             <CircularProgress sx={{ color: BRAND.gold }} />
           </Box>
         ) : (
-          <Grid container spacing={{ xs: 3, md: 4 }}>
+          <Grid 
+            container 
+            spacing={{ xs: 3, md: 4 }} 
+            justifyContent="center" // This centers the cards horizontally
+            alignItems="stretch"
+          >
             {statItems.map((item, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
+              <Grid item xs={12} sm={6} md={3} key={index} sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Box
+                  component={motion.div}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -10 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  sx={{ width: '100%', maxWidth: { xs: '400px', md: 'none' } }}
                 >
                   <Paper
                     elevation={0}
                     sx={{
-                      py: { xs: 5, md: 6 },
+                      py: { xs: 6, md: 8 },
                       px: 3,
+                      height: '100%',
                       textAlign: 'center',
                       borderRadius: '24px',
-                      backdropFilter: 'blur(12px)',
+                      backdropFilter: 'blur(10px)',
                       background: 'rgba(255, 255, 255, 0.02)',
                       border: '1px solid rgba(255, 255, 255, 0.08)',
-                      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                       '&:hover': {
-                        transform: 'translateY(-8px)',
                         borderColor: BRAND.gold,
-                        background: 'rgba(236, 155, 20, 0.04)',
-                        boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 15px rgba(236, 155, 20, 0.1)`,
+                        bgcolor: 'rgba(236, 155, 20, 0.06)',
+                        boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(236, 155, 20, 0.1)`,
                       },
                     }}
                   >
-                    {/* Icon */}
-                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Box sx={{ mb: 3 }}>
                       {iconMap[index]}
                     </Box>
 
-                    {/* Number */}
                     <Typography
                       variant="h3"
                       sx={{
                         fontWeight: 900,
                         color: BRAND.gold,
-                        fontSize: { xs: '2.2rem', md: '2.8rem' },
+                        fontSize: { xs: '2.5rem', md: '3rem' },
                         mb: 1,
-                        fontFamily: 'serif', // Gives a prestigious "financial" feel
+                        letterSpacing: -1
                       }}
                     >
                       <CountUp
@@ -185,21 +194,20 @@ const SaccoStatsSection = () => {
                       />
                     </Typography>
 
-                    {/* Label */}
                     <Typography
                       variant="subtitle2"
                       sx={{
                         color: BRAND.textMuted,
                         fontWeight: 700,
-                        letterSpacing: 1.5,
+                        letterSpacing: '0.15em',
                         textTransform: 'uppercase',
-                        fontSize: { xs: '0.75rem', md: '0.85rem' },
+                        fontSize: { xs: '0.8rem', md: '0.9rem' },
                       }}
                     >
                       {item.label}
                     </Typography>
                   </Paper>
-                </motion.div>
+                </Box>
               </Grid>
             ))}
           </Grid>
