@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
-  Grid,
   CircularProgress,
-  Paper,
+  Card,
+  CardContent,
+  CardActionArea,
   Container,
 } from '@mui/material';
 import { motion } from 'framer-motion';
@@ -25,6 +26,9 @@ const SaccoIdentitySection = () => {
   const [vision, setVision] = useState('');
   const [coreValues, setCoreValues] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // State for the interactive selection styling from your reference component
+  const [selectedCard, setSelectedCard] = useState(0);
 
   useEffect(() => {
     const fetchProfile = axios.get('https://mufate-g-sacco.onrender.com/sacco-profile');
@@ -44,10 +48,11 @@ const SaccoIdentitySection = () => {
   }, []);
 
   const identityCards = [
-    { title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: 50, color: BRAND.gold }} />, content: mission },
+    { id: 0, title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: 50 }} />, content: mission },
     {
+      id: 1,
       title: 'Our Values',
-      icon: <StarIcon sx={{ fontSize: 50, color: BRAND.gold }} />,
+      icon: <StarIcon sx={{ fontSize: 50 }} />,
       content: (
         <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
           {coreValues.map((v, i) => (
@@ -58,7 +63,7 @@ const SaccoIdentitySection = () => {
         </Box>
       ),
     },
-    { title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: 50, color: BRAND.gold }} />, content: vision },
+    { id: 2, title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: 50 }} />, content: vision },
   ];
 
   return (
@@ -73,44 +78,72 @@ const SaccoIdentitySection = () => {
         </Typography>
 
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}><CircularProgress sx={{ color: BRAND.gold }} /></Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
+            <CircularProgress sx={{ color: BRAND.gold }} />
+          </Box>
         ) : (
-          <Grid 
-            container 
-            spacing={8} // Matches your screenshot selection
-            alignItems="stretch" // Forces all cards to have the same height
+          <Box
+            sx={{
+              width: '100%',
+              display: 'grid',
+              // Applied the exact Grid logic from the reference component
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))',
+              gap: 4, // Spacing between cards
+            }}
           >
             {identityCards.map((card, index) => (
-              <Grid item xs={12} md={4} key={index} sx={{ display: 'flex' }}>
-                <Paper
-                  elevation={0}
-                  component={motion.div}
-                  whileHover={{ y: -10 }}
+              <Card 
+                key={card.id}
+                component={motion.div}
+                whileHover={{ y: -5 }}
+                sx={{ 
+                  bgcolor: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '24px',
+                  color: BRAND.light,
+                  transition: '0.3s'
+                }}
+              >
+                <CardActionArea
+                  onClick={() => setSelectedCard(index)}
+                  data-active={selectedCard === index ? '' : undefined}
                   sx={{
-                    p: 5,
-                    width: '100%', // Ensures card fills the Grid column width
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    borderRadius: '24px',
-                    bgcolor: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    transition: 'border-color 0.3s',
-                    '&:hover': { borderColor: BRAND.gold }
+                    height: '100%',
+                    p: 2,
+                    // Applied the exact [data-active] selection styling
+                    '&[data-active]': {
+                      backgroundColor: 'rgba(236, 155, 20, 0.1)', // Gold tint for active state
+                      borderColor: BRAND.gold,
+                      '&:hover': {
+                        backgroundColor: 'rgba(236, 155, 20, 0.15)',
+                      },
+                    },
                   }}
                 >
-                  <Box sx={{ mb: 3 }}>{card.icon}</Box>
-                  <Typography variant="h5" sx={{ color: BRAND.gold, fontWeight: 800, mb: 3, textTransform: 'uppercase' }}>
-                    {card.title}
-                  </Typography>
-                  <Box sx={{ color: BRAND.light, opacity: 0.8, lineHeight: 1.8 }}>
-                    {card.content}
-                  </Box>
-                </Paper>
-              </Grid>
+                  <CardContent sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center', 
+                    textAlign: 'center',
+                    minHeight: '250px' 
+                  }}>
+                    <Box sx={{ color: BRAND.gold, mb: 3 }}>
+                      {card.icon}
+                    </Box>
+                    <Typography 
+                      variant="h5" 
+                      sx={{ color: BRAND.gold, fontWeight: 800, mb: 3, textTransform: 'uppercase' }}
+                    >
+                      {card.title}
+                    </Typography>
+                    <Box sx={{ opacity: 0.8, lineHeight: 1.8 }}>
+                      {card.content}
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
             ))}
-          </Grid>
+          </Box>
         )}
       </Container>
     </Box>
