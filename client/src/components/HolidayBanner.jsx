@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import CelebrationIcon from '@mui/icons-material/Celebration';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Identical Brand Palette for Uniformity
+
 const BRAND = {
   gold: "#EC9B14",
   lightGold: "#FFC25F",
@@ -49,9 +49,9 @@ const HolidayBanner = () => {
               alignItems: 'center',
               justifyContent: 'center',
               gap: 0.5,
-              zIndex: 1100, // Ensure it stays above other elements
+              zIndex: 1100, 
               position: 'relative',
-              // High-end glass/glow touch to the bottom edge
+             
               borderBottom: `2px solid ${BRAND.lightGold}`,
             }}
           >

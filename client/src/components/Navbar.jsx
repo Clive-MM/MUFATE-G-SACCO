@@ -180,7 +180,7 @@ const Navbar = () => {
             <Stack spacing={0} sx={{ ml: 1.5 }}>
               <Typography sx={{ fontSize: { xs: '0.8rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase' }}>Golden Generation</Typography>
               <Typography sx={{ fontSize: { xs: '0.8rem', md: '0.9rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase' }}>DT SACCO</Typography>
-              <Typography sx={{ fontSize: { xs: '0.65rem', md: '0.9rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase' }}>Walking With You</Typography>
+              <Typography sx={{ fontSize: { xs: '0.65rem', md: '0.9rem' }, fontWeight: 900, color:'#FFFFFF', textTransform: 'uppercase' }}>Walking With You</Typography>
             </Stack>
           </Link>
         </Box>

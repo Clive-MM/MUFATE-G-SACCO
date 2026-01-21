@@ -65,16 +65,16 @@ const HomepageSlider = () => {
                   width: { xs: '100%', md: '100%' },
                   height: { xs: '60%', md: '100vh' },
                   backgroundImage: `url(${slide.ImagePath})`,
-                  // CHANGED: Use 'contain' for mobile to prevent cropping
+                 
                   backgroundSize: 'contain', 
                   backgroundRepeat: 'no-repeat',
-                  // CHANGED: Position 'bottom' for mobile so it sits right above the text section
+                
                   backgroundPosition: { xs: 'bottom center', md: 'right center' },
                   position: { md: 'absolute' },
                   right: 0,
                   top: 0,
                   zIndex: 1,
-                  // Adds a little breathing room so image doesn't touch the very top on mobile
+                 
                   pt: { xs: 2, md: 0 } 
                 }}
               />
@@ -86,7 +86,7 @@ const HomepageSlider = () => {
                 width: '100%', 
                 height: { xs: '40%', md: '100vh' },
                 display: 'flex',
-                alignItems: { xs: 'flex-start', md: 'center' }, // Align text to top of its 40% box on mobile
+                alignItems: { xs: 'flex-start', md: 'center' }, 
                 pt: { xs: 3, md: 0 } 
               }}>
                 <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
