@@ -34,42 +34,80 @@ const AboutSection = () => {
     {
       title: "Salary Processing & Check-off",
       desc: "Seamless check-off services for tea farmers, teachers, civil servants and private sector employees.",
-      icon: <PaymentsIcon sx={{ fontSize: 45 }} />
+      icon: <PaymentsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     },
     {
       title: "Agricultural & Tea-Grower Support",
-      desc: "Tailored products for farmers and smallholder producers, supporting inputs, farm improvement and seasonal needs.",
-      icon: <AgricultureIcon sx={{ fontSize: 45 }} />
+      desc: "Tailored products for farmers and smallholder producers, supporting inputs and farm improvement.",
+      icon: <AgricultureIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     },
     {
       title: "Business & Development Loans",
       desc: "Competitive, well-structured credit for MSMEs, projects and personal development goals.",
-      icon: <TrendingUpIcon sx={{ fontSize: 45 }} />
+      icon: <TrendingUpIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     },
     {
       title: "Smart Savings & Investment Accounts",
-      desc: "Goal-based savings, fixed deposits and targeted products for education, emergencies and long-term growth.",
-      icon: <SavingsIcon sx={{ fontSize: 45 }} />
+      desc: "Goal-based savings, fixed deposits and targeted products for education and long-term growth.",
+      icon: <SavingsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     },
     {
       title: "Mobile & Digital Banking",
-      desc: "24/7 access to your SACCO account through our USSD and mobile platforms – deposit, withdraw and check balances from anywhere.",
-      icon: <PhoneIphoneIcon sx={{ fontSize: 45 }} />
+      desc: "24/7 access to your SACCO account through our USSD and mobile platforms – deposit and withdraw anywhere.",
+      icon: <PhoneIphoneIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     },
     {
       title: "Asset Financing",
-      desc: "Get the machinery or equipment you need today with our asset financing. Repay comfortably over time, and enjoy full ownership.",
-      icon: <PrecisionManufacturingIcon sx={{ fontSize: 45 }} />
+      desc: "Get the machinery or equipment you need today. Repay comfortably over time with full ownership.",
+      icon: <PrecisionManufacturingIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     }
   ];
 
+  // Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
+
   return (
-    <Box sx={{ bgcolor: BRAND.dark, py: { xs: 8, md: 12 }, width: '100%', overflow: 'hidden' }}>
-      <Container maxWidth="xl">
-        <Stack spacing={8} alignItems="center">
+    <Box sx={{ 
+      bgcolor: BRAND.dark, 
+      py: { xs: 10, md: 15 }, 
+      width: '100%', 
+      overflow: 'hidden',
+      position: 'relative' 
+    }}>
+      {/* BACKGROUND DECORATION */}
+      <Box sx={{
+        position: 'absolute',
+        top: '10%',
+        right: '-5%',
+        width: '400px',
+        height: '400px',
+        bgcolor: BRAND.gold,
+        filter: 'blur(150px)',
+        opacity: 0.05,
+        borderRadius: '50%',
+        zIndex: 0
+      }} />
+
+      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
+        <Stack spacing={{ xs: 6, md: 10 }} alignItems="center">
           
           {/* HEADER SECTION */}
-          <Box sx={{ textAlign: 'center' }}>
+          <Box sx={{ textAlign: 'center', px: 2 }}>
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -85,16 +123,34 @@ const AboutSection = () => {
                   fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.5rem" },
                   letterSpacing: { xs: "0.05em", md: "0.1em" },
                   filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.5))',
-                  mb: 2
+                  mb: 3
                 }}
               >
                 About Us
               </Typography>
-               </motion.div>
+              <Typography 
+                sx={{ 
+                  color: BRAND.light, 
+                  maxWidth: "850px", 
+                  mx: 'auto', 
+                  fontSize: { xs: "1rem", md: "1.15rem" }, 
+                  opacity: 0.85,
+                  lineHeight: 1.8,
+                  fontWeight: 300
+                }}
+              >
+                <strong style={{ color: BRAND.gold, fontWeight: 700 }}>Golden Generation Deposit Taking SACCO</strong> is a trusted, member-owned financial institution serving tea farmers, salaried workers, and entrepreneurs.
+              </Typography>
+            </motion.div>
           </Box>
 
           {/* INTERACTIVE GRID */}
           <Box
+            component={motion.div}
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
             sx={{
               width: '100%',
               display: 'grid',
@@ -103,36 +159,28 @@ const AboutSection = () => {
                 sm: 'repeat(2, 1fr)',
                 md: 'repeat(3, 1fr)'
               },
-              gap: 4,
+              gap: { xs: 3, md: 4 },
             }}
           >
             {services.map((service, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -12, scale: 1.02 }}
-              >
+              <motion.div key={index} variants={cardVariants}>
                 <Card 
                   elevation={0}
                   sx={{ 
-                    bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.08)' : 'rgba(255, 255, 255, 0.03)',
-                    borderRadius: '20px',
-                    border: `1px solid ${selectedCard === index ? BRAND.gold : 'rgba(236, 155, 20, 0.15)'}`,
-                    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.06)' : 'rgba(255, 255, 255, 0.02)',
+                    borderRadius: '24px',
+                    border: `1px solid ${selectedCard === index ? BRAND.gold : 'rgba(255, 255, 255, 0.08)'}`,
+                    transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     height: '100%',
-                    position: 'relative',
-                    overflow: 'visible',
-                    // The "Glow" effect
-                    boxShadow: selectedCard === index 
-                      ? `0 0 30px rgba(236, 155, 20, 0.2)` 
-                      : 'none',
                     backdropFilter: 'blur(10px)',
+                    boxShadow: selectedCard === index 
+                      ? `0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(236, 155, 20, 0.1)` 
+                      : '0 10px 30px rgba(0,0,0,0.2)',
                     '&:hover': {
                       borderColor: BRAND.gold,
-                      boxShadow: `0 15px 40px rgba(0, 0, 0, 0.4)`,
+                      transform: 'translateY(-10px)',
+                      bgcolor: 'rgba(236, 155, 20, 0.08)',
+                      boxShadow: `0 25px 50px rgba(0, 0, 0, 0.5)`,
                     }
                   }}
                 >
@@ -140,7 +188,7 @@ const AboutSection = () => {
                     onClick={() => setSelectedCard(index)}
                     sx={{
                       height: '100%',
-                      p: 4,
+                      p: { xs: 4, md: 5 },
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -151,15 +199,15 @@ const AboutSection = () => {
                     <Box 
                       component={motion.div}
                       animate={{ 
-                        rotate: selectedCard === index ? [0, -10, 10, 0] : 0,
-                        scale: selectedCard === index ? 1.1 : 1
+                        scale: selectedCard === index ? 1.15 : 1,
+                        filter: selectedCard === index 
+                          ? 'drop-shadow(0 0 15px rgba(236, 155, 20, 0.6))' 
+                          : 'drop-shadow(0 0 0px rgba(236, 155, 20, 0))'
                       }}
                       sx={{ 
-                        mb: 3, 
+                        mb: 4, 
                         color: BRAND.gold,
-                        filter: selectedCard === index 
-                          ? 'drop-shadow(0 0 12px rgba(236, 155, 20, 0.8))' 
-                          : 'drop-shadow(0 4px 4px rgba(0,0,0,0.3))'
+                        transition: '0.4s'
                       }}
                     >
                       {service.icon}
@@ -169,13 +217,12 @@ const AboutSection = () => {
                       <Typography 
                         variant="h5" 
                         sx={{ 
-                          fontWeight: 800, 
+                          fontWeight: 900, 
                           color: BRAND.gold, 
                           textTransform: 'uppercase',
-                          fontSize: '1.2rem',
-                          mb: 2,
-                          letterSpacing: '0.05em',
-                          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                          fontSize: { xs: '1.1rem', md: '1.25rem' },
+                          mb: 2.5,
+                          letterSpacing: '0.1em',
                         }}
                       >
                         {service.title}
@@ -183,8 +230,8 @@ const AboutSection = () => {
                       <Typography 
                         sx={{ 
                           color: BRAND.textMuted, 
-                          fontSize: '0.95rem', 
-                          lineHeight: 1.7,
+                          fontSize: { xs: '0.9rem', md: '0.95rem' }, 
+                          lineHeight: 1.8,
                           fontWeight: 400
                         }}
                       >
@@ -199,6 +246,9 @@ const AboutSection = () => {
 
           {/* ACTION BUTTON */}
           <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -210,21 +260,21 @@ const AboutSection = () => {
                 bgcolor: BRAND.gold,
                 color: BRAND.dark,
                 fontWeight: 900,
-                px: 8,
+                px: { xs: 6, md: 10 },
                 py: 2.5,
-                borderRadius: '0px', 
-                fontSize: '1.1rem',
-                letterSpacing: '0.15em',
+                borderRadius: '4px', 
+                fontSize: '1rem',
+                letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                boxShadow: `0 10px 20px rgba(0,0,0,0.4)`,
-                transition: '0.3s',
+                boxShadow: `0 15px 30px rgba(0,0,0,0.4)`,
+                transition: '0.4s ease',
                 '&:hover': {
                   bgcolor: BRAND.light,
-                  boxShadow: `0 0 25px ${BRAND.gold}`,
+                  boxShadow: `0 0 30px ${BRAND.gold}`,
                 }
               }}
             >
-              Read More
+              Discover More
             </Button>
           </motion.div>
 
