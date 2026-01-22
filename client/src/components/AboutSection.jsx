@@ -126,7 +126,7 @@ const AboutSection = () => {
                   mb: 3
                 }}
               >
-                About Us
+                Why Choose Us
               </Typography>
               <Typography 
                 sx={{ 
