@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Divider, Container, Stack, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Typography, Divider, Container, Stack } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import FlagIcon from '@mui/icons-material/Flag';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -14,9 +14,7 @@ const BRAND = {
 };
 
 const AboutUsSection = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  // Removed unused theme and isMobile variables to fix ESLint error
   return (
     <Box
       sx={{
@@ -30,7 +28,6 @@ const AboutUsSection = () => {
         overflow: 'hidden',
       }}
     >
-      {/* Background Subtle Elements */}
       <Box sx={backgroundPatternStyle} />
 
       <Container maxWidth="md">
@@ -102,14 +99,13 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
   </motion.div>
 );
 
-/* ================= THEMED & RESPONSIVE STYLES ================= */
+/* ================= STYLES ================= */
 
 const glassCardStyle = {
   background: BRAND.glassBg,
   backdropFilter: 'blur(30px)',
   borderRadius: 'clamp(30px, 5vw, 60px)',
   padding: 'clamp(1rem, 3vw, 2.5rem)',
-  // Brighter Border: Opacity increased to 0.5 and subtle glow added
   border: `1.5px solid rgba(236, 155, 20, 0.5)`,
   boxShadow: `0 0 30px rgba(0,0,0,0.5), 0 0 10px rgba(236, 155, 20, 0.15), inset 0 0 20px rgba(236, 155, 20, 0.05)`,
   position: 'relative'
@@ -119,12 +115,10 @@ const iconWrapperStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  // Responsive icon sizing
   width: { xs: '70px', sm: '85px', md: '100px' },
   height: { xs: '70px', sm: '85px', md: '100px' },
   borderRadius: { xs: '18px', md: '24px' },
   background: 'rgba(236, 155, 20, 0.05)',
-  // Brighter icon border
   border: `2px solid rgba(236, 155, 20, 0.7)`, 
   boxShadow: `0 0 20px rgba(236, 155, 20, 0.25)`,
   flexShrink: 0,
