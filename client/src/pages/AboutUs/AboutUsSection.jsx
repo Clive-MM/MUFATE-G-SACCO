@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Divider, Container, Stack } from '@mui/material';
+import { Box, Typography, Divider, Container, Stack, useTheme, useMediaQuery } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import FlagIcon from '@mui/icons-material/Flag';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -14,25 +14,28 @@ const BRAND = {
 };
 
 const AboutUsSection = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Box
       sx={{
         width: '100%',
-        py: { xs: 8, md: 12 },
-        px: 2,
+        py: { xs: 6, sm: 8, md: 12 },
+        px: { xs: 2, sm: 4 },
         background: `radial-gradient(circle at center, #032419 0%, ${BRAND.dark} 100%)`,
         display: 'flex',
         justifyContent: 'center',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     >
-      {/* Background Subtle Elements to match the designed image pattern */}
+      {/* Background Subtle Elements */}
       <Box sx={backgroundPatternStyle} />
 
       <Container maxWidth="md">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
@@ -69,21 +72,25 @@ const AboutUsSection = () => {
 
 const SectionItem = ({ icon, title, content, delay = 0 }) => (
   <motion.div
-    initial={{ opacity: 0, y: 10 }}
+    initial={{ opacity: 0, y: 15 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.6, delay }}
   >
     <Stack 
         direction={{ xs: 'column', sm: 'row' }} 
-        spacing={4} 
-        alignItems="center"
-        sx={{ py: 5, px: { xs: 2, sm: 4 } }}
+        spacing={{ xs: 2, sm: 4 }} 
+        alignItems={{ xs: 'center', sm: 'flex-start' }}
+        sx={{ 
+          py: { xs: 4, md: 6 }, 
+          px: { xs: 1, sm: 2 },
+          textAlign: { xs: 'center', sm: 'left' } 
+        }}
     >
       <Box sx={iconWrapperStyle}>
         {icon}
       </Box>
-      <Box sx={{ flex: 1, textAlign: { xs: 'center', sm: 'left' } }}>
+      <Box sx={{ flex: 1 }}>
         <Typography sx={headerStyle}>
           {title}
         </Typography>
@@ -95,16 +102,16 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
   </motion.div>
 );
 
-/* ================= THEMED STYLES ================= */
+/* ================= THEMED & RESPONSIVE STYLES ================= */
 
 const glassCardStyle = {
   background: BRAND.glassBg,
   backdropFilter: 'blur(30px)',
-  borderRadius: '60px',
-  padding: '1rem',
-  // High-gloss gold border as seen in image 2
-  border: `1.5px solid rgba(236, 155, 20, 0.3)`,
-  boxShadow: `0 0 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(236, 155, 20, 0.05)`,
+  borderRadius: 'clamp(30px, 5vw, 60px)',
+  padding: 'clamp(1rem, 3vw, 2.5rem)',
+  // Brighter Border: Opacity increased to 0.5 and subtle glow added
+  border: `1.5px solid rgba(236, 155, 20, 0.5)`,
+  boxShadow: `0 0 30px rgba(0,0,0,0.5), 0 0 10px rgba(236, 155, 20, 0.15), inset 0 0 20px rgba(236, 155, 20, 0.05)`,
   position: 'relative'
 };
 
@@ -112,52 +119,56 @@ const iconWrapperStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: '100px',
-  height: '100px',
-  borderRadius: '24px',
-  background: 'rgba(236, 155, 20, 0.03)',
-  border: `2px solid rgba(236, 155, 20, 0.5)`, // Thicker border for icons
-  boxShadow: `0 0 15px rgba(236, 155, 20, 0.2)`,
+  // Responsive icon sizing
+  width: { xs: '70px', sm: '85px', md: '100px' },
+  height: { xs: '70px', sm: '85px', md: '100px' },
+  borderRadius: { xs: '18px', md: '24px' },
+  background: 'rgba(236, 155, 20, 0.05)',
+  // Brighter icon border
+  border: `2px solid rgba(236, 155, 20, 0.7)`, 
+  boxShadow: `0 0 20px rgba(236, 155, 20, 0.25)`,
+  flexShrink: 0,
 };
 
 const iconStyle = {
   color: BRAND.gold,
-  fontSize: '2.8rem',
+  fontSize: { xs: '2rem', sm: '2.4rem', md: '2.8rem' },
 };
 
 const headerStyle = {
-  fontSize: '1.4rem',
+  fontSize: { xs: '1.2rem', sm: '1.3rem', md: '1.5rem' },
   fontWeight: 800,
   color: BRAND.gold,
   textTransform: 'uppercase',
-  letterSpacing: '2px',
-  mb: 1,
+  letterSpacing: '1.5px',
+  mb: 1.5,
+  textShadow: '0 0 10px rgba(236, 155, 20, 0.3)',
 };
 
 const bodyStyle = {
-  fontSize: '0.95rem',
-  lineHeight: 1.7,
-  color: 'rgba(255, 255, 255, 0.8)',
+  fontSize: { xs: '0.875rem', sm: '0.95rem', md: '1rem' },
+  lineHeight: 1.8,
+  color: 'rgba(255, 255, 255, 0.85)',
   fontWeight: 400,
+  maxWidth: '900px',
 };
 
 const dividerStyle = {
-  // Creating the glowing line effect from image 2
-  height: '2px',
+  height: '1.5px',
   border: 'none',
   background: `linear-gradient(90deg, transparent 0%, ${BRAND.gold} 50%, transparent 100%)`,
-  opacity: 0.4,
-  margin: '0 10%',
+  opacity: 0.3,
+  width: '80%',
+  mx: 'auto',
 };
 
 const backgroundPatternStyle = {
   position: 'absolute',
   inset: 0,
-  opacity: 0.05,
+  opacity: 0.06,
   pointerEvents: 'none',
-  // Mimics the circuit/bean pattern in image 2
   backgroundImage: `radial-gradient(${BRAND.gold} 1px, transparent 1px)`,
-  backgroundSize: '40px 40px',
+  backgroundSize: 'clamp(30px, 4vw, 50px) clamp(30px, 4vw, 50px)',
 };
 
 export default AboutUsSection;
