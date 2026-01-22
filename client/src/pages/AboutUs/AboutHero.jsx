@@ -8,18 +8,18 @@ const AboutHero = () => {
     <Box 
       sx={{ 
         width: '100%', 
-        // We use 'auto' or a fixed max-height to ensure the full image shows
-        height: { xs: 'auto', md: '70vh' }, 
+        // Height is fixed on desktop but remains flexible on mobile to prevent cropping
+        height: { xs: 'auto', md: '80vh' }, 
+        minHeight: { xs: '300px', md: '600px' },
         position: 'relative',
         overflow: 'hidden',
-        backgroundColor: '#02150F', // Deep green base
+        backgroundColor: '#02150F', // Deep green matches brand identity
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        pt: { xs: '60px', md: '0' } // Adjust for navbar height if needed
       }}
     >
-      {/* 1. Blurred Background Layer (Prevents empty bars) */}
+      {/* 1. Blurred Background Layer - Occupies the "Whole Section" */}
       <Box
         sx={{
           position: 'absolute',
@@ -30,13 +30,13 @@ const AboutHero = () => {
           backgroundImage: `url(${HERO_IMAGE})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          filter: 'blur(15px) brightness(0.4)', // Heavily blurred and darkened
-          opacity: 0.6,
+          filter: 'blur(20px) brightness(0.3)', // Darkened for premium feel
+          transform: 'scale(1.1)', // Prevents white edges from blur
           zIndex: 1,
         }}
       />
 
-      {/* 2. The Main Image (Contained & Full) */}
+      {/* 2. Main Team Image - Fully Contained (No Cropping) */}
       <Box
         component="img"
         src={HERO_IMAGE}
@@ -44,23 +44,25 @@ const AboutHero = () => {
         sx={{
           width: '100%',
           height: '100%',
-          maxHeight: { xs: '400px', md: '70vh' },
-          objectFit: 'contain', // THE KEY FIX: Ensures full image is visible
+          // Ensures the entire team is visible regardless of screen size
+          objectFit: 'contain', 
           position: 'relative',
           zIndex: 2,
           display: 'block',
+          // Adds a soft glow to separate image from blurred background
+          boxShadow: '0 0 50px rgba(0,0,0,0.5)', 
         }}
       />
 
-      {/* 3. Subtle Bottom Gradient for transition to the next section */}
+      {/* 3. Gradient Overlay - Smooth transition to next section */}
       <Box 
         sx={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           width: '100%',
-          height: '150px',
-          background: 'linear-gradient(to bottom, transparent, rgba(2,21,15,1))',
+          height: '20%',
+          background: 'linear-gradient(to bottom, transparent, #02150F)',
           zIndex: 3
         }} 
       />
