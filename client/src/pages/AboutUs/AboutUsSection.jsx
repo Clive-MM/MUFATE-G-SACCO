@@ -5,12 +5,12 @@ import FlagIcon from '@mui/icons-material/Flag';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { motion } from 'framer-motion';
 
-// Consistent Brand Colors from ContactDetails
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
   light: '#F4F4F4',
   textMuted: 'rgba(244, 244, 244, 0.7)',
+  glassBg: 'rgba(255, 255, 255, 0.04)',
 };
 
 const AboutUsSection = () => {
@@ -20,21 +20,24 @@ const AboutUsSection = () => {
         width: '100%',
         py: { xs: 8, md: 12 },
         px: 2,
-        // Using the same brand background logic
-        background: `radial-gradient(circle at top left, ${BRAND.dark}, #010a07)`,
+        background: `radial-gradient(circle at center, #032419 0%, ${BRAND.dark} 100%)`,
         display: 'flex',
         justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
-      <Container maxWidth="lg">
+      {/* Background Subtle Elements to match the designed image pattern */}
+      <Box sx={backgroundPatternStyle} />
+
+      <Container maxWidth="md">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           style={glassCardStyle}
         >
-          {/* --- WHO WE ARE SECTION --- */}
           <SectionItem 
             icon={<InfoIcon sx={iconStyle} />}
             title="Who We Are"
@@ -43,7 +46,6 @@ const AboutUsSection = () => {
 
           <Divider sx={dividerStyle} />
 
-          {/* --- MISSION SECTION --- */}
           <SectionItem 
             icon={<FlagIcon sx={iconStyle} />}
             title="Our Mission"
@@ -53,7 +55,6 @@ const AboutUsSection = () => {
 
           <Divider sx={dividerStyle} />
 
-          {/* --- VISION SECTION --- */}
           <SectionItem 
             icon={<VisibilityIcon sx={iconStyle} />}
             title="Our Vision"
@@ -66,24 +67,23 @@ const AboutUsSection = () => {
   );
 };
 
-// Sub-component for clean organization
 const SectionItem = ({ icon, title, content, delay = 0 }) => (
   <motion.div
-    initial={{ opacity: 0, x: -20 }}
-    whileInView={{ opacity: 1, x: 0 }}
+    initial={{ opacity: 0, y: 10 }}
+    whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.6, delay }}
   >
     <Stack 
-        direction={{ xs: 'column', md: 'row' }} 
-        spacing={3} 
-        alignItems={{ xs: 'center', md: 'flex-start' }}
-        sx={{ textAlign: { xs: 'center', md: 'left' }, py: 4 }}
+        direction={{ xs: 'column', sm: 'row' }} 
+        spacing={4} 
+        alignItems="center"
+        sx={{ py: 5, px: { xs: 2, sm: 4 } }}
     >
-      <Box sx={iconContainerStyle}>
+      <Box sx={iconWrapperStyle}>
         {icon}
       </Box>
-      <Box>
+      <Box sx={{ flex: 1, textAlign: { xs: 'center', sm: 'left' } }}>
         <Typography sx={headerStyle}>
           {title}
         </Typography>
@@ -95,54 +95,69 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
   </motion.div>
 );
 
-/* ================= STYLES ================= */
+/* ================= THEMED STYLES ================= */
 
 const glassCardStyle = {
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
-  borderRadius: '40px',
-  padding: '2rem 3rem',
-  border: '1px solid rgba(255, 255, 255, 0.08)',
-  borderTop: `6px solid ${BRAND.gold}`, // Brand Gold accent
-  boxShadow: '0 40px 100px rgba(0,0,0,0.6)',
+  background: BRAND.glassBg,
+  backdropFilter: 'blur(30px)',
+  borderRadius: '60px',
+  padding: '1rem',
+  // High-gloss gold border as seen in image 2
+  border: `1.5px solid rgba(236, 155, 20, 0.3)`,
+  boxShadow: `0 0 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(236, 155, 20, 0.05)`,
+  position: 'relative'
 };
 
-const iconContainerStyle = {
+const iconWrapperStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  minWidth: '70px',
-  height: '70px',
-  borderRadius: '20px',
-  background: 'rgba(236, 155, 20, 0.1)', // Gold with low opacity
-  border: `1px solid ${BRAND.gold}33`,
+  width: '100px',
+  height: '100px',
+  borderRadius: '24px',
+  background: 'rgba(236, 155, 20, 0.03)',
+  border: `2px solid rgba(236, 155, 20, 0.5)`, // Thicker border for icons
+  boxShadow: `0 0 15px rgba(236, 155, 20, 0.2)`,
 };
 
 const iconStyle = {
   color: BRAND.gold,
-  fontSize: '2.2rem',
+  fontSize: '2.8rem',
 };
 
 const headerStyle = {
-  fontSize: { xs: '1.5rem', md: '1.8rem' },
-  fontWeight: 900,
+  fontSize: '1.4rem',
+  fontWeight: 800,
   color: BRAND.gold,
   textTransform: 'uppercase',
-  letterSpacing: '1.5px',
-  mb: 1.5,
+  letterSpacing: '2px',
+  mb: 1,
 };
 
 const bodyStyle = {
-  fontSize: '1.1rem',
-  lineHeight: 1.8,
-  color: BRAND.textMuted,
-  fontFamily: '"Inter", "Segoe UI", sans-serif',
-  maxWidth: '850px',
+  fontSize: '0.95rem',
+  lineHeight: 1.7,
+  color: 'rgba(255, 255, 255, 0.8)',
+  fontWeight: 400,
 };
 
 const dividerStyle = {
-  borderColor: 'rgba(255, 255, 255, 0.05)',
-  width: '100%',
+  // Creating the glowing line effect from image 2
+  height: '2px',
+  border: 'none',
+  background: `linear-gradient(90deg, transparent 0%, ${BRAND.gold} 50%, transparent 100%)`,
+  opacity: 0.4,
+  margin: '0 10%',
+};
+
+const backgroundPatternStyle = {
+  position: 'absolute',
+  inset: 0,
+  opacity: 0.05,
+  pointerEvents: 'none',
+  // Mimics the circuit/bean pattern in image 2
+  backgroundImage: `radial-gradient(${BRAND.gold} 1px, transparent 1px)`,
+  backgroundSize: '40px 40px',
 };
 
 export default AboutUsSection;
