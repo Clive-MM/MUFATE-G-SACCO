@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Box, Typography, Container, Stack, Button, Grid, Paper } from '@mui/material';
 import { 
   Room as RoomIcon, 
-  Favorite as FavoriteIcon, 
+  // Favorite as FavoriteIcon, 
   Verified as VerifiedIcon, 
   Map as MapIcon 
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const BRAND = { 
   gold: '#EC9B14', 
