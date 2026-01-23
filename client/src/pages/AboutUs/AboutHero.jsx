@@ -2,58 +2,56 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 const AboutHero = () => {
-  const HERO_IMAGE = "https://res.cloudinary.com/djydkcx01/image/upload/v1752730090/IMG_9698_nwftoq.jpg";
+  const HERO_IMAGE =
+    "https://res.cloudinary.com/djydkcx01/image/upload/v1752730090/IMG_9698_nwftoq.jpg";
 
   return (
-    <Box 
-      sx={{ 
+    <Box
+      sx={{
         width: '100%',
         position: 'relative',
-        backgroundColor: '#02150F',
         overflow: 'hidden',
-        
-        // SOLUTION: Set the container to match the image's natural shape.
-        // This prevents the "zoom" that cuts off feet and heads.
-        aspectRatio: { 
-          xs: '4/3',   // Square-ish for mobile so people aren't tiny
-          sm: '16/9',  // Standard widescreen for tablets
-          md: '2.2/1'  // Cinematic wide for desktop
-        },
+        backgroundColor: '#02150F',
 
+        // ✅ Control hero height responsively (better than aspectRatio for full image)
+        minHeight: { xs: '240px', sm: '320px', md: '480px', lg: '520px' },
+
+        // ✅ FULL IMAGE WITHOUT CROPPING
         backgroundImage: `url(${HERO_IMAGE})`,
-        backgroundSize: 'cover', 
-        // We anchor to the top so faces are never lost under the navbar
-        backgroundPosition: 'center top', 
         backgroundRepeat: 'no-repeat',
-        
-        display: 'flex',
-        flexDirection: 'column',
+        backgroundPosition: 'center',
+        backgroundSize: 'contain', // ✅ THIS IS THE KEY FIX
+
+        // ✅ improves quality & smoothness
+        imageRendering: 'auto',
       }}
     >
-      {/* 1. TOP OVERLAY: Protects the Navbar visibility */}
-      <Box 
+      {/* ✅ Top dark overlay for navbar visibility */}
+      <Box
         sx={{
           position: 'absolute',
           top: 0,
           left: 0,
           width: '100%',
-          height: '120px',
-          background: 'linear-gradient(to bottom, rgba(2,21,15,0.9), transparent)',
-          zIndex: 1
-        }} 
+          height: { xs: '90px', md: '140px' },
+          background: 'linear-gradient(to bottom, rgba(2,21,15,0.95), transparent)',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
       />
 
-      {/* 2. BOTTOM OVERLAY: Blends into the next section */}
-      <Box 
+      {/* ✅ Bottom blend overlay */}
+      <Box
         sx={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           width: '100%',
-          height: '20%',
-          background: 'linear-gradient(to bottom, transparent, #02150F)',
-          zIndex: 2
-        }} 
+          height: '18%',
+          background: 'linear-gradient(to top, rgba(2,21,15,1), transparent)',
+          zIndex: 2,
+          pointerEvents: 'none',
+        }}
       />
     </Box>
   );
