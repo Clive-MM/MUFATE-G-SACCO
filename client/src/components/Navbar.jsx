@@ -79,7 +79,7 @@ const Navbar = () => {
         { to: '/products/fosa', label: 'FOSA' },
         { to: '/products/bosa', label: 'BOSA' },
         { to: '/products/savings', label: 'Savings' },
-         { to: '/products/loancalculator', label: 'Loan Calculator' }
+         { to: '/products/loanCalculator', label: 'Loan Calculator' }
       ]
     },
     { to: '/services', label: 'Services' },
