@@ -21,7 +21,7 @@ const AboutUsSection = () => {
     
         py: { xs: 4, sm: 6, md: 8 }, 
         px: { xs: 2, sm: 4 },
-        background: `radial-gradient(circle at center, #032419 0%, ${BRAND.dark} 100%)`,
+       bgcolor: BRAND.dark,
         display: 'flex',
         justifyContent: 'center',
         position: 'relative',
