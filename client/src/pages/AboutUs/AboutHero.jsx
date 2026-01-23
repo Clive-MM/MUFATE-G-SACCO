@@ -8,22 +8,20 @@ const AboutHero = () => {
     <Box 
       sx={{ 
         width: '100%', 
-        // Height is fixed on desktop but remains flexible on mobile
-        height: { xs: '350px', md: '70vh' }, 
-        minHeight: { xs: '300px', md: '500px' },
+        // Increased height from 70vh to 85vh to prevent aggressive bottom cropping
+        height: { xs: '450px', md: '85vh' }, 
+        // Increased min-height for better visibility on larger screens
+        minHeight: { xs: '400px', md: '700px' },
         position: 'relative',
         overflow: 'hidden',
         
         // Background Configuration
         backgroundImage: `url(${HERO_IMAGE})`,
-        /* 'cover' ensures the image fills the entire container 
-           without stretching the people. 
-        */
         backgroundSize: 'cover', 
-        /* 'top' or 'center' keeps the heads of the team 
-           visible if the container gets too narrow. 
+        /* Changed to 'center center' to balance the crop between 
+           the top (roof) and bottom (grass/feet) 
         */
-        backgroundPosition: 'center 20%', 
+        backgroundPosition: 'center center', 
         backgroundRepeat: 'no-repeat',
         
         display: 'flex',
@@ -32,14 +30,16 @@ const AboutHero = () => {
         backgroundColor: '#02150F', 
       }}
     >
-      {/* Bottom Gradient Overlay for smooth transition */}
+      {/* Bottom Gradient Overlay 
+         Reduced height to 15% so it doesn't cover the team's legs/feet 
+      */}
       <Box 
         sx={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           width: '100%',
-          height: '25%',
+          height: '15%',
           background: 'linear-gradient(to bottom, transparent, #02150F)',
           zIndex: 1
         }} 
