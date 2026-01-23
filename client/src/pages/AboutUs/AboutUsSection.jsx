@@ -18,10 +18,9 @@ const AboutUsSection = () => {
     <Box
       sx={{
         width: '100%',
-    
-        py: { xs: 4, sm: 6, md: 8 }, 
-        px: { xs: 2, sm: 4 },
-       bgcolor: BRAND.dark,
+        py: { xs: 6, sm: 8, md: 10 }, // Increased padding for better breathing room
+        px: { xs: 0, sm: 2 }, // Reduced outer padding on mobile to maximize card width
+        bgcolor: BRAND.dark,
         display: 'flex',
         justifyContent: 'center',
         position: 'relative',
@@ -30,13 +29,16 @@ const AboutUsSection = () => {
     >
       <Box sx={backgroundPatternStyle} />
 
-      <Container maxWidth="md">
+      <Container maxWidth="md" sx={{ px: { xs: 2, sm: 3 } }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          style={glassCardStyle}
+          style={{
+            ...glassCardStyle,
+            width: '100%', // Ensure card takes full container width
+          }}
         >
           <SectionItem 
             icon={<InfoIcon sx={iconStyle} />}
@@ -75,14 +77,12 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
     transition={{ duration: 0.5, delay }}
   >
     <Stack 
-       
         direction={{ xs: 'column', sm: 'row' }} 
-        spacing={{ xs: 1.5, sm: 3 }} 
+        spacing={{ xs: 2, sm: 3 }} // Slightly more spacing on mobile
         alignItems={{ xs: 'center', sm: 'flex-start' }}
         sx={{ 
-          
-          py: { xs: 2.5, md: 3.5 }, 
-          px: { xs: 1, sm: 1.5 },
+          py: { xs: 3, md: 4 }, 
+          px: { xs: 1.5, sm: 2 },
           textAlign: { xs: 'center', sm: 'left' } 
         }}
     >
@@ -101,15 +101,14 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
   </motion.div>
 );
 
-
+/* ================= STYLES (Kept exactly as requested, minor responsive tweaks) ================= */
 
 const glassCardStyle = {
   background: BRAND.glassBg,
   backdropFilter: 'blur(20px)',
-
-  borderRadius: 'clamp(20px, 3vw, 40px)', 
-  padding: 'clamp(0.75rem, 2vw, 1.5rem)',
-  border: `1px solid rgba(236, 155, 20, 0.3)`,
+  borderRadius: '32px', // More stable radius across screens
+  padding: '10px', // Inner padding of the glass container
+  border: `1px solid rgba(236, 155, 20, 0.2)`,
   boxShadow: `0 15px 35px rgba(0,0,0,0.4)`,
   position: 'relative'
 };
@@ -118,32 +117,31 @@ const iconWrapperStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  
-  width: { xs: '55px', sm: '65px', md: '75px' },
-  height: { xs: '55px', sm: '65px', md: '75px' },
-  borderRadius: { xs: '12px', md: '16px' },
+  width: { xs: '60px', sm: '65px', md: '75px' },
+  height: { xs: '60px', sm: '65px', md: '75px' },
+  borderRadius: '16px',
   background: 'rgba(236, 155, 20, 0.08)',
-  border: `1.5px solid rgba(236, 155, 20, 0.5)`, 
+  border: `1.5px solid rgba(236, 155, 20, 0.4)`, 
   flexShrink: 0,
 };
 
 const iconStyle = {
   color: BRAND.gold,
-  fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
+  fontSize: { xs: '1.8rem', sm: '2rem', md: '2.2rem' },
 };
 
 const headerStyle = {
-  fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+  fontSize: { xs: '1.1rem', sm: '1.15rem', md: '1.25rem' },
   fontWeight: 800,
   color: BRAND.gold,
   textTransform: 'uppercase',
   letterSpacing: '1px',
-  mb: 0.5, 
+  mb: 1, 
 };
 
 const bodyStyle = {
-  fontSize: { xs: '0.85rem', sm: '0.9rem', md: '0.95rem' },
-  lineHeight: 1.6, 
+  fontSize: { xs: '0.9rem', sm: '0.92rem', md: '0.98rem' },
+  lineHeight: 1.7, 
   color: 'rgba(255, 255, 255, 0.85)',
   fontWeight: 400,
 };
@@ -152,8 +150,8 @@ const dividerStyle = {
   height: '1px',
   border: 'none',
   background: `linear-gradient(90deg, transparent 0%, ${BRAND.gold} 50%, transparent 100%)`,
-  opacity: 0.2,
-  width: '90%',
+  opacity: 0.15,
+  width: '85%',
   mx: 'auto',
 };
 
