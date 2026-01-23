@@ -12,47 +12,45 @@ const AboutHero = () => {
         backgroundColor: '#02150F',
         overflow: 'hidden',
         
-        // This ensures the container height matches the image width perfectly.
-        // No more "zooming in" that cuts off people on the sides or bottom.
+        // SOLUTION: Set the container to match the image's natural shape.
+        // This prevents the "zoom" that cuts off feet and heads.
         aspectRatio: { 
-          xs: '4/3',  // Taller for mobile screens
-          md: '2.4/1' // Maintains the wide team shot for desktop
+          xs: '4/3',   // Square-ish for mobile so people aren't tiny
+          sm: '16/9',  // Standard widescreen for tablets
+          md: '2.2/1'  // Cinematic wide for desktop
         },
 
-        // Background Configuration
         backgroundImage: `url(${HERO_IMAGE})`,
         backgroundSize: 'cover', 
-        backgroundPosition: 'center center',
+        // We anchor to the top so faces are never lost under the navbar
+        backgroundPosition: 'center top', 
         backgroundRepeat: 'no-repeat',
         
-        // This padding prevents the navbar from physically overlapping the faces
-        pt: { xs: '70px', md: '100px' } 
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      {/* 1. Navbar Overlay: 
-          Darkens the top edge so the white menu text stays visible 
-          without needing to hide the team's heads.
-      */}
+      {/* 1. TOP OVERLAY: Protects the Navbar visibility */}
       <Box 
         sx={{
           position: 'absolute',
           top: 0,
           left: 0,
           width: '100%',
-          height: '140px',
-          background: 'linear-gradient(to bottom, rgba(2,21,15,0.95), transparent)',
+          height: '120px',
+          background: 'linear-gradient(to bottom, rgba(2,21,15,0.9), transparent)',
           zIndex: 1
         }} 
       />
 
-      {/* 2. Bottom Blend Overlay */}
+      {/* 2. BOTTOM OVERLAY: Blends into the next section */}
       <Box 
         sx={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           width: '100%',
-          height: '15%',
+          height: '20%',
           background: 'linear-gradient(to bottom, transparent, #02150F)',
           zIndex: 2
         }} 
