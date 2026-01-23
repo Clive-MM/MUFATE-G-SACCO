@@ -143,7 +143,7 @@ const headerStyle = {
 
 const bodyStyle = {
   fontSize: { xs: '0.85rem', sm: '0.9rem', md: '0.95rem' },
-  lineHeight: 1.6, // Slightly tighter line height
+  lineHeight: 1.6, 
   color: 'rgba(255, 255, 255, 0.85)',
   fontWeight: 400,
 };
