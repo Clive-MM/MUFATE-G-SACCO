@@ -10,7 +10,7 @@ const BRAND = {
   dark: '#02150F',
   light: '#F4F4F4',
   textMuted: 'rgba(244, 244, 244, 0.7)',
-  glassBg: 'rgba(255, 255, 255, 0.03)', // Slightly more transparent
+  glassBg: 'rgba(255, 255, 255, 0.03)', 
 };
 
 const AboutUsSection = () => {
@@ -18,7 +18,7 @@ const AboutUsSection = () => {
     <Box
       sx={{
         width: '100%',
-        // ✅ Reduced vertical padding to make the section shorter
+    
         py: { xs: 4, sm: 6, md: 8 }, 
         px: { xs: 2, sm: 4 },
         background: `radial-gradient(circle at center, #032419 0%, ${BRAND.dark} 100%)`,
@@ -75,12 +75,12 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
     transition={{ duration: 0.5, delay }}
   >
     <Stack 
-        // ✅ Compact row layout for sm screens and up to save height
+       
         direction={{ xs: 'column', sm: 'row' }} 
         spacing={{ xs: 1.5, sm: 3 }} 
         alignItems={{ xs: 'center', sm: 'flex-start' }}
         sx={{ 
-          // ✅ Reduced padding inside each item
+          
           py: { xs: 2.5, md: 3.5 }, 
           px: { xs: 1, sm: 1.5 },
           textAlign: { xs: 'center', sm: 'left' } 
@@ -101,12 +101,12 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
   </motion.div>
 );
 
-/* ================= UPDATED COMPACT STYLES ================= */
+
 
 const glassCardStyle = {
   background: BRAND.glassBg,
   backdropFilter: 'blur(20px)',
-  // ✅ Reduced border radius for a sleeker look
+
   borderRadius: 'clamp(20px, 3vw, 40px)', 
   padding: 'clamp(0.75rem, 2vw, 1.5rem)',
   border: `1px solid rgba(236, 155, 20, 0.3)`,
@@ -118,7 +118,7 @@ const iconWrapperStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  // ✅ Scaled down icon boxes to reduce vertical height
+  
   width: { xs: '55px', sm: '65px', md: '75px' },
   height: { xs: '55px', sm: '65px', md: '75px' },
   borderRadius: { xs: '12px', md: '16px' },
@@ -138,7 +138,7 @@ const headerStyle = {
   color: BRAND.gold,
   textTransform: 'uppercase',
   letterSpacing: '1px',
-  mb: 0.5, // Reduced margin
+  mb: 0.5, 
 };
 
 const bodyStyle = {
