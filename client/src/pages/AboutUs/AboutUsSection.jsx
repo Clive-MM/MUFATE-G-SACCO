@@ -10,16 +10,16 @@ const BRAND = {
   dark: '#02150F',
   light: '#F4F4F4',
   textMuted: 'rgba(244, 244, 244, 0.7)',
-  glassBg: 'rgba(255, 255, 255, 0.04)',
+  glassBg: 'rgba(255, 255, 255, 0.03)', // Slightly more transparent
 };
 
 const AboutUsSection = () => {
-  // Removed unused theme and isMobile variables to fix ESLint error
   return (
     <Box
       sx={{
         width: '100%',
-        py: { xs: 6, sm: 8, md: 12 },
+        // ✅ Reduced vertical padding to make the section shorter
+        py: { xs: 4, sm: 6, md: 8 }, 
         px: { xs: 2, sm: 4 },
         background: `radial-gradient(circle at center, #032419 0%, ${BRAND.dark} 100%)`,
         display: 'flex',
@@ -32,8 +32,8 @@ const AboutUsSection = () => {
 
       <Container maxWidth="md">
         <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           style={glassCardStyle}
@@ -41,7 +41,7 @@ const AboutUsSection = () => {
           <SectionItem 
             icon={<InfoIcon sx={iconStyle} />}
             title="Who We Are"
-            content="Golden Generation DT Sacco, formerly Mufate ‘G’ Sacco, is a progressive and member-driven financial cooperative founded in 1987. Our transformation reflects our commitment to modernize, expand our services, and empower more members—while preserving the rights and benefits of our farmers and community."
+            content="Golden Generation DT Sacco, formerly Mufate ‘G’ Sacco, is a progressive and member-driven financial cooperative founded in 1987. Our transformation reflects our commitment to modernize and empower more members."
           />
 
           <Divider sx={dividerStyle} />
@@ -50,7 +50,7 @@ const AboutUsSection = () => {
             icon={<FlagIcon sx={iconStyle} />}
             title="Our Mission"
             content="To economically empower our members by mobilizing resources and providing innovative, diverse, and competitive financial solutions tailored to their changing needs."
-            delay={0.2}
+            delay={0.1}
           />
 
           <Divider sx={dividerStyle} />
@@ -58,8 +58,8 @@ const AboutUsSection = () => {
           <SectionItem 
             icon={<VisibilityIcon sx={iconStyle} />}
             title="Our Vision"
-            content="To become a nationally recognized and trusted financial institution that transforms the livelihoods of its members through innovation, integrity, and inclusive financial growth."
-            delay={0.4}
+            content="To become a nationally recognized and trusted financial institution that transforms the livelihoods of its members through innovation and integrity."
+            delay={0.2}
           />
         </motion.div>
       </Container>
@@ -69,18 +69,20 @@ const AboutUsSection = () => {
 
 const SectionItem = ({ icon, title, content, delay = 0 }) => (
   <motion.div
-    initial={{ opacity: 0, y: 15 }}
-    whileInView={{ opacity: 1, y: 0 }}
+    initial={{ opacity: 0, x: -10 }}
+    whileInView={{ opacity: 1, x: 0 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.6, delay }}
+    transition={{ duration: 0.5, delay }}
   >
     <Stack 
+        // ✅ Compact row layout for sm screens and up to save height
         direction={{ xs: 'column', sm: 'row' }} 
-        spacing={{ xs: 2, sm: 4 }} 
+        spacing={{ xs: 1.5, sm: 3 }} 
         alignItems={{ xs: 'center', sm: 'flex-start' }}
         sx={{ 
-          py: { xs: 4, md: 6 }, 
-          px: { xs: 1, sm: 2 },
+          // ✅ Reduced padding inside each item
+          py: { xs: 2.5, md: 3.5 }, 
+          px: { xs: 1, sm: 1.5 },
           textAlign: { xs: 'center', sm: 'left' } 
         }}
     >
@@ -99,15 +101,16 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
   </motion.div>
 );
 
-/* ================= STYLES ================= */
+/* ================= UPDATED COMPACT STYLES ================= */
 
 const glassCardStyle = {
   background: BRAND.glassBg,
-  backdropFilter: 'blur(30px)',
-  borderRadius: 'clamp(30px, 5vw, 60px)',
-  padding: 'clamp(1rem, 3vw, 2.5rem)',
-  border: `1.5px solid rgba(236, 155, 20, 0.5)`,
-  boxShadow: `0 0 30px rgba(0,0,0,0.5), 0 0 10px rgba(236, 155, 20, 0.15), inset 0 0 20px rgba(236, 155, 20, 0.05)`,
+  backdropFilter: 'blur(20px)',
+  // ✅ Reduced border radius for a sleeker look
+  borderRadius: 'clamp(20px, 3vw, 40px)', 
+  padding: 'clamp(0.75rem, 2vw, 1.5rem)',
+  border: `1px solid rgba(236, 155, 20, 0.3)`,
+  boxShadow: `0 15px 35px rgba(0,0,0,0.4)`,
   position: 'relative'
 };
 
@@ -115,54 +118,52 @@ const iconWrapperStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: { xs: '70px', sm: '85px', md: '100px' },
-  height: { xs: '70px', sm: '85px', md: '100px' },
-  borderRadius: { xs: '18px', md: '24px' },
-  background: 'rgba(236, 155, 20, 0.05)',
-  border: `2px solid rgba(236, 155, 20, 0.7)`, 
-  boxShadow: `0 0 20px rgba(236, 155, 20, 0.25)`,
+  // ✅ Scaled down icon boxes to reduce vertical height
+  width: { xs: '55px', sm: '65px', md: '75px' },
+  height: { xs: '55px', sm: '65px', md: '75px' },
+  borderRadius: { xs: '12px', md: '16px' },
+  background: 'rgba(236, 155, 20, 0.08)',
+  border: `1.5px solid rgba(236, 155, 20, 0.5)`, 
   flexShrink: 0,
 };
 
 const iconStyle = {
   color: BRAND.gold,
-  fontSize: { xs: '2rem', sm: '2.4rem', md: '2.8rem' },
+  fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2.2rem' },
 };
 
 const headerStyle = {
-  fontSize: { xs: '1.2rem', sm: '1.3rem', md: '1.5rem' },
+  fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
   fontWeight: 800,
   color: BRAND.gold,
   textTransform: 'uppercase',
-  letterSpacing: '1.5px',
-  mb: 1.5,
-  textShadow: '0 0 10px rgba(236, 155, 20, 0.3)',
+  letterSpacing: '1px',
+  mb: 0.5, // Reduced margin
 };
 
 const bodyStyle = {
-  fontSize: { xs: '0.875rem', sm: '0.95rem', md: '1rem' },
-  lineHeight: 1.8,
+  fontSize: { xs: '0.85rem', sm: '0.9rem', md: '0.95rem' },
+  lineHeight: 1.6, // Slightly tighter line height
   color: 'rgba(255, 255, 255, 0.85)',
   fontWeight: 400,
-  maxWidth: '900px',
 };
 
 const dividerStyle = {
-  height: '1.5px',
+  height: '1px',
   border: 'none',
   background: `linear-gradient(90deg, transparent 0%, ${BRAND.gold} 50%, transparent 100%)`,
-  opacity: 0.3,
-  width: '80%',
+  opacity: 0.2,
+  width: '90%',
   mx: 'auto',
 };
 
 const backgroundPatternStyle = {
   position: 'absolute',
   inset: 0,
-  opacity: 0.06,
+  opacity: 0.04,
   pointerEvents: 'none',
   backgroundImage: `radial-gradient(${BRAND.gold} 1px, transparent 1px)`,
-  backgroundSize: 'clamp(30px, 4vw, 50px) clamp(30px, 4vw, 50px)',
+  backgroundSize: '40px 40px',
 };
 
 export default AboutUsSection;
