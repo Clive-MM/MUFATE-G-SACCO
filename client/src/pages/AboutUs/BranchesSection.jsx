@@ -16,18 +16,18 @@ const BRAND = {
 };
 
 const BranchesSection = ({ branches = [], coreValues = [] }) => {
-  // Default to first branch location or a general one
+
   const [selectedLocation, setSelectedLocation] = useState(branches[0]?.Location || "Kakamega, Kenya");
 
   return (
     <Box sx={{ 
       py: { xs: 8, md: 12 }, 
-      bgcolor: BRAND.dark, // ✅ Unified with Footer
+      bgcolor: BRAND.dark, 
       position: 'relative'
     }}>
-      <Container maxWidth="xl"> {/* Wider container to fit 4 columns comfortably */}
+      <Container maxWidth="xl"> 
         
-        {/* Header - Cleaned up (No gold line) */}
+      
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <motion.div initial={{ opacity: 0, y: -20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 900, letterSpacing: 3 }}>
@@ -51,7 +51,7 @@ const BranchesSection = ({ branches = [], coreValues = [] }) => {
           gridTemplateColumns: { 
             xs: '1fr', 
             sm: '1fr 1fr', 
-            md: '1fr 1.5fr 1fr 1fr' // Map (Column 2) is slightly wider for visibility
+            md: '1fr 1.5fr 1fr 1fr' 
           }, 
           gap: 2.5,
           alignItems: 'start'
@@ -67,7 +67,7 @@ const BranchesSection = ({ branches = [], coreValues = [] }) => {
             />
           )}
 
-          {/* COLUMN 2: THE STICKY MAP (Center-Left) */}
+          {/* COLUMN 2: THE STICKY MAP  */}
           <Box sx={{ position: 'sticky', top: '100px', height: '100%' }}>
             <AnimatePresence mode="wait">
               <motion.div 
@@ -98,7 +98,7 @@ const BranchesSection = ({ branches = [], coreValues = [] }) => {
             </AnimatePresence>
           </Box>
 
-          {/* COLUMN 3: Branch 2 (or more if you map them) */}
+          {/* COLUMN 3: Branch 2 */}
           {branches[1] && (
             <BranchCard 
               branch={branches[1]} 
@@ -182,7 +182,7 @@ const CoreValuesCard = ({ values }) => (
   </motion.div>
 );
 
-/* ================= STYLES ================= */
+
 
 const cardStyle = {
   p: 3,
