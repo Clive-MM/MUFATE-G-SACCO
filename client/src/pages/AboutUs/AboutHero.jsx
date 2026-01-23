@@ -8,34 +8,33 @@ const AboutHero = () => {
     <Box 
       sx={{ 
         width: '100%', 
-        // We keep the height you requested
+        // Generous height to allow the full team to be visible
         height: { xs: '500px', md: '90vh' }, 
         minHeight: { xs: '450px', md: '750px' },
         position: 'relative',
         overflow: 'hidden',
+        backgroundColor: '#02150F', 
         
         // Background Configuration
         backgroundImage: `url(${HERO_IMAGE})`,
         backgroundSize: 'cover', 
-        /* Changing 'center center' to 'center 10%' ensures the 
-          top of the image (the heads) stays within the top 
-          section of the container.
+        /* 'center bottom' is the key here. It anchors the bottom of the 
+           photo (the feet/grass) to the bottom of the container so 
+           nothing is cut off at the lower side.
         */
-        backgroundPosition: 'center 10%', 
+        backgroundPosition: 'center bottom', 
         backgroundRepeat: 'no-repeat',
         
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#02150F', 
-        
-        // Adds space so the faces don't start immediately under the navbar
-        pt: { xs: '80px', md: '100px' }, 
+        /* Adding top padding pushes the entire container's "visual start" 
+           below your navbar so heads don't overlap with the menu.
+        */
+        pt: { xs: '80px', md: '120px' }, 
       }}
     >
-      {/* Overlay to slightly dim the top if the image 
-         makes the navbar menu hard to read 
+      {/* Top Shadow Overlay: 
+          Helps the white navbar text stay readable against the building background.
       */}
       <Box 
         sx={{
@@ -43,20 +42,22 @@ const AboutHero = () => {
           top: 0,
           left: 0,
           width: '100%',
-          height: '15%',
-          background: 'linear-gradient(to bottom, rgba(2,21,15,0.7), transparent)',
+          height: '20%',
+          background: 'linear-gradient(to bottom, rgba(2,21,15,0.8), transparent)',
           zIndex: 1
         }} 
       />
 
-      {/* Bottom Gradient Overlay */}
+      {/* Bottom Gradient Overlay: 
+          Kept subtle (15%) to blend into the next section without hiding the feet.
+      */}
       <Box 
         sx={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           width: '100%',
-          height: '20%',
+          height: '15%',
           background: 'linear-gradient(to bottom, transparent, #02150F)',
           zIndex: 2
         }} 
