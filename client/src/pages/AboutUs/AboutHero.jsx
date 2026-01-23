@@ -2,59 +2,61 @@ import React from "react";
 import { Box } from "@mui/material";
 
 const AboutHero = () => {
-  const HERO_IMAGE =
-    "https://res.cloudinary.com/djydkcx01/image/upload/v1752730090/IMG_9698_nwftoq.jpg";
+  const HERO_IMAGE = "https://res.cloudinary.com/djydkcx01/image/upload/v1752730090/IMG_9698_nwftoq.jpg";
 
   return (
     <Box
       sx={{
         width: "100%",
         position: "relative",
-        overflow: "hidden",
-        height: { xs: "55vh", sm: "65vh", md: "75vh" },
-        minHeight: { xs: 320, md: 520 },
-        backgroundColor: "#02150F",
+        backgroundColor: "#02150F", // Fills any gaps on ultra-wide screens
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      {/* ✅ Real image (sharp + fills full hero like your screenshot) */}
+      {/* 1. THE IMAGE LAYER
+          Using 'width: 100%' and 'height: auto' is the ONLY way to 
+          ensure 100% of the image is shown without any cropping.
+      */}
       <Box
         component="img"
         src={HERO_IMAGE}
         alt="Golden Generation DT SACCO Team"
-        loading="lazy"
         sx={{
           width: "100%",
-          height: "100%",
-          objectFit: "cover", // ✅ fills entire section
-          objectPosition: { xs: "center 20%", md: "center 25%" }, // ✅ keeps faces safe
+          height: "auto", // Respects the original photo's dimensions
           display: "block",
         }}
       />
 
-      {/* ✅ Top dark overlay (optional, for navbar visibility) */}
+      {/* 2. THE NAVBAR PROTECTOR (Top Overlay)
+          This stays on top of the image so your white menu links 
+          are readable over the building's roof.
+      */}
       <Box
         sx={{
           position: "absolute",
           top: 0,
           left: 0,
           width: "100%",
-          height: { xs: "90px", md: "130px" },
-          background:
-            "linear-gradient(to bottom, rgba(2,21,15,0.9), transparent)",
+          // Adjust height based on your navbar thickness
+          height: { xs: "80px", md: "140px" }, 
+          background: "linear-gradient(to bottom, rgba(2,21,15,0.8), transparent)",
           pointerEvents: "none",
         }}
       />
 
-      {/* ✅ Bottom overlay (optional for smooth transition) */}
+      {/* 3. THE BOTTOM BLEND (Optional)
+          Makes the grass fade into your next section smoothly.
+      */}
       <Box
         sx={{
           position: "absolute",
           bottom: 0,
           left: 0,
           width: "100%",
-          height: "22%",
-          background:
-            "linear-gradient(to top, rgba(2,21,15,0.85), transparent)",
+          height: "15%",
+          background: "linear-gradient(to top, #02150F, transparent)",
           pointerEvents: "none",
         }}
       />
