@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, keyframes } from "@mui/material";
 
-// 1. Entrance animations
+
 const revealImage = keyframes`
   0% { transform: scale(1.08); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
