@@ -12,38 +12,40 @@ const AboutHero = () => {
         backgroundColor: '#02150F',
         overflow: 'hidden',
         
-        // This 'aspectRatio' ensures the container is always the exact shape
-        // of your photo. No more cropped feet or cut-off side people.
+        // This ensures the container height matches the image width perfectly.
+        // No more "zooming in" that cuts off people on the sides or bottom.
         aspectRatio: { 
-          xs: '4/3', // Square-ish for mobile
-          md: '16/7' // Wider for desktop
+          xs: '4/3',  // Taller for mobile screens
+          md: '2.4/1' // Maintains the wide team shot for desktop
         },
 
         // Background Configuration
         backgroundImage: `url(${HERO_IMAGE})`,
-        /* 'contain' ensures 100% of the image is always visible.
-           If you prefer it to fill the screen edges, keep 'cover' 
-           but the aspectRatio above will prevent the cropping.
-        */
         backgroundSize: 'cover', 
-        backgroundPosition: 'center top',
+        backgroundPosition: 'center center',
         backgroundRepeat: 'no-repeat',
+        
+        // This padding prevents the navbar from physically overlapping the faces
+        pt: { xs: '70px', md: '100px' } 
       }}
     >
-      {/* Top Navbar Protection Overlay */}
+      {/* 1. Navbar Overlay: 
+          Darkens the top edge so the white menu text stays visible 
+          without needing to hide the team's heads.
+      */}
       <Box 
         sx={{
           position: 'absolute',
           top: 0,
           left: 0,
           width: '100%',
-          height: '100px',
-          background: 'linear-gradient(to bottom, rgba(2,21,15,0.9), transparent)',
+          height: '140px',
+          background: 'linear-gradient(to bottom, rgba(2,21,15,0.95), transparent)',
           zIndex: 1
         }} 
       />
 
-      {/* Bottom Blend Overlay */}
+      {/* 2. Bottom Blend Overlay */}
       <Box 
         sx={{
           position: 'absolute',
