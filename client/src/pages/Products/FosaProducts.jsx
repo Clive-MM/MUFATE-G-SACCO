@@ -63,7 +63,7 @@ const FosaProducts = () => {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(to bottom, #011B0A, #012A12)',
+       background: '#02150F',
         py: { xs: 6, md: 8 },
       }}
     >
