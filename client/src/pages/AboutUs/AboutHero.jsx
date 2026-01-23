@@ -7,17 +7,23 @@ const AboutHero = () => {
   return (
     <Box 
       sx={{ 
-        width: '100%',
-        // Aspect ratio ensures the container keeps the shape of the photo 
-        // to prevent cropping of the team members.
-        aspectRatio: { xs: '16/9', md: '25/9' }, 
+        width: '100%', 
+        // Height is fixed on desktop but remains flexible on mobile
+        height: { xs: '350px', md: '70vh' }, 
         minHeight: { xs: '300px', md: '500px' },
         position: 'relative',
+        overflow: 'hidden',
         
         // Background Configuration
         backgroundImage: `url(${HERO_IMAGE})`,
-        backgroundSize: '100% 100%', // Forces the image to occupy full width and height
-        backgroundPosition: 'center',
+        /* 'cover' ensures the image fills the entire container 
+           without stretching the people. 
+        */
+        backgroundSize: 'cover', 
+        /* 'top' or 'center' keeps the heads of the team 
+           visible if the container gets too narrow. 
+        */
+        backgroundPosition: 'center 20%', 
         backgroundRepeat: 'no-repeat',
         
         display: 'flex',
@@ -26,17 +32,14 @@ const AboutHero = () => {
         backgroundColor: '#02150F', 
       }}
     >
-      {/* Bottom Gradient Overlay: 
-        This is kept only to ensure a smooth visual blend into the 
-        content section below the hero.
-      */}
+      {/* Bottom Gradient Overlay for smooth transition */}
       <Box 
         sx={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           width: '100%',
-          height: '20%',
+          height: '25%',
           background: 'linear-gradient(to bottom, transparent, #02150F)',
           zIndex: 1
         }} 
