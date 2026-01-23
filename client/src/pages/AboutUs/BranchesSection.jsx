@@ -1,34 +1,36 @@
-import React from 'react';
-import { Box, Typography, Container, Stack, Button } from '@mui/material';
-import RoomIcon from '@mui/icons-material/Room';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { Box, Typography, Container, Stack, Button, Grid, Paper } from '@mui/material';
+import { 
+  Room as RoomIcon, 
+  Favorite as FavoriteIcon, 
+  Verified as VerifiedIcon, 
+  Map as MapIcon 
+} from '@mui/icons-material';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const BRAND = { 
   gold: '#EC9B14', 
   dark: '#02150F', 
-  darkLighter: '#032419', 
-  bodyText: 'rgba(255, 255, 255, 0.7)',
+  bodyText: 'rgba(244, 244, 244, 0.6)',
   glass: 'rgba(255, 255, 255, 0.03)'
 };
 
 const BranchesSection = ({ branches = [], coreValues = [] }) => {
+  // State to track the currently selected branch for the map
+  const [selectedLocation, setSelectedLocation] = useState(branches[0]?.Location || "Kakamega, Kenya");
+
   return (
     <Box sx={{ 
       py: { xs: 8, md: 12 }, 
-      background: `radial-gradient(circle at 50% 0%, ${BRAND.darkLighter} 0%, ${BRAND.dark} 100%)`,
+      bgcolor: BRAND.dark, // ✅ Unified with Footer background
       position: 'relative'
     }}>
       <Container maxWidth="lg">
+        {/* Header Section */}
         <Box sx={{ textAlign: 'center', mb: 8 }}>
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 700, letterSpacing: 3 }}>
-              Our Network
+          <motion.div initial={{ opacity: 0, y: -20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 900, letterSpacing: 3 }}>
+              OUR NETWORK
             </Typography>
             <Typography variant="h3" sx={{ 
               fontWeight: 900, 
@@ -39,60 +41,94 @@ const BranchesSection = ({ branches = [], coreValues = [] }) => {
             }}>
               Our Presence
             </Typography>
-            <Box sx={{ width: 60, height: 4, bgcolor: BRAND.gold, mx: 'auto', mt: 2, borderRadius: 2 }} />
+            {/* ✅ Horizontal line removed as requested */}
           </motion.div>
         </Box>
 
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, 
-          gap: 4 
-        }}>
-          {/* Branch Cards */}
-          {branches.map((branch, index) => (
-            <BranchCard key={index} branch={branch} index={index} />
-          ))}
+        <Grid container spacing={4}>
+          {/* LEFT: Branch List */}
+          <Grid item xs={12} md={7}>
+            <Stack spacing={3}>
+              {branches.map((branch, index) => (
+                <BranchCard 
+                  key={index} 
+                  branch={branch} 
+                  index={index} 
+                  isSelected={selectedLocation === branch.Location}
+                  onSelect={() => setSelectedLocation(branch.Location)}
+                />
+              ))}
+              <CoreValuesCard values={coreValues} />
+            </Stack>
+          </Grid>
 
-          {/* Core Values Card - Styled Differently for Contrast */}
-          <CoreValuesCard values={coreValues} />
-        </Box>
+          {/* RIGHT: Live Map Integration */}
+          <Grid item xs={12} md={5}>
+            <Box sx={{ position: 'sticky', top: '100px' }}>
+              <motion.div 
+                key={selectedLocation}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Paper sx={mapContainerStyle}>
+                  <Box sx={mapHeaderStyle}>
+                    <MapIcon sx={{ color: BRAND.gold, mr: 1 }} />
+                    <Typography sx={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem' }}>
+                      LIVE LOCATION
+                    </Typography>
+                  </Box>
+                  <iframe
+                    title="Branch Location"
+                    width="100%"
+                    height="450"
+                    frameBorder="0"
+                    style={{ border: 0, display: 'block' }}
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(selectedLocation)}&output=embed`}
+                    allowFullScreen
+                  />
+                </Paper>
+              </motion.div>
+            </Box>
+          </Grid>
+        </Grid>
       </Container>
     </Box>
   );
 };
 
-const BranchCard = ({ branch, index }) => (
+const BranchCard = ({ branch, index, isSelected, onSelect }) => (
   <motion.div 
-    initial={{ opacity: 0, y: 30 }} 
-    whileInView={{ opacity: 1, y: 0 }} 
+    initial={{ opacity: 0, x: -20 }} 
+    whileInView={{ opacity: 1, x: 0 }} 
     viewport={{ once: true }}
-    transition={{ delay: index * 0.1, duration: 0.5 }}
+    transition={{ delay: index * 0.1 }}
   >
-    <Box sx={cardStyle}>
-      <Stack spacing={2} alignItems="center" sx={{ textAlign: 'center', height: '100%' }}>
+    <Box 
+      onClick={onSelect}
+      sx={{ 
+        ...branchCardStyle, 
+        borderColor: isSelected ? BRAND.gold : 'rgba(255, 255, 255, 0.08)',
+        bgcolor: isSelected ? 'rgba(236, 155, 20, 0.05)' : BRAND.glass
+      }}
+    >
+      <Stack direction="row" spacing={3} alignItems="center">
         <Box sx={iconCircleStyle}>
-          <RoomIcon sx={{ fontSize: 32, color: BRAND.gold }} />
+          <RoomIcon sx={{ color: BRAND.gold }} />
         </Box>
-        
         <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="h5" sx={{ fontWeight: 800, color: BRAND.gold, mb: 1 }}>
+          <Typography variant="h6" sx={{ fontWeight: 800, color: BRAND.gold }}>
             {branch.BranchName}
           </Typography>
-          <Typography sx={{ color: '#fff', fontSize: '0.95rem', opacity: 0.9, mb: 1 }}>
+          <Typography sx={{ color: '#fff', fontSize: '0.9rem', opacity: 0.8 }}>
             {branch.Location}
           </Typography>
-          <Typography sx={{ color: BRAND.bodyText, fontSize: '0.85rem' }}>
-            {branch.ContactNumber}
-          </Typography>
         </Box>
-
         <Button 
-          fullWidth
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.Location)}`}
-          target="_blank"
-          sx={buttonStyle}
+          variant={isSelected ? "contained" : "outlined"}
+          sx={isSelected ? activeButtonStyle : ghostButtonStyle}
         >
-          View on Map
+          {isSelected ? "Active" : "View Map"}
         </Button>
       </Stack>
     </Box>
@@ -100,82 +136,72 @@ const BranchCard = ({ branch, index }) => (
 );
 
 const CoreValuesCard = ({ values }) => (
-  <motion.div 
-    initial={{ opacity: 0, scale: 0.95 }} 
-    whileInView={{ opacity: 1, scale: 1 }} 
-    viewport={{ once: true }}
-    transition={{ delay: 0.4 }}
-  >
-    <Box sx={{ ...cardStyle, background: 'rgba(236, 155, 20, 0.05)', borderColor: BRAND.gold }}>
-      <Stack spacing={2} alignItems="center">
-        <FavoriteIcon sx={{ fontSize: 40, color: BRAND.gold }} />
-        <Typography variant="h5" sx={{ fontWeight: 800, color: BRAND.gold, textTransform: 'uppercase' }}>
-          Core Values
-        </Typography>
-        
-        <Box sx={{ width: '100%', textAlign: 'left', mt: 1 }}>
-          {values.map((v, i) => (
-            <Stack key={i} direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
-              <VerifiedIcon sx={{ fontSize: 18, color: BRAND.gold, opacity: 0.8 }} />
-              <Typography sx={{ color: '#fff', fontSize: '0.9rem', fontWeight: 500 }}>
-                {v.CoreValueName}
-              </Typography>
-            </Stack>
-          ))}
-        </Box>
-      </Stack>
-    </Box>
-  </motion.div>
+  <Box sx={coreCardStyle}>
+    <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
+      <VerifiedIcon sx={{ color: BRAND.gold, fontSize: 30 }} />
+      <Typography variant="h5" sx={{ fontWeight: 900, color: '#fff' }}>CORE VALUES</Typography>
+    </Stack>
+    <Grid container spacing={2}>
+      {values.map((v, i) => (
+        <Grid item xs={6} sm={4} key={i}>
+          <Typography sx={{ color: BRAND.bodyText, fontSize: '0.85rem', fontWeight: 600 }}>
+             • {v.CoreValueName}
+          </Typography>
+        </Grid>
+      ))}
+    </Grid>
+  </Box>
 );
 
 /* ================= THEMED STYLES ================= */
 
-const cardStyle = {
-  background: BRAND.glass,
-  backdropFilter: 'blur(15px)',
-  borderRadius: '32px',
-  border: '1px solid rgba(255, 255, 255, 0.08)',
-  padding: { xs: 4, md: 5 },
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-  '&:hover': { 
-    transform: 'translateY(-12px)', 
-    borderColor: BRAND.gold,
-    boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(236, 155, 20, 0.1)`,
-    background: 'rgba(255, 255, 255, 0.06)'
-  }
+const branchCardStyle = {
+  p: 3,
+  borderRadius: '20px',
+  border: '1px solid',
+  cursor: 'pointer',
+  transition: '0.3s ease',
+  '&:hover': { transform: 'translateX(10px)', bgcolor: 'rgba(255,255,255,0.05)' }
 };
 
-const iconCircleStyle = {
-  width: 70,
-  height: 70,
-  borderRadius: '20px',
-  background: 'rgba(236, 155, 20, 0.1)',
+const mapContainerStyle = {
+  overflow: 'hidden',
+  borderRadius: '32px',
+  bgcolor: '#000',
+  border: `1px solid rgba(236, 155, 20, 0.3)`,
+  boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+};
+
+const mapHeaderStyle = {
+  p: 2,
+  bgcolor: 'rgba(236, 155, 20, 0.1)',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
-  mb: 1,
+  borderBottom: `1px solid rgba(236, 155, 20, 0.2)`
+};
+
+const coreCardStyle = {
+  mt: 4,
+  p: 4,
+  borderRadius: '24px',
+  background: 'linear-gradient(135deg, rgba(236, 155, 20, 0.1) 0%, transparent 100%)',
   border: '1px solid rgba(236, 155, 20, 0.2)'
 };
 
-const buttonStyle = {
-  mt: 2,
-  py: 1.5,
-  borderRadius: '16px',
-  textTransform: 'none',
-  fontWeight: 700,
-  fontSize: '0.9rem',
-  color: BRAND.dark,
-  backgroundColor: BRAND.gold,
-  border: `1px solid ${BRAND.gold}`,
-  transition: '0.3s',
-  '&:hover': { 
-    backgroundColor: 'transparent', 
-    color: BRAND.gold,
-    boxShadow: `0 0 15px ${BRAND.gold}44`
-  }
+const iconCircleStyle = {
+  width: 50, height: 50, borderRadius: '12px',
+  bgcolor: 'rgba(236, 155, 20, 0.1)',
+  display: 'flex', alignItems: 'center', justifyContent: 'center'
+};
+
+const activeButtonStyle = {
+  bgcolor: BRAND.gold, color: BRAND.dark, fontWeight: 900,
+  borderRadius: '10px', '&:hover': { bgcolor: BRAND.gold }
+};
+
+const ghostButtonStyle = {
+  color: BRAND.gold, borderColor: BRAND.gold, fontWeight: 700,
+  borderRadius: '10px', '&:hover': { bgcolor: 'rgba(236, 155, 20, 0.1)', borderColor: BRAND.gold }
 };
 
 export default BranchesSection;
