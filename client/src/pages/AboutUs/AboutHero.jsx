@@ -24,13 +24,12 @@ const AboutHero = () => {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        // ✅ CRITICAL FIX: Add padding at the top so the heads 
-        // are pushed below the navbar on mobile devices.
+    
         pt: { xs: "65px", sm: "80px", md: "0px" }, 
       }}
     >
       {/* 2. THE IMAGE LAYER 
-          Maintains 'height: auto' to ensure NO cropping occurs on any screen.
+        
       */}
       <Box
         component="img"
@@ -46,7 +45,7 @@ const AboutHero = () => {
       />
 
       {/* 3. RESPONSIVE NAVBAR PROTECTOR
-          We reduce the intensity on mobile so it doesn't mask the faces.
+        
       */}
       <Box
         sx={{
@@ -54,7 +53,7 @@ const AboutHero = () => {
           top: 0,
           left: 0,
           width: "100%",
-          // Height matches the padding to stay purely behind the navbar
+        
           height: { xs: "80px", md: "160px" },
           background: {
             xs: "linear-gradient(to bottom, rgba(2,21,15,1) 0%, transparent 100%)",
@@ -66,7 +65,7 @@ const AboutHero = () => {
       />
 
       {/* 4. BOTTOM BLEND 
-          Ensures a smooth fade into your "WHO WE ARE" section.
+          
       */}
       <Box
         sx={{
