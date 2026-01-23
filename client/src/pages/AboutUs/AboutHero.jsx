@@ -7,54 +7,29 @@ const AboutHero = () => {
   return (
     <Box 
       sx={{ 
-        width: '100%', 
-        // Height is fixed on desktop but remains flexible on mobile to prevent cropping
-        height: { xs: 'auto', md: '80vh' }, 
-        minHeight: { xs: '300px', md: '600px' },
+        width: '100%',
+        // Aspect ratio ensures the container keeps the shape of the photo 
+        // to prevent cropping of the team members.
+        aspectRatio: { xs: '16/9', md: '25/9' }, 
+        minHeight: { xs: '300px', md: '500px' },
         position: 'relative',
-        overflow: 'hidden',
-        backgroundColor: '#02150F', // Deep green matches brand identity
+        
+        // Background Configuration
+        backgroundImage: `url(${HERO_IMAGE})`,
+        backgroundSize: '100% 100%', // Forces the image to occupy full width and height
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: '#02150F', 
       }}
     >
-      {/* 1. Blurred Background Layer - Occupies the "Whole Section" */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `url(${HERO_IMAGE})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'blur(20px) brightness(0.3)', // Darkened for premium feel
-          transform: 'scale(1.1)', // Prevents white edges from blur
-          zIndex: 1,
-        }}
-      />
-
-      {/* 2. Main Team Image - Fully Contained (No Cropping) */}
-      <Box
-        component="img"
-        src={HERO_IMAGE}
-        alt="Golden Generation DT Sacco Team"
-        sx={{
-          width: '100%',
-          height: '100%',
-          // Ensures the entire team is visible regardless of screen size
-          objectFit: 'contain', 
-          position: 'relative',
-          zIndex: 2,
-          display: 'block',
-          // Adds a soft glow to separate image from blurred background
-          boxShadow: '0 0 50px rgba(0,0,0,0.5)', 
-        }}
-      />
-
-      {/* 3. Gradient Overlay - Smooth transition to next section */}
+      {/* Bottom Gradient Overlay: 
+        This is kept only to ensure a smooth visual blend into the 
+        content section below the hero.
+      */}
       <Box 
         sx={{
           position: 'absolute',
@@ -63,7 +38,7 @@ const AboutHero = () => {
           width: '100%',
           height: '20%',
           background: 'linear-gradient(to bottom, transparent, #02150F)',
-          zIndex: 3
+          zIndex: 1
         }} 
       />
     </Box>
