@@ -1,14 +1,14 @@
 import React from "react";
 import { Box, keyframes } from "@mui/material";
 
-// 1. Define the entrance animations
+// 1. Entrance animations
 const revealImage = keyframes`
-  0% { transform: scale(1.1); opacity: 0; }
+  0% { transform: scale(1.08); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 `;
 
 const fadeUp = keyframes`
-  0% { opacity: 0; transform: translateY(20px); }
+  0% { opacity: 0; transform: translateY(15px); }
   100% { opacity: 1; transform: translateY(0); }
 `;
 
@@ -21,12 +21,17 @@ const AboutHero = () => {
         width: "100%",
         position: "relative",
         backgroundColor: "#02150F",
-        overflow: "hidden", // Keeps the zoom animation contained
+        overflow: "hidden",
         display: "flex",
         flexDirection: "column",
+        // ✅ CRITICAL FIX: Add padding at the top so the heads 
+        // are pushed below the navbar on mobile devices.
+        pt: { xs: "65px", sm: "80px", md: "0px" }, 
       }}
     >
-      {/* 2. THE IMAGE LAYER with Animation */}
+      {/* 2. THE IMAGE LAYER 
+          Maintains 'height: auto' to ensure NO cropping occurs on any screen.
+      */}
       <Box
         component="img"
         src={HERO_IMAGE}
@@ -35,13 +40,13 @@ const AboutHero = () => {
           width: "100%",
           height: "auto", 
           display: "block",
-          // Animation: subtle scale down and fade in on load
+          zIndex: 1,
           animation: `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards`,
         }}
       />
 
-      {/* 3. RESPONSIVE NAVBAR OVERLAY 
-          Adjusted opacity and height for different screens
+      {/* 3. RESPONSIVE NAVBAR PROTECTOR
+          We reduce the intensity on mobile so it doesn't mask the faces.
       */}
       <Box
         sx={{
@@ -49,27 +54,31 @@ const AboutHero = () => {
           top: 0,
           left: 0,
           width: "100%",
-          height: { xs: "70px", sm: "100px", md: "160px" },
-          background: "linear-gradient(to bottom, rgba(2,21,15,0.9) 0%, rgba(2,21,15,0.4) 60%, transparent 100%)",
+          // Height matches the padding to stay purely behind the navbar
+          height: { xs: "80px", md: "160px" },
+          background: {
+            xs: "linear-gradient(to bottom, rgba(2,21,15,1) 0%, transparent 100%)",
+            md: "linear-gradient(to bottom, rgba(2,21,15,0.8) 0%, transparent 100%)"
+          },
           zIndex: 2,
           pointerEvents: "none",
-          animation: `${fadeUp} 0.8s ease-out forwards`,
         }}
       />
 
-      {/* 4. RESPONSIVE BOTTOM BLEND 
-          Ensures the grass transitions perfectly into the next section
+      {/* 4. BOTTOM BLEND 
+          Ensures a smooth fade into your "WHO WE ARE" section.
       */}
       <Box
         sx={{
           position: "absolute",
-          bottom: -1, // -1 avoids tiny gaps on some browsers
+          bottom: -1, 
           left: 0,
           width: "100%",
-          height: { xs: "10%", md: "20%" },
-          background: "linear-gradient(to top, #02150F 0%, transparent 100%)",
-          zIndex: 2,
+          height: { xs: "15%", md: "25%" },
+          background: "linear-gradient(to top, #02150F 15%, transparent 100%)",
+          zIndex: 3,
           pointerEvents: "none",
+          animation: `${fadeUp} 1s ease-out forwards`,
         }}
       />
     </Box>
