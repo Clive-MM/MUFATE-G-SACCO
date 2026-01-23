@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box } from '@mui/material';
+import React from "react";
+import { Box } from "@mui/material";
 
 const AboutHero = () => {
   const HERO_IMAGE =
@@ -8,49 +8,66 @@ const AboutHero = () => {
   return (
     <Box
       sx={{
-        width: '100%',
-        position: 'relative',
-        overflow: 'hidden',
-        backgroundColor: '#02150F',
-
-        // ✅ Control hero height responsively (better than aspectRatio for full image)
-        minHeight: { xs: '240px', sm: '320px', md: '480px', lg: '520px' },
-
-        // ✅ FULL IMAGE WITHOUT CROPPING
-        backgroundImage: `url(${HERO_IMAGE})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        backgroundSize: 'contain', // ✅ THIS IS THE KEY FIX
-
-        // ✅ improves quality & smoothness
-        imageRendering: 'auto',
+        width: "100%",
+        position: "relative",
+        overflow: "hidden",
+        minHeight: { xs: "260px", sm: "340px", md: "500px", lg: "550px" },
+        backgroundColor: "#02150F",
       }}
     >
-      {/* ✅ Top dark overlay for navbar visibility */}
+      {/* ✅ Blurred full-width background (fills empty space) */}
       <Box
         sx={{
-          position: 'absolute',
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `url(${HERO_IMAGE})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "blur(18px)",
+          transform: "scale(1.15)", // prevents blur edges
+          opacity: 0.35,
+        }}
+      />
+
+      {/* ✅ Main image fully visible (no crop) */}
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `url(${HERO_IMAGE})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "contain",
+          zIndex: 1,
+        }}
+      />
+
+      {/* ✅ Top navbar readability overlay */}
+      <Box
+        sx={{
+          position: "absolute",
           top: 0,
           left: 0,
-          width: '100%',
-          height: { xs: '90px', md: '140px' },
-          background: 'linear-gradient(to bottom, rgba(2,21,15,0.95), transparent)',
-          zIndex: 1,
-          pointerEvents: 'none',
+          width: "100%",
+          height: { xs: "90px", md: "140px" },
+          background:
+            "linear-gradient(to bottom, rgba(2,21,15,0.95), transparent)",
+          zIndex: 2,
+          pointerEvents: "none",
         }}
       />
 
       {/* ✅ Bottom blend overlay */}
       <Box
         sx={{
-          position: 'absolute',
+          position: "absolute",
           bottom: 0,
           left: 0,
-          width: '100%',
-          height: '18%',
-          background: 'linear-gradient(to top, rgba(2,21,15,1), transparent)',
+          width: "100%",
+          height: "22%",
+          background: "linear-gradient(to top, #02150F, transparent)",
           zIndex: 2,
-          pointerEvents: 'none',
+          pointerEvents: "none",
         }}
       />
     </Box>
