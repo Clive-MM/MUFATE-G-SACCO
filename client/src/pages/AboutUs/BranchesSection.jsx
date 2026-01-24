@@ -35,7 +35,7 @@ const BranchesSection = ({ branches = [], coreValues = [] }) => {
             </Typography>
             <Typography variant="h3" sx={{ 
               fontWeight: 900, 
-              color: '#fff', 
+              color: BRAND.gold, 
               mt: 1,
               fontSize: { xs: '2.2rem', md: '3rem' },
               textTransform: 'uppercase' 

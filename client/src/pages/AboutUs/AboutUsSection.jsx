@@ -18,8 +18,8 @@ const AboutUsSection = () => {
     <Box
       sx={{
         width: '100%',
-        py: { xs: 6, sm: 8, md: 10 }, // Increased padding for better breathing room
-        px: { xs: 0, sm: 2 }, // Reduced outer padding on mobile to maximize card width
+        py: { xs: 6, sm: 8, md: 10 }, 
+        px: { xs: 0, sm: 2 }, 
         bgcolor: BRAND.dark,
         display: 'flex',
         justifyContent: 'center',
@@ -37,7 +37,7 @@ const AboutUsSection = () => {
           transition={{ duration: 0.8 }}
           style={{
             ...glassCardStyle,
-            width: '100%', // Ensure card takes full container width
+            width: '100%', 
           }}
         >
           <SectionItem 
@@ -78,7 +78,7 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
   >
     <Stack 
         direction={{ xs: 'column', sm: 'row' }} 
-        spacing={{ xs: 2, sm: 3 }} // Slightly more spacing on mobile
+        spacing={{ xs: 2, sm: 3 }} 
         alignItems={{ xs: 'center', sm: 'flex-start' }}
         sx={{ 
           py: { xs: 3, md: 4 }, 
@@ -101,13 +101,13 @@ const SectionItem = ({ icon, title, content, delay = 0 }) => (
   </motion.div>
 );
 
-/* ================= STYLES (Kept exactly as requested, minor responsive tweaks) ================= */
+
 
 const glassCardStyle = {
   background: BRAND.glassBg,
   backdropFilter: 'blur(20px)',
-  borderRadius: '32px', // More stable radius across screens
-  padding: '10px', // Inner padding of the glass container
+  borderRadius: '32px', 
+  padding: '10px', 
   border: `1px solid rgba(236, 155, 20, 0.2)`,
   boxShadow: `0 15px 35px rgba(0,0,0,0.4)`,
   position: 'relative'
