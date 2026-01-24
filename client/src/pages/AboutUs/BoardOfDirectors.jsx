@@ -33,9 +33,7 @@ const BoardOfDirectors = () => {
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
-    // CHANGE THIS: 
-    // Increase pt (padding-top) to push content below the navbar.
-    // pt: 12 is usually enough for standard navbars (approx 96px)
+   
     pt: { xs: 10, md: 15 }, 
     pb: 5,
   }}
@@ -50,7 +48,7 @@ const BoardOfDirectors = () => {
           letterSpacing: 1.5,
           background: `linear-gradient(to right, ${COLORS.gold}, ${COLORS.softGold})`,
           WebkitBackgroundClip: "text",
-          color: "transparent",
+          color: COLORS.gold,
           textShadow: `0 0 18px ${COLORS.gold}55`,
         }}
       >
@@ -106,7 +104,7 @@ const BoardOfDirectors = () => {
                   sx={{
                     fontWeight: 900,
                     fontSize: "1.25rem",
-                    color: COLORS.softGold,
+                    color: COLORS.gold,
                     textTransform: "uppercase",
                     mb: 1,
                     letterSpacing: 1,
