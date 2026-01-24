@@ -29,6 +29,14 @@ const SavingsProducts = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expanded, setExpanded] = useState(null);
 
+  // Standardized Brand Colors
+  const COLORS = {
+    gold: '#EC9B14',      // Matches the logo/footer gold
+    dark: '#02150F',      // Matches the deep dark background
+    textLight: '#F4F4F4',
+    cardBg: 'rgba(255,255,255,0.98)'
+  };
+
   useEffect(() => {
     axios
       .get('https://mufate-g-sacco.onrender.com/products')
@@ -69,8 +77,10 @@ const SavingsProducts = () => {
   return (
     <Box
       sx={{
-        background: '#02150F',
-        py: { xs: 6, md: 8 },
+        background: COLORS.dark,
+        // Increased padding to push title below the navigation bar
+        pt: { xs: 14, md: 18 }, 
+        pb: { xs: 6, md: 8 },
       }}
     >
       {/* SECTION TITLE */}
@@ -80,29 +90,29 @@ const SavingsProducts = () => {
         sx={{
           fontWeight: 900,
           textTransform: 'uppercase',
-          mb: 4,
-          letterSpacing: '1px',
-          background: 'linear-gradient(to right, #FFD700, #F9E7C5)',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          textShadow: '0 0 12px rgba(255,215,0,0.45)',
+          mb: 5,
+          letterSpacing: '3px',
+          color: COLORS.gold,
+          fontSize: { xs: '1.6rem', md: '2.3rem' },
+          textShadow: `0 0 15px ${COLORS.gold}33`,
         }}
       >
         Savings Products
       </Typography>
 
       {/* SEARCH BAR */}
-      <Box sx={{ maxWidth: 420, mx: 'auto', mb: 5 }}>
+      <Box sx={{ maxWidth: 420, mx: 'auto', mb: 6, px: 2 }}>
         <TextField
           fullWidth
           placeholder="Search savings product..."
           onChange={(e) => setSearchTerm(e.target.value)}
           sx={{
-            background: 'rgba(255,255,255,0.95)',
-            borderRadius: '14px',
-            boxShadow: '0 0 18px rgba(255,215,0,0.25)',
+            background: 'white',
+            borderRadius: '12px',
+            boxShadow: `0 0 20px ${COLORS.gold}20`,
             '& .MuiOutlinedInput-root': {
               fontWeight: 600,
+              '& fieldset': { border: 'none' },
             },
           }}
         />
@@ -118,6 +128,7 @@ const SavingsProducts = () => {
                 index={index}
                 expanded={expanded}
                 handleExpandClick={handleExpandClick}
+                COLORS={COLORS}
               />
             </Box>
           ))
@@ -130,6 +141,7 @@ const SavingsProducts = () => {
                   index={index}
                   expanded={expanded}
                   handleExpandClick={handleExpandClick}
+                  COLORS={COLORS}
                 />
               </Box>
             ))}
@@ -140,9 +152,10 @@ const SavingsProducts = () => {
       {/* GOLD DIVIDER */}
       <Box
         sx={{
-          height: '16px',
-          background: 'linear-gradient(to right, #FFD700, #F9E7C5)',
-          mt: 6,
+          height: '4px',
+          background: COLORS.gold,
+          mt: 10,
+          opacity: 0.4
         }}
       />
 
@@ -152,23 +165,24 @@ const SavingsProducts = () => {
 };
 
 /* ======================
-   SHARED SAVINGS CARD
+    SHARED SAVINGS CARD
 ====================== */
-const SavingsCard = ({ item, index, expanded, handleExpandClick }) => (
+const SavingsCard = ({ item, index, expanded, handleExpandClick, COLORS }) => (
   <Card
     data-aos="zoom-in"
     sx={{
-      borderRadius: '22px',
-      background: 'rgba(255,255,255,0.96)',
-      boxShadow: '0 8px 28px rgba(0,0,0,0.25)',
-      transition: '0.35s ease',
+      borderRadius: '24px',
+      background: COLORS.cardBg,
+      boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+      transition: '0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
       '&:hover': {
-        transform: 'scale(1.03)',
-        boxShadow: '0 0 28px rgba(255,215,0,0.55)',
-        border: '1px solid rgba(255,215,0,0.6)',
+        transform: 'translateY(-8px)',
+        boxShadow: `0 0 30px ${COLORS.gold}40`,
+        border: `1px solid ${COLORS.gold}80`,
       },
       maxWidth: 500,
       mx: 'auto',
+      mb: 3
     }}
   >
     {/* HEADER */}
@@ -176,15 +190,15 @@ const SavingsCard = ({ item, index, expanded, handleExpandClick }) => (
       avatar={
         <Avatar
           sx={{
-            background: 'linear-gradient(135deg, #013D19, #0A5A2A)',
-            boxShadow: '0 0 12px rgba(255,215,0,0.5)',
+            background: COLORS.dark,
+            border: `1px solid ${COLORS.gold}`,
           }}
         >
-          <SavingsIcon sx={{ color: '#FFD700' }} />
+          <SavingsIcon sx={{ color: COLORS.gold }} />
         </Avatar>
       }
       title={
-        <Typography sx={{ fontWeight: 700, color: '#013D19' }}>
+        <Typography sx={{ fontWeight: 800, color: COLORS.dark, textTransform: 'uppercase', fontSize: '1.1rem' }}>
           {item.ProductName}
         </Typography>
       }
@@ -194,16 +208,20 @@ const SavingsCard = ({ item, index, expanded, handleExpandClick }) => (
     {item.ImageURL && (
       <CardMedia
         component="img"
-        height="320"
+        height="300"
         image={item.ImageURL}
         alt={item.ProductName}
-        sx={{ objectFit: 'cover' }}
+        sx={{ 
+            objectFit: 'cover',
+            filter: 'brightness(0.95)',
+            borderBottom: `2px solid ${COLORS.gold}20`
+        }}
       />
     )}
 
     {/* INTRO */}
     <CardContent>
-      <Typography sx={{ color: '#333', lineHeight: 1.6 }}>
+      <Typography sx={{ color: '#2C3E50', lineHeight: 1.7, fontWeight: 500 }}>
         {item.Intro}
       </Typography>
     </CardContent>
@@ -214,13 +232,10 @@ const SavingsCard = ({ item, index, expanded, handleExpandClick }) => (
         onClick={() => handleExpandClick(index)}
         sx={{
           ml: 'auto',
-          color: '#013D19',
+          color: COLORS.dark,
           transform: expanded === index ? 'rotate(180deg)' : 'rotate(0deg)',
           transition: '0.3s ease',
-          '&:hover': {
-            color: '#FFD700',
-            transform: 'scale(1.2) rotate(180deg)',
-          },
+          '&:hover': { color: COLORS.gold },
         }}
       >
         <ExpandMoreIcon />
@@ -229,24 +244,24 @@ const SavingsCard = ({ item, index, expanded, handleExpandClick }) => (
 
     {/* EXPANDED CONTENT */}
     <Collapse in={expanded === index} timeout="auto" unmountOnExit>
-      <CardContent>
+      <CardContent sx={{ pt: 0, borderTop: '1px dashed rgba(0,0,0,0.1)' }}>
         {item.Features && (
-          <Box mb={2}>
-            <Typography sx={{ fontWeight: 800, color: '#013D19' }}>
-              Features
+          <Box mt={2} mb={3}>
+            <Typography sx={{ fontWeight: 900, color: COLORS.gold, textTransform: 'uppercase', fontSize: '0.85rem', mb: 1 }}>
+              Key Features
             </Typography>
-            <Typography sx={{ color: '#333' }}>
+            <Typography sx={{ color: '#444', fontSize: '0.95rem', borderLeft: `3px solid ${COLORS.gold}`, pl: 2 }}>
               {item.Features}
             </Typography>
           </Box>
         )}
 
         {item.Benefits && (
-          <Box>
-            <Typography sx={{ fontWeight: 800, color: '#013D19' }}>
-              Benefits
+          <Box mb={2}>
+            <Typography sx={{ fontWeight: 900, color: COLORS.gold, textTransform: 'uppercase', fontSize: '0.85rem', mb: 1 }}>
+              Member Benefits
             </Typography>
-            <Typography sx={{ color: '#333' }}>
+            <Typography sx={{ color: '#444', fontSize: '0.95rem', borderLeft: `3px solid ${COLORS.dark}`, pl: 2 }}>
               {item.Benefits}
             </Typography>
           </Box>

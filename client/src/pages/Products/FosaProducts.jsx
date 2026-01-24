@@ -22,13 +22,12 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const FosaProducts = () => {
-  const [fosaLoans, setFosaLoans] = useState([]);
+  const [fosaLoans, setFosaLoans] = useState([]); // Defined with capital F
   const [expanded, setExpanded] = useState(null);
 
-  // Standardized Brand Colors
   const COLORS = {
-    gold: '#EC9B14',      // Matches BRAND.gold from Footer
-    dark: '#02150F',      // Matches BRAND.dark from Footer
+    gold: '#EC9B14',
+    dark: '#02150F',
     textMuted: 'rgba(244, 244, 244, 0.6)',
     light: '#F4F4F4',
   };
@@ -40,7 +39,7 @@ const FosaProducts = () => {
         const filtered = res.data.services.filter(
           service => service.ServiceCategory === 'FOSA'
         );
-        setfosaLoans(filtered);
+        setFosaLoans(filtered); // Fixed: Changed setfosaLoans to setFosaLoans
       })
       .catch(err => console.error(err));
   }, []);
@@ -72,12 +71,10 @@ const FosaProducts = () => {
     <Box
       sx={{
         background: COLORS.dark,
-        // Responsive Padding to clear the Navbar
         pt: { xs: 12, md: 18 }, 
         pb: { xs: 6, md: 8 },
       }}
     >
-      {/* SECTION TITLE - Standardized Style */}
       <Typography
         variant="h4"
         align="center"
@@ -94,7 +91,6 @@ const FosaProducts = () => {
         FOSA Loan Products
       </Typography>
 
-      {/* SLIDER */}
       <Box sx={{ maxWidth: '1200px', mx: 'auto', px: 2 }}>
         <Slider {...sliderSettings}>
           {fosaLoans.map((loan, index) => (
@@ -116,7 +112,6 @@ const FosaProducts = () => {
                   mb: 2
                 }}
               >
-                {/* CARD HEADER */}
                 <CardHeader
                   avatar={
                     <Avatar
@@ -135,7 +130,6 @@ const FosaProducts = () => {
                   }
                 />
 
-                {/* IMAGE */}
                 {loan.ImageURL && (
                   <CardMedia
                     component="img"
@@ -146,7 +140,6 @@ const FosaProducts = () => {
                   />
                 )}
 
-                {/* DESCRIPTION */}
                 <CardContent>
                   <Typography
                     variant="body2"
@@ -156,7 +149,6 @@ const FosaProducts = () => {
                   </Typography>
                 </CardContent>
 
-                {/* EXPAND BUTTON */}
                 <CardActions disableSpacing>
                   <IconButton
                     onClick={() => handleExpandClick(index)}
@@ -175,7 +167,6 @@ const FosaProducts = () => {
                   </IconButton>
                 </CardActions>
 
-                {/* EXPANDABLE CONTENT */}
                 <Collapse in={expanded === index} timeout="auto" unmountOnExit>
                   <CardContent sx={{ borderTop: `1px solid rgba(0,0,0,0.05)` }}>
                     {loan.Features && (
@@ -212,7 +203,6 @@ const FosaProducts = () => {
                       </Box>
                     )}
 
-                    {/* DOWNLOAD FORM BUTTON - Standardized Style */}
                     {loan.LoanFormURL && (
                       <Box mt={2} textAlign="center">
                         <a
@@ -254,7 +244,6 @@ const FosaProducts = () => {
         </Slider>
       </Box>
 
-      {/* GOLD DIVIDER */}
       <Box
         sx={{
           height: '4px',
@@ -263,7 +252,6 @@ const FosaProducts = () => {
           opacity: 0.3
         }}
       />
-
       <Footer />
     </Box>
   );
