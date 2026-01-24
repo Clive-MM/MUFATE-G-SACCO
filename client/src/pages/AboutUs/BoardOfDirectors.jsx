@@ -29,7 +29,7 @@ const BoardOfDirectors = () => {
   return (
     <Box
       sx={{
-        background: `linear-gradient(135deg, ${COLORS.deepGreen}, ${COLORS.deepGreen2})`,
+        background: "#02150F",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
