@@ -28,14 +28,18 @@ const BoardOfDirectors = () => {
 
   return (
     <Box
-      sx={{
-        background: "#02150F",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        py: 5,
-      }}
-    >
+  sx={{
+    background: "#02150F",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    // CHANGE THIS: 
+    // Increase pt (padding-top) to push content below the navbar.
+    // pt: 12 is usually enough for standard navbars (approx 96px)
+    pt: { xs: 10, md: 15 }, 
+    pb: 5,
+  }}
+>
       {/* TITLE */}
       <Typography
         variant="h4"
