@@ -18,45 +18,45 @@ const BoardOfDirectors = () => {
     AOS.init({ duration: 900, once: true });
   }, []);
 
+  // Updated to match the Footer's BRAND constants exactly
   const COLORS = {
-    deepGreen: "#011407",
-    deepGreen2: "#01240F",
-    gold: "#FFD700",
-    deepGold: "#E6C200",
-    softGold: "#FFF4B5",
+    gold: '#EC9B14',      // Matches BRAND.gold from Footer
+    dark: '#02150F',      // Matches BRAND.dark from Footer
+    textMuted: 'rgba(244, 244, 244, 0.6)', // Matches BRAND.textMuted
+    light: '#F4F4F4',
   };
 
   return (
     <Box
-  sx={{
-    background: "#02150F",
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-   
-    pt: { xs: 10, md: 15 }, 
-    pb: 5,
-  }}
->
-      {/* TITLE */}
+      sx={{
+        background: COLORS.dark,
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        // Pushes content below the fixed/absolute navbar
+        pt: { xs: 12, md: 18 }, 
+        pb: 5,
+      }}
+    >
+      {/* TITLE - Matched to Footer Branding Style */}
       <Typography
         variant="h4"
         align="center"
         sx={{
           fontWeight: 900,
-          mb: 5,
-          letterSpacing: 1.5,
-          background: `linear-gradient(to right, ${COLORS.gold}, ${COLORS.softGold})`,
-          WebkitBackgroundClip: "text",
+          mb: 8,
+          letterSpacing: '3px',
           color: COLORS.gold,
-          textShadow: `0 0 18px ${COLORS.gold}55`,
+          textTransform: 'uppercase',
+          fontSize: { xs: '1.5rem', md: '2.2rem' },
+          textShadow: `0 0 15px ${COLORS.gold}33`,
         }}
       >
         BOARD OF DIRECTORS
       </Typography>
 
       {/* GRID */}
-      <Grid container spacing={4} justifyContent="center" px={4}>
+      <Grid container spacing={4} justifyContent="center" px={4} sx={{ flexGrow: 1 }}>
         {bodList.map(member => (
           <Grid
             item
@@ -71,15 +71,15 @@ const BoardOfDirectors = () => {
               sx={{
                 borderRadius: 3,
                 overflow: "hidden",
-                background: `rgba(255,255,255,0.04)`,
-                border: `1.5px solid ${COLORS.gold}44`,
-                backdropFilter: "blur(6px)",
+                background: `rgba(255,255,255,0.03)`,
+                border: `1px solid rgba(255,255,255,0.1)`,
+                backdropFilter: "blur(8px)",
                 transition: "all 0.4s ease",
-                boxShadow: `0 10px 30px rgba(0,0,0,0.45)`,
+                height: '100%',
 
                 "&:hover": {
                   transform: "translateY(-10px)",
-                  boxShadow: `0 20px 50px rgba(0,0,0,0.7), 0 0 35px ${COLORS.gold}55`,
+                  boxShadow: `0 20px 50px rgba(0,0,0,0.7), 0 0 20px ${COLORS.gold}33`,
                   borderColor: COLORS.gold,
                 },
               }}
@@ -93,46 +93,42 @@ const BoardOfDirectors = () => {
                 sx={{
                   objectFit: "cover",
                   objectPosition: "top",
-                  filter: "brightness(0.95)",
+                  filter: "brightness(0.9)",
                 }}
               />
 
               {/* TEXT */}
               <CardContent sx={{ textAlign: "center", py: 3 }}>
+                {/* Member Name - Uniform Gold */}
                 <Typography
                   variant="h6"
                   sx={{
                     fontWeight: 900,
-                    fontSize: "1.25rem",
+                    fontSize: "1.1rem",
                     color: COLORS.gold,
                     textTransform: "uppercase",
-                    mb: 1,
+                    mb: 1.5,
                     letterSpacing: 1,
-                    textShadow: `0 0 6px ${COLORS.gold}55`,
                   }}
                 >
                   {member.Name}
                 </Typography>
 
+                {/* Designation Badge - Dark Text on Gold for legibility */}
                 <Typography
-                  className="designation"
-                  variant="body1"
+                  variant="body2"
                   sx={{
                     display: "inline-block",
                     px: 2,
-                    py: 0.7,
-                    borderRadius: "10px",
-                    fontWeight: 700,
-                    fontSize: "0.95rem",
-                    color: COLORS.deepGreen,
+                    py: 0.8,
+                    borderRadius: "4px",
+                    fontWeight: 800,
+                    fontSize: "0.75rem",
+                    color: COLORS.dark, // Dark text on gold background
                     background: COLORS.gold,
-                    boxShadow: `0 0 12px ${COLORS.gold}55`,
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
                     transition: "all 0.3s ease",
-
-                    "&:hover": {
-                      transform: "scale(1.08)",
-                      boxShadow: `0 0 20px ${COLORS.gold}`,
-                    },
                   }}
                 >
                   {member.Designation}
