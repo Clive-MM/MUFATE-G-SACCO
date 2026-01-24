@@ -127,7 +127,7 @@ const HomepageSlider = () => {
                         Join Us
                       </Button>
                       <Button 
-                        component={RouterLink} to="/products" 
+                        component={RouterLink} to="/products/bosa" 
                         sx={{ 
                           ...ButtonStyle, 
                           border: `1.5px solid ${BRAND.gold}`, 
