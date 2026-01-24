@@ -19,120 +19,116 @@ const ManagementTeam = () => {
     AOS.init({ duration: 900, once: true });
   }, []);
 
-  // BRAND COLORS
+  // Standardized Brand Colors to match Footer and BOD
   const COLORS = {
-    deepGreen: '#011407',
-    deepGreen2: '#01240F',
-    gold: '#FFD700',
-    deepGold: '#E6C200',
-    softGold: '#FFF4B5',
-    textLight: '#F8F3D5',
+    gold: '#EC9B14',      // Matches BRAND.gold from Footer
+    dark: '#02150F',      // Matches BRAND.dark from Footer
+    textMuted: 'rgba(244, 244, 244, 0.6)', 
+    light: '#F4F4F4',
   };
 
   return (
     <Box
       sx={{
-        background: `linear-gradient(135deg, ${COLORS.deepGreen}, ${COLORS.deepGreen2})`,
+        background: COLORS.dark,
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        py: 5,
+        // Responsive padding to push content below the navbar
+        pt: { xs: 12, md: 18 }, 
+        pb: 5,
       }}
     >
-      {/* PAGE TITLE */}
+      {/* PAGE TITLE - Standardized Style */}
       <Typography
         variant="h4"
-        gutterBottom
         align="center"
         sx={{
           fontWeight: 900,
-          mb: 6,
-          fontSize: { xs: '2rem', md: '2.6rem' },
-          letterSpacing: 1.5,
-          background: `linear-gradient(to right, ${COLORS.gold}, ${COLORS.softGold})`,
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          textShadow: `0 0 12px ${COLORS.gold}50`,
+          mb: 8,
+          letterSpacing: '3px',
+          color: COLORS.gold,
+          textTransform: 'uppercase',
+          fontSize: { xs: '1.5rem', md: '2.2rem' },
+          textShadow: `0 0 15px ${COLORS.gold}33`,
         }}
       >
         MANAGEMENT TEAM
       </Typography>
 
       {/* TEAM GRID */}
-      <Grid container spacing={4} justifyContent="center" sx={{ px: { xs: 2, md: 6 } }}>
+      <Grid container spacing={4} justifyContent="center" px={4} sx={{ flexGrow: 1 }}>
         {managementList.map(member => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={member.MGTID} data-aos="fade-up">
+          <Grid 
+            item 
+            xs={12} 
+            sm={6} 
+            md={4} 
+            lg={3} 
+            key={member.MGTID} 
+            data-aos="zoom-in"
+          >
             <Card
               sx={{
-                borderRadius: '18px',
+                borderRadius: 3,
                 overflow: 'hidden',
-                background: `rgba(1,20,10,0.78)`,
-                border: `1.5px solid ${COLORS.gold}40`,
-                boxShadow: `0 12px 35px rgba(0,0,0,0.45), 0 0 22px ${COLORS.gold}20`,
+                background: `rgba(255,255,255,0.03)`,
+                border: `1px solid rgba(255,255,255,0.1)`,
+                backdropFilter: "blur(8px)",
                 transition: 'all 0.4s ease',
-                '&:hover': {
+                height: '100%',
+                "&:hover": {
                   transform: 'translateY(-10px)',
-                  boxShadow: `0 25px 45px rgba(0,0,0,0.6), 0 0 35px ${COLORS.gold}55`,
-                  border: `1.5px solid ${COLORS.gold}`,
+                  boxShadow: `0 20px 50px rgba(0,0,0,0.7), 0 0 20px ${COLORS.gold}33`,
+                  borderColor: COLORS.gold,
                 },
               }}
             >
               {/* IMAGE */}
               <CardMedia
                 component="img"
-                height="360"
+                height="380"
                 image={member.ImageURL}
                 alt={member.MGTName}
-                sx={{ objectFit: 'cover' }}
+                sx={{ 
+                    objectFit: 'cover',
+                    objectPosition: "top",
+                    filter: "brightness(0.9)",
+                }}
               />
 
               {/* CONTENT */}
-              <CardContent
-                sx={{
-                  textAlign: 'center',
-                  py: 3,
-                  color: COLORS.textLight,
-                }}
-              >
-                {/* NAME */}
+              <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                {/* NAME - Uniform Gold Style */}
                 <Typography
                   variant="h6"
-                  gutterBottom
                   sx={{
-                    fontWeight: 800,
-                    fontSize: '1.25rem',
+                    fontWeight: 900,
+                    fontSize: '1.1rem',
+                    color: COLORS.gold,
                     textTransform: 'uppercase',
-                    background: `linear-gradient(to right, ${COLORS.gold}, ${COLORS.softGold})`,
-                    WebkitBackgroundClip: 'text',
-                    color: 'transparent',
-                    mb: 2,
+                    mb: 1.5,
+                    letterSpacing: 1,
                   }}
                 >
                   {member.MGTName}
                 </Typography>
 
-                {/* DESIGNATION */}
+                {/* DESIGNATION BADGE - Matches BOD Style */}
                 <Typography
+                  variant="body2"
                   sx={{
                     display: 'inline-block',
-                    px: 2.5,
-                    py: 0.7,
-                    borderRadius: '12px',
-                    background: `rgba(255,215,0,0.12)`,
-                    color: COLORS.softGold,
-                    fontWeight: 700,
-                    fontSize: '0.95rem',
-                    textShadow: `0 0 8px ${COLORS.gold}40`,
-                    border: `1px solid ${COLORS.gold}40`,
+                    px: 2,
+                    py: 0.8,
+                    borderRadius: '4px',
+                    background: COLORS.gold,
+                    color: COLORS.dark, // Dark text for contrast
+                    fontWeight: 800,
+                    fontSize: '0.75rem',
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
                     transition: 'all 0.3s ease',
-                    boxShadow: `0 4px 10px rgba(0,0,0,0.35)`,
-                    '&:hover': {
-                      transform: 'scale(1.06)',
-                      boxShadow: `0 0 15px ${COLORS.gold}70`,
-                      background: COLORS.deepGold,
-                      color: '#000',
-                      borderColor: COLORS.gold,
-                    },
                   }}
                 >
                   {member.Designation}
