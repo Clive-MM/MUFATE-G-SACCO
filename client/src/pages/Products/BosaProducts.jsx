@@ -27,6 +27,14 @@ const BosaProducts = () => {
   const [expanded, setExpanded] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Standardized Brand Colors
+  const COLORS = {
+    gold: '#EC9B14',      // Matches BRAND.gold from Footer
+    dark: '#02150F',      // Matches BRAND.dark from Footer
+    textMuted: 'rgba(244, 244, 244, 0.6)',
+    light: '#F4F4F4',
+  };
+
   useEffect(() => {
     axios
       .get('https://mufate-g-sacco.onrender.com/services')
@@ -66,38 +74,37 @@ const BosaProducts = () => {
     autoplay: true,
     autoplaySpeed: 4500,
     arrows: true,
-    responsive: [
-      { breakpoint: 768, settings: { slidesToShow: 1 } }
-    ],
+    responsive: [{ breakpoint: 768, settings: { slidesToShow: 1 } }],
   };
 
   return (
     <Box
       sx={{
-        background: '#02150F',
-        py: { xs: 6, md: 8 },
+        background: COLORS.dark,
+        // Increased Padding-Top to make header visible below navbar
+        pt: { xs: 12, md: 18 }, 
+        pb: { xs: 6, md: 8 },
       }}
     >
-      {/* SECTION TITLE */}
+      {/* SECTION TITLE - Standardized Style */}
       <Typography
         variant="h4"
         align="center"
         sx={{
           fontWeight: 900,
           textTransform: 'uppercase',
-          mb: 4,
-          letterSpacing: '1px',
-          background: 'linear-gradient(to right, #FFD700, #F9E7C5)',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          textShadow: '0 0 12px rgba(255,215,0,0.45)',
+          mb: 6,
+          letterSpacing: '3px',
+          color: COLORS.gold,
+          fontSize: { xs: '1.5rem', md: '2.2rem' },
+          textShadow: `0 0 15px ${COLORS.gold}33`,
         }}
       >
         BOSA Loan Products
       </Typography>
 
       {/* SEARCH BAR */}
-      <Box sx={{ maxWidth: 420, mx: 'auto', mb: 5 }}>
+      <Box sx={{ maxWidth: 420, mx: 'auto', mb: 5, px: 2 }}>
         <TextField
           fullWidth
           placeholder="Search BOSA loan..."
@@ -105,7 +112,7 @@ const BosaProducts = () => {
           sx={{
             background: 'rgba(255,255,255,0.95)',
             borderRadius: '14px',
-            boxShadow: '0 0 18px rgba(255,215,0,0.25)',
+            boxShadow: `0 0 18px ${COLORS.gold}25`,
             '& .MuiOutlinedInput-root': {
               fontWeight: 600,
             },
@@ -123,6 +130,7 @@ const BosaProducts = () => {
                 index={index}
                 expanded={expanded}
                 handleExpandClick={handleExpandClick}
+                COLORS={COLORS}
               />
             </Box>
           ))
@@ -135,6 +143,7 @@ const BosaProducts = () => {
                   index={index}
                   expanded={expanded}
                   handleExpandClick={handleExpandClick}
+                  COLORS={COLORS}
                 />
               </Box>
             ))}
@@ -145,9 +154,10 @@ const BosaProducts = () => {
       {/* GOLD DIVIDER */}
       <Box
         sx={{
-          height: '16px',
-          background: 'linear-gradient(to right, #FFD700, #F9E7C5)',
-          mt: 6,
+          height: '4px',
+          background: COLORS.gold,
+          mt: 8,
+          opacity: 0.3
         }}
       />
 
@@ -157,23 +167,24 @@ const BosaProducts = () => {
 };
 
 /* ======================
-   SHARED LOAN CARD
+    SHARED LOAN CARD
 ====================== */
-const LoanCard = ({ loan, index, expanded, handleExpandClick }) => (
+const LoanCard = ({ loan, index, expanded, handleExpandClick, COLORS }) => (
   <Card
     data-aos="zoom-in"
     sx={{
       borderRadius: '22px',
-      background: 'rgba(255,255,255,0.96)',
+      background: 'rgba(255,255,255,0.98)',
       boxShadow: '0 8px 28px rgba(0,0,0,0.25)',
       transition: '0.35s ease',
       '&:hover': {
-        transform: 'scale(1.03)',
-        boxShadow: '0 0 28px rgba(255,215,0,0.55)',
-        border: '1px solid rgba(255,215,0,0.6)',
+        transform: 'scale(1.02)',
+        boxShadow: `0 0 28px ${COLORS.gold}55`,
+        border: `1px solid ${COLORS.gold}`,
       },
       maxWidth: 500,
       mx: 'auto',
+      mb: 2
     }}
   >
     {/* HEADER */}
@@ -181,15 +192,15 @@ const LoanCard = ({ loan, index, expanded, handleExpandClick }) => (
       avatar={
         <Avatar
           sx={{
-            background: 'linear-gradient(135deg, #013D19, #0A5A2A)',
-            boxShadow: '0 0 12px rgba(255,215,0,0.5)',
+            background: COLORS.dark,
+            boxShadow: `0 0 10px ${COLORS.gold}50`,
           }}
         >
-          <AccountBalanceIcon sx={{ color: '#FFD700' }} />
+          <AccountBalanceIcon sx={{ color: COLORS.gold }} />
         </Avatar>
       }
       title={
-        <Typography sx={{ fontWeight: 700, color: '#013D19' }}>
+        <Typography sx={{ fontWeight: 900, color: COLORS.dark, textTransform: 'uppercase', fontSize: '1rem' }}>
           {loan.ServiceName}
         </Typography>
       }
@@ -202,13 +213,13 @@ const LoanCard = ({ loan, index, expanded, handleExpandClick }) => (
         height="250"
         image={loan.ImageURL}
         alt={loan.ServiceName}
-        sx={{ objectFit: 'cover' }}
+        sx={{ objectFit: 'cover', filter: 'brightness(0.9)' }}
       />
     )}
 
     {/* DESCRIPTION */}
     <CardContent>
-      <Typography sx={{ color: '#333', lineHeight: 1.6 }}>
+      <Typography sx={{ color: '#333', lineHeight: 1.6, fontWeight: 500 }}>
         {loan.Description}
       </Typography>
     </CardContent>
@@ -219,12 +230,11 @@ const LoanCard = ({ loan, index, expanded, handleExpandClick }) => (
         onClick={() => handleExpandClick(index)}
         sx={{
           ml: 'auto',
-          color: '#013D19',
+          color: COLORS.dark,
           transform: expanded === index ? 'rotate(180deg)' : 'rotate(0deg)',
           transition: '0.3s ease',
           '&:hover': {
-            color: '#FFD700',
-            transform: 'scale(1.2) rotate(180deg)',
+            color: COLORS.gold,
           },
         }}
       >
@@ -234,49 +244,59 @@ const LoanCard = ({ loan, index, expanded, handleExpandClick }) => (
 
     {/* EXPANDED CONTENT */}
     <Collapse in={expanded === index} timeout="auto" unmountOnExit>
-      <CardContent>
+      <CardContent sx={{ borderTop: `1px solid rgba(0,0,0,0.05)` }}>
         {loan.Features && (
           <Box mb={2}>
-            <Typography sx={{ fontWeight: 800, color: '#013D19' }}>
+            <Typography sx={{ fontWeight: 800, color: COLORS.gold, textTransform: 'uppercase', fontSize: '0.85rem', mb: 0.5 }}>
               Features
             </Typography>
-            <Typography sx={{ color: '#333' }}>
+            <Typography sx={{ color: '#444', fontSize: '0.95rem' }}>
               {loan.Features}
             </Typography>
           </Box>
         )}
 
         {loan.Benefits && (
-          <Box mb={2}>
-            <Typography sx={{ fontWeight: 800, color: '#013D19' }}>
+          <Box mb={3}>
+            <Typography sx={{ fontWeight: 800, color: COLORS.gold, textTransform: 'uppercase', fontSize: '0.85rem', mb: 0.5 }}>
               Benefits
             </Typography>
-            <Typography sx={{ color: '#333' }}>
+            <Typography sx={{ color: '#444', fontSize: '0.95rem' }}>
               {loan.Benefits}
             </Typography>
           </Box>
         )}
 
         {loan.LoanFormURL && (
-          <Box mt={2}>
+          <Box mt={2} textAlign="center">
             <a
               href={loan.LoanFormURL}
               target="_blank"
               rel="noopener noreferrer"
               style={{
                 display: 'inline-block',
-                background: 'linear-gradient(135deg, #013D19, #0A5A2A)',
-                color: '#FFD700',
+                background: COLORS.dark,
+                color: COLORS.gold,
                 fontWeight: 800,
-                padding: '10px 22px',
-                borderRadius: '30px',
+                padding: '12px 28px',
+                borderRadius: '8px',
                 textDecoration: 'none',
-                border: '1px solid rgba(255,215,0,0.45)',
-                boxShadow: '0 0 18px rgba(255,215,0,0.45)',
+                textTransform: 'uppercase',
+                fontSize: '0.8rem',
+                letterSpacing: '1px',
+                boxShadow: `0 4px 15px rgba(0,0,0,0.2)`,
                 transition: '0.3s ease',
               }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = COLORS.gold;
+                e.currentTarget.style.color = COLORS.dark;
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = COLORS.dark;
+                e.currentTarget.style.color = COLORS.gold;
+              }}
             >
-              Download Form
+              Download Application Form
             </a>
           </Box>
         )}
