@@ -14,10 +14,7 @@ const revealImage = keyframes`
   100% { transform: scale(1); opacity: 1; }
 `;
 
-const fadeUp = keyframes`
-  0% { opacity: 0; transform: translateY(15px); }
-  100% { opacity: 1; transform: translateY(0); }
-`;
+// REMOVED: fadeUp constant to resolve 'no-unused-vars' error
 
 const BRAND = {
   gold: "#EC9B14",
@@ -28,7 +25,7 @@ const BRAND = {
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentSlide, setCurrentSlide] = useState(0); // Track active slide for animation reset
+  const [currentSlide, setCurrentSlide] = useState(0); 
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/slider/view`)
@@ -86,7 +83,6 @@ const HomepageSlider = () => {
                   top: 0,
                   zIndex: 1,
                   pt: { xs: 2, md: 0 },
-                  // IMPLEMENTING REVEAL ANIMATION (Triggers when slide is active)
                   animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : 'none',
                 }}
               />
@@ -103,7 +99,6 @@ const HomepageSlider = () => {
               }}>
                 <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
                   
-                  {/* TITLE ANIMATION (Delay 0.2s) */}
                   <motion.div
                     key={`title-${currentSlide}`}
                     initial={{ opacity: 0, y: 20 }}
@@ -123,7 +118,6 @@ const HomepageSlider = () => {
                     </Typography>
                   </motion.div>
 
-                  {/* DESCRIPTION ANIMATION (Delay 0.4s) */}
                   <motion.div
                     key={`desc-${currentSlide}`}
                     initial={{ opacity: 0, y: 20 }}
@@ -143,7 +137,6 @@ const HomepageSlider = () => {
                     </Typography>
                   </motion.div>
 
-                  {/* BUTTONS ANIMATION (Delay 0.6s) */}
                   <Stack 
                     direction="row" 
                     spacing={2}
