@@ -2,11 +2,22 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
 import { motion } from 'framer-motion';
-import { Box, Typography, Button, Container, CircularProgress, Stack } from '@mui/material';
+import { Box, Typography, Button, Container, CircularProgress, Stack, keyframes } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+
+// --- ANIMATIONS FROM ABOUT HERO ---
+const revealImage = keyframes`
+  0% { transform: scale(1.08); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+`;
+
+const fadeUp = keyframes`
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+`;
 
 const BRAND = {
   gold: "#EC9B14",
@@ -17,6 +28,7 @@ const BRAND = {
 const HomepageSlider = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0); // Track active slide for animation reset
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/slider/view`)
@@ -36,7 +48,8 @@ const HomepageSlider = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
-    arrows: false, 
+    arrows: false,
+    beforeChange: (oldIndex, newIndex) => setCurrentSlide(newIndex),
   };
 
   if (loading) return (
@@ -65,17 +78,16 @@ const HomepageSlider = () => {
                   width: { xs: '100%', md: '100%' },
                   height: { xs: '60%', md: '100vh' },
                   backgroundImage: `url(${slide.ImagePath})`,
-                 
                   backgroundSize: 'contain', 
                   backgroundRepeat: 'no-repeat',
-                
                   backgroundPosition: { xs: 'bottom center', md: 'right center' },
                   position: { md: 'absolute' },
                   right: 0,
                   top: 0,
                   zIndex: 1,
-                 
-                  pt: { xs: 2, md: 0 } 
+                  pt: { xs: 2, md: 0 },
+                  // IMPLEMENTING REVEAL ANIMATION (Triggers when slide is active)
+                  animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : 'none',
                 }}
               />
 
@@ -90,10 +102,13 @@ const HomepageSlider = () => {
                 pt: { xs: 3, md: 0 } 
               }}>
                 <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
+                  
+                  {/* TITLE ANIMATION (Delay 0.2s) */}
                   <motion.div
+                    key={`title-${currentSlide}`}
                     initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
+                    animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.8, delay: 0.2 }}
                   >
                     <Typography variant="h1" sx={{
                       color: BRAND.gold,
@@ -106,7 +121,15 @@ const HomepageSlider = () => {
                     }}>
                       {slide.Title}
                     </Typography>
+                  </motion.div>
 
+                  {/* DESCRIPTION ANIMATION (Delay 0.4s) */}
+                  <motion.div
+                    key={`desc-${currentSlide}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                  >
                     <Typography sx={{
                       color: BRAND.light,
                       maxWidth: { xs: "100%", md: "340px" },
@@ -118,26 +141,35 @@ const HomepageSlider = () => {
                     }}>
                       {slide.Description?.replace(/<[^>]*>/g, '')}
                     </Typography>
-
-                    <Stack direction="row" spacing={2}>
-                      <Button 
-                        component={RouterLink} to="/customer_registration" 
-                        sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
-                      >
-                        Join Us
-                      </Button>
-                      <Button 
-                        component={RouterLink} to="/products/bosa" 
-                        sx={{ 
-                          ...ButtonStyle, 
-                          border: `1.5px solid ${BRAND.gold}`, 
-                          color: BRAND.gold,
-                        }}
-                      >
-                        Products
-                      </Button>
-                    </Stack>
                   </motion.div>
+
+                  {/* BUTTONS ANIMATION (Delay 0.6s) */}
+                  <Stack 
+                    direction="row" 
+                    spacing={2}
+                    component={motion.div}
+                    key={`btns-${currentSlide}`}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.8, delay: 0.6 }}
+                  >
+                    <Button 
+                      component={RouterLink} to="/customer_registration" 
+                      sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
+                    >
+                      Join Us
+                    </Button>
+                    <Button 
+                      component={RouterLink} to="/products/bosa" 
+                      sx={{ 
+                        ...ButtonStyle, 
+                        border: `1.5px solid ${BRAND.gold}`, 
+                        color: BRAND.gold,
+                      }}
+                    >
+                      Products
+                    </Button>
+                  </Stack>
                 </Container>
               </Box>
             </Box>
