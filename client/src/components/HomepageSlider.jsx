@@ -41,7 +41,7 @@ const HomepageSlider = () => {
     infinite: true,
     speed: 1000,
     autoplay: true,
-    autoplaySpeed: 3500,
+    autoplaySpeed: 4000,
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
