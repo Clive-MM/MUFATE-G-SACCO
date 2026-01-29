@@ -4,35 +4,22 @@ import "./LoanCalculator.css";
 import Footer from "../../components/Footer";
 import { Box, Typography, Container } from "@mui/material";
 
-/* Backend base URL */
-const API_BASE =
-  process.env.REACT_APP_API_BASE?.replace(/\/$/, "") ||
-  "https://mufate-g-sacco.onrender.com";
+const API_BASE = process.env.REACT_APP_API_BASE?.replace(/\/$/, "") || "https://mufate-g-sacco.onrender.com";
 
 /* ---------------- Helpers ---------------- */
 async function getJSON(url, opts) {
   const r = await fetch(url, opts);
   const ct = r.headers.get("content-type") || "";
   const isJSON = ct.includes("application/json");
-
   if (!r.ok) {
     const body = isJSON ? await r.json() : await r.text();
-    const msg = isJSON ? body?.message || JSON.stringify(body) : body.slice(0, 240);
-    throw new Error(`${r.status} ${r.statusText} – ${msg}`);
+    throw new Error(`${r.status} – ${isJSON ? body?.message : body.slice(0, 240)}`);
   }
-
-  if (!isJSON) throw new Error("Expected JSON response from server.");
   return r.json();
 }
 
-const todayISO = () => {
-  const d = new Date();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${d.getFullYear()}-${mm}-${dd}`;
-};
+const todayISO = () => new Date().toISOString().split('T')[0];
 
-/* ---------------- Component ---------------- */
 export default function LoanCalculator() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
@@ -46,21 +33,18 @@ export default function LoanCalculator() {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState("");
 
-  /* Simple KES formatter */
   const formatMoney = (value) =>
     `KES ${Number(value || 0).toLocaleString("en-KE", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
 
-  /* Load loan products */
   useEffect(() => {
     (async () => {
       try {
         const js = await getJSON(`${API_BASE}/loan/products`);
         const items = js.items || [];
         setProducts(items);
-
         if (items.length) {
           const first = items[0];
           setSelectedKey(first.ProductKey);
@@ -68,17 +52,11 @@ export default function LoanCalculator() {
           setDefaultMonths(first.DefaultTermMonths);
           setMonths(String(first.DefaultTermMonths));
         }
-      } catch (e) {
-        setError(e.message);
-      }
+      } catch (e) { setError(e.message); }
     })();
   }, []);
 
-  /* Sync when product changes */
-  const currentProduct = useMemo(
-    () => products.find((p) => p.ProductKey === selectedKey),
-    [products, selectedKey]
-  );
+  const currentProduct = useMemo(() => products.find((p) => p.ProductKey === selectedKey), [products, selectedKey]);
 
   useEffect(() => {
     if (!currentProduct) return;
@@ -87,46 +65,26 @@ export default function LoanCalculator() {
     setMonths(String(currentProduct.DefaultTermMonths));
   }, [currentProduct]);
 
-  /* Calculate */
   const onCalculate = async () => {
     setError("");
-    setSchedule([]);
-    setSummary(null);
-
-    if (!selectedKey) return setError("Select a loan product.");
-    if (+principal <= 0) return setError("Enter a valid principal amount.");
-    if (+months <= 0) return setError("Enter a valid repayment period.");
-
+    if (!selectedKey || +principal <= 0 || +months <= 0) return setError("Please fill all fields correctly.");
     setLoading(true);
     try {
       const js = await getJSON(`${API_BASE}/loan/calc`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product_key: selectedKey,
-          principal: Number(principal),
-          start_date: startDate,
-          term_months: Number(months),
-        }),
+        body: JSON.stringify({ product_key: selectedKey, principal: Number(principal), start_date: startDate, term_months: Number(months) }),
       });
-
       setSchedule(js.schedule || []);
       setSummary(js.summary || null);
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
+    } catch (e) { setError(e.message); }
+    finally { setLoading(false); }
   };
 
-  /* Reset */
   const onReset = () => {
-    const base = products[0];
-    if (base) {
-      setSelectedKey(base.ProductKey);
-      setRatePct(Number(base.MonthlyInterestRate) * 100);
-      setDefaultMonths(base.DefaultTermMonths);
-      setMonths(String(base.DefaultTermMonths));
+    if (products.length) {
+      setSelectedKey(products[0].ProductKey);
+      setMonths(String(products[0].DefaultTermMonths));
     }
     setPrincipal("");
     setStartDate(todayISO());
@@ -138,186 +96,118 @@ export default function LoanCalculator() {
   return (
     <div className="lc-page">
       <Container maxWidth="lg">
-        {/* HEADER - Styled to match BOSA Component & Fixed Navbar spacing */}
-        <Box sx={{ 
-            pt: { xs: 6, md: 10 }, // Combined with .lc-page padding to clear navbar
-            mb: 6, 
-            textAlign: 'center' 
-        }}>
-          <Typography
-            variant="h3"
-            sx={{
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              letterSpacing: '3px',
-              color: '#EC9B14', // Brand Gold
-              mb: 1,
-              fontSize: { xs: '1.8rem', md: '2.5rem' },
-              textShadow: '0 0 15px rgba(236, 155, 20, 0.3)'
-            }}
-          >
+        <Box sx={{ pt: { xs: 8, md: 12 }, mb: 6, textAlign: 'center' }}>
+          <Typography variant="h3" sx={{ fontWeight: 900, textTransform: 'uppercase', letterSpacing: '3px', color: '#EC9B14', mb: 1, fontSize: { xs: '2rem', md: '3rem' }, textShadow: '0 0 20px rgba(236, 155, 20, 0.4)' }}>
             Loan Calculator
           </Typography>
-          <Typography 
-            sx={{ 
-              color: 'rgba(244, 244, 244, 0.7)', 
-              fontWeight: 500,
-              letterSpacing: '1px',
-              fontSize: { xs: '0.9rem', md: '1.1rem' }
-            }}
-          >
+          <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', letterSpacing: '1px' }}>
             Plan your repayments with <b>GOLDEN GENERATION DT SACCO</b>
           </Typography>
         </Box>
 
-        <div className="lc-grid">
-          {/* INPUTS CARD */}
-          <div className="card neo">
-            <div className="card-title">Specify your loan</div>
-
-            <div className="compact-row">
-              <label className="field compact">
+        <div className="lc-main-layout">
+          {/* LEFT: INPUTS */}
+          <div className="card neo lc-input-section">
+            <div className="card-header-modern">SPECIFY YOUR LOAN</div>
+            <div className="lc-form-grid">
+              <label className="field full">
                 <span>Loan Type</span>
-                <select
-                  className="input"
-                  value={selectedKey}
-                  onChange={(e) => setSelectedKey(e.target.value)}
-                >
-                  {products.map((p) => (
-                    <option key={p.ProductKey} value={p.ProductKey}>
-                      {p.LoanName}
-                    </option>
-                  ))}
+                <select className="input-modern" value={selectedKey} onChange={(e) => setSelectedKey(e.target.value)}>
+                  {products.map((p) => <option key={p.ProductKey} value={p.ProductKey}>{p.LoanName}</option>)}
                 </select>
               </label>
 
-              <label className="field compact">
+              <label className="field">
                 <span>Start Date</span>
-                <input
-                  className="input"
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
+                <input className="input-modern" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
               </label>
-            </div>
 
-            <div className="field-row">
-              <label className="field">
-                <span>Rate (per month)</span>
-                <input
-                  className="input"
-                  value={`${ratePct.toFixed(2)} %`}
-                  readOnly
-                />
-              </label>
-              <label className="field">
-                <span>Default Term (Months)</span>
-                <input className="input" value={defaultMonths} readOnly />
-              </label>
-            </div>
-
-            <div className="field-row">
-              <label className="field">
-                <span>Specify Repayment Months</span>
-                <input
-                  className="input"
-                  type="number"
-                  value={months}
-                  onChange={(e) => setMonths(e.target.value)}
-                />
-              </label>
               <label className="field">
                 <span>Principal (KES)</span>
-                <input
-                  className="input"
-                  type="number"
-                  placeholder="Enter Amount"
-                  value={principal}
-                  onChange={(e) => setPrincipal(e.target.value)}
-                />
+                <input className="input-modern" type="number" placeholder="0.00" value={principal} onChange={(e) => setPrincipal(e.target.value)} />
+              </label>
+
+              <label className="field">
+                <span>Interest Rate</span>
+                <input className="input-modern readonly" value={`${ratePct.toFixed(2)}%`} readOnly />
+              </label>
+
+              <label className="field">
+                <span>Default Term</span>
+                <input className="input-modern readonly" value={`${defaultMonths} Months`} readOnly />
+              </label>
+
+              <label className="field full">
+                <span>Specify Repayment Months</span>
+                <input className="input-modern" type="number" value={months} onChange={(e) => setMonths(e.target.value)} />
               </label>
             </div>
 
-            {error && <div className="alert" style={{ color: '#ff4d4d', marginTop: '10px', fontWeight: 'bold' }}>{error}</div>}
-
-            <div className="actions">
-              <button
-                className="btn-brand"
-                onClick={onCalculate}
-                disabled={loading}
-              >
-                {loading ? "Calculating…" : "Calculate"}
-              </button>
-              <button className="btn-ghost" onClick={onReset}>
-                Reset
-              </button>
+            <div className="lc-actions-modern">
+              <button className="btn-modern-gold" onClick={onCalculate} disabled={loading}>{loading ? "..." : "CALCULATE"}</button>
+              <button className="btn-modern-outline" onClick={onReset}>RESET</button>
             </div>
+            {error && <div className="error-text">{error}</div>}
           </div>
 
-          {/* SUMMARY CARD */}
-          <div className="card neo">
-            <div className="card-title">Summary</div>
-            {!summary ? (
-              <div className="muted">
-                Run a calculation to view results.
-              </div>
-            ) : (
-              <div className="chips">
-                <div className="chip">
-                  <div className="k">Loan Amount</div>
-                  <div className="v">{formatMoney(summary.Principal)}</div>
+          {/* RIGHT: SUMMARY & SCHEDULE */}
+          <div className="lc-results-column">
+            <div className="card neo lc-summary-section">
+              <div className="card-header-modern">SUMMARY</div>
+              {!summary ? (
+                <div className="muted-modern">Run a calculation to view results.</div>
+              ) : (
+                <div className="summary-chips-container">
+                  <div className="gold-chip">
+                    <span className="chip-label">Loan Amount</span>
+                    <span className="chip-value">{formatMoney(summary.Principal)}</span>
+                  </div>
+                  <div className="gold-chip">
+                    <span className="chip-label">Total Interest</span>
+                    <span className="chip-value">{formatMoney(summary.TotalInterest)}</span>
+                  </div>
+                  <div className="gold-chip">
+                    <span className="chip-label">Total Payable</span>
+                    <span className="chip-value">{formatMoney(summary.TotalPayable)}</span>
+                  </div>
                 </div>
-                <div className="chip">
-                  <div className="k">Total Interest</div>
-                  <div className="v">{formatMoney(summary.TotalInterest)}</div>
-                </div>
-                <div className="chip">
-                  <div className="k">Total Payable</div>
-                  <div className="v">{formatMoney(summary.TotalPayable)}</div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* SCHEDULE SECTION */}
-        <div className="card neo schedule-card" style={{ marginTop: '24px' }}>
-          <div className="card-title">Repayment Schedule</div>
-
-          {!schedule.length ? (
-            <div className="muted">No schedule generated.</div>
-          ) : (
-            <div className="table-wrap">
-              <table className="table-fixed">
-                <thead>
-                  <tr>
-                    <th>Installment</th>
-                    <th>Date</th>
-                    <th>Principal</th>
-                    <th>Interest</th>
-                    <th>Total</th>
-                    <th>Balance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {schedule.map((r, i) => (
-                    <tr key={r.period} className={i === 0 ? "first-row" : ""}>
-                      <td>{r.period}</td>
-                      <td>{r.date}</td>
-                      <td>{formatMoney(r.principal)}</td>
-                      <td>{formatMoney(r.interest)}</td>
-                      <td>{formatMoney(r.total)}</td>
-                      <td>{formatMoney(r.balance)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              )}
             </div>
-          )}
+
+            <div className="card neo lc-schedule-section">
+              <div className="card-header-modern">REPAYMENT SCHEDULE</div>
+              {!schedule.length ? (
+                <div className="muted-modern">No schedule generated.</div>
+              ) : (
+                <div className="table-modern-wrap">
+                  <table className="table-modern">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Principal</th>
+                        <th>Interest</th>
+                        <th>Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {schedule.map((r) => (
+                        <tr key={r.period}>
+                          <td>{r.period}</td>
+                          <td>{r.date}</td>
+                          <td>{formatMoney(r.principal)}</td>
+                          <td>{formatMoney(r.interest)}</td>
+                          <td>{formatMoney(r.balance)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </Container>
-
       <Footer />
     </div>
   );
