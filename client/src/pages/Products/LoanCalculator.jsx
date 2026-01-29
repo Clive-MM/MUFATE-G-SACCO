@@ -97,7 +97,7 @@ export default function LoanCalculator() {
     <div className="lc-page">
       <Container maxWidth="lg">
         <Box sx={{ pt: { xs: 8, md: 12 }, mb: 6, textAlign: 'center' }}>
-          <Typography variant="h3" sx={{ fontWeight: 900, textTransform: 'uppercase', letterSpacing: '3px', color: '#EC9B14', mb: 1, fontSize: { xs: '2rem', md: '3rem' }, textShadow: '0 0 20px rgba(236, 155, 20, 0.4)' }}>
+          <Typography variant="h3" sx={{ fontWeight: 900, textTransform: 'uppercase', letterSpacing: '3px', color: COLORS.gold, mb: 1, fontSize: { xs: '2rem', md: '3rem' }, textShadow: '0 0 20px rgba(236, 155, 20, 0.4)' }}>
             Loan Calculator
           </Typography>
           <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', letterSpacing: '1px' }}>
