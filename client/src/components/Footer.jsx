@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Typography, IconButton, Link, Container, Stack, Divider, Grid, Tooltip
+  Box, Typography, IconButton, Link, Container, Stack, Divider, Grid
 } from '@mui/material';
 import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
