@@ -15,7 +15,7 @@ const PageWrapper = styled('div')(({ theme }) => ({
   minHeight: '100vh',
   paddingTop: '100px',
   paddingBottom: '80px',
-  backgroundColor: '#02150F', 
+  background: 'radial-gradient(circle at top, #04331a 0%, #02150F 70%)',
   color: '#F4F4F4',
   fontFamily: "'Inter', sans-serif",
 }));
