@@ -247,7 +247,7 @@ export default function LoanCalculator() {
                   <Table stickyHeader size="small">
                     <TableHead>
                       <TableRow>
-                        {['#', 'Date', 'Principal', 'Interest', 'Balance'].map(head => (
+                        {['Installment', 'Date', 'Principal', 'Interest', 'Balance'].map(head => (
                           <TableCell key={head} sx={{ bgcolor: '#02150F', color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)', fontSize: '0.75rem' }}>
                             {head.toUpperCase()}
                           </TableCell>
