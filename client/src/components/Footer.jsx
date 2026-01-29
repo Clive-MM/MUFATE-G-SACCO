@@ -32,7 +32,7 @@ const Footer = () => {
   };
 
   const socialIconStyle = {
-    color: BRAND.gold, 
+    color: BRAND.gold,
     border: '1px solid rgba(255,255,255,0.1)',
     transition: '0.3s ease',
     width: 40,
@@ -55,11 +55,11 @@ const Footer = () => {
   };
 
   return (
-    <Box 
-      sx={{ 
-        bgcolor: BRAND.dark, 
-        color: BRAND.light, 
-        pt: 8, 
+    <Box
+      sx={{
+        bgcolor: BRAND.dark,
+        color: BRAND.light,
+        pt: 8,
         pb: 2,
         position: 'relative',
         borderTop: `1px solid rgba(255,255,255,0.05)`
@@ -67,7 +67,7 @@ const Footer = () => {
     >
       <Container maxWidth="xl">
         <Grid container spacing={4}>
-          
+
           {/* Column 1: Logo + Description */}
           <Grid item xs={12} md={4}>
             <Box sx={{ pr: { md: 5 } }}>
@@ -79,10 +79,23 @@ const Footer = () => {
               <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 2, letterSpacing: '2px', fontSize: '0.9rem' }}>
                 WALKING WITH YOU
               </Typography>
-              <Typography sx={{ color: BRAND.textMuted, lineHeight: 1.8, mb: 4, fontSize: '0.88rem' }}>
-                Golden Generation DT Sacco, formerly Mufate G Sacco, has undergone rebranding to expand, modernize, and serve more members effectively.
+              <Typography
+                sx={{
+                  color: BRAND.textMuted,
+                  lineHeight: 1.7,
+                  mb: 4,
+                  maxWidth: '400px',
+                  fontSize: '0.85rem',
+                  fontWeight: 400,
+                  letterSpacing: '0.3px'
+                }}
+              >
+                Golden Generation DT Sacco,<br />
+                formerly Mufate G Sacco,<br />
+                expanding and modernizing<br />
+                to serve our members effectively.
               </Typography>
-              
+
               <Stack direction="row" spacing={1.5}>
                 <IconButton component="a" href="https://x.com/GMufate" target="_blank" sx={socialIconStyle}>
                   <XIcon fontSize="small" />
@@ -90,8 +103,8 @@ const Footer = () => {
                 <IconButton component="a" href="https://www.facebook.com/share/1CLhxfKxb2/" target="_blank" sx={socialIconStyle}>
                   <Facebook fontSize="small" />
                 </IconButton>
-                <IconButton 
-                  component="a" href="https://wa.me/254791331932" target="_blank" 
+                <IconButton
+                  component="a" href="https://wa.me/254791331932" target="_blank"
                   sx={{ ...socialIconStyle, '&:hover': { background: BRAND.success, color: '#FFF' } }}
                 >
                   <FaWhatsapp size={18} />
@@ -108,18 +121,18 @@ const Footer = () => {
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
               {postImages.slice(0, 4).map((post, idx) => (
                 <Link key={idx} component={RouterLink} to="/news">
-                  <Box 
-                    component="img" 
-                    src={post.CoverImage} 
-                    sx={{ 
-                      width: '100%', 
-                      height: '75px', 
-                      objectFit: 'cover', 
+                  <Box
+                    component="img"
+                    src={post.CoverImage}
+                    sx={{
+                      width: '100%',
+                      height: '75px',
+                      objectFit: 'cover',
                       borderRadius: '8px',
                       transition: '0.3s',
                       filter: 'brightness(0.8)',
                       '&:hover': { filter: 'brightness(1.1)', transform: 'scale(1.05)' }
-                    }} 
+                    }}
                   />
                 </Link>
               ))}
@@ -137,9 +150,9 @@ const Footer = () => {
                   key={text}
                   component={RouterLink}
                   to={`/${text.toLowerCase().replace(/\s+/g, '-')}`}
-                  sx={{ 
-                    color: BRAND.textMuted, 
-                    textDecoration: 'none', 
+                  sx={{
+                    color: BRAND.textMuted,
+                    textDecoration: 'none',
                     fontSize: '0.88rem',
                     transition: '0.2s',
                     '&:hover': { color: BRAND.gold, transform: 'translateX(5px)' }
@@ -156,11 +169,11 @@ const Footer = () => {
             <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
               Contact Us
             </Typography>
-            
+
             <Box sx={contactItemStyle}>
               <Phone sx={iconWrapperStyle} />
               <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem', lineHeight: 1.6 }}>
-                +254 791 331 932<br/>+254 794 515 407
+                +254 791 331 932<br />+254 794 515 407
               </Typography>
             </Box>
 
@@ -201,7 +214,7 @@ const Footer = () => {
       </Container>
 
       {/* Scroll Up Button */}
-      <IconButton 
+      <IconButton
         onClick={scrollToTop}
         sx={{
           position: 'absolute',
