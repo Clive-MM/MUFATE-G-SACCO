@@ -13,12 +13,11 @@ const API_BASE = process.env.REACT_APP_API_BASE?.replace(/\/$/, "") || "https://
 /* ---------------- STYLED COMPONENTS ---------------- */
 const PageWrapper = styled('div')(({ theme }) => ({
   minHeight: '100vh',
-  paddingTop: '120px',
+  paddingTop: '100px',
   paddingBottom: '80px',
   background: 'radial-gradient(circle at top, #04331a 0%, #02150F 70%)',
   color: '#F4F4F4',
   fontFamily: "'Inter', sans-serif",
-  [theme.breakpoints.down('md')]: { paddingTop: '80px' },
 }));
 
 const NeoCard = styled(Paper)({
@@ -27,7 +26,7 @@ const NeoCard = styled(Paper)({
   border: '1px solid rgba(236, 155, 20, 0.15)',
   borderRadius: '20px',
   padding: '24px',
-  height: '100%',
+  height: '100%', // Critical for side-by-side alignment
   display: 'flex',
   flexDirection: 'column',
   boxShadow: 'none',
@@ -46,54 +45,50 @@ const CardHeader = styled(Typography)({
 
 const InputLabel = styled('label')({
   display: 'block',
-  marginBottom: '14px',
+  marginBottom: '10px',
   '& span': {
     display: 'block',
     marginBottom: '6px',
     fontWeight: 700,
-    fontSize: '0.7rem',
+    fontSize: '0.65rem',
     color: '#F9E7C5',
     textTransform: 'uppercase',
   }
 });
 
 const StyledInput = styled('input')({
-  height: '42px',
+  height: '38px',
   width: '100%',
   background: 'rgba(255, 255, 255, 0.95)',
   borderRadius: '8px',
-  border: '2px solid transparent',
+  border: 'none',
   padding: '0 12px',
   fontWeight: 600,
   color: '#02150F',
-  boxSizing: 'border-box',
-  fontSize: '0.9rem',
-  transition: '0.2s',
-  '&:focus': { outline: 'none', borderColor: '#EC9B14' },
-  '&.readonly': { background: 'rgba(255, 255, 255, 0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', cursor: 'not-allowed' }
+  fontSize: '0.85rem',
+  '&:focus': { outline: '2px solid #EC9B14' },
+  '&.readonly': { background: 'rgba(255, 255, 255, 0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }
 });
 
 const SummaryGoldCard = styled(Box)({
   background: 'linear-gradient(135deg, #EC9B14 0%, #D48A11 100%)',
-  padding: '20px',
+  padding: '18px',
   borderRadius: '16px',
   color: '#02150F',
   textAlign: 'center',
   marginBottom: '16px',
-  boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
-  '& .label': { fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', opacity: 0.8 },
-  '& .value': { fontSize: '1.4rem', fontWeight: 900, marginTop: '4px' },
+  '& .label': { fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', opacity: 0.8 },
+  '& .value': { fontSize: '1.2rem', fontWeight: 900, marginTop: '2px' },
 });
 
 /* ---------------- HELPERS ---------------- */
+const formatMoney = (val) => `KES ${Number(val || 0).toLocaleString("en-KE", { minimumFractionDigits: 2 })}`;
 async function getJSON(url, opts) {
   const r = await fetch(url, opts);
   if (!r.ok) throw new Error(`${r.status} - Request failed`);
   return r.json();
 }
-const todayISO = () => new Date().toISOString().split('T')[0];
 
-/* ---------------- MAIN COMPONENT ---------------- */
 export default function LoanCalculator() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
@@ -102,12 +97,10 @@ export default function LoanCalculator() {
   const [defaultMonths, setDefaultMonths] = useState(0);
   const [months, setMonths] = useState("");
   const [principal, setPrincipal] = useState("");
-  const [startDate, setStartDate] = useState(todayISO());
+  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [schedule, setSchedule] = useState([]);
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState("");
-
-  const formatMoney = (val) => `KES ${Number(val || 0).toLocaleString("en-KE", { minimumFractionDigits: 2 })}`;
 
   useEffect(() => {
     (async () => {
@@ -116,17 +109,16 @@ export default function LoanCalculator() {
         const items = js.items || [];
         setProducts(items);
         if (items.length) {
-          const first = items[0];
-          setSelectedKey(first.ProductKey);
-          setRatePct(Number(first.MonthlyInterestRate) * 100);
-          setDefaultMonths(first.DefaultTermMonths);
-          setMonths(String(first.DefaultTermMonths));
+          setSelectedKey(items[0].ProductKey);
+          setRatePct(Number(items[0].MonthlyInterestRate) * 100);
+          setDefaultMonths(items[0].DefaultTermMonths);
+          setMonths(String(items[0].DefaultTermMonths));
         }
       } catch (e) { setError(e.message); }
     })();
   }, []);
 
-  const currentProduct = useMemo(() => products.find((p) => p.ProductKey === selectedKey), [products, selectedKey]);
+  const currentProduct = useMemo(() => products.find(p => p.ProductKey === selectedKey), [products, selectedKey]);
 
   useEffect(() => {
     if (!currentProduct) return;
@@ -137,7 +129,7 @@ export default function LoanCalculator() {
 
   const onCalculate = async () => {
     setError("");
-    if (+principal <= 0) return setError("Enter a valid amount.");
+    if (+principal <= 0) return setError("Please enter a valid amount.");
     setLoading(true);
     try {
       const js = await getJSON(`${API_BASE}/loan/calc`, {
@@ -154,18 +146,15 @@ export default function LoanCalculator() {
   return (
     <PageWrapper>
       <Container maxWidth="lg">
-        {/* HEADER SECTION */}
-        <Box sx={{ textAlign: 'center', mb: 6 }}>
-          <Typography variant="h3" sx={{ fontWeight: 900, textTransform: 'uppercase', color: '#EC9B14', letterSpacing: '3px', textShadow: '0 0 15px rgba(236, 155, 20, 0.3)', fontSize: { xs: '2rem', md: '2.5rem' } }}>
+        {/* HEADER */}
+        <Box sx={{ textAlign: 'center', mb: 5 }}>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: '#EC9B14', letterSpacing: '2px', textTransform: 'uppercase' }}>
             Loan Calculator
-          </Typography>
-          <Typography sx={{ color: 'rgba(244, 244, 244, 0.6)', mt: 1, letterSpacing: '1px', fontSize: '0.9rem' }}>
-            Plan your repayments with <b>GOLDEN GENERATION DT SACCO</b>
           </Typography>
         </Box>
 
         <Grid container spacing={3}>
-          {/* TOP LEFT: SPECIFY YOUR LOAN (8/12 Width) */}
+          {/* ROW 1 LEFT: SPECIFY YOUR LOAN (xs=12, md=7 or 8) */}
           <Grid item xs={12} md={8}>
             <NeoCard>
               <CardHeader>Specify Your Loan</CardHeader>
@@ -194,43 +183,37 @@ export default function LoanCalculator() {
                 </Grid>
               </Grid>
 
-              <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-                <Button variant="contained" onClick={onCalculate} disabled={loading} sx={{ bgcolor: '#EC9B14', color: '#02150F', fontWeight: 900, px: 4, height: '45px', borderRadius: '10px', '&:hover': { bgcolor: '#fff' } }}>
-                  {loading ? "PROCESSING..." : "CALCULATE"}
+              <Box sx={{ mt: 'auto', pt: 3, display: 'flex', gap: 2 }}>
+                <Button onClick={onCalculate} disabled={loading} sx={{ bgcolor: '#EC9B14', color: '#02150F', fontWeight: 900, px: 4, height: '45px', borderRadius: '10px', '&:hover': { bgcolor: '#fff' } }}>
+                  {loading ? "Calculating..." : "CALCULATE"}
                 </Button>
-                <Button variant="outlined" onClick={() => window.location.reload()} sx={{ color: '#fff', borderColor: 'rgba(255,255,255,0.2)', px: 4, borderRadius: '10px', fontWeight: 700 }}>
+                <Button onClick={() => window.location.reload()} sx={{ border: '1px solid rgba(255,255,255,0.2)', color: '#fff', px: 4, borderRadius: '10px' }}>
                   RESET
                 </Button>
               </Box>
-              {error && <Typography sx={{ color: '#ff4d4d', mt: 2, fontWeight: 700, fontSize: '0.8rem' }}>{error}</Typography>}
             </NeoCard>
           </Grid>
 
-          {/* TOP RIGHT: SUMMARY (4/12 Width) */}
+          {/* ROW 1 RIGHT: SUMMARY (xs=12, md=4 or 5) */}
           <Grid item xs={12} md={4}>
             <NeoCard>
               <CardHeader>Summary</CardHeader>
               {!summary ? (
-                <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Typography sx={{ color: 'rgba(255,255,255,0.25)', textAlign: 'center', fontStyle: 'italic', fontSize: '0.9rem' }}>
-                    Run a calculation to see the results.
-                  </Typography>
-                </Box>
+                <Box sx={{ m: 'auto', textAlign: 'center', opacity: 0.3 }}>Run calculation to view results.</Box>
               ) : (
-                <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <Box>
                   <SummaryGoldCard>
                     <div className="label">Loan Amount</div>
                     <div className="value">{formatMoney(summary.Principal)}</div>
                   </SummaryGoldCard>
-                  
                   <Box sx={{ px: 1 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography sx={{ fontSize: '0.75rem', opacity: 0.7, fontWeight: 700 }}>TOTAL INTEREST</Typography>
-                      <Typography sx={{ fontSize: '0.85rem', fontWeight: 800 }}>{formatMoney(summary.TotalInterest)}</Typography>
+                      <Typography sx={{ fontSize: '0.7rem', opacity: 0.7 }}>TOTAL INTEREST</Typography>
+                      <Typography sx={{ fontSize: '0.8rem', fontWeight: 800 }}>{formatMoney(summary.TotalInterest)}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                       <Typography sx={{ fontSize: '0.8rem', fontWeight: 900, color: '#EC9B14' }}>TOTAL PAYABLE</Typography>
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 900, color: '#EC9B14' }}>{formatMoney(summary.TotalPayable)}</Typography>
+                      <Typography sx={{ fontSize: '0.85rem', fontWeight: 900, color: '#EC9B14' }}>{formatMoney(summary.TotalPayable)}</Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -238,34 +221,32 @@ export default function LoanCalculator() {
             </NeoCard>
           </Grid>
 
-          {/* BOTTOM: REPAYMENT SCHEDULE (Full Width) */}
+          {/* ROW 2: REPAYMENT SCHEDULE (Full Width) */}
           <Grid item xs={12}>
             <NeoCard>
               <CardHeader>Repayment Schedule</CardHeader>
               {!schedule.length ? (
-                <Typography sx={{ color: 'rgba(255,255,255,0.25)', textAlign: 'center', py: 4, fontSize: '0.9rem' }}>
-                  No schedule generated yet.
-                </Typography>
+                <Typography sx={{ opacity: 0.3, textAlign: 'center', py: 4 }}>No schedule available yet.</Typography>
               ) : (
-                <TableContainer>
-                  <Table sx={{ minWidth: 600 }}>
+                <TableContainer sx={{ maxHeight: '400px' }}>
+                  <Table stickyHeader size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.2)', textTransform: 'uppercase', fontSize: '0.7rem' }}>#</TableCell>
-                        <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.2)', textTransform: 'uppercase', fontSize: '0.7rem' }}>Date</TableCell>
-                        <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.2)', textTransform: 'uppercase', fontSize: '0.7rem' }}>Principal</TableCell>
-                        <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.2)', textTransform: 'uppercase', fontSize: '0.7rem' }}>Interest</TableCell>
-                        <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.2)', textTransform: 'uppercase', fontSize: '0.7rem' }}>Balance</TableCell>
+                        {['#', 'Date', 'Principal', 'Interest', 'Balance'].map(head => (
+                          <TableCell key={head} sx={{ bgcolor: '#02150F', color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)' }}>
+                            {head.toUpperCase()}
+                          </TableCell>
+                        ))}
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {schedule.map((row) => (
-                        <TableRow key={row.period} sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.03)' } }}>
-                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: '0.85rem' }}>{row.period}</TableCell>
-                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: '0.85rem' }}>{row.date}</TableCell>
-                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: '0.85rem' }}>{formatMoney(row.principal)}</TableCell>
-                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: '0.85rem' }}>{formatMoney(row.interest)}</TableCell>
-                          <TableCell sx={{ color: '#EC9B14', borderBottom: '1px solid rgba(255,255,255,0.05)', fontWeight: 700, fontSize: '0.85rem' }}>{formatMoney(row.balance)}</TableCell>
+                        <TableRow key={row.period}>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.period}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.date}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{formatMoney(row.principal)}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{formatMoney(row.interest)}</TableCell>
+                          <TableCell sx={{ color: '#EC9B14', borderBottom: '1px solid rgba(255,255,255,0.05)', fontWeight: 700 }}>{formatMoney(row.balance)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
