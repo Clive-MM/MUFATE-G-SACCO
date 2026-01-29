@@ -1,237 +1,283 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Box, Typography, IconButton, Link, Container, Stack, Divider, Tooltip
-} from '@mui/material';
-import {
-  LocationOn, Email, AccessTime, Phone, ArrowUpward,
-  Facebook, X as XIcon
-} from '@mui/icons-material';
-import { Link as RouterLink } from 'react-router-dom';
-import { FaWhatsapp } from 'react-icons/fa';
-import axios from 'axios';
+import React, { useEffect, useMemo, useState } from "react";
+import { 
+  Box, Typography, Container, Grid, Paper, Table, 
+  TableBody, TableCell, TableContainer, TableHead, 
+  TableRow, Button, Alert 
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Footer from "../../components/Footer";
 
+/* ---------------- API CONFIG ---------------- */
+const API_BASE = process.env.REACT_APP_API_BASE?.replace(/\/$/, "") || "https://mufate-g-sacco.onrender.com";
 
-const BRAND = {
-  gold: '#EC9B14',
-  dark: '#02150F',
-  light: '#F4F4F4',
-  textMuted: 'rgba(244, 244, 244, 0.6)',
-  success: '#25D366'
-};
+/* ---------------- STYLED COMPONENTS ---------------- */
+const PageWrapper = styled('div')(({ theme }) => ({
+  minHeight: '100vh',
+  paddingTop: '100px',
+  paddingBottom: '80px',
+  // MATCHED TO FOOTER BRAND.dark (#02150F)
+  backgroundColor: '#02150F', 
+  color: '#F4F4F4',
+  fontFamily: "'Inter', sans-serif",
+}));
 
-const Footer = () => {
-  const [postImages, setPostImages] = useState([]);
+const NeoCard = styled(Paper)({
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(12px)',
+  border: '1px solid rgba(236, 155, 20, 0.15)',
+  borderRadius: '20px',
+  padding: '24px',
+  height: '100%', // Critical for the side-by-side look
+  display: 'flex',
+  flexDirection: 'column',
+  boxShadow: 'none',
+});
+
+const CardHeader = styled(Typography)({
+  color: '#EC9B14',
+  fontWeight: 800,
+  textTransform: 'uppercase',
+  fontSize: '0.85rem',
+  letterSpacing: '1.2px',
+  marginBottom: '20px',
+  borderBottom: '1px solid rgba(236, 155, 20, 0.15)',
+  paddingBottom: '10px',
+});
+
+const InputLabel = styled('label')({
+  display: 'block',
+  marginBottom: '10px',
+  '& span': {
+    display: 'block',
+    marginBottom: '6px',
+    fontWeight: 700,
+    fontSize: '0.65rem',
+    color: '#F9E7C5',
+    textTransform: 'uppercase',
+  }
+});
+
+const StyledInput = styled('input')({
+  height: '38px',
+  width: '100%',
+  background: 'rgba(255, 255, 255, 0.95)',
+  borderRadius: '8px',
+  border: 'none',
+  padding: '0 12px',
+  fontWeight: 600,
+  color: '#02150F',
+  fontSize: '0.85rem',
+  '&:focus': { outline: '2px solid #EC9B14' },
+  '&.readonly': { background: 'rgba(255, 255, 255, 0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }
+});
+
+const SummaryGoldCard = styled(Box)({
+  background: 'linear-gradient(135deg, #EC9B14 0%, #D48A11 100%)',
+  padding: '18px',
+  borderRadius: '16px',
+  color: '#02150F',
+  textAlign: 'center',
+  marginBottom: '12px',
+  '& .label': { fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', opacity: 0.8 },
+  '& .value': { fontSize: '1.2rem', fontWeight: 900, marginTop: '2px' },
+});
+
+/* ---------------- HELPERS ---------------- */
+const formatMoney = (val) => `KES ${Number(val || 0).toLocaleString("en-KE", { minimumFractionDigits: 2 })}`;
+
+async function getJSON(url, opts) {
+  const r = await fetch(url, opts);
+  if (!r.ok) throw new Error(`${r.status} - Request failed`);
+  return r.json();
+}
+
+export default function LoanCalculator() {
+  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [selectedKey, setSelectedKey] = useState("");
+  const [ratePct, setRatePct] = useState(0);
+  const [defaultMonths, setDefaultMonths] = useState(0);
+  const [months, setMonths] = useState("");
+  const [principal, setPrincipal] = useState("");
+  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [schedule, setSchedule] = useState([]);
+  const [summary, setSummary] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/posts/images')
-      .then((res) => setPostImages(res.data.images || []))
-      .catch((err) => console.error('❌ Failed to fetch recent post images:', err));
+    (async () => {
+      try {
+        const js = await getJSON(`${API_BASE}/loan/products`);
+        const items = js.items || [];
+        setProducts(items);
+        if (items.length) {
+          setSelectedKey(items[0].ProductKey);
+          setRatePct(Number(items[0].MonthlyInterestRate) * 100);
+          setDefaultMonths(items[0].DefaultTermMonths);
+          setMonths(String(items[0].DefaultTermMonths));
+        }
+      } catch (e) { setError(e.message); }
+    })();
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const currentProduct = useMemo(() => products.find(p => p.ProductKey === selectedKey), [products, selectedKey]);
 
-  // Icon Styling from ContactDetails logic
-  const socialIconStyle = {
-    color: BRAND.gold, 
-    border: '1px solid rgba(255,255,255,0.1)',
-    transition: '0.3s ease',
-    width: 45,
-    height: 45,
-    '&:hover': { color: BRAND.dark, background: BRAND.gold, transform: 'translateY(-3px)' }
-  };
+  useEffect(() => {
+    if (!currentProduct) return;
+    setRatePct(Number(currentProduct.MonthlyInterestRate) * 100);
+    setDefaultMonths(currentProduct.DefaultTermMonths);
+    setMonths(String(currentProduct.DefaultTermMonths));
+  }, [currentProduct]);
 
-  const contactItemStyle = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: 2,
-    mb: 2.5,
-    transition: '0.3s',
-    '&:hover': { transform: 'translateX(8px)' }
-  };
-
-  const iconWrapperStyle = {
-    color: BRAND.gold,
-    fontSize: '1.2rem',
-    mt: 0.5
+  const onCalculate = async () => {
+    setError("");
+    if (+principal <= 0) {
+      setError("Please enter a valid amount.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const js = await getJSON(`${API_BASE}/loan/calc`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_key: selectedKey,
+          principal: Number(principal),
+          start_date: startDate,
+          term_months: Number(months)
+        }),
+      });
+      setSchedule(js.schedule || []);
+      setSummary(js.summary || null);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Box 
-      sx={{ 
-        bgcolor: BRAND.dark, 
-        color: BRAND.light, 
-        pt: 10, 
-        position: 'relative',
-        borderTop: `1px solid rgba(255,255,255,0.05)`
-      }}
-    >
-      <Container maxWidth="xl">
-        <Stack 
-          direction={{ xs: 'column', md: 'row' }} 
-          spacing={{ xs: 6, md: 4 }} 
-          justifyContent="space-between"
-        >
-          {/* Column 1: Logo + Description */}
-          <Box sx={{ flex: 1.2 }}>
-            <img
-              src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
-              alt="Logo"
-              style={{ height: '70px', marginBottom: '20px' }}
-            />
-            <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 2, letterSpacing: '2px' }}>
-              WALKING WITH YOU
-            </Typography>
-            <Typography sx={{ color: BRAND.textMuted, lineHeight: 1.8, mb: 4, maxWidth: '400px' }}>
-              Golden Generation DT Sacco, formerly Mufate G Sacco, has undergone rebranding to expand, modernize, and serve more members effectively.
-            </Typography>
-            
-            <Stack direction="row" spacing={2}>
-              <Tooltip title="Follow on X">
-                <IconButton component="a" href="https://x.com/GMufate" target="_blank" sx={socialIconStyle}>
-                  <XIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Facebook">
-                <IconButton component="a" href="https://www.facebook.com/share/1CLhxfKxb2/" target="_blank" sx={socialIconStyle}>
-                  <Facebook />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="WhatsApp Support">
-                <IconButton 
-                  component="a" 
-                  href="https://wa.me/254791331932" 
-                  target="_blank" 
-                  sx={{ ...socialIconStyle, '&:hover': { background: BRAND.success, color: '#FFF' } }}
-                >
-                  <FaWhatsapp />
-                </IconButton>
-              </Tooltip>
-            </Stack>
-          </Box>
-
-          {/* Column 2: Recent Posts (2x2 Grid) */}
-          <Box sx={{ flex: 0.8 }}>
-            <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase' }}>
-              Recent Posts
-            </Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
-              {postImages.slice(0, 4).map((post, idx) => (
-                <Link key={idx} component={RouterLink} to="/news">
-                  <Box 
-                    component="img" 
-                    src={post.CoverImage} 
-                    sx={{ 
-                      width: '100%', 
-                      height: '80px', 
-                      objectFit: 'cover', 
-                      borderRadius: '8px',
-                      transition: '0.3s',
-                      filter: 'grayscale(0.5)',
-                      '&:hover': { filter: 'grayscale(0)', transform: 'scale(1.05)' }
-                    }} 
-                  />
-                </Link>
-              ))}
-            </Box>
-          </Box>
-
-          {/* Column 3: Quick Links */}
-          <Box sx={{ flex: 0.7 }}>
-            <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase' }}>
-              Quick Links
-            </Typography>
-            <Stack spacing={1.5}>
-              {['Home', 'About Us', 'Services', 'Our Products', 'Blogs & Posts', 'FAQs', 'Membership', 'Contact Us'].map((text) => (
-                <Link
-                  key={text}
-                  component={RouterLink}
-                  to={`/${text.toLowerCase().replace(/\s+/g, '-')}`}
-                  sx={{ 
-                    color: BRAND.textMuted, 
-                    textDecoration: 'none', 
-                    transition: '0.3s',
-                    '&:hover': { color: BRAND.gold, transform: 'translateX(5px)' }
-                  }}
-                >
-                  {text}
-                </Link>
-              ))}
-            </Stack>
-          </Box>
-
-          {/* Column 4: Contact Info */}
-          <Box sx={{ flex: 1 }}>
-            <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase' }}>
-              Contact Us
-            </Typography>
-            
-            <Box sx={contactItemStyle}>
-              <Phone sx={iconWrapperStyle} />
-              <Typography sx={{ color: BRAND.textMuted }}>+254 791 331 932 / +254 794 515 407</Typography>
-            </Box>
-
-            <Box sx={contactItemStyle}>
-              <LocationOn sx={iconWrapperStyle} />
-              <Typography sx={{ color: BRAND.textMuted }}>Khayega - Kakamega</Typography>
-            </Box>
-
-            <Box sx={contactItemStyle}>
-              <Email sx={iconWrapperStyle} />
-              <Typography sx={{ color: BRAND.textMuted }}>info@mudetesacco.co.ke</Typography>
-            </Box>
-
-            <Box sx={contactItemStyle}>
-              <AccessTime sx={iconWrapperStyle} />
-              <Box>
-                <Typography sx={{ color: BRAND.textMuted, display: 'block' }}>Mon - Fri: 8:30AM - 4:00PM</Typography>
-                <Typography sx={{ color: BRAND.textMuted }}>Sat: 8:30AM - 12:30PM</Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Stack>
-
-        <Divider sx={{ mt: 8, borderColor: 'rgba(255,255,255,0.05)' }} />
-
-        {/* REPLACED FOOTER BOTTOM SECTION */}
-        <Box sx={{ py: 6, textAlign: 'center' }}>
-          <Typography
-            sx={{
-              color: BRAND.gold,
-              letterSpacing: '3px',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              fontSize: { xs: '0.8rem', md: '1.35rem' }
-            }}
-          >
-            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
-          </Typography>
-          <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem', mt: 1, letterSpacing: '1px' }}>
-            ALL RIGHTS RESERVED
+    <PageWrapper>
+      <Container maxWidth="lg">
+        <Box sx={{ textAlign: 'center', mb: 5 }}>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: '#EC9B14', letterSpacing: '2px', textTransform: 'uppercase' }}>
+            Loan Calculator
           </Typography>
         </Box>
+
+        <Grid container spacing={3} alignItems="stretch">
+          {/* TOP ROW: INPUTS (LEFT) */}
+          <Grid item xs={12} md={8}>
+            <NeoCard>
+              <CardHeader>Specify Your Loan</CardHeader>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <InputLabel><span>Loan Type</span>
+                    <StyledInput as="select" value={selectedKey} onChange={e => setSelectedKey(e.target.value)}>
+                      {products.map(p => <option key={p.ProductKey} value={p.ProductKey}>{p.LoanName}</option>)}
+                    </StyledInput>
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <InputLabel><span>Start Date</span><StyledInput type="date" value={startDate} onChange={e => setStartDate(e.target.value)} /></InputLabel>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel><span>Principal (KES)</span><StyledInput type="number" placeholder="0.00" value={principal} onChange={e => setPrincipal(e.target.value)} /></InputLabel>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel><span>Interest Rate</span><StyledInput className="readonly" value={`${ratePct.toFixed(2)}%`} readOnly /></InputLabel>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <InputLabel><span>Default Term</span><StyledInput className="readonly" value={`${defaultMonths} Months`} readOnly /></InputLabel>
+                </Grid>
+                <Grid item xs={12}>
+                  <InputLabel><span>Repayment Period (Months)</span><StyledInput type="number" value={months} onChange={e => setMonths(e.target.value)} /></InputLabel>
+                </Grid>
+              </Grid>
+
+              {error && (
+                <Alert severity="error" sx={{ mt: 2, bgcolor: 'rgba(211, 47, 47, 0.1)', color: '#ff8a8a', border: '1px solid #d32f2f' }}>
+                  {error}
+                </Alert>
+              )}
+
+              <Box sx={{ mt: 'auto', pt: 3, display: 'flex', gap: 2 }}>
+                <Button onClick={onCalculate} disabled={loading} sx={{ bgcolor: '#EC9B14', color: '#02150F', fontWeight: 900, px: 4, height: '45px', borderRadius: '10px', '&:hover': { bgcolor: '#fff' } }}>
+                  {loading ? "Calculating..." : "CALCULATE"}
+                </Button>
+                <Button onClick={() => window.location.reload()} sx={{ border: '1px solid rgba(255,255,255,0.2)', color: '#fff', px: 4, borderRadius: '10px' }}>
+                  RESET
+                </Button>
+              </Box>
+            </NeoCard>
+          </Grid>
+
+          {/* TOP ROW: SUMMARY (RIGHT) */}
+          <Grid item xs={12} md={4}>
+            <NeoCard>
+              <CardHeader>Summary</CardHeader>
+              {!summary ? (
+                <Box sx={{ m: 'auto', textAlign: 'center', opacity: 0.3 }}>
+                  Run calculation to view results.
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <SummaryGoldCard>
+                    <div className="label">Loan Amount</div>
+                    <div className="value">{formatMoney(summary.Principal)}</div>
+                  </SummaryGoldCard>
+
+                  <SummaryGoldCard sx={{ background: 'rgba(236, 155, 20, 0.1)', border: '1px solid #EC9B14', color: '#fff' }}>
+                    <div className="label" style={{ color: '#EC9B14' }}>Total Interest</div>
+                    <div className="value" style={{ fontSize: '1.1rem' }}>{formatMoney(summary.TotalInterest)}</div>
+                  </SummaryGoldCard>
+
+                  <SummaryGoldCard sx={{ mt: 'auto' }}>
+                    <div className="label">Total Payable</div>
+                    <div className="value" style={{ fontSize: '1.3rem', textDecoration: 'underline' }}>{formatMoney(summary.TotalPayable)}</div>
+                  </SummaryGoldCard>
+                </Box>
+              )}
+            </NeoCard>
+          </Grid>
+
+          {/* BOTTOM ROW: FULL WIDTH REPAYMENT SCHEDULE */}
+          <Grid item xs={12}>
+            <NeoCard>
+              <CardHeader>Repayment Schedule</CardHeader>
+              {!schedule.length ? (
+                <Typography sx={{ opacity: 0.3, textAlign: 'center', py: 4 }}>No schedule available yet.</Typography>
+              ) : (
+                <TableContainer sx={{ maxHeight: '500px' }}>
+                  <Table stickyHeader size="small">
+                    <TableHead>
+                      <TableRow>
+                        {['#', 'Date', 'Principal', 'Interest', 'Balance'].map(head => (
+                          <TableCell key={head} sx={{ bgcolor: '#02150F', color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)', fontSize: '0.75rem' }}>
+                            {head.toUpperCase()}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {schedule.map((row) => (
+                        <TableRow key={row.period} sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.02)' } }}>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.period}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.date}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{formatMoney(row.principal)}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{formatMoney(row.interest)}</TableCell>
+                          <TableCell sx={{ color: '#EC9B14', borderBottom: '1px solid rgba(255,255,255,0.05)', fontWeight: 700 }}>{formatMoney(row.balance)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+            </NeoCard>
+          </Grid>
+        </Grid>
       </Container>
-
-      {/* Scroll to Top - Styled like Contact Buttons */}
-      <IconButton 
-        onClick={scrollToTop}
-        sx={{
-          position: 'absolute',
-          right: 30,
-          bottom: 120,
-          bgcolor: BRAND.gold,
-          color: BRAND.dark,
-          '&:hover': { bgcolor: BRAND.lightGold, transform: 'scale(1.1)' },
-          transition: '0.3s'
-        }}
-      >
-        <ArrowUpward fontSize="small" />
-      </IconButton>
-
-     
-    </Box>
+      <Footer />
+    </PageWrapper>
   );
-};
-
-export default Footer;
+}
