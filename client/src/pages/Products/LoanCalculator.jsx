@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { 
   Box, Typography, Container, Grid, Paper, Table, 
   TableBody, TableCell, TableContainer, TableHead, 
-  TableRow, Button 
+  TableRow, Button, Alert 
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Footer from "../../components/Footer";
@@ -26,7 +26,7 @@ const NeoCard = styled(Paper)({
   border: '1px solid rgba(236, 155, 20, 0.15)',
   borderRadius: '20px',
   padding: '24px',
-  height: '100%', // Critical for side-by-side alignment
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   boxShadow: 'none',
@@ -83,6 +83,7 @@ const SummaryGoldCard = styled(Box)({
 
 /* ---------------- HELPERS ---------------- */
 const formatMoney = (val) => `KES ${Number(val || 0).toLocaleString("en-KE", { minimumFractionDigits: 2 })}`;
+
 async function getJSON(url, opts) {
   const r = await fetch(url, opts);
   if (!r.ok) throw new Error(`${r.status} - Request failed`);
@@ -129,24 +130,34 @@ export default function LoanCalculator() {
 
   const onCalculate = async () => {
     setError("");
-    if (+principal <= 0) return setError("Please enter a valid amount.");
+    if (+principal <= 0) {
+      setError("Please enter a valid amount.");
+      return;
+    }
     setLoading(true);
     try {
       const js = await getJSON(`${API_BASE}/loan/calc`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ product_key: selectedKey, principal: Number(principal), start_date: startDate, term_months: Number(months) }),
+        body: JSON.stringify({ 
+          product_key: selectedKey, 
+          principal: Number(principal), 
+          start_date: startDate, 
+          term_months: Number(months) 
+        }),
       });
       setSchedule(js.schedule || []);
       setSummary(js.summary || null);
-    } catch (e) { setError(e.message); }
-    finally { setLoading(false); }
+    } catch (e) { 
+      setError(e.message); 
+    } finally { 
+      setLoading(false); 
+    }
   };
 
   return (
     <PageWrapper>
       <Container maxWidth="lg">
-        {/* HEADER */}
         <Box sx={{ textAlign: 'center', mb: 5 }}>
           <Typography variant="h4" sx={{ fontWeight: 900, color: '#EC9B14', letterSpacing: '2px', textTransform: 'uppercase' }}>
             Loan Calculator
@@ -154,7 +165,7 @@ export default function LoanCalculator() {
         </Box>
 
         <Grid container spacing={3}>
-          {/* ROW 1 LEFT: SPECIFY YOUR LOAN (xs=12, md=7 or 8) */}
+          {/* TOP ROW: INPUTS (LEFT) & SUMMARY (RIGHT) */}
           <Grid item xs={12} md={8}>
             <NeoCard>
               <CardHeader>Specify Your Loan</CardHeader>
@@ -183,6 +194,13 @@ export default function LoanCalculator() {
                 </Grid>
               </Grid>
 
+              {/* ERROR DISPLAY - Resolves no-unused-vars */}
+              {error && (
+                <Alert severity="error" sx={{ mt: 2, bgcolor: 'rgba(211, 47, 47, 0.1)', color: '#ff8a8a', border: '1px solid #d32f2f' }}>
+                  {error}
+                </Alert>
+              )}
+
               <Box sx={{ mt: 'auto', pt: 3, display: 'flex', gap: 2 }}>
                 <Button onClick={onCalculate} disabled={loading} sx={{ bgcolor: '#EC9B14', color: '#02150F', fontWeight: 900, px: 4, height: '45px', borderRadius: '10px', '&:hover': { bgcolor: '#fff' } }}>
                   {loading ? "Calculating..." : "CALCULATE"}
@@ -194,7 +212,6 @@ export default function LoanCalculator() {
             </NeoCard>
           </Grid>
 
-          {/* ROW 1 RIGHT: SUMMARY (xs=12, md=4 or 5) */}
           <Grid item xs={12} md={4}>
             <NeoCard>
               <CardHeader>Summary</CardHeader>
@@ -221,7 +238,7 @@ export default function LoanCalculator() {
             </NeoCard>
           </Grid>
 
-          {/* ROW 2: REPAYMENT SCHEDULE (Full Width) */}
+          {/* BOTTOM ROW: FULL WIDTH REPAYMENT SCHEDULE */}
           <Grid item xs={12}>
             <NeoCard>
               <CardHeader>Repayment Schedule</CardHeader>
@@ -233,7 +250,7 @@ export default function LoanCalculator() {
                     <TableHead>
                       <TableRow>
                         {['#', 'Date', 'Principal', 'Interest', 'Balance'].map(head => (
-                          <TableCell key={head} sx={{ bgcolor: '#02150F', color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)' }}>
+                          <TableCell key={head} sx={{ bgcolor: '#02150F', color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)', fontSize: '0.7rem' }}>
                             {head.toUpperCase()}
                           </TableCell>
                         ))}
@@ -242,11 +259,11 @@ export default function LoanCalculator() {
                     <TableBody>
                       {schedule.map((row) => (
                         <TableRow key={row.period}>
-                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.period}</TableCell>
-                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.date}</TableCell>
-                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{formatMoney(row.principal)}</TableCell>
-                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{formatMoney(row.interest)}</TableCell>
-                          <TableCell sx={{ color: '#EC9B14', borderBottom: '1px solid rgba(255,255,255,0.05)', fontWeight: 700 }}>{formatMoney(row.balance)}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: '0.75rem' }}>{row.period}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: '0.75rem' }}>{row.date}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: '0.75rem' }}>{formatMoney(row.principal)}</TableCell>
+                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: '0.75rem' }}>{formatMoney(row.interest)}</TableCell>
+                          <TableCell sx={{ color: '#EC9B14', borderBottom: '1px solid rgba(255,255,255,0.05)', fontWeight: 700, fontSize: '0.75rem' }}>{formatMoney(row.balance)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
