@@ -27,7 +27,7 @@ const NeoCard = styled(Paper)({
   border: '1px solid rgba(236, 155, 20, 0.2)',
   borderRadius: '24px',
   padding: '24px',
-  height: '100%', // Critical for side-by-side equal height
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   transition: '0.3s ease',
@@ -202,7 +202,6 @@ export default function LoanCalculator() {
                 </Grid>
               </Grid>
 
-              {/* Action Buttons */}
               <Box sx={{ mt: 'auto', pt: 3, display: 'flex', gap: 2 }}>
                 <Button fullWidth variant="contained" onClick={onCalculate} disabled={loading} sx={{ bgcolor: '#EC9B14', color: '#02150F', fontWeight: 900, borderRadius: '12px', height: '50px', '&:hover': { bgcolor: '#fff' } }}>
                   {loading ? "..." : "CALCULATE"}
@@ -271,7 +270,10 @@ export default function LoanCalculator() {
                           <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{row.date}</TableCell>
                           <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{formatMoney(row.principal)}</TableCell>
                           <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>{formatMoney(row.interest)}</TableCell>
-                          <TableCell sx={{ color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#EC9B14', fontWeight: 700 }}>{formatMoney(row.balance)}</TableCell>
+                          {/* FIXED DUPLICATE KEY ERROR BELOW */}
+                          <TableCell sx={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#EC9B14', fontWeight: 700 }}>
+                            {formatMoney(row.balance)}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
