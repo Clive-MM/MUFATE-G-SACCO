@@ -2,24 +2,22 @@ import React, { useEffect, useMemo, useState } from "react";
 import { 
   Box, Typography, Container, Grid, Paper, Table, 
   TableBody, TableCell, TableContainer, TableHead, 
-  TableRow, Button, Alert 
+  TableRow, Button, Alert, Divider 
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Footer from "../../components/Footer";
 
 /* ---------------- API CONFIG ---------------- */
 const API_BASE = process.env.REACT_APP_API_BASE?.replace(/\/$/, "") || "https://mufate-g-sacco.onrender.com";
 
 /* ---------------- STYLED COMPONENTS ---------------- */
-const PageWrapper = styled('div')(({ theme }) => ({
+const PageWrapper = styled('div')({
   minHeight: '100vh',
   paddingTop: '100px',
-  paddingBottom: '80px',
-  // MATCHED TO FOOTER BRAND.dark (#02150F)
+  // Using the exact Footer background color
   backgroundColor: '#02150F', 
   color: '#F4F4F4',
   fontFamily: "'Inter', sans-serif",
-}));
+});
 
 const NeoCard = styled(Paper)({
   background: 'rgba(255, 255, 255, 0.03)',
@@ -27,7 +25,7 @@ const NeoCard = styled(Paper)({
   border: '1px solid rgba(236, 155, 20, 0.15)',
   borderRadius: '20px',
   padding: '24px',
-  height: '100%', // Critical for the side-by-side look
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   boxShadow: 'none',
@@ -166,7 +164,6 @@ export default function LoanCalculator() {
         </Box>
 
         <Grid container spacing={3} alignItems="stretch">
-          {/* TOP ROW: INPUTS (LEFT) */}
           <Grid item xs={12} md={8}>
             <NeoCard>
               <CardHeader>Specify Your Loan</CardHeader>
@@ -212,7 +209,6 @@ export default function LoanCalculator() {
             </NeoCard>
           </Grid>
 
-          {/* TOP ROW: SUMMARY (RIGHT) */}
           <Grid item xs={12} md={4}>
             <NeoCard>
               <CardHeader>Summary</CardHeader>
@@ -241,7 +237,6 @@ export default function LoanCalculator() {
             </NeoCard>
           </Grid>
 
-          {/* BOTTOM ROW: FULL WIDTH REPAYMENT SCHEDULE */}
           <Grid item xs={12}>
             <NeoCard>
               <CardHeader>Repayment Schedule</CardHeader>
@@ -277,7 +272,21 @@ export default function LoanCalculator() {
           </Grid>
         </Grid>
       </Container>
-      <Footer />
+
+      {/* INLINED FOOTER TO PREVENT IMPORT ERRORS */}
+      <Box sx={{ bgcolor: '#02150F', pt: 10, pb: 4, mt: 10, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <Container maxWidth="lg">
+            <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)', mb: 4 }} />
+            <Box sx={{ textAlign: 'center' }}>
+                <Typography sx={{ color: '#EC9B14', fontWeight: 900, letterSpacing: '2px', fontSize: '1rem' }}>
+                    GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+                </Typography>
+                <Typography sx={{ color: 'rgba(244, 244, 244, 0.6)', fontSize: '0.7rem', mt: 1 }}>
+                    ALL RIGHTS RESERVED
+                </Typography>
+            </Box>
+        </Container>
+      </Box>
     </PageWrapper>
   );
 }
