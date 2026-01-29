@@ -13,7 +13,6 @@ const API_BASE = process.env.REACT_APP_API_BASE?.replace(/\/$/, "") || "https://
 const PageWrapper = styled('div')({
   minHeight: '100vh',
   paddingTop: '100px',
-  // Using the exact Footer background color
   backgroundColor: '#02150F', 
   color: '#F4F4F4',
   fontFamily: "'Inter', sans-serif",
@@ -156,7 +155,8 @@ export default function LoanCalculator() {
 
   return (
     <PageWrapper>
-      <Container maxWidth="lg">
+      {/* 1. CHANGED maxWidth to "xl" to make the entire content area wider on large screens */}
+      <Container maxWidth="xl">
         <Box sx={{ textAlign: 'center', mb: 5 }}>
           <Typography variant="h4" sx={{ fontWeight: 900, color: '#EC9B14', letterSpacing: '2px', textTransform: 'uppercase' }}>
             Loan Calculator
@@ -243,7 +243,8 @@ export default function LoanCalculator() {
               {!schedule.length ? (
                 <Typography sx={{ opacity: 0.3, textAlign: 'center', py: 4 }}>No schedule available yet.</Typography>
               ) : (
-                <TableContainer sx={{ maxHeight: '500px' }}>
+                /* 2. INCREASED maxHeight from 500px to 800px to make the table scroll area longer */
+                <TableContainer sx={{ maxHeight: '800px', width: '100%' }}>
                   <Table stickyHeader size="small">
                     <TableHead>
                       <TableRow>
@@ -273,7 +274,6 @@ export default function LoanCalculator() {
         </Grid>
       </Container>
 
-      {/* INLINED FOOTER TO PREVENT IMPORT ERRORS */}
       <Box sx={{ bgcolor: '#02150F', pt: 10, pb: 4, mt: 10, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <Container maxWidth="lg">
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)', mb: 4 }} />
