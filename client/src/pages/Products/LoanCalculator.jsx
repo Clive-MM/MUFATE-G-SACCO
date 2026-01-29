@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./LoanCalculator.css";
 import Footer from "../../components/Footer";
+import { Box, Typography, Container } from "@mui/material";
 
 /* Backend base URL */
 const API_BASE =
@@ -134,164 +135,188 @@ export default function LoanCalculator() {
     setError("");
   };
 
-  /* ---------------- UI ---------------- */
   return (
     <div className="lc-page">
-      <div className="lc-header">
-        <h1>Loan Calculator</h1>
-        <p>
-          Plan your repayments with <b>Golden Generation DT SACCO</b>
-        </p>
-      </div>
+      <Container maxWidth="lg">
+        {/* HEADER - Styled to match BOSA Component & Fixed Navbar spacing */}
+        <Box sx={{ 
+            pt: { xs: 6, md: 10 }, // Combined with .lc-page padding to clear navbar
+            mb: 6, 
+            textAlign: 'center' 
+        }}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 900,
+              textTransform: 'uppercase',
+              letterSpacing: '3px',
+              color: '#EC9B14', // Brand Gold
+              mb: 1,
+              fontSize: { xs: '1.8rem', md: '2.5rem' },
+              textShadow: '0 0 15px rgba(236, 155, 20, 0.3)'
+            }}
+          >
+            Loan Calculator
+          </Typography>
+          <Typography 
+            sx={{ 
+              color: 'rgba(244, 244, 244, 0.7)', 
+              fontWeight: 500,
+              letterSpacing: '1px',
+              fontSize: { xs: '0.9rem', md: '1.1rem' }
+            }}
+          >
+            Plan your repayments with <b>GOLDEN GENERATION DT SACCO</b>
+          </Typography>
+        </Box>
 
-      <div className="lc-grid">
-        {/* INPUTS */}
-        <div className="card neo">
-          <div className="card-title">Specify your loan</div>
+        <div className="lc-grid">
+          {/* INPUTS CARD */}
+          <div className="card neo">
+            <div className="card-title">Specify your loan</div>
 
-          <div className="compact-row">
-            <label className="field compact">
-              <span>Loan Type</span>
-              <select
-                className="input"
-                value={selectedKey}
-                onChange={(e) => setSelectedKey(e.target.value)}
+            <div className="compact-row">
+              <label className="field compact">
+                <span>Loan Type</span>
+                <select
+                  className="input"
+                  value={selectedKey}
+                  onChange={(e) => setSelectedKey(e.target.value)}
+                >
+                  {products.map((p) => (
+                    <option key={p.ProductKey} value={p.ProductKey}>
+                      {p.LoanName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="field compact">
+                <span>Start Date</span>
+                <input
+                  className="input"
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </label>
+            </div>
+
+            <div className="field-row">
+              <label className="field">
+                <span>Rate (per month)</span>
+                <input
+                  className="input"
+                  value={`${ratePct.toFixed(2)} %`}
+                  readOnly
+                />
+              </label>
+              <label className="field">
+                <span>Default Term (Months)</span>
+                <input className="input" value={defaultMonths} readOnly />
+              </label>
+            </div>
+
+            <div className="field-row">
+              <label className="field">
+                <span>Specify Repayment Months</span>
+                <input
+                  className="input"
+                  type="number"
+                  value={months}
+                  onChange={(e) => setMonths(e.target.value)}
+                />
+              </label>
+              <label className="field">
+                <span>Principal (KES)</span>
+                <input
+                  className="input"
+                  type="number"
+                  placeholder="Enter Amount"
+                  value={principal}
+                  onChange={(e) => setPrincipal(e.target.value)}
+                />
+              </label>
+            </div>
+
+            {error && <div className="alert" style={{ color: '#ff4d4d', marginTop: '10px', fontWeight: 'bold' }}>{error}</div>}
+
+            <div className="actions">
+              <button
+                className="btn-brand"
+                onClick={onCalculate}
+                disabled={loading}
               >
-                {products.map((p) => (
-                  <option key={p.ProductKey} value={p.ProductKey}>
-                    {p.LoanName}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label className="field compact">
-              <span>Start Date</span>
-              <input
-                className="input"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </label>
+                {loading ? "Calculating…" : "Calculate"}
+              </button>
+              <button className="btn-ghost" onClick={onReset}>
+                Reset
+              </button>
+            </div>
           </div>
 
-          <div className="field-row">
-            <label className="field">
-              <span>Rate (per month)</span>
-              <input
-                className="input"
-                value={`${ratePct.toFixed(2)} %`}
-                readOnly
-              />
-            </label>
-            <label className="field">
-              <span>Default Repayment Months</span>
-              <input className="input" value={defaultMonths} readOnly />
-            </label>
-          </div>
-
-          <div className="field-row">
-            <label className="field">
-              <span>Specify your Repayment Months</span>
-              <input
-                className="input"
-                type="number"
-                value={months}
-                onChange={(e) => setMonths(e.target.value)}
-              />
-            </label>
-            <label className="field">
-              <span>Principal (KES)</span>
-              <input
-                className="input"
-                type="number"
-                value={principal}
-                onChange={(e) => setPrincipal(e.target.value)}
-              />
-            </label>
-          </div>
-
-          {error && <div className="alert">{error}</div>}
-
-          <div className="actions">
-            <button
-              className="btn-brand"
-              onClick={onCalculate}
-              disabled={loading}
-            >
-              {loading ? "Calculating…" : "Calculate"}
-            </button>
-            <button className="btn-ghost" onClick={onReset}>
-              Reset
-            </button>
+          {/* SUMMARY CARD */}
+          <div className="card neo">
+            <div className="card-title">Summary</div>
+            {!summary ? (
+              <div className="muted">
+                Run a calculation to view results.
+              </div>
+            ) : (
+              <div className="chips">
+                <div className="chip">
+                  <div className="k">Loan Amount</div>
+                  <div className="v">{formatMoney(summary.Principal)}</div>
+                </div>
+                <div className="chip">
+                  <div className="k">Total Interest</div>
+                  <div className="v">{formatMoney(summary.TotalInterest)}</div>
+                </div>
+                <div className="chip">
+                  <div className="k">Total Payable</div>
+                  <div className="v">{formatMoney(summary.TotalPayable)}</div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* SUMMARY */}
-        <div className="card neo">
-          <div className="card-title">Summary</div>
-          {!summary ? (
-            <div className="muted">
-              Run a calculation to view results.
-            </div>
+        {/* SCHEDULE SECTION */}
+        <div className="card neo schedule-card" style={{ marginTop: '24px' }}>
+          <div className="card-title">Repayment Schedule</div>
+
+          {!schedule.length ? (
+            <div className="muted">No schedule generated.</div>
           ) : (
-            <div className="chips">
-              <div className="chip">
-                <div className="k">Loan Amount</div>
-                <div className="v">{formatMoney(summary.Principal)}</div>
-              </div>
-              <div className="chip">
-                <div className="k">Total Interest</div>
-                <div className="v">{formatMoney(summary.TotalInterest)}</div>
-              </div>
-              <div className="chip">
-                <div className="k">Total Payable</div>
-                <div className="v">{formatMoney(summary.TotalPayable)}</div>
-              </div>
+            <div className="table-wrap">
+              <table className="table-fixed">
+                <thead>
+                  <tr>
+                    <th>Installment</th>
+                    <th>Date</th>
+                    <th>Principal</th>
+                    <th>Interest</th>
+                    <th>Total</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {schedule.map((r, i) => (
+                    <tr key={r.period} className={i === 0 ? "first-row" : ""}>
+                      <td>{r.period}</td>
+                      <td>{r.date}</td>
+                      <td>{formatMoney(r.principal)}</td>
+                      <td>{formatMoney(r.interest)}</td>
+                      <td>{formatMoney(r.total)}</td>
+                      <td>{formatMoney(r.balance)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
-      </div>
-
-      {/* SCHEDULE */}
-      <div className="card neo schedule-card">
-        <div className="card-title">Repayment Schedule</div>
-
-        {!schedule.length ? (
-          <div className="muted">No schedule generated.</div>
-        ) : (
-          <div className="table-wrap">
-            <table className="table-fixed">
-              <thead>
-                <tr>
-                  <th>Installment</th>
-                  <th>Date</th>
-                  <th>Principal</th>
-                  <th>Interest</th>
-                  <th>Total</th>
-                  <th>Balance</th>
-                </tr>
-              </thead>
-              <tbody>
-                {schedule.map((r, i) => (
-                  <tr key={r.period} className={i === 0 ? "first-row" : ""}>
-                    <td>{r.period}</td>
-                    <td>{r.date}</td>
-                    <td>{formatMoney(r.principal)}</td>
-                    <td>{formatMoney(r.interest)}</td>
-                    <td>{formatMoney(r.total)}</td>
-                    <td>{formatMoney(r.balance)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-        )}
-      </div>
-
-    
+      </Container>
 
       <Footer />
     </div>
