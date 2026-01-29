@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { 
-  Box, Typography, Container, Grid, Paper, Table, 
-  TableBody, TableCell, TableContainer, TableHead, 
-  TableRow, Button, Alert 
+import {
+  Box, Typography, Container, Grid, Paper, Table,
+  TableBody, TableCell, TableContainer, TableHead,
+  TableRow, Button, Alert
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Footer from "../../components/Footer";
@@ -139,19 +139,19 @@ export default function LoanCalculator() {
       const js = await getJSON(`${API_BASE}/loan/calc`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          product_key: selectedKey, 
-          principal: Number(principal), 
-          start_date: startDate, 
-          term_months: Number(months) 
+        body: JSON.stringify({
+          product_key: selectedKey,
+          principal: Number(principal),
+          start_date: startDate,
+          term_months: Number(months)
         }),
       });
       setSchedule(js.schedule || []);
       setSummary(js.summary || null);
-    } catch (e) { 
-      setError(e.message); 
-    } finally { 
-      setLoading(false); 
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -178,19 +178,19 @@ export default function LoanCalculator() {
                   </InputLabel>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <InputLabel><span>Start Date</span><StyledInput type="date" value={startDate} onChange={e => setStartDate(e.target.value)}/></InputLabel>
+                  <InputLabel><span>Start Date</span><StyledInput type="date" value={startDate} onChange={e => setStartDate(e.target.value)} /></InputLabel>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <InputLabel><span>Principal (KES)</span><StyledInput type="number" placeholder="0.00" value={principal} onChange={e => setPrincipal(e.target.value)}/></InputLabel>
+                  <InputLabel><span>Principal (KES)</span><StyledInput type="number" placeholder="0.00" value={principal} onChange={e => setPrincipal(e.target.value)} /></InputLabel>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <InputLabel><span>Interest Rate</span><StyledInput className="readonly" value={`${ratePct.toFixed(2)}%`} readOnly/></InputLabel>
+                  <InputLabel><span>Interest Rate</span><StyledInput className="readonly" value={`${ratePct.toFixed(2)}%`} readOnly /></InputLabel>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <InputLabel><span>Default Term</span><StyledInput className="readonly" value={`${defaultMonths} Months`} readOnly/></InputLabel>
+                  <InputLabel><span>Default Term</span><StyledInput className="readonly" value={`${defaultMonths} Months`} readOnly /></InputLabel>
                 </Grid>
                 <Grid item xs={12}>
-                  <InputLabel><span>Repayment Period (Months)</span><StyledInput type="number" value={months} onChange={e => setMonths(e.target.value)}/></InputLabel>
+                  <InputLabel><span>Repayment Period (Months)</span><StyledInput type="number" value={months} onChange={e => setMonths(e.target.value)} /></InputLabel>
                 </Grid>
               </Grid>
 
@@ -216,23 +216,30 @@ export default function LoanCalculator() {
             <NeoCard>
               <CardHeader>Summary</CardHeader>
               {!summary ? (
-                <Box sx={{ m: 'auto', textAlign: 'center', opacity: 0.3 }}>Run calculation to view results.</Box>
+                <Box sx={{ m: 'auto', textAlign: 'center', opacity: 0.3 }}>
+                  Run calculation to view results.
+                </Box>
               ) : (
-                <Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  {/* LOAN AMOUNT */}
                   <SummaryGoldCard>
                     <div className="label">Loan Amount</div>
                     <div className="value">{formatMoney(summary.Principal)}</div>
                   </SummaryGoldCard>
-                  <Box sx={{ px: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography sx={{ fontSize: '0.7rem', opacity: 0.7 }}>TOTAL INTEREST</Typography>
-                      <Typography sx={{ fontSize: '0.8rem', fontWeight: 800 }}>{formatMoney(summary.TotalInterest)}</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                      <Typography sx={{ fontSize: '0.8rem', fontWeight: 900, color: '#EC9B14' }}>TOTAL PAYABLE</Typography>
-                      <Typography sx={{ fontSize: '0.85rem', fontWeight: 900, color: '#EC9B14' }}>{formatMoney(summary.TotalPayable)}</Typography>
-                    </Box>
-                  </Box>
+
+                  {/* TOTAL INTEREST */}
+                  <SummaryGoldCard sx={{ background: 'rgba(236, 155, 20, 0.1)', border: '1px solid #EC9B14', color: '#fff' }}>
+                    <div className="label" style={{ color: '#EC9B14' }}>Total Interest</div>
+                    <div className="value" style={{ fontSize: '1.1rem' }}>{formatMoney(summary.TotalInterest)}</div>
+                  </SummaryGoldCard>
+
+                  {/* TOTAL PAYABLE */}
+                  <SummaryGoldCard sx={{ mt: 1 }}>
+                    <div className="label">Total Payable</div>
+                    <div className="value" style={{ fontSize: '1.3rem', textDecoration: 'underline' }}>
+                      {formatMoney(summary.TotalPayable)}
+                    </div>
+                  </SummaryGoldCard>
                 </Box>
               )}
             </NeoCard>
