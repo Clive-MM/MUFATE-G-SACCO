@@ -198,7 +198,7 @@ export default function LoanCalculator() {
                   <InputLabel><span>Default Term</span><StyledInput className="readonly" value={`${defaultMonths} Months`} readOnly/></InputLabel>
                 </Grid>
                 <Grid item xs={12}>
-                  <InputLabel><span>Repayment Period (Months)</span><StyledInput type="number" value={months} onChange={e => setMonths(e.target.value)}/></InputLabel>
+                  <InputLabel><span>Editable Repayment Period (Months)</span><StyledInput type="number" value={months} onChange={e => setMonths(e.target.value)}/></InputLabel>
                 </Grid>
               </Grid>
 
@@ -250,7 +250,7 @@ export default function LoanCalculator() {
                   <Table sx={{ minWidth: 650 }}>
                     <TableHead>
                       <TableRow>
-                        <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)' }}>#</TableCell>
+                        <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)' }}>Installment</TableCell>
                         <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)' }}>Date</TableCell>
                         <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)' }}>Principal</TableCell>
                         <TableCell sx={{ color: '#EC9B14', fontWeight: 800, borderBottom: '1px solid rgba(236,155,20,0.3)' }}>Interest</TableCell>
