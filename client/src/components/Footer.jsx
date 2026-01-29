@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Typography, IconButton, Link, Container, Stack, Divider, Grid
-} from '@mui/material'; // Added Grid here
+  Box, Typography, IconButton, Link, Container, Stack, Divider, Grid, Tooltip
+} from '@mui/material';
 import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
   Facebook, X as XIcon
@@ -44,14 +44,14 @@ const Footer = () => {
   const contactItemStyle = {
     display: 'flex',
     alignItems: 'flex-start',
-    gap: 1.5,
-    mb: 2,
+    gap: 2,
+    mb: 2.5,
   };
 
   const iconWrapperStyle = {
     color: BRAND.gold,
-    fontSize: '1.1rem',
-    mt: 0.3
+    fontSize: '1.2rem',
+    mt: 0.4
   };
 
   return (
@@ -59,22 +59,23 @@ const Footer = () => {
       sx={{
         bgcolor: BRAND.dark,
         color: BRAND.light,
-        pt: 8,
+        pt: 10,
         pb: 2,
         position: 'relative',
         borderTop: `1px solid rgba(255,255,255,0.05)`
       }}
     >
       <Container maxWidth="xl">
-        <Grid container spacing={4}>
+        {/* Main Grid with even distribution */}
+        <Grid container spacing={4} justifyContent="space-between">
 
-          {/* Column 1: Logo + Description */}
-          <Grid item xs={12} md={4}>
-            <Box sx={{ pr: { md: 5 } }}>
+          {/* Column 1: Logo + Short Phrases Description */}
+          <Grid item xs={12} md={3.5}>
+            <Box>
               <img
                 src="https://res.cloudinary.com/djydkcx01/image/upload/v1764080163/ChatGPT_Image_Nov_25_2025_05_15_43_PM_kt0vz9.png"
                 alt="Logo"
-                style={{ height: '65px', marginBottom: '15px' }}
+                style={{ height: '70px', marginBottom: '20px' }}
               />
               <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 2, letterSpacing: '2px', fontSize: '0.9rem' }}>
                 WALKING WITH YOU
@@ -82,9 +83,8 @@ const Footer = () => {
               <Typography
                 sx={{
                   color: BRAND.textMuted,
-                  lineHeight: 1.7,
+                  lineHeight: 1.8,
                   mb: 4,
-                  maxWidth: '400px',
                   fontSize: '0.85rem',
                   fontWeight: 400,
                   letterSpacing: '0.3px'
@@ -113,8 +113,8 @@ const Footer = () => {
             </Box>
           </Grid>
 
-          {/* Column 2: Recent Posts */}
-          <Grid item xs={12} sm={6} md={2.5}>
+          {/* Column 2: Recent Posts (Centered in distribution) */}
+          <Grid item xs={12} sm={6} md={2}>
             <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
               Recent Posts
             </Typography>
@@ -139,12 +139,12 @@ const Footer = () => {
             </Box>
           </Grid>
 
-          {/* Column 3: Quick Links */}
+          {/* Column 3: Quick Links (Centered in distribution) */}
           <Grid item xs={12} sm={6} md={2}>
             <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
               Quick Links
             </Typography>
-            <Stack spacing={1.5}>
+            <Stack spacing={1.8}>
               {['Home', 'About Us', 'Services', 'Our Products', 'Blogs & Posts', 'FAQs', 'Membership', 'Contact Us'].map((text) => (
                 <Link
                   key={text}
@@ -164,8 +164,8 @@ const Footer = () => {
             </Stack>
           </Grid>
 
-          {/* Column 4: Contact Info */}
-          <Grid item xs={12} md={3.5}>
+          {/* Column 4: Contact Info (Aligned to the right) */}
+          <Grid item xs={12} md={3}>
             <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
               Contact Us
             </Typography>
@@ -207,7 +207,7 @@ const Footer = () => {
           <Typography sx={{ color: BRAND.gold, letterSpacing: '3px', fontWeight: 900, fontSize: { xs: '0.8rem', md: '1.2rem' } }}>
             GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
           </Typography>
-          <Typography sx={{ color: BRAND.textMuted, fontSize: '0.7rem', mt: 1, textTransform: 'uppercase' }}>
+          <Typography sx={{ color: BRAND.textMuted, fontSize: '0.75rem', mt: 1, textTransform: 'uppercase', letterSpacing: '1px' }}>
             All Rights Reserved
           </Typography>
         </Box>
@@ -219,7 +219,7 @@ const Footer = () => {
         sx={{
           position: 'absolute',
           right: { xs: 20, md: 40 },
-          bottom: 120,
+          bottom: { xs: 80, md: 100 },
           bgcolor: BRAND.gold,
           color: BRAND.dark,
           width: 45,
