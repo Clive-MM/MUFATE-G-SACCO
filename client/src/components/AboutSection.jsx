@@ -13,13 +13,13 @@ import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 // ICONS
-import PaymentsIcon from '@mui/icons-material/Payments';
-import AgricultureIcon from '@mui/icons-material/Agriculture';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+
 import SavingsIcon from '@mui/icons-material/Savings';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
-
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import PaymentsIcon from '@mui/icons-material/PaymentsIcon';
 const BRAND = {
   gold: "#EC9B14",
   dark: "#02150F",
@@ -32,35 +32,37 @@ const AboutSection = () => {
 
   const services = [
     {
-      title: "Salary Processing & Check-off",
-      desc: "Seamless check-off services for tea farmers, teachers, civil servants and private sector employees.",
-      icon: <PaymentsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    },
-    {
-      title: "Agricultural & Tea-Grower Support",
-      desc: "Tailored products for farmers and smallholder producers, supporting inputs and farm improvement.",
-      icon: <AgricultureIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    },
-    {
-      title: "Business & Development Loans",
-      desc: "Competitive, well-structured credit for MSMEs, projects and personal development goals.",
-      icon: <TrendingUpIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    },
-    {
-      title: "Smart Savings & Investment Accounts",
-      desc: "Goal-based savings, fixed deposits and targeted products for education and long-term growth.",
+      title: "Smart Savings & Investment Solutions",
+      desc: "Build your financial future through disciplined savings and rewarding investment accounts. From goal-based savings and fixed deposits to dividend-earning investments, our products help you grow your money safely while earning competitive returns.",
       icon: <SavingsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     },
     {
-      title: "Mobile & Digital Banking",
-      desc: "24/7 access to your SACCO account through our USSD and mobile platforms – deposit and withdraw anywhere.",
-      icon: <PhoneIphoneIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+      title: "Tailored & Affordable Loans",
+      desc: "Built on the strength of our members’ savings and shared trust, we offer tailored loan products to meet diverse needs — from development and agribusiness support to business expansion, education, and emergencies. Enjoy affordable rates, flexible terms, and quick access to credit when you need it most.",
+      icon: <AccountBalanceIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     },
     {
       title: "Asset Financing",
-      desc: "Get the machinery or equipment you need today. Repay comfortably over time with full ownership.",
+      desc: "Acquire the equipment, machinery, or tools you need today through our flexible asset financing. We fund your purchase and use the asset as security while you repay in affordable installments — giving you full ownership once the loan is cleared.",
       icon: <PrecisionManufacturingIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    }
+    },
+     {
+      title: "Mobile Banking & Digital Lending",
+      desc: "Enjoy secure 24/7 access to your SACCO account through our USSD and mobile platforms. Deposit, withdraw, transfer funds, and even apply for loans instantly — anytime, anywhere, right from your phone.",
+      icon: <PhoneIphoneIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+    },
+    {
+      title: "Benevolent Funeral Cover",
+      desc: "We believe in standing by our members when it matters most. Our Benevolent Fund offers a helping hand with funeral expenses for active contributors and their families.",
+      icon: <FavoriteIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+    },
+    {
+      title: "Timely Salary Processing",
+      desc: "We provide a reliable payroll and check-off platform that ensures tea farmers, teachers, civil servants, and institutional employees receive their payments on time. Once funds or cheques are received, we promptly process and credit accounts to guarantee timely and seamless salary disbursement.",
+      icon: <PaymentsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+    },
+
+    
   ];
 
   // Animation Variants
@@ -128,19 +130,7 @@ const AboutSection = () => {
               >
                 Why Choose Us
               </Typography>
-              {/* <Typography 
-                sx={{ 
-                  color: BRAND.light, 
-                  maxWidth: "850px", 
-                  mx: 'auto', 
-                  fontSize: { xs: "1rem", md: "1.15rem" }, 
-                  opacity: 0.85,
-                  lineHeight: 1.8,
-                  fontWeight: 300
-                }}
-              >
-                <strong style={{ color: BRAND.gold, fontWeight: 700 }}>Golden Generation Deposit Taking SACCO</strong> is a trusted, member-owned financial institution serving tea farmers, salaried workers,and entrepreneurs.
-              </Typography> */}
+              
             </motion.div>
           </Box>
 
