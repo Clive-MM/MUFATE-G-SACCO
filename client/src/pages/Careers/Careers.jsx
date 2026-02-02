@@ -12,10 +12,10 @@ const Careers = () => {
 
   // Standardized Brand Colors
   const COLORS = {
-    gold: '#EC9B14',      
-    dark: '#02150F',      
+    gold: '#EC9B14',      // Matches BRAND.gold
+    dark: '#02150F',      // Matches BRAND.dark
     light: '#F4F4F4',
-    textMuted: 'rgba(244, 244, 244, 0.7)',
+    textMuted: '#FFECA8', // Kept your specific light gold text color
   };
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Careers = () => {
     return (
       <Box
         sx={{
-          height: '100vh',
+          height: '90vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -54,11 +54,11 @@ const Careers = () => {
   return (
     <Box
       sx={{
+        fontFamily: `'Segoe UI', sans-serif`,
         background: COLORS.dark,
         m: 0,
         p: 0,
-        color: COLORS.light,
-        minHeight: '100vh',
+        color: COLORS.textMuted,
       }}
     >
       {/* HERO IMAGE SECTION */}
@@ -69,10 +69,9 @@ const Careers = () => {
           alt={hero1?.Title || 'Career Hero'}
           sx={{
             width: '100%',
-            height: { xs: '300px', md: '500px' },
+            height: 'auto',
             objectFit: 'cover',
             display: 'block',
-            filter: 'brightness(0.7)', // Darker filter to make floating image pop
           }}
         />
 
@@ -84,15 +83,15 @@ const Careers = () => {
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
-              bottom: { xs: '-80px', md: '-120px' },
+              bottom: { xs: '-120px', sm: '-140px', md: '-160px' },
               zIndex: 5,
-              px: 2,
+              px: { xs: 2, sm: 4, md: 0 },
             }}
           >
             <Box
               sx={{
                 width: '100%',
-                maxWidth: { xs: '90%', md: '700px' },
+                maxWidth: { xs: '90%', sm: '80%', md: '600px' },
               }}
             >
               <motion.img
@@ -102,14 +101,13 @@ const Careers = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1 }}
                 whileHover={{
-                  scale: 1.02,
-                  boxShadow: `0 0 35px ${COLORS.gold}44`,
+                  scale: 1.03,
+                  boxShadow: `0 0 35px ${COLORS.gold}88`,
                 }}
                 style={{
                   width: '100%',
-                  borderRadius: '22px', // Brand standard radius
-                  border: `2px solid ${COLORS.gold}33`,
-                  boxShadow: '0 15px 40px rgba(0,0,0,0.5)',
+                  borderRadius: '22px', // Standardized brand radius
+                  border: `1px solid ${COLORS.gold}44`
                 }}
               />
             </Box>
@@ -117,65 +115,46 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* SPACER FOR FLOATING IMAGE */}
-      <Box sx={{ height: { xs: 120, md: 180 } }} />
+      {/* SPACER BELOW IMAGE */}
+      <Box sx={{ height: { xs: 100, sm: 120, md: 160 } }} />
 
       {/* PAGE DESCRIPTION */}
-      <Box sx={{ textAlign: 'center', px: 2, mb: 10 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+      <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: 900,
+            fontSize: { xs: '1.6rem', sm: '2rem', md: '2.6rem' },
+            letterSpacing: '3px', // Standardized brand spacing
+            mb: 2,
+            textTransform: 'uppercase',
+            color: COLORS.gold,
+            textShadow: `0 0 18px ${COLORS.gold}73`,
+          }}
         >
-          <Typography
-            variant="h3"
-            sx={{
-              fontWeight: 900,
-              fontSize: { xs: '1.8rem', md: '3rem' },
-              letterSpacing: '3px',
-              mb: 3,
-              textTransform: 'uppercase',
-              color: COLORS.gold,
-              textShadow: `0 0 20px ${COLORS.gold}33`,
-            }}
-          >
-            Join Our Team
-          </Typography>
+          Careers
+        </Typography>
 
-          <Typography
-            variant="body1"
-            sx={{
-              maxWidth: '850px',
-              mx: 'auto',
-              fontSize: { xs: '1rem', md: '1.2rem' },
-              lineHeight: 1.9,
-              color: COLORS.textMuted,
-              fontWeight: 500,
-            }}
-          >
-            {hero1?.Description}
-          </Typography>
-        </motion.div>
+        <Typography
+          variant="body1"
+          sx={{
+            maxWidth: '900px',
+            mx: 'auto',
+            fontSize: { xs: '1rem', md: '1.15rem' },
+            lineHeight: 1.85,
+            color: COLORS.textMuted,
+            fontWeight: 500,
+            textShadow: '0 0 6px rgba(0,0,0,0.35)',
+          }}
+        >
+          {hero1?.Description}
+        </Typography>
       </Box>
 
-      {/* CAREER LISTINGS SECTION */}
-      <Box sx={{ background: 'rgba(255,255,255,0.02)', py: 4 }}>
-        <CareerListing />
-      </Box>
+      {/* CAREER LISTINGS */}
+      <CareerListing />
 
-      {/* GOLD DIVIDER */}
-      <Box
-        sx={{
-          height: '4px',
-          background: COLORS.gold,
-          mt: 8,
-          opacity: 0.2,
-          mx: 'auto',
-          width: '80%',
-        }}
-      />
-
+      {/* FOOTER */}
       <Footer />
     </Box>
   );
