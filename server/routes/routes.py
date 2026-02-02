@@ -18,7 +18,7 @@ import traceback
 
 # ✅ Initialize Blueprint and Flask extensions
 routes = Blueprint('routes', __name__)
-CORS(routes)
+#CORS(routes)
 
 bcrypt = Bcrypt()
 jwt = JWTManager()

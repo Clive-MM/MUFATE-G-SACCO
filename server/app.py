@@ -21,17 +21,29 @@ load_dotenv(dotenv_path=".mufate_env")
 app = Flask(__name__)
 
 # CORS: allow Vercel frontend and main site to call this backend
+# 1. Define your allowed origins clearly
+ALLOWED_ORIGINS = [
+    "https://mufate-g-sacco.vercel.app",
+    "http://localhost:3000"
+]
+
+# 2. Perfected CORS Configuration
 CORS(
     app,
-    resources={r"/*": {
-        "origins": [
-            "https://mufate-g-sacco.vercel.app",
-            "http://localhost:3000"
-        ],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }},
-    supports_credentials=True
+    resources={
+        r"/*": {
+            "origins": ALLOWED_ORIGINS,
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": [
+                "Content-Type", 
+                "Authorization", 
+                "Access-Control-Allow-Origin"
+            ],
+            "expose_headers": ["Content-Type", "Authorization"],
+            "supports_credentials": True,
+            "max_age": 3600 # Cache pre-flight response for 1 hour to improve performance
+        }
+    }
 )
 
 # -----------------------------
