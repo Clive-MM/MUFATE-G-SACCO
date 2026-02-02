@@ -17,6 +17,13 @@ const ResourcesPage = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Standardized Brand Colors from Golden Generation DT Sacco
+  const COLORS = {
+    gold: '#EC9B14',      
+    dark: '#02150F',      
+    light: '#F4F4F4',
+  };
+
   useEffect(() => {
     axios
       .get('https://mufate-g-sacco.onrender.com/resources/recent')
@@ -35,128 +42,126 @@ const ResourcesPage = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.98 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
+    <Box
+      sx={{
+        background: COLORS.dark,
+        // Standardized padding to push content below the fixed Navbar
+        pt: { xs: 14, md: 20 }, 
+        pb: { xs: 6, md: 8 },
+        minHeight: '100vh'
+      }}
     >
-      {/* 🌑 Deep Green Background Brand */}
-      <Box sx={{ background: 'linear-gradient(135deg, #011407, #01240F)' }}>
-        <Box sx={{ pt: 6, pb: 6, px: { xs: 2, md: 10 } }}>
-          
-          {/* ⭐ Gold Title */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+      <Box sx={{ maxWidth: '1200px', mx: 'auto', px: { xs: 2, md: 10 } }}>
+        
+        {/* ⭐ Standardized Section Title */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <Typography
+            variant="h4"
+            align="center"
+            sx={{
+              fontWeight: 900,
+              textTransform: 'uppercase',
+              mb: 8, // Increased margin for better breathing room
+              letterSpacing: '3px',
+              color: COLORS.gold,
+              fontSize: { xs: '1.5rem', md: '2.4rem' },
+              textShadow: `0 0 15px ${COLORS.gold}33`,
+            }}
           >
-            <Typography
-              variant="h4"
-              align="center"
-              sx={{
-                fontWeight: 900,
-                fontSize: { xs: '1.8rem', md: '2.4rem' },
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
-                WebkitBackgroundClip: 'text',
-                color: 'transparent',
-                mb: 5,
-              }}
-            >
-              Access SACCO Documents
-            </Typography>
-          </motion.div>
+            Access SACCO Documents
+          </Typography>
+        </motion.div>
 
-          {/* LOADING */}
-          {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
-              <CircularProgress sx={{ color: '#FFD700' }} />
-            </Box>
-          ) : (
-            <Grid container spacing={4} justifyContent="center">
-              {resources.map((res, idx) => (
-                <Grid item xs={12} sm={6} md={4} key={idx}>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: idx * 0.1 }}
-                    whileHover={{ scale: 1.03 }}
+        {/* LOADING STATE */}
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+            <CircularProgress sx={{ color: COLORS.gold }} />
+          </Box>
+        ) : (
+          <Grid container spacing={4} justifyContent="center">
+            {resources.map((res, idx) => (
+              <Grid item xs={12} sm={6} md={4} key={idx}>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Card
+                    sx={{
+                      borderRadius: '22px', // Matches LoanCard style
+                      p: 2,
+                      backgroundColor: 'rgba(255,255,255,0.03)', // Subtle dark glass
+                      border: `1px solid ${COLORS.gold}33`,
+                      boxShadow: '0 8px 28px rgba(0,0,0,0.25)',
+                      transition: '0.35s ease',
+                      '&:hover': {
+                        transform: 'translateY(-6px)',
+                        border: `1px solid ${COLORS.gold}`,
+                        boxShadow: `0 0 25px ${COLORS.gold}40`,
+                      },
+                    }}
                   >
-                    {/* 📄 Document Card */}
-                    <Card
-                      sx={{
-                        borderRadius: 3,
-                        p: 2,
-                        backgroundColor: '#01240F',
-                        border: '1px solid rgba(255,215,0,0.2)',
-                        boxShadow:
-                          '0 10px 25px rgba(0,0,0,0.45), 0 0 18px rgba(255,215,0,0.25)',
-                        transition:
-                          'transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-6px)',
-                          border: '1px solid #FFD700',
-                          boxShadow:
-                            '0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(255,215,0,0.4)',
-                        },
-                      }}
-                    >
-                      <CardContent sx={{ textAlign: 'center' }}>
-                        {/* Title */}
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            fontWeight: 800,
-                            mb: 2,
-                            background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
-                            WebkitBackgroundClip: 'text',
-                            color: 'transparent',
-                            letterSpacing: '0.5px',
-                          }}
-                        >
-                          {res.Title}
-                        </Typography>
+                    <CardContent sx={{ textAlign: 'center' }}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 800,
+                          mb: 3,
+                          color: COLORS.light,
+                          letterSpacing: '0.5px',
+                          fontSize: '1.1rem'
+                        }}
+                      >
+                        {res.Title}
+                      </Typography>
 
-                        {/* Download Button */}
-                        <Button
-                          onClick={() => handleDownload(res.FilePath)}
-                          variant="contained"
-                          startIcon={<CloudDownload />}
-                          sx={{
-                            background:
-                              'linear-gradient(135deg, #FFD700, #E6C200)',
-                            color: '#000',
-                            px: 3,
-                            fontWeight: 700,
-                            borderRadius: '25px',
-                            boxShadow: '0 4px 12px rgba(255,215,0,0.35)',
-                            '&:hover': {
-                              background:
-                                'linear-gradient(135deg, #E6C200, #FFD700)',
-                              transform: 'scale(1.07)',
-                              boxShadow: '0 6px 18px rgba(255,215,0,0.55)',
-                            },
-                            transition: 'all 0.3s ease-in-out',
-                          }}
-                        >
-                          Download
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Grid>
-              ))}
-            </Grid>
-          )}
-        </Box>
-
-        <Box sx={{ mt: '-10px' }}>
-          <Footer />
-        </Box>
+                      <Button
+                        onClick={() => handleDownload(res.FilePath)}
+                        variant="contained"
+                        startIcon={<CloudDownload />}
+                        sx={{
+                          background: COLORS.gold,
+                          color: COLORS.dark,
+                          px: 4,
+                          fontWeight: 800,
+                          borderRadius: '12px',
+                          textTransform: 'uppercase',
+                          fontSize: '0.75rem',
+                          '&:hover': {
+                            background: COLORS.light,
+                            transform: 'scale(1.05)',
+                          },
+                          transition: 'all 0.3s ease',
+                        }}
+                      >
+                        Download
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Box>
-    </motion.div>
+
+      {/* GOLD DIVIDER before footer */}
+      <Box
+        sx={{
+          height: '4px',
+          background: COLORS.gold,
+          mt: 10,
+          opacity: 0.2
+        }}
+      />
+      <Footer />
+    </Box>
   );
 };
 
