@@ -20,6 +20,7 @@ import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturi
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PaymentsIcon from '@mui/icons-material/PaymentsIcon';
+
 const BRAND = {
   gold: "#EC9B14",
   dark: "#02150F",
