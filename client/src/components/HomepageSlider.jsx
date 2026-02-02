@@ -8,13 +8,11 @@ import { Link as RouterLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 
-// --- ANIMATIONS FROM ABOUT HERO ---
+
 const revealImage = keyframes`
   0% { transform: scale(1.08); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 `;
-
-// REMOVED: fadeUp constant to resolve 'no-unused-vars' error
 
 const BRAND = {
   gold: "#EC9B14",

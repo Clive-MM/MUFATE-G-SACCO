@@ -16,7 +16,7 @@ import FAQs from './more/FAQs';
 import ContactUs from './pages/ContactUs/ContactUs';
 import Careers from './pages/Careers/Careers';
 import News from './more/News';
-import SaccoGallery from './more/saccogallery'; // Duplicate removed below
+import SaccoGallery from './more/saccogallery'; 
 import MemberRegistration from "./pages/MemberRegistration";
 import LoanCalculator from './pages/Products/LoanCalculator';
 

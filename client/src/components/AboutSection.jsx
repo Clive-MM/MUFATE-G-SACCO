@@ -128,7 +128,7 @@ const AboutSection = () => {
               >
                 Why Choose Us
               </Typography>
-              <Typography 
+              {/* <Typography 
                 sx={{ 
                   color: BRAND.light, 
                   maxWidth: "850px", 
@@ -139,8 +139,8 @@ const AboutSection = () => {
                   fontWeight: 300
                 }}
               >
-                <strong style={{ color: BRAND.gold, fontWeight: 700 }}>Golden Generation Deposit Taking SACCO</strong> is a trusted, member-owned financial institution serving tea farmers, salaried workers, and entrepreneurs.
-              </Typography>
+                <strong style={{ color: BRAND.gold, fontWeight: 700 }}>Golden Generation Deposit Taking SACCO</strong> is a trusted, member-owned financial institution serving tea farmers, salaried workers,and entrepreneurs.
+              </Typography> */}
             </motion.div>
           </Box>
 
