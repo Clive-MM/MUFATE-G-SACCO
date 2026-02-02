@@ -19,7 +19,7 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import PaymentsIcon from '@mui/icons-material/PaymentsIcon';
+import PaymentsIcon from '@mui/icons-material/Payments';
 
 const BRAND = {
   gold: "#EC9B14",
