@@ -9,12 +9,12 @@ import {
   IconButton,
   Container,
   useMediaQuery,
+  CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 
-// Brand Palette - Identical to SaccoIdentitySection
 const BRAND = {
   gold: "#EC9B14",
   lightGold: "#FFC25F",
@@ -24,11 +24,14 @@ const BRAND = {
 
 const FeedbackBanner = () => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const isMobile = useMediaQuery('(max-width:600px)');
   const { enqueueSnackbar } = useSnackbar();
 
+  // 1. Updated State to include PhoneNumber (Aligned with Backend Model)
   const [formData, setFormData] = useState({
     Email: '',
+    PhoneNumber: '', 
     Subject: '',
     Message: ''
   });
@@ -38,22 +41,35 @@ const FeedbackBanner = () => {
   };
 
   const handleSubmit = async () => {
+    // Basic validation
+    if (!formData.Email || !formData.PhoneNumber || !formData.Message) {
+      enqueueSnackbar('❌ Please fill in all required fields.', { variant: 'warning' });
+      return;
+    }
+
+    setLoading(true);
     try {
       const res = await axios.post(
         'https://mufate-g-sacco.onrender.com/feedback',
         formData
       );
+      
       enqueueSnackbar(res.data.message || "✅ Feedback submitted successfully!", {
         variant: 'success'
       });
+      
       setOpen(false);
-      setFormData({ Email: '', Subject: '', Message: '' });
+      // Reset form including PhoneNumber
+      setFormData({ Email: '', PhoneNumber: '', Subject: '', Message: '' });
     } catch (err) {
-      enqueueSnackbar('❌ Failed to submit feedback.', { variant: 'error' });
+      console.error("Submission Error:", err);
+      const serverMsg = err.response?.data?.message || '❌ Failed to submit feedback.';
+      enqueueSnackbar(serverMsg, { variant: 'error' });
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Reusable TextField Styles for Uniformity
   const textFieldStyles = {
     mb: 2,
     '& label': { color: 'rgba(255,255,255,0.6)' },
@@ -70,36 +86,12 @@ const FeedbackBanner = () => {
   return (
     <Box sx={{ bgcolor: BRAND.dark, py: { xs: 8, md: 10 }, borderTop: `1px solid rgba(255,255,255,0.05)` }}>
       <Container maxWidth="lg">
-        <Box 
-          sx={{ 
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 3
-          }}
-        >
-          <Typography 
-            variant="h3" 
-            sx={{ 
-              color: BRAND.gold, 
-              fontWeight: 900, 
-              textTransform: 'uppercase',
-              fontSize: { xs: '1.8rem', md: '2.5rem' } 
-            }}
-          >
+        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+          <Typography variant="h3" sx={{ color: BRAND.gold, fontWeight: 900, textTransform: 'uppercase', fontSize: { xs: '1.8rem', md: '2.5rem' } }}>
             We Value Your Feedback
           </Typography>
 
-          <Typography 
-            sx={{ 
-              color: BRAND.light, 
-              opacity: 0.8, 
-              maxWidth: '800px', 
-              lineHeight: 1.8,
-              fontSize: '1.1rem' 
-            }}
-          >
+          <Typography sx={{ color: BRAND.light, opacity: 0.8, maxWidth: '800px', lineHeight: 1.8, fontSize: '1.1rem' }}>
             Your opinion matters to us! Help us serve you better by sharing your thoughts,
             suggestions, or experiences with GOLDEN GENERATION DT Sacco.
           </Typography>
@@ -115,10 +107,7 @@ const FeedbackBanner = () => {
               py: 1.5,
               borderRadius: '50px',
               fontSize: '1rem',
-              '&:hover': {
-                bgcolor: BRAND.lightGold,
-                transform: 'scale(1.05)',
-              },
+              '&:hover': { bgcolor: BRAND.lightGold, transform: 'scale(1.05)' },
               transition: '0.3s'
             }}
           >
@@ -127,15 +116,14 @@ const FeedbackBanner = () => {
         </Box>
       </Container>
 
-      {/* ===================== POPUP ===================== */}
       <Dialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => !loading && setOpen(false)} // Prevent closing while loading
         fullWidth
         maxWidth="md"
         PaperProps={{
           sx: {
-            bgcolor: '#011A13', // Deepest dark for contrast
+            bgcolor: '#011A13',
             backgroundImage: 'none',
             color: BRAND.light,
             borderRadius: '28px',
@@ -146,6 +134,7 @@ const FeedbackBanner = () => {
       >
         <IconButton
           onClick={() => setOpen(false)}
+          disabled={loading}
           sx={{ position: 'absolute', top: 16, right: 16, color: BRAND.gold, zIndex: 10 }}
         >
           <CloseIcon />
@@ -153,8 +142,6 @@ const FeedbackBanner = () => {
 
         <DialogContent sx={{ p: { xs: 3, md: 6 } }}>
           <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 5 }}>
-            
-            {/* Left Content */}
             <Box sx={{ flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
               <Box sx={{ mb: 3 }}>
                 <img
@@ -171,16 +158,28 @@ const FeedbackBanner = () => {
               </Typography>
             </Box>
 
-            {/* Right Form */}
             <Box sx={{ flex: 1.2, display: 'flex', flexDirection: 'column' }}>
               <TextField
                 label="Email"
                 name="Email"
+                type="email"
                 value={formData.Email}
                 onChange={handleChange}
                 fullWidth
                 sx={textFieldStyles}
               />
+              
+              {/* 2. Added PhoneNumber Field */}
+              <TextField
+                label="Phone Number"
+                name="PhoneNumber"
+                value={formData.PhoneNumber}
+                onChange={handleChange}
+                fullWidth
+                placeholder="e.g. 0712345678"
+                sx={textFieldStyles}
+              />
+
               <TextField
                 label="Subject"
                 name="Subject"
@@ -203,6 +202,7 @@ const FeedbackBanner = () => {
               <Button
                 onClick={handleSubmit}
                 fullWidth
+                disabled={loading}
                 sx={{
                   mt: 1,
                   py: 1.5,
@@ -210,12 +210,11 @@ const FeedbackBanner = () => {
                   backgroundColor: BRAND.gold,
                   color: BRAND.dark,
                   fontWeight: 700,
-                  '&:hover': {
-                    backgroundColor: BRAND.lightGold,
-                  }
+                  '&:hover': { backgroundColor: BRAND.lightGold },
+                  '&.Mui-disabled': { backgroundColor: 'rgba(236,155,20,0.3)', color: BRAND.dark }
                 }}
               >
-                SUBMIT FEEDBACK
+                {loading ? <CircularProgress size={24} sx={{ color: BRAND.dark }} /> : "SUBMIT FEEDBACK"}
               </Button>
             </Box>
           </Box>
