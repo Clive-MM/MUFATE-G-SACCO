@@ -430,17 +430,28 @@ export default function LoanCalculator() {
                     <TableBody>
                       {schedule.map((row) => (
                         <TableRow key={row.period}>
-                          <TableCell>{row.period}</TableCell>
-                          <TableCell>{row.date}</TableCell>
-                          <TableCell>
+                          {/* Installment Number */}
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700 }}>
+                            {row.period}
+                          </TableCell>
+
+                          {/* Date */}
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700 }}>
+                            {row.date}
+                          </TableCell>
+
+                          {/* Principal Amount */}
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700 }}>
                             {formatMoney(row.principal)}
                           </TableCell>
-                          <TableCell>
+
+                          {/* Interest Amount */}
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700 }}>
                             {formatMoney(row.interest)}
                           </TableCell>
-                          <TableCell
-                            sx={{ color: "#EC9B14", fontWeight: 700 }}
-                          >
+
+                          {/* Balance Amount */}
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 900 }}>
                             {formatMoney(row.balance)}
                           </TableCell>
                         </TableRow>
