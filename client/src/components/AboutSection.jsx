@@ -13,7 +13,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 // ICONS
-
 import SavingsIcon from '@mui/icons-material/Savings';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
@@ -30,6 +29,7 @@ const BRAND = {
 
 const AboutSection = () => {
   const [selectedCard, setSelectedCard] = useState(0);
+  const [hoveredCard, setHoveredCard] = useState(null);
 
   const services = [
     {
@@ -47,7 +47,7 @@ const AboutSection = () => {
       desc: "Acquire the equipment, machinery, or tools you need today through our flexible asset financing. We fund your purchase and use the asset as security while you repay in affordable installments — giving you full ownership once the loan is cleared.",
       icon: <PrecisionManufacturingIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     },
-     {
+    {
       title: "Mobile Banking & Digital Lending",
       desc: "Enjoy secure 24/7 access to your SACCO account through our USSD and mobile platforms. Deposit, withdraw, transfer funds, and even apply for loans instantly — anytime, anywhere, right from your phone.",
       icon: <PhoneIphoneIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
@@ -62,11 +62,9 @@ const AboutSection = () => {
       desc: "We provide a reliable payroll and check-off platform that ensures tea farmers, teachers, civil servants, and institutional employees receive their payments on time. Once funds or cheques are received, we promptly process and credit accounts to guarantee timely and seamless salary disbursement.",
       icon: <PaymentsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
     },
-
-    
   ];
 
-  // Animation Variants
+  // 1. Waterfall Entry Variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -76,11 +74,11 @@ const AboutSection = () => {
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 50 },
     visible: { 
       opacity: 1, 
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
+      y: 0, 
+      transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] } 
     }
   };
 
@@ -131,11 +129,10 @@ const AboutSection = () => {
               >
                 Why Choose Us
               </Typography>
-              
             </motion.div>
           </Box>
 
-          {/* INTERACTIVE GRID */}
+          {/* INTERACTIVE GRID (Waterfall Effect) */}
           <Box
             component={motion.div}
             variants={containerVariants}
@@ -151,26 +148,39 @@ const AboutSection = () => {
                 md: 'repeat(3, 1fr)'
               },
               gap: { xs: 3, md: 4 },
+              perspective: '1500px' // High perspective for 3D tilt
             }}
           >
             {services.map((service, index) => (
-              <motion.div key={index} variants={cardVariants}>
+              <motion.div 
+                key={index} 
+                variants={cardVariants}
+                onMouseEnter={() => setHoveredCard(index)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
                 <Card 
+                  component={motion.div}
+                  // 2. Tilt & Scale Hover
+                  whileHover={{ 
+                    scale: 1.04,
+                    rotateX: 4,
+                    rotateY: -4,
+                    y: -12
+                  }}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
                   elevation={0}
                   sx={{ 
                     bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.06)' : 'rgba(255, 255, 255, 0.02)',
                     borderRadius: '24px',
                     border: `1px solid ${selectedCard === index ? BRAND.gold : 'rgba(255, 255, 255, 0.08)'}`,
-                    transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    transition: 'background-color 0.4s, border-color 0.4s',
                     height: '100%',
                     backdropFilter: 'blur(10px)',
                     boxShadow: selectedCard === index 
-                      ? `0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(236, 155, 20, 0.1)` 
+                      ? `0 20px 40px rgba(0,0,0,0.4)` 
                       : '0 10px 30px rgba(0,0,0,0.2)',
                     '&:hover': {
                       borderColor: BRAND.gold,
-                      transform: 'translateY(-10px)',
-                      bgcolor: 'rgba(236, 155, 20, 0.08)',
                       boxShadow: `0 25px 50px rgba(0, 0, 0, 0.5)`,
                     }
                   }}
@@ -186,25 +196,17 @@ const AboutSection = () => {
                       textAlign: 'center',
                     }}
                   >
-                    {/* Animated Icon Wrapper */}
-                    <Box 
-                      component={motion.div}
-                      animate={{ 
-                        scale: selectedCard === index ? 1.15 : 1,
-                        filter: selectedCard === index 
-                          ? 'drop-shadow(0 0 15px rgba(236, 155, 20, 0.6))' 
-                          : 'drop-shadow(0 0 0px rgba(236, 155, 20, 0))'
-                      }}
-                      sx={{ 
-                        mb: 4, 
-                        color: BRAND.gold,
-                        transition: '0.4s'
-                      }}
-                    >
+                    <Box sx={{ mb: 4, color: BRAND.gold, transition: '0.4s' }}>
                       {service.icon}
                     </Box>
                     
-                    <CardContent sx={{ p: 0 }}>
+                    {/* 3. Text Slide Content */}
+                    <CardContent 
+                      component={motion.div}
+                      animate={{ y: hoveredCard === index ? -8 : 0 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      sx={{ p: 0 }}
+                    >
                       <Typography 
                         variant="h5" 
                         sx={{ 
