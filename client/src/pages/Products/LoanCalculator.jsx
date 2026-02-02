@@ -394,7 +394,7 @@ export default function LoanCalculator() {
           {/* ================= SCHEDULE ================= */}
           <Grid item xs={12} md={8}>
             <NeoCard>
-              <CardHeader sx={{ color: "#EC9B14" }}>Repayment Schedule</CardHeader>
+              <CardHeader >Repayment Schedule</CardHeader>
 
               {!schedule.length ? (
                 <Typography
