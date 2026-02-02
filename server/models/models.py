@@ -381,8 +381,8 @@ class SupportTicket(db.Model):
 
     Id = db.Column(db.Integer, primary_key=True)
     Email = db.Column(db.String(255), nullable=True,
-                      index=True)  # <-- change to True
-    # <-- keep optional
+                      index=True)  
+
     PhoneNumber = db.Column(db.String(20))
     Message = db.Column(db.Text, nullable=False)
     PageUrl = db.Column(db.String(1024))
