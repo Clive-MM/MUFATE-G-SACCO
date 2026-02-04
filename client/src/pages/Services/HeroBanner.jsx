@@ -47,40 +47,45 @@ const HeroBanner = () => {
       }}
     >
       {/* TEXT BLOCK */}
+      {/* TEXT BLOCK */}
       <motion.div
         initial={{ opacity: 0, x: 40 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8 }}
-        style={{ position: 'relative', zIndex: 2, maxWidth: '450px' }}
+        style={{ position: 'relative', zIndex: 2, maxWidth: '500px' }}
       >
+        {/* MAIN HEADING - Solid Gold */}
         <Typography
           variant="h3"
           fontWeight={900}
           sx={{
             mb: 2,
-            fontSize: { xs: '1.8rem', md: '2.6rem' },
-            lineHeight: 1.3,
-            background: 'linear-gradient(to right,#EC9B14, #FFF4B5)',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            textShadow: '0 0 12px rgba(255,215,0,0.35)',
+            fontSize: { xs: '2rem', md: '3rem' }, // Slightly larger for impact
+            lineHeight: 1.2,
+            color: '#EC9B14', // Solid Brand Gold
+            textTransform: 'uppercase', // Professional banking look
+            letterSpacing: '1px',
+            textShadow: '2px 2px 10px rgba(0,0,0,0.5)', // Adds depth against background
           }}
         >
           Secure Banking on the Go
         </Typography>
 
+        {/* BODY TEXT - Solid Gold with Refined Weight */}
         <Typography
           variant="body1"
           sx={{
-            fontSize: { xs: '0.95rem', md: '1.05rem' },
-            lineHeight: 1.7,
-            color:  '#EC9B14',
-            textShadow: '0 0 10px rgba(0,0,0,0.7)',
+            fontSize: { xs: '1rem', md: '1.15rem' }, // Increased size for readability
+            fontWeight: 500, // Medium weight for better definition
+            lineHeight: 1.8,
+            color: '#EC9B14', // Solid Brand Gold
+            letterSpacing: '0.4px',
+            textShadow: '1px 1px 8px rgba(0,0,0,0.8)', // Stronger shadow for legibility
           }}
         >
-          With GOLDEN GENERATION DT SACCO’s mobile banking services, managing your 
-          finances has never been easier. Enjoy secure, 24/7 access to your account 
-          right from your phone — whether you're checking balances, transferring 
+          With **GOLDEN GENERATION DT SACCO’s** mobile banking services, managing your
+          finances has never been easier. Enjoy secure, 24/7 access to your account
+          right from your phone — whether you're checking balances, transferring
           funds, or paying bills on the go.
         </Typography>
       </motion.div>
