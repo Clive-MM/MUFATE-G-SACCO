@@ -1,11 +1,29 @@
 import React from 'react';
 import { Box, Typography, Button, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
+import { Link as RouterLink } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AppleIcon from '@mui/icons-material/Apple';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const HeroBanner = () => {
+  // Stagger Container Variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3, // Time between each element appearing
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: 30 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
+  };
+
   return (
     <Box
       sx={{
@@ -13,7 +31,7 @@ const HeroBanner = () => {
         backgroundImage: `url("https://res.cloudinary.com/djydkcx01/image/upload/v1747941107/ChatGPT_Image_May_22_2025_10_11_23_PM_aoofyb.png")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        height: { xs: '70vh', md: '80vh' }, // Slightly taller for more breathing room
+        height: { xs: '70vh', md: '80vh' },
         width: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -21,7 +39,7 @@ const HeroBanner = () => {
         px: { xs: 3, md: 10 },
         overflow: 'hidden',
 
-        /* Improved Overlay for better text contrast */
+        /* Dark Overlay for Text Readability */
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -30,25 +48,31 @@ const HeroBanner = () => {
           width: '100%',
           height: '100%',
           background: {
-            xs: 'rgba(1, 20, 7, 0.7)', // Darker on mobile for readability
-            md: 'linear-gradient(to right, rgba(1,20,7,0.85), rgba(1,20,7,0.4), transparent)'
+            xs: 'rgba(1, 20, 7, 0.75)',
+            md: 'linear-gradient(to right, rgba(1,20,7,0.9), rgba(1,20,7,0.5), transparent)'
           },
           zIndex: 1,
         },
       }}
     >
-      <motion.div
+      <Box
+        component={motion.div}
+        variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        variants={{
-          visible: { transition: { staggerChildren: 0.2 } }
-        }}
-        style={{ position: 'relative', zIndex: 2, maxWidth: '550px' }}
+        sx={{ position: 'relative', zIndex: 2, maxWidth: '550px' }}
       >
-        {/* Left Accent Line */}
-        <Box sx={{ borderLeft: `4px solid #EC9B14`, pl: 3 }}>
-          <motion.div variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}>
+        {/* Visual "Glassmorphism" Left Accent Line */}
+        <Box 
+          sx={{ 
+            borderLeft: `5px solid #EC9B14`, 
+            pl: { xs: 2, md: 4 },
+            py: 1
+          }}
+        >
+          {/* STAGGERED TITLE */}
+          <motion.div variants={itemVariants}>
             <Typography
               variant="h3"
               fontWeight={900}
@@ -66,15 +90,15 @@ const HeroBanner = () => {
             </Typography>
           </motion.div>
 
-          <motion.div variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}>
+          {/* STAGGERED DESCRIPTION */}
+          <motion.div variants={itemVariants}>
             <Typography
               variant="body1"
               sx={{
-                fontSize: { xs: '1rem', md: '1.1rem' },
-                fontWeight: 400,
+                fontSize: { xs: '1rem', md: '1.15rem' },
+                fontWeight: 500,
                 lineHeight: 1.8,
                 color: '#EC9B14',
-                opacity: 0.9,
                 mb: 4,
                 textShadow: '1px 1px 8px rgba(0,0,0,0.8)',
               }}
@@ -85,37 +109,44 @@ const HeroBanner = () => {
             </Typography>
           </motion.div>
 
-          {/* Action Buttons */}
-          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+          {/* STAGGERED CTA & APP ICONS */}
+          <motion.div variants={itemVariants}>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} alignItems={{ xs: 'flex-start', sm: 'center' }}>
               <Button
+                component={RouterLink}
+                to="/customer_registration"
                 variant="contained"
                 endIcon={<ArrowForwardIcon />}
                 sx={{
                   bgcolor: '#EC9B14',
-                  color: '#011407',
-                  fontWeight: 800,
+                  color: '#02150F', // Dark text for high contrast on Gold
+                  fontWeight: 900,
                   px: 4,
-                  py: 1.5,
-                  borderRadius: '4px', // Squared edges often look more "Corporate/Banking"
-                  '&:hover': { bgcolor: '#fff', color: '#011407' },
+                  py: 1.8,
+                  fontSize: '0.9rem',
+                  letterSpacing: '1px',
+                  borderRadius: '4px',
+                  boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+                  '&:hover': { 
+                    bgcolor: '#FFFFFF', 
+                    color: '#02150F',
+                    transform: 'translateY(-3px)' 
+                  },
                   transition: '0.3s'
                 }}
               >
-                Get Started
+                Become a Member
               </Button>
               
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ color: '#fff', opacity: 0.8 }}>
-                <AppleIcon sx={{ fontSize: '1.8rem', cursor: 'pointer', '&:hover': { color: '#EC9B14' } }} />
-                <PlayArrowIcon sx={{ fontSize: '1.8rem', cursor: 'pointer', '&:hover': { color: '#EC9B14' } }} />
-                <Typography variant="caption" sx={{ fontWeight: 700, textTransform: 'uppercase' }}>
-                  Available on Stores
-                </Typography>
+              {/* App Store Indicators */}
+              <Stack direction="row" spacing={2} sx={{ color: '#EC9B14', opacity: 0.9 }}>
+                <AppleIcon sx={{ fontSize: '2rem', cursor: 'pointer', '&:hover': { color: '#FFF' } }} />
+                <PlayArrowIcon sx={{ fontSize: '2rem', cursor: 'pointer', '&:hover': { color: '#FFF' } }} />
               </Stack>
             </Stack>
           </motion.div>
         </Box>
-      </motion.div>
+      </Box>
     </Box>
   );
 };
