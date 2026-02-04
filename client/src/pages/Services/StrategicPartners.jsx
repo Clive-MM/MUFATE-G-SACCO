@@ -12,6 +12,14 @@ import {
 import { motion } from 'framer-motion';
 import Footer from '../../components/Footer';
 
+// Define the brand constants used in your footer for uniformity
+const BRAND = {
+  gold: '#EC9B14',
+  dark: '#02150F', // Standard footer deep green
+  light: '#F4F4F4',
+  textMuted: 'rgba(244, 244, 244, 0.7)',
+};
+
 const StrategicPartners = () => {
   const [partners, setPartners] = useState([]);
 
@@ -29,16 +37,16 @@ const StrategicPartners = () => {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      {/* 🌟 Deep Green + Gold Luxury Background */}
+      {/* 🌟 Background adjusted to match Footer (#02150F) */}
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #011407, #01240F)',
+          bgcolor: BRAND.dark,
           py: 8,
         }}
       >
         <Box sx={{ px: { xs: 2, md: 10 } }}>
           
-          {/* 🌟 GOLD TITLE (Underline Removed) */}
+          {/* 🌟 Title Color adjusted to Brand Gold */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -52,10 +60,8 @@ const StrategicPartners = () => {
                 textAlign: 'center',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
-                WebkitBackgroundClip: 'text',
-                color: 'transparent',
-                mb: 6, // adjusted spacing after removing underline
+                color: BRAND.gold, // Uniform Brand Gold
+                mb: 6, 
               }}
             >
               Trusted Partners in Growth
@@ -77,17 +83,15 @@ const StrategicPartners = () => {
                       maxWidth: 360,
                       mx: 'auto',
                       borderRadius: '20px',
-                      background: '#01240F',
-                      border: '1px solid rgba(255,215,0,0.2)',
-                      boxShadow:
-                        '0 10px 25px rgba(0,0,0,0.4), 0 0 25px rgba(255,215,0,0.15)',
+                      background: 'rgba(255, 255, 255, 0.03)', // Subtle contrast against dark bg
+                      border: `1px solid rgba(236, 155, 20, 0.2)`, // Brand gold border opacity
+                      boxShadow: '0 10px 25px rgba(0,0,0,0.4)',
                       transition:
                         'transform 0.35s ease, box-shadow 0.35s ease, border 0.35s ease',
                       '&:hover': {
                         transform: 'translateY(-10px)',
-                        border: '1px solid #FFD700',
-                        boxShadow:
-                          '0 18px 35px rgba(0,0,0,0.5), 0 0 35px rgba(255,215,0,0.4)',
+                        border: `1px solid ${BRAND.gold}`,
+                        boxShadow: `0 0 25px rgba(236, 155, 20, 0.2)`,
                       },
                     }}
                   >
@@ -102,9 +106,8 @@ const StrategicPartners = () => {
                             objectFit: 'contain',
                             backgroundColor: '#ffffff',
                             p: 2,
-                            borderBottom: '1px solid rgba(255,215,0,0.2)',
-                            filter:
-                              'drop-shadow(0 0 10px rgba(0,0,0,0.25))',
+                            borderBottom: `1px solid rgba(236, 155, 20, 0.2)`,
+                            filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.25))',
                           }}
                         />
                       )}
@@ -115,10 +118,7 @@ const StrategicPartners = () => {
                           sx={{
                             fontWeight: 800,
                             textAlign: 'center',
-                            background:
-                              'linear-gradient(to right, #FFD700, #FFF4B5)',
-                            WebkitBackgroundClip: 'text',
-                            color: 'transparent',
+                            color: BRAND.gold, // Uniform Brand Gold
                             mb: 1,
                             letterSpacing: '0.5px',
                           }}
@@ -129,7 +129,7 @@ const StrategicPartners = () => {
                         <Typography
                           variant="body2"
                           sx={{
-                            color: '#FFF4B5',
+                            color: BRAND.textMuted, // Uniform Muted Text
                             textAlign: 'center',
                             lineHeight: 1.6,
                           }}
