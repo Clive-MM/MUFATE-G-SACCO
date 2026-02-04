@@ -77,7 +77,7 @@ const FAQs = () => {
               letterSpacing: '0.03em',
             }}
           >
-            Frequently Asked Questions
+            FREQUENTLY ASKED QUESTIONS
           </Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
