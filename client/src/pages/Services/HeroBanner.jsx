@@ -60,7 +60,7 @@ const HeroBanner = () => {
             mb: 2,
             fontSize: { xs: '1.8rem', md: '2.6rem' },
             lineHeight: 1.3,
-            background: 'linear-gradient(to right, #FFD700, #FFF4B5)',
+            background: 'linear-gradient(to right,#EC9B14, #FFF4B5)',
             WebkitBackgroundClip: 'text',
             color: 'transparent',
             textShadow: '0 0 12px rgba(255,215,0,0.35)',
@@ -74,7 +74,7 @@ const HeroBanner = () => {
           sx={{
             fontSize: { xs: '0.95rem', md: '1.05rem' },
             lineHeight: 1.7,
-            color: '#FFF4B5',
+            color:  '#EC9B14',
             textShadow: '0 0 10px rgba(0,0,0,0.7)',
           }}
         >
