@@ -10,9 +10,11 @@ import {
 import axios from 'axios';
 import Footer from '../components/Footer';
 
-const GOLD = '#FFD700';
-const LIGHT_GOLD = '#FFEFA8';
-const DEEP_GREEN = '#004225';
+// Colors pulled exactly from your Footer BRAND object
+const BRAND_DARK = '#02150F';
+const BRAND_GOLD = '#EC9B14';
+const BRAND_TEXT_MUTED = 'rgba(244, 244, 244, 0.6)';
+const BRAND_LIGHT = '#F4F4F4';
 
 const FAQs = () => {
   const [faqs, setFaqs] = useState([]);
@@ -36,18 +38,19 @@ const FAQs = () => {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        background: `linear-gradient(135deg, #02160c 0%, ${DEEP_GREEN} 45%, #001009 100%)`,
+        // Changed main background to match Footer
+        backgroundColor: BRAND_DARK,
       }}
     >
       <Card
         sx={{
           m: 0,
           borderRadius: 0,
-          boxShadow: 6,
+          boxShadow: 0, // Set to 0 to blend with footer
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
           height: { xs: 'auto', md: '70vh' },
-          backgroundColor: 'transparent',
+          backgroundColor: BRAND_DARK, // Match Footer
         }}
       >
         {/* FAQ Section */}
@@ -55,26 +58,24 @@ const FAQs = () => {
           sx={{
             flex: 1,
             px: { xs: 2.5, sm: 3, md: 5 },
-            py: { xs: 2.5, sm: 3, md: 4 },
+            py: { xs: 5, sm: 6, md: 8 }, // Adjusted to align top levels
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0.45)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            borderRight: { xs: 'none', md: `1px solid rgba(255, 215, 0, 0.25)` },
+            justifyContent: 'flex-start', // Align to top for horizontal parity with image
+            background: BRAND_DARK, // Match Footer
+            borderRight: { xs: 'none', md: `1px solid rgba(255, 255, 255, 0.05)` },
           }}
         >
           <Typography
             variant={isMobile ? 'h5' : 'h4'}
             sx={{
-              fontWeight: 800,
-              mb: 3,
-              color: GOLD,
+              fontWeight: 900, // Matches footer weight
+              mb: 4,
+              color: BRAND_GOLD, // Match Footer Gold
               textAlign: isMobile ? 'center' : 'left',
-              textShadow: '0 0 10px rgba(0,0,0,0.8)',
               letterSpacing: '0.03em',
+              textTransform: 'uppercase', // Match footer heading style
             }}
           >
             Frequently Asked Questions
@@ -91,16 +92,12 @@ const FAQs = () => {
                   borderRadius: '12px',
                   backgroundColor:
                     hoveredIndex === index
-                      ? 'rgba(255, 215, 0, 0.08)'
+                      ? 'rgba(236, 155, 20, 0.08)' // Themed hover
                       : 'transparent',
                   border:
                     hoveredIndex === index
-                      ? `1px solid rgba(255, 215, 0, 0.4)`
-                      : '1px solid rgba(255,255,255,0.06)',
-                  boxShadow:
-                    hoveredIndex === index
-                      ? '0 0 18px rgba(0,0,0,0.7)'
-                      : 'none',
+                      ? `1px solid ${BRAND_GOLD}`
+                      : '1px solid rgba(255,255,255,0.05)',
                   transition: 'all 0.25s ease-in-out',
                   cursor: 'pointer',
                 }}
@@ -109,7 +106,7 @@ const FAQs = () => {
                   sx={{
                     fontSize: '1.05rem',
                     fontWeight: 600,
-                    color: GOLD,
+                    color: hoveredIndex === index ? BRAND_GOLD : BRAND_LIGHT,
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: 1,
@@ -122,7 +119,7 @@ const FAQs = () => {
                       width: 7,
                       height: 7,
                       borderRadius: '50%',
-                      backgroundColor: GOLD,
+                      backgroundColor: BRAND_GOLD,
                       flexShrink: 0,
                     }}
                   />
@@ -134,7 +131,7 @@ const FAQs = () => {
                     sx={{
                       mt: 1,
                       fontSize: '0.95rem',
-                      color: LIGHT_GOLD,
+                      color: BRAND_TEXT_MUTED, // Match footer text style
                       pl: 3,
                       lineHeight: 1.5,
                     }}
@@ -147,19 +144,27 @@ const FAQs = () => {
           </Box>
         </Box>
 
-        {/* Image Section */}
-        <CardMedia
-          component="img"
-          sx={{
-            flex: 1,
-            height: { xs: 260, sm: 320, md: '100%' },
-            objectFit: 'cover',
-            filter: 'grayscale(100%)',
-            borderTop: { xs: `1px solid rgba(255,215,0,0.35)`, md: 'none' },
+        {/* Image Section - Aligned to same level */}
+        <Box 
+          sx={{ 
+            flex: 1, 
+            pt: { xs: 0, md: 8 }, // Top padding matches FAQ section for horizontal level
+            backgroundColor: BRAND_DARK 
           }}
-          image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
-          alt="Support Agent"
-        />
+        >
+          <CardMedia
+            component="img"
+            sx={{
+              width: '100%',
+              height: { xs: 260, sm: 320, md: '100%' },
+              objectFit: 'cover',
+              filter: 'grayscale(100%) brightness(0.7)', // Slightly darker to blend with background
+              borderTop: { xs: `1px solid rgba(255,255,255,0.05)`, md: 'none' },
+            }}
+            image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
+            alt="Support Agent"
+          />
+        </Box>
       </Card>
 
       <Footer />
