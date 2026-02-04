@@ -83,7 +83,7 @@ const HeroBanner = () => {
             textShadow: '1px 1px 8px rgba(0,0,0,0.8)', // Stronger shadow for legibility
           }}
         >
-          With **GOLDEN GENERATION DT SACCO’s** mobile banking services, managing your
+          With GOLDEN GENERATION DT SACCO’s mobile banking services, managing your
           finances has never been easier. Enjoy secure, 24/7 access to your account
           right from your phone — whether you're checking balances, transferring
           funds, or paying bills on the go.
