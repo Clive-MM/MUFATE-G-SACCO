@@ -7,7 +7,7 @@ import AppleIcon from '@mui/icons-material/Apple';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const HeroBanner = () => {
-  // Stagger Container Variants
+ 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -31,7 +31,7 @@ const HeroBanner = () => {
         backgroundImage: `url("https://res.cloudinary.com/djydkcx01/image/upload/v1747941107/ChatGPT_Image_May_22_2025_10_11_23_PM_aoofyb.png")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        height: { xs: '80vh', md: '75vh' }, // Taller on mobile for better text fit
+        height: { xs: '80vh', md: '75vh' }, 
         width: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -39,7 +39,7 @@ const HeroBanner = () => {
         px: { xs: 2, md: 10 },
         overflow: 'hidden',
 
-        /* Dark Overlay for Text Readability */
+       
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -48,7 +48,7 @@ const HeroBanner = () => {
           width: '100%',
           height: '100%',
           background: {
-            xs: 'rgba(1, 20, 7, 0.85)', // Darker on mobile
+            xs: 'rgba(1, 20, 7, 0.85)',
             md: 'linear-gradient(to right, rgba(1,20,7,0.9), rgba(1,20,7,0.4), transparent)'
           },
           zIndex: 1,
@@ -65,10 +65,10 @@ const HeroBanner = () => {
             position: 'relative', 
             zIndex: 2, 
             maxWidth: '600px',
-            textAlign: { xs: 'center', md: 'left' } // Center text on mobile
+            textAlign: { xs: 'center', md: 'left' } 
         }}
       >
-        {/* STAGGERED TITLE */}
+      
         <motion.div variants={itemVariants}>
           <Typography
             variant="h3"
@@ -87,7 +87,7 @@ const HeroBanner = () => {
           </Typography>
         </motion.div>
 
-        {/* STAGGERED DESCRIPTION */}
+       
         <motion.div variants={itemVariants}>
           <Typography
             variant="body1"
@@ -107,7 +107,7 @@ const HeroBanner = () => {
           </Typography>
         </motion.div>
 
-        {/* STAGGERED CTA */}
+       
         <motion.div variants={itemVariants}>
           <Stack 
             direction={{ xs: 'column', sm: 'row' }} 
@@ -128,7 +128,7 @@ const HeroBanner = () => {
                 py: 1.8,
                 fontSize: '0.9rem',
                 borderRadius: '4px',
-                width: { xs: '100%', sm: 'auto' }, // Full width button on mobile
+                width: { xs: '100%', sm: 'auto' }, 
                 boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
                 '&:hover': { 
                   bgcolor: '#FFFFFF', 
@@ -141,7 +141,7 @@ const HeroBanner = () => {
               Become a Member
             </Button>
             
-            {/* APP STORE SECTION */}
+           
             <Stack spacing={1} alignItems={{ xs: 'center', md: 'flex-start' }}>
                <Typography 
                  sx={{ 
