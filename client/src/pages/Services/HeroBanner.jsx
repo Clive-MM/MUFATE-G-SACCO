@@ -16,7 +16,7 @@ const HeroBanner = () => {
         alignItems: 'center',
         justifyContent: { xs: 'center', md: 'flex-end' },
         px: { xs: 2, md: 10 },
-        color: '#FFD700', // Gold text
+        color: BRAND.gold, // Gold text
         textAlign: { xs: 'center', md: 'left' },
         overflow: 'hidden',
 
