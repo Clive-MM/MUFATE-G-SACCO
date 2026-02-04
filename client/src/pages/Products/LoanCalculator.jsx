@@ -428,7 +428,7 @@ export default function LoanCalculator() {
                               color: "#EC9B14",
                               fontWeight: 800,
                               fontSize: "0.85rem",
-                              padding: "20px 24px", // Increased padding for width/height
+                              padding: "20px 24px",
                               borderBottom: "2px solid rgba(236,155,20,0.3)"
                             }}
                           >
