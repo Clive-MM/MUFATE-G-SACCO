@@ -1,6 +1,9 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import AppleIcon from '@mui/icons-material/Apple';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const HeroBanner = () => {
   return (
@@ -10,17 +13,15 @@ const HeroBanner = () => {
         backgroundImage: `url("https://res.cloudinary.com/djydkcx01/image/upload/v1747941107/ChatGPT_Image_May_22_2025_10_11_23_PM_aoofyb.png")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        height: { xs: '60vh', md: '75vh' },
+        height: { xs: '70vh', md: '80vh' }, // Slightly taller for more breathing room
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: { xs: 'center', md: 'flex-end' },
-        px: { xs: 2, md: 10 },
-        color: '#EC9B14', // Gold text
-        textAlign: { xs: 'center', md: 'left' },
+        px: { xs: 3, md: 10 },
         overflow: 'hidden',
 
-        /* Deep dark-green gradient overlay */
+        /* Improved Overlay for better text contrast */
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -28,66 +29,92 @@ const HeroBanner = () => {
           left: 0,
           width: '100%',
           height: '100%',
-          background:
-            'linear-gradient(to right, rgba(1,20,7,0.85), rgba(1,20,7,0.45), rgba(0,0,0,0))',
-          zIndex: 1,
-        },
-
-        /* Subtle gold glow */
-        '&::after': {
-          content: '""',
-          position: 'absolute',
-          bottom: 0,
-          right: 0,
-          width: '40%',
-          height: '40%',
-          background: 'radial-gradient(circle, rgba(255,215,0,0.15), transparent)',
+          background: {
+            xs: 'rgba(1, 20, 7, 0.7)', // Darker on mobile for readability
+            md: 'linear-gradient(to right, rgba(1,20,7,0.85), rgba(1,20,7,0.4), transparent)'
+          },
           zIndex: 1,
         },
       }}
     >
-      {/* TEXT BLOCK */}
-      {/* TEXT BLOCK */}
       <motion.div
-        initial={{ opacity: 0, x: 40 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-        style={{ position: 'relative', zIndex: 2, maxWidth: '500px' }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={{
+          visible: { transition: { staggerChildren: 0.2 } }
+        }}
+        style={{ position: 'relative', zIndex: 2, maxWidth: '550px' }}
       >
-        {/* MAIN HEADING - Solid Gold */}
-        <Typography
-          variant="h3"
-          fontWeight={900}
-          sx={{
-            mb: 2,
-            fontSize: { xs: '2rem', md: '3rem' }, // Slightly larger for impact
-            lineHeight: 1.2,
-            color: '#EC9B14', // Solid Brand Gold
-            textTransform: 'uppercase', // Professional banking look
-            letterSpacing: '1px',
-            textShadow: '2px 2px 10px rgba(0,0,0,0.5)', // Adds depth against background
-          }}
-        >
-          Secure Banking on the Go
-        </Typography>
+        {/* Left Accent Line */}
+        <Box sx={{ borderLeft: `4px solid #EC9B14`, pl: 3 }}>
+          <motion.div variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}>
+            <Typography
+              variant="h3"
+              fontWeight={900}
+              sx={{
+                mb: 2,
+                fontSize: { xs: '2.2rem', md: '3.5rem' },
+                lineHeight: 1.1,
+                color: '#EC9B14',
+                textTransform: 'uppercase',
+                letterSpacing: '1.5px',
+                textShadow: '3px 3px 15px rgba(0,0,0,0.6)',
+              }}
+            >
+              Secure Banking <br /> On The Go
+            </Typography>
+          </motion.div>
 
-        {/* BODY TEXT - Solid Gold with Refined Weight */}
-        <Typography
-          variant="body1"
-          sx={{
-            fontSize: { xs: '1rem', md: '1.15rem' }, // Increased size for readability
-            fontWeight: 500, // Medium weight for better definition
-            lineHeight: 1.8,
-            color: '#EC9B14', // Solid Brand Gold
-            letterSpacing: '0.4px',
-            textShadow: '1px 1px 8px rgba(0,0,0,0.8)', // Stronger shadow for legibility
-          }}
-        >
-          With GOLDEN GENERATION DT SACCO’s mobile banking services, managing your
-          finances has never been easier. Enjoy secure, 24/7 access to your account
-          right from your phone — whether you're checking balances, transferring
-          funds, or paying bills on the go.
-        </Typography>
+          <motion.div variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}>
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: { xs: '1rem', md: '1.1rem' },
+                fontWeight: 400,
+                lineHeight: 1.8,
+                color: '#EC9B14',
+                opacity: 0.9,
+                mb: 4,
+                textShadow: '1px 1px 8px rgba(0,0,0,0.8)',
+              }}
+            >
+              With <strong>GOLDEN GENERATION DT SACCO’s</strong> mobile banking services, 
+              managing your finances is effortless. Enjoy secure, 24/7 access to your 
+              funds right from your pocket.
+            </Typography>
+          </motion.div>
+
+          {/* Action Buttons */}
+          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Button
+                variant="contained"
+                endIcon={<ArrowForwardIcon />}
+                sx={{
+                  bgcolor: '#EC9B14',
+                  color: '#011407',
+                  fontWeight: 800,
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: '4px', // Squared edges often look more "Corporate/Banking"
+                  '&:hover': { bgcolor: '#fff', color: '#011407' },
+                  transition: '0.3s'
+                }}
+              >
+                Get Started
+              </Button>
+              
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ color: '#fff', opacity: 0.8 }}>
+                <AppleIcon sx={{ fontSize: '1.8rem', cursor: 'pointer', '&:hover': { color: '#EC9B14' } }} />
+                <PlayArrowIcon sx={{ fontSize: '1.8rem', cursor: 'pointer', '&:hover': { color: '#EC9B14' } }} />
+                <Typography variant="caption" sx={{ fontWeight: 700, textTransform: 'uppercase' }}>
+                  Available on Stores
+                </Typography>
+              </Stack>
+            </Stack>
+          </motion.div>
+        </Box>
       </motion.div>
     </Box>
   );
