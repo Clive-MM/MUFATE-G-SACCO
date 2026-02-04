@@ -12,10 +12,10 @@ import {
 import { motion } from 'framer-motion';
 import Footer from '../../components/Footer';
 
-// Define the brand constants used in your footer for uniformity
+
 const BRAND = {
   gold: '#EC9B14',
-  dark: '#02150F', // Standard footer deep green
+  dark: '#02150F', 
   light: '#F4F4F4',
   textMuted: 'rgba(244, 244, 244, 0.7)',
 };
@@ -37,7 +37,7 @@ const StrategicPartners = () => {
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      {/* 🌟 Background adjusted to match Footer (#02150F) */}
+      
       <Box
         sx={{
           bgcolor: BRAND.dark,
@@ -46,7 +46,7 @@ const StrategicPartners = () => {
       >
         <Box sx={{ px: { xs: 2, md: 10 } }}>
           
-          {/* 🌟 Title Color adjusted to Brand Gold */}
+          
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -60,7 +60,7 @@ const StrategicPartners = () => {
                 textAlign: 'center',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                color: BRAND.gold, // Uniform Brand Gold
+                color: BRAND.gold, 
                 mb: 6, 
               }}
             >
@@ -83,8 +83,8 @@ const StrategicPartners = () => {
                       maxWidth: 360,
                       mx: 'auto',
                       borderRadius: '20px',
-                      background: 'rgba(255, 255, 255, 0.03)', // Subtle contrast against dark bg
-                      border: `1px solid rgba(236, 155, 20, 0.2)`, // Brand gold border opacity
+                      background: 'rgba(255, 255, 255, 0.03)', 
+                      border: `1px solid rgba(236, 155, 20, 0.2)`, 
                       boxShadow: '0 10px 25px rgba(0,0,0,0.4)',
                       transition:
                         'transform 0.35s ease, box-shadow 0.35s ease, border 0.35s ease',
@@ -118,7 +118,7 @@ const StrategicPartners = () => {
                           sx={{
                             fontWeight: 800,
                             textAlign: 'center',
-                            color: BRAND.gold, // Uniform Brand Gold
+                            color: BRAND.gold, 
                             mb: 1,
                             letterSpacing: '0.5px',
                           }}
@@ -129,7 +129,7 @@ const StrategicPartners = () => {
                         <Typography
                           variant="body2"
                           sx={{
-                            color: BRAND.textMuted, // Uniform Muted Text
+                            color: BRAND.textMuted, 
                             textAlign: 'center',
                             lineHeight: 1.6,
                           }}
