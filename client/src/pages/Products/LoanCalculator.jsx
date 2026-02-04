@@ -214,12 +214,11 @@ export default function LoanCalculator() {
 
         <Grid container spacing={4}>
           {/* ================= SPECIFY LOAN ================= */}
-          <Grid item xs={12} md={8} lg={6}>
+          <Grid item xs={12} md={8}>
             <NeoCard>
               <CardHeader>Specify Your Loan</CardHeader>
 
               <Grid container spacing={3}>
-                {/* Row 1 */}
                 <Grid item xs={12} sm={6} md={4}>
                   <InputLabel>
                     <span>Loan Type</span>
@@ -260,7 +259,6 @@ export default function LoanCalculator() {
                   </InputLabel>
                 </Grid>
 
-                {/* Row 2 */}
                 <Grid item xs={12} sm={6} md={4}>
                   <InputLabel>
                     <span>Interest Rate</span>
@@ -391,10 +389,10 @@ export default function LoanCalculator() {
             </NeoCard>
           </Grid>
 
-          {/* ================= SCHEDULE ================= */}
-          <Grid item xs={12} md={8}>
+          {/* ================= SCHEDULE (EXPANDED) ================= */}
+          <Grid item xs={12}>
             <NeoCard>
-              <CardHeader >Repayment Schedule</CardHeader>
+              <CardHeader>Repayment Schedule</CardHeader>
 
               {!schedule.length ? (
                 <Typography
@@ -412,16 +410,16 @@ export default function LoanCalculator() {
                   No schedule available yet.
                 </Typography>
               ) : (
-                <TableContainer sx={{ maxHeight: 420 }}>
-                  <Table stickyHeader size="small">
+                <TableContainer sx={{ maxHeight: 600 }}>
+                  <Table stickyHeader>
                     <TableHead>
                       <TableRow>
                         {[
                           "Installment",
                           "Date",
-                          "Principal",
-                          "Interest",
-                          "Balance",
+                          "Principal Repayment",
+                          "Interest Charge",
+                          "Remaining Balance",
                         ].map((h) => (
                           <TableCell
                             key={h}
@@ -429,7 +427,9 @@ export default function LoanCalculator() {
                               bgcolor: "#02150F",
                               color: "#EC9B14",
                               fontWeight: 800,
-                              fontSize: "0.75rem",
+                              fontSize: "0.85rem",
+                              padding: "20px 24px", // Increased padding for width/height
+                              borderBottom: "2px solid rgba(236,155,20,0.3)"
                             }}
                           >
                             {h}
@@ -440,29 +440,27 @@ export default function LoanCalculator() {
 
                     <TableBody>
                       {schedule.map((row) => (
-                        <TableRow key={row.period}>
-                          {/* Installment Number */}
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700 }}>
+                        <TableRow 
+                          key={row.period}
+                          sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.02)' } }}
+                        >
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>
                             {row.period}
                           </TableCell>
 
-                          {/* Date */}
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700 }}>
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>
                             {row.date}
                           </TableCell>
 
-                          {/* Principal Amount */}
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700 }}>
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>
                             {formatMoney(row.principal)}
                           </TableCell>
 
-                          {/* Interest Amount */}
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700 }}>
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>
                             {formatMoney(row.interest)}
                           </TableCell>
 
-                          {/* Balance Amount */}
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 900 }}>
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 900, padding: "18px 24px" }}>
                             {formatMoney(row.balance)}
                           </TableCell>
                         </TableRow>
