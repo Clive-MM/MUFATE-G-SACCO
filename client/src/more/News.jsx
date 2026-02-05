@@ -62,7 +62,7 @@ const News = () => {
 
   return (
     <Box sx={{ bgcolor: BRAND.dark, width: '100%', minHeight: '100vh', overflowX: 'hidden' }}>
-      <Container maxWidth="xl" sx={{ pt: { xs: 4, md: 6 }, pb: 2 }}>
+      <Container maxWidth="xl" sx={{ pt: { xs: 12, md: 16 }, pb: 2 }}>
         <Stack alignItems="center" spacing={1}>
           <Typography
             variant="h2"
