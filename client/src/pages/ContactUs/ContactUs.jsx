@@ -123,7 +123,7 @@ const ContactUs = () => {
           >
             GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
           </Typography>
-          <Typography sx={{ color: BRAND.textMuted, fontSize: '0.75rem', mt: 1, textTransform: 'uppercase', letterSpacing: '1px' }}>
+          <Typography sx={{ color: BRAND.gold.textMuted, fontSize: '0.75rem', mt: 1, textTransform: 'uppercase', letterSpacing: '1px' }}>
             All Rights Reserved
           </Typography>
         </Box>
