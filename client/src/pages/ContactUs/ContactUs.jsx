@@ -38,7 +38,7 @@ const ContactUs = () => {
         sx={{
           position: 'fixed',
           inset: 0,
-          background: isMobile 
+          background: isMobile
             ? `linear-gradient(to bottom, rgba(2,21,15,0.4) 0%, ${BRAND.dark} 40%, ${BRAND.dark} 100%)`
             : `linear-gradient(to bottom, rgba(2,21,15,0.7) 0%, ${BRAND.dark} 100%)`,
           zIndex: 1,
@@ -46,11 +46,11 @@ const ContactUs = () => {
       />
 
       <Box sx={{ position: 'relative', zIndex: 2 }}>
-        
+
         {/* Hero Section - Height adjusted for mobile to match the narrow image */}
         <Box
           sx={{
-            height: { xs: '40vh', md: '65vh' }, 
+            height: { xs: '40vh', md: '65vh' },
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -94,7 +94,7 @@ const ContactUs = () => {
                   px: { xs: 2, md: 0 }
                 }}
               >
-                Your financial growth is our priority. Whether you have questions 
+                Your financial growth is our priority. Whether you have questions
                 about membership or need technical support, our team is here.
               </Typography>
             </Box>
@@ -102,10 +102,10 @@ const ContactUs = () => {
         </Box>
 
         {/* Contact Details - Positioning fixed for mobile view */}
-        <Box sx={{ 
-          mt: { xs: 2, md: -15 }, 
+        <Box sx={{
+          mt: { xs: 2, md: -15 },
           pb: 10,
-          px: { xs: 1, md: 0 } 
+          px: { xs: 1, md: 0 }
         }}>
           <ContactDetails />
         </Box>
@@ -123,7 +123,10 @@ const ContactUs = () => {
           >
             GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
           </Typography>
-          <Typography sx={{ color: 'BRAND.gold.textMuted', fontSize: '0.75rem', mt: 1, textTransform: 'uppercase', letterSpacing: '1px' }}>
+          <Typography sx={{
+            color: BRAND.gold,
+            opacity: 0.7, fontSize: '0.75rem', mt: 1, textTransform: 'uppercase', letterSpacing: '1px'
+          }}>
             All Rights Reserved
           </Typography>
         </Box>
