@@ -62,69 +62,93 @@ const NewsFeed = () => {
     };
 
     const PostCard = ({ post }) => {
-        const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    
+    // Strict check for the Financial Reports tab (Index 1)
+    const isReport = activeTab === 1;
 
-        return (
-            <Grid item xs={12} sm={6} xl={4}> {/* Adaptive Grid: 1 col mobile, 2 col tablet/laptop, 3 col desktop */}
-                <motion.div
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.3 }}
-                >
-                    <Card sx={{
-                        maxWidth: { xs: '100%', md: 420 }, // Full width on mobile
-                        width: '100%',
-                        bgcolor: BRAND.cardBg,
-                        borderRadius: '16px',
-                        border: `1.5px solid rgba(236, 155, 20, 0.15)`,
-                        height: 'auto',
-                        mx: 'auto',
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                            borderColor: BRAND.gold,
-                            boxShadow: `0 0 20px ${BRAND.gold}44`
-                        }
-                    }}>
-                        <CardActionArea onClick={() => setExpanded(!expanded)} sx={{ alignItems: 'flex-start' }}>
-                            <CardMedia
-                                component="img"
-                                // Responsive height: shorter on mobile, original on desktop
-                                sx={{
-                                    height: { xs: 300, sm: 280, md: 370 },
-                                    objectFit: 'cover',
-                                    p: 0,
-                                    bgcolor: 'rgba(255,255,255,0.03)',
-                                    objectPosition: 'center'
-                                }}
-                                image={post.CoverImage || 'https://via.placeholder.com/320x140'}
-                            />
-                            <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
-                                <Typography variant="h6" sx={{
-                                    color: '#FFF',
-                                    fontWeight: 800,
-                                    fontSize: { xs: '1rem', md: '1.1rem' },
-                                    height: 'auto',
-                                    mb: 1.5
-                                }}>
-                                    {post.Title}
-                                </Typography>
+    return (
+        <Grid item xs={12} sm={6} xl={4}>
+            <motion.div
+                layout
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+            >
+                <Card sx={{
+                    maxWidth: { xs: '100%', md: 420 },
+                    width: '100%',
+                    bgcolor: BRAND.cardBg,
+                    borderRadius: '16px',
+                    border: `1.5px solid rgba(236, 155, 20, 0.15)`,
+                    height: 'auto',
+                    mx: 'auto',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                        borderColor: BRAND.gold,
+                        boxShadow: `0 0 20px ${BRAND.gold}44`
+                    }
+                }}>
+                    <CardActionArea 
+                        onClick={() => !isReport && setExpanded(!expanded)} 
+                        sx={{ alignItems: 'flex-start' }}
+                    >
+                        <CardMedia
+                            component="img"
+                            sx={{
+                                height: { xs: 300, sm: 280, md: 370 },
+                                objectFit: 'cover',
+                                p: 0,
+                                bgcolor: 'rgba(255,255,255,0.03)',
+                                objectPosition: 'center'
+                            }}
+                            image={post.CoverImage || 'https://via.placeholder.com/320x140'}
+                        />
+                        <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
+                            <Typography variant="h6" sx={{
+                                color: '#FFF',
+                                fontWeight: 800,
+                                fontSize: { xs: '1rem', md: '1.1rem' },
+                                mb: 1.5
+                            }}>
+                                {post.Title}
+                            </Typography>
 
-                                <Typography variant="body2" sx={{
-                                    color: BRAND.textMuted,
-                                    fontSize: '0.85rem',
-                                    lineHeight: 1.6,
-                                    height: 'auto',
-                                    mb: 1,
-                                    display: expanded ? 'block' : '-webkit-box',
-                                    WebkitLineClamp: expanded ? 'none' : 3,
-                                    WebkitBoxOrient: 'vertical',
-                                    overflow: 'hidden',
-                                }}>
-                                    {post.Content.replace(/<[^>]*>/g, '')}
-                                </Typography>
+                            <Typography variant="body2" sx={{
+                                color: BRAND.textMuted,
+                                fontSize: '0.85rem',
+                                lineHeight: 1.6,
+                                mb: 1,
+                                display: (expanded || isReport) ? 'block' : '-webkit-box',
+                                WebkitLineClamp: expanded ? 'none' : 3,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                            }}>
+                                {post.Content.replace(/<[^>]*>/g, '')}
+                            </Typography>
 
+                            {/* Conditional Download Functionality for Reports */}
+                            {isReport ? (
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    href={post.CoverImage} 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    download
+                                    sx={{
+                                        bgcolor: BRAND.gold,
+                                        color: BRAND.dark,
+                                        fontWeight: 900,
+                                        my: 2,
+                                        '&:hover': { bgcolor: '#FFF' },
+                                        textTransform: 'uppercase'
+                                    }}
+                                >
+                                    Download Report
+                                </Button>
+                            ) : (
                                 <Typography sx={{ 
                                     color: BRAND.gold, 
                                     fontSize: '0.75rem', 
@@ -135,23 +159,24 @@ const NewsFeed = () => {
                                 }}>
                                     {expanded ? "Show Less ▲" : "Read More ▼"}
                                 </Typography>
+                            )}
 
-                                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                    <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
-                                        <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
-                                        <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
-                                            {formatDate(post.DatePosted)}
-                                        </Typography>
-                                    </Stack>
-                                    <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
+                            <Stack direction="row" justifyContent="space-between" alignItems="center">
+                                <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
+                                    <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
+                                    <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
+                                        {formatDate(post.DatePosted)}
+                                    </Typography>
                                 </Stack>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </motion.div>
-            </Grid>
-        );
-    };
+                                <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
+                            </Stack>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </motion.div>
+        </Grid>
+    );
+};
 
     return (
         <Container maxWidth="xl" sx={{ pb: 10, mt: 4, px: { xs: 2, md: 4 } }}>
