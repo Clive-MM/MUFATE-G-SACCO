@@ -22,7 +22,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const FosaProducts = () => {
-  const [fosaLoans, setFosaLoans] = useState([]); // Defined with capital F
+  const [fosaLoans, setFosaLoans] = useState([]); 
   const [expanded, setExpanded] = useState(null);
 
   const COLORS = {

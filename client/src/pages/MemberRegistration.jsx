@@ -26,9 +26,8 @@ const steps = [
   { label: "Nominee", icon: <GroupIcon /> }
 ];
 
-// --- UPDATED LAYOUT (Extended widths to prevent cropping) ---
+// --- UPDATED LAYOUT ---
 const layout = {
-  // Bio Data
   FullName: { xs: 12, sm: 8, md: 8 },
   Salutation: { xs: 12, sm: 4, md: 4 }, 
   IDType: { xs: 12, sm: 6, md: 6 },     
@@ -37,8 +36,6 @@ const layout = {
   MaritalStatus: { xs: 12, sm: 6, md: 4 },
   Gender: { xs: 12, sm: 6, md: 4 },
   KRAPin: { xs: 12, sm: 12, md: 12 },   
-
-  // Contact
   County: { xs: 12, sm: 6 },
   District: { xs: 12, sm: 6 },
   Division: { xs: 12, sm: 6 },
@@ -50,8 +47,6 @@ const layout = {
   Email: { xs: 12, sm: 12 },           
   Profession: { xs: 12, sm: 6 },
   ProfessionSector: { xs: 12, sm: 6 },
-
-  // Nominee
   NomineeName: { xs: 12, sm: 8 },
   NomineeIDNumber: { xs: 12, sm: 4 },
   NomineePhoneNumber: { xs: 12, sm: 6 },
@@ -98,43 +93,24 @@ const MemberRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [, setRegMeta] = useState({ next_step: null, payment: null, member_id: null, email_warning: null });
 
-  // ✅ FIX: Bring back regMeta so setRegMeta exists (no layout/styling change)
-  const [, setRegMeta] = useState({
-  next_step: null,
-  payment: null,
-  member_id: null,
-  email_warning: null,
-});
-
-
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const confirmSubmission = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.post(
-        "https://mufate-g-sacco.onrender.com/membership-register",
-        formData
-      );
-
-      // ✅ Now setRegMeta is defined and build will pass
+      const { data } = await axios.post("https://mufate-g-sacco.onrender.com/membership-register", formData);
       setRegMeta({
         next_step: data.next_step || null,
         payment: data.payment || null,
         member_id: data.member_id || null,
         email_warning: data.email_warning || null,
       });
-
       setSuccess(true);
       setSnackbar({ open: true, message: data.message, severity: "success" });
     } catch (error) {
-      setSnackbar({
-        open: true,
-        message: error.response?.data?.message || "Registration failed.",
-        severity: "error",
-      });
+      setSnackbar({ open: true, message: error.response?.data?.message || "Registration failed.", severity: "error" });
     }
     setLoading(false);
   };
@@ -153,11 +129,7 @@ const MemberRegistration = () => {
             onChange={handleChange}
             input={<FilledInput disableUnderline />}
           >
-            {options.map((op) => (
-              <MenuItem key={op} value={op}>
-                {op}
-              </MenuItem>
-            ))}
+            {options.map((op) => <MenuItem key={op} value={op}>{op}</MenuItem>)}
           </Select>
         </FormControl>
       );
@@ -189,7 +161,9 @@ const MemberRegistration = () => {
   return (
     <Box sx={{ 
       minHeight: "100vh",
-      py: { xs: 4, md: 10 }, 
+      /* --- APPLIED BOSA STYLING HERE --- */
+      pt: { xs: 12, md: 18 }, 
+      pb: { xs: 6, md: 8 },
       backgroundColor: BRAND.dark,
       backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(236, 155, 20, 0.05) 0%, transparent 70%)' 
     }}>
@@ -202,10 +176,12 @@ const MemberRegistration = () => {
                 sx={{
                   fontWeight: 900,
                   color: BRAND.gold,
-                  fontSize: { xs: "1.8rem", md: "2.5rem" },
+                  /* --- APPLIED BOSA TEXT STYLING HERE --- */
+                  fontSize: { xs: '1.8rem', md: '2.5rem' },
                   textTransform: "uppercase",
                   letterSpacing: "4px",
-                  mb: 2,
+                  mb: 4,
+                  textShadow: `0 0 15px ${BRAND.gold}33`,
                 }}
               >
                 Member Registration
@@ -330,14 +306,7 @@ const MemberRegistration = () => {
   );
 };
 
-const countiesInKenya = [
-  "Baringo","Bomet","Bungoma","Busia","Elgeyo-Marakwet","Embu","Garissa","Homa Bay","Isiolo","Kajiado","Kakamega",
-  "Kericho","Kiambu","Kilifi","Kirinyaga","Kisii","Kisumu","Kitui","Kwale","Laikipia","Lamu","Machakos","Makueni",
-  "Mandera","Marsabit","Meru","Migori","Mombasa","Murang'a","Nairobi","Nakuru","Nandi","Narok","Nyamira","Nyandarua",
-  "Nyeri","Samburu","Siaya","Taita Taveta","Tana River","Tharaka-Nithi","Trans Nzoia","Turkana","Uasin Gishu","Vihiga",
-  "Wajir","West Pokot"
-];
-
+const countiesInKenya = ["Baringo","Bomet","Bungoma","Busia","Elgeyo-Marakwet","Embu","Garissa","Homa Bay","Isiolo","Kajiado","Kakamega","Kericho","Kiambu","Kilifi","Kirinyaga","Kisii","Kisumu","Kitui","Kwale","Laikipia","Lamu","Machakos","Makueni","Mandera","Marsabit","Meru","Migori","Mombasa","Murang'a","Nairobi","Nakuru","Nandi","Narok","Nyamira","Nyandarua","Nyeri","Samburu","Siaya","Taita Taveta","Tana River","Tharaka-Nithi","Trans Nzoia","Turkana","Uasin Gishu","Vihiga","Wajir","West Pokot"];
 const selectOptions = {
   IDType: ["ID Card", "Certificate of Incorp", "Passport"],
   MaritalStatus: ["Married", "Single", "Divorced", "Separated"],

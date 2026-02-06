@@ -21,9 +21,7 @@ const ContactUs = () => {
         minHeight: '100vh',
         position: 'relative',
         overflowX: 'hidden',
-        /* FIX: Set background to 'contain' on mobile so it shows the whole 
-           image proportionally without zooming in.
-        */
+        
         backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
         backgroundRepeat: 'no-repeat',
         backgroundSize: { xs: 'contain', md: 'cover' },
@@ -31,9 +29,7 @@ const ContactUs = () => {
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       }}
     >
-      {/* OVERLAY FIX: We use a lighter gradient at the top for mobile 
-          so the "narrow" image is clearly visible behind the text.
-      */}
+     
       <Box
         sx={{
           position: 'fixed',
@@ -47,7 +43,7 @@ const ContactUs = () => {
 
       <Box sx={{ position: 'relative', zIndex: 2 }}>
 
-        {/* Hero Section - Height adjusted for mobile to match the narrow image */}
+       
         <Box
           sx={{
             height: { xs: '40vh', md: '65vh' },
@@ -101,7 +97,7 @@ const ContactUs = () => {
           </Container>
         </Box>
 
-        {/* Contact Details - Positioning fixed for mobile view */}
+        
         <Box sx={{
           mt: { xs: 2, md: -15 },
           pb: 10,
@@ -110,7 +106,7 @@ const ContactUs = () => {
           <ContactDetails />
         </Box>
 
-        {/* FOOTER */}
+    
         <Box sx={{ py: 6, textAlign: 'center' }}>
           <Typography
             sx={{
@@ -127,7 +123,7 @@ const ContactUs = () => {
             color: BRAND.gold,
             opacity: 0.85,
             fontSize: '0.85rem',
-            fontWeight: 600, // Added semi-bold weight
+            fontWeight: 600, 
             mt: 1,
             textTransform: 'uppercase',
             letterSpacing: '1px'
