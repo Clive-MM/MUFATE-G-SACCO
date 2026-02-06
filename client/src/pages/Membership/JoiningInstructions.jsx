@@ -3,6 +3,14 @@ import { Box, Typography, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { motion } from 'framer-motion';
 
+// --- UNIFIED BRAND TOKENS ---
+const BRAND = {
+  gold: '#EC9B14',
+  dark: '#02150F',
+  light: '#F4F4F4',
+  textMuted: 'rgba(244, 244, 244, 0.6)',
+};
+
 const instructions = [
   'Get the membership application form from the office or website.',
   'Fill in the form with your correct details.',
@@ -11,8 +19,8 @@ const instructions = [
   'Open a savings account and start making deposits.',
 ];
 
-// UPDATED bright gold brand colors
-const GOLD_BARS = ['#FFD700', '#E8C46A', '#F9E7C5', '#D8AF56'];
+// Updated palette based on your specific BRAND.gold
+const GOLD_BARS = [BRAND.gold, '#FFB84D', '#FFD38A', '#D1870D'];
 
 const JoiningInstructions = () => {
   const width = window.innerWidth;
@@ -24,7 +32,8 @@ const JoiningInstructions = () => {
     <Box
       sx={{
         position: 'relative',
-        background: 'linear-gradient(to bottom, #011B0A, #012A12)',
+        // Updated to BRAND.dark
+        background: `linear-gradient(to bottom, ${BRAND.dark}, #03241A)`,
         borderBottomLeftRadius: '18px',
         borderBottomRightRadius: '18px',
         px: { xs: 2, md: 8 },
@@ -65,9 +74,10 @@ const JoiningInstructions = () => {
               transition={{ duration: 0.9 + index * 0.25 }}
               style={{
                 width: width < 960 ? '50px' : '70px',
-                backgroundColor: color,          // UPDATED gold
+                backgroundColor: color,
                 borderRadius: '12px',
-                boxShadow: '0 0 25px rgba(255,215,0,0.55)', // brighter
+                // Updated glow with brand gold
+                boxShadow: `0 0 25px ${BRAND.gold}88`, 
               }}
             />
           ))}
@@ -87,10 +97,11 @@ const JoiningInstructions = () => {
             textTransform: 'uppercase',
             fontSize: { xs: '1.5rem', md: '2.2rem' },
             mb: 3,
-            background: 'linear-gradient(to right, #FFD700, #FFF4B2)',
+            // Updated Gradient to BRAND.gold
+            background: `linear-gradient(to right, ${BRAND.gold}, #FFD38A)`,
             WebkitBackgroundClip: 'text',
             color: 'transparent',
-            textShadow: '0 0 12px rgba(255,215,0,0.45)',
+            textShadow: `0 0 12px ${BRAND.gold}73`,
             zIndex: 2,
           }}
         >
@@ -117,7 +128,8 @@ const JoiningInstructions = () => {
           >
             <Typography
               sx={{
-                color: '#FFECA8',
+                color: BRAND.light, // Using light brand color
+                opacity: 0.9,
                 fontSize: { xs: '1rem', md: '1.15rem' },
                 lineHeight: 1.6,
                 textShadow: '0 0 6px rgba(0,0,0,0.35)',
@@ -144,20 +156,21 @@ const JoiningInstructions = () => {
             download
             startIcon={<DownloadIcon />}
             sx={{
+              // Keeping the green theme for the button but syncing the gold border
               background: 'linear-gradient(135deg, #013D19, #0A5A2A)',
-              border: '1px solid rgba(255,215,0,0.45)',
-              color: '#FFF4B2',
+              border: `1px solid ${BRAND.gold}73`,
+              color: BRAND.light,
               fontWeight: 800,
               px: { xs: 3, md: 4 },
               py: 1.5,
               fontSize: '0.95rem',
               textTransform: 'uppercase',
               borderRadius: '12px',
-              boxShadow: '0 0 18px rgba(255,215,0,0.45)',
+              boxShadow: `0 0 18px ${BRAND.gold}73`,
               '&:hover': {
                 background: 'linear-gradient(135deg, #014A21, #0C6E30)',
                 transform: 'scale(1.04)',
-                boxShadow: '0 0 28px rgba(255,215,0,0.7)',
+                boxShadow: `0 0 28px ${BRAND.gold}`,
               },
             }}
           >
