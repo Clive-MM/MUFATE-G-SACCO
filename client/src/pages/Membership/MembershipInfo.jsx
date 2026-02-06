@@ -2,11 +2,20 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 
+// --- UNIFIED BRAND TOKENS ---
+const BRAND = {
+  gold: '#EC9B14',
+  dark: '#02150F',
+  light: '#F4F4F4',
+  textMuted: 'rgba(244, 244, 244, 0.6)',
+};
+
 const MembershipInfo = () => {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(to bottom, #011B0A, #012B12)', // deep SACCO green
+        // Updated to use your unified BRAND.dark color
+        background: `linear-gradient(to bottom, ${BRAND.dark}, #03241A)`, 
         boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
@@ -21,7 +30,7 @@ const MembershipInfo = () => {
       }}
     >
 
-      {/* SOFT GOLD BACKLIGHT */}
+      {/* SOFT GOLD BACKLIGHT - Updated with BRAND.gold */}
       <Box
         sx={{
           position: 'absolute',
@@ -29,7 +38,7 @@ const MembershipInfo = () => {
           left: '-10%',
           width: '50%',
           height: '60%',
-          background: 'radial-gradient(circle, rgba(255,215,0,0.18), transparent)',
+          background: `radial-gradient(circle, ${BRAND.gold}2E, transparent)`, // 2E is ~18% opacity
           filter: 'blur(55px)',
           zIndex: 0,
         }}
@@ -43,7 +52,7 @@ const MembershipInfo = () => {
           transition={{ duration: 0.8 }}
         >
 
-          {/* GOLD TITLE */}
+          {/* GOLD TITLE - Updated with BRAND.gold */}
           <Typography
             variant="h4"
             sx={{
@@ -51,22 +60,22 @@ const MembershipInfo = () => {
               textTransform: 'uppercase',
               fontSize: { xs: '1.7rem', md: '2.2rem' },
               mb: 2,
-
-              background: 'linear-gradient(to right, #FFD700, #FFF4B2)',
+              background: `linear-gradient(to right, ${BRAND.gold}, #FFD38A)`,
               WebkitBackgroundClip: 'text',
               color: 'transparent',
-              textShadow: '0 0 12px rgba(255,215,0,0.4)',
+              textShadow: `0 0 12px ${BRAND.gold}66`, // 66 is ~40% opacity
             }}
           >
             Membership
           </Typography>
 
-          {/* GOLDEN BODY TEXT */}
+          {/* GOLDEN BODY TEXT - Updated to BRAND.light with slight opacity for readability */}
           <Typography
             sx={{
               fontSize: { xs: '1rem', md: '1.15rem' },
               lineHeight: 1.65,
-              color: '#FFECA8', // readable warm gold
+              color: BRAND.light, 
+              opacity: 0.9,
               textShadow: '0px 0px 6px rgba(0,0,0,0.6)',
             }}
           >
@@ -90,8 +99,9 @@ const MembershipInfo = () => {
             maxWidth: '360px',
             height: 'auto',
             borderRadius: '18px',
+            // Updated box shadow glow to BRAND.gold
             boxShadow:
-              '0 0 25px rgba(255,215,0,0.25), 0 10px 25px rgba(0,0,0,0.45)',
+              `0 0 25px ${BRAND.gold}40, 0 10px 25px rgba(0,0,0,0.45)`,
             transition: 'transform 0.3s ease',
             cursor: 'pointer',
           }}
