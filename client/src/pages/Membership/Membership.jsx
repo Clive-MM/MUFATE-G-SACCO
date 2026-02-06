@@ -6,6 +6,14 @@ import JoiningInstructions from './JoiningInstructions';
 import MembershipBenefits from './MembershipBenefits';
 import Footer from '../../components/Footer';
 
+// --- UNIFIED BRAND TOKENS ---
+const BRAND = {
+  gold: '#EC9B14',
+  dark: '#02150F',
+  light: '#F4F4F4',
+  textMuted: 'rgba(244, 244, 244, 0.6)',
+};
+
 const Membership = () => {
   return (
     <Box>
@@ -28,9 +36,9 @@ const Membership = () => {
           textAlign: 'center',
 
           /* TEXT SHOULD OVERLAY ABOVE EVERYTHING */
-          color: '#fff',
+          color: BRAND.light,
 
-          /* DARK GREEN OVERLAY + GOLD GLOW */
+          /* UNIFIED DARK OVERLAY - Using BRAND.dark */
           '&::before': {
             content: '""',
             position: 'absolute',
@@ -39,11 +47,11 @@ const Membership = () => {
             width: '100%',
             height: '100%',
             background:
-              'linear-gradient(to right, rgba(1, 20, 7, 0.75), rgba(1,20,7,0.35), transparent)',
+              `linear-gradient(to right, rgba(2, 21, 15, 0.85), rgba(2, 21, 15, 0.45), transparent)`,
             zIndex: 1,
           },
 
-          /* GOLDEN EDGE GLOW ON BOTTOM */
+          /* UNIFIED GOLD EDGE GLOW - Using BRAND.gold */
           '&::after': {
             content: '""',
             position: 'absolute',
@@ -52,7 +60,7 @@ const Membership = () => {
             width: '100%',
             height: '22%',
             background:
-              'linear-gradient(to top, rgba(255,215,0,0.28), transparent)',
+              `linear-gradient(to top, ${BRAND.gold}47, transparent)`, // 47 is approx 28% opacity
             zIndex: 1,
           },
         }}
@@ -69,7 +77,7 @@ const Membership = () => {
             py: { xs: 4, md: 6 },
           }}
         >
-          {/* ⭐ GOLD REBRANDED HEADING */}
+          {/* ⭐ UNIFIED GOLD HEADING */}
           <Typography
             variant="h3"
             fontWeight={900}
@@ -80,24 +88,25 @@ const Membership = () => {
               letterSpacing: '1px',
               lineHeight: 1.2,
 
-              /* TRUE SACCO GOLD GRADIENT */
-              background: 'linear-gradient(to right, #FFD700, #FFF4B2)',
+              /* SACCO BRAND GOLD GRADIENT */
+              background: `linear-gradient(to right, ${BRAND.gold}, #FFD38A)`,
               WebkitBackgroundClip: 'text',
               color: 'transparent',
 
-              /* SOFT GOLD GLOW */
-              textShadow: '0px 0px 12px rgba(255,215,0,0.65)',
+              /* UNIFIED GOLD GLOW */
+              textShadow: `0px 0px 12px ${BRAND.gold}A6`, // A6 is approx 65% opacity
             }}
           >
             Join Us Today and Start Your Journey
           </Typography>
 
-          {/* ⭐ REBRANDED SUBHEADING (Warm Soft Gold) */}
+          {/* ⭐ UNIFIED SUBHEADING (Warm Soft Gold) */}
           <Typography
             variant="body1"
             sx={{
               mt: 2,
-              color: '#FFECA8', // very readable warm gold
+              color: BRAND.light, // Unified light color for readability
+              opacity: 0.9,
               fontSize: { xs: '1rem', md: '1.2rem' },
               lineHeight: 1.65,
               maxWidth: '600px',
@@ -112,7 +121,7 @@ const Membership = () => {
         </Box>
       </Box>
 
-      {/* Additional Sections */}
+      {/* Additional Sections (Now all unified) */}
       <MembershipInfo />
       <JoiningInstructions />
       <MembershipBenefits />
