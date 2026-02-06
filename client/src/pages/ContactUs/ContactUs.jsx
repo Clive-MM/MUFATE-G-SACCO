@@ -125,7 +125,12 @@ const ContactUs = () => {
           </Typography>
           <Typography sx={{
             color: BRAND.gold,
-            opacity: 0.7, fontSize: '0.85rem', mt: 1, textTransform: 'uppercase', letterSpacing: '1px'
+            opacity: 0.85,
+            fontSize: '0.85rem',
+            fontWeight: 600, // Added semi-bold weight
+            mt: 1,
+            textTransform: 'uppercase',
+            letterSpacing: '1px'
           }}>
             All Rights Reserved
           </Typography>
