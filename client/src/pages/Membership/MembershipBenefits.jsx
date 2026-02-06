@@ -1,6 +1,14 @@
 import React from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 
+// --- UNIFIED BRAND TOKENS ---
+const BRAND = {
+  gold: '#EC9B14',
+  dark: '#02150F',
+  light: '#F4F4F4',
+  textMuted: 'rgba(244, 244, 244, 0.6)',
+};
+
 const benefits = [
   'Secure and trusted savings platform.',
   'Access to affordable loans and affordable rates.',
@@ -14,8 +22,9 @@ const MembershipBenefits = () => {
     <Box
       sx={{
         width: '100%',
-        background: 'linear-gradient(to bottom, #011B0A, #012A12)', // DARK GREEN BRAND
-        color: '#FFECA8',
+        // Updated to use your unified BRAND.dark color
+        background: `linear-gradient(to bottom, ${BRAND.dark}, #03241A)`, 
+        color: BRAND.light,
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
         alignItems: 'center',
@@ -38,6 +47,8 @@ const MembershipBenefits = () => {
           height: { xs: '250px', md: 'calc(75vh - 96px)' },
           ml: 0,
           flexShrink: 0,
+          // Added a subtle gold border to tie the image into the theme
+          borderRight: { md: `1px solid ${BRAND.gold}33` } 
         }}
       >
         <Box
@@ -64,7 +75,7 @@ const MembershipBenefits = () => {
           gap: 2,
         }}
       >
-        {/* GOLDEN HEADING */}
+        {/* GOLDEN HEADING - Updated with BRAND.gold */}
         <Typography
           variant="h4"
           sx={{
@@ -72,10 +83,10 @@ const MembershipBenefits = () => {
             textTransform: 'uppercase',
             fontSize: { xs: '1.4rem', md: '2rem' },
             mb: 1,
-            background: 'linear-gradient(to right, #FFD700, #FFF4B2)',
+            background: `linear-gradient(to right, ${BRAND.gold}, #FFD38A)`,
             WebkitBackgroundClip: 'text',
             color: 'transparent',
-            textShadow: '0px 0px 10px rgba(255,215,0,0.4)',
+            textShadow: `0px 0px 10px ${BRAND.gold}66`, // Matches registration glow
           }}
         >
           Membership Benefits
@@ -84,17 +95,21 @@ const MembershipBenefits = () => {
         {/* BENEFITS LIST */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           {benefits.map((benefit, idx) => (
-            <Typography
-              key={idx}
-              sx={{
-                fontSize: { xs: '1rem', md: '1.15rem' },
-                lineHeight: 1.6,
-                color: '#FFECA8',
-                textShadow: '0px 0px 4px rgba(0,0,0,0.4)',
-              }}
-            >
-              {benefit}
-            </Typography>
+            <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              {/* Added a small gold bullet for extra brand alignment */}
+              <Box sx={{ width: 6, height: 6, bgcolor: BRAND.gold, borderRadius: '50%' }} />
+              <Typography
+                sx={{
+                  fontSize: { xs: '1rem', md: '1.15rem' },
+                  lineHeight: 1.6,
+                  color: BRAND.light,
+                  opacity: 0.9,
+                  textShadow: '0px 0px 4px rgba(0,0,0,0.4)',
+                }}
+              >
+                {benefit}
+              </Typography>
+            </Box>
           ))}
         </Box>
       </Box>
