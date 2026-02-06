@@ -29,13 +29,13 @@ const steps = [
 // --- UPDATED LAYOUT ---
 const layout = {
   FullName: { xs: 12, sm: 8, md: 8 },
-  Salutation: { xs: 12, sm: 4, md: 4 }, 
-  IDType: { xs: 12, sm: 6, md: 6 },     
+  Salutation: { xs: 12, sm: 4, md: 4 },
+  IDType: { xs: 12, sm: 6, md: 6 },
   IDNumber: { xs: 12, sm: 6, md: 6 },
   DOB: { xs: 12, sm: 6, md: 4 },
   MaritalStatus: { xs: 12, sm: 6, md: 4 },
   Gender: { xs: 12, sm: 6, md: 4 },
-  KRAPin: { xs: 12, sm: 12, md: 12 },   
+  KRAPin: { xs: 12, sm: 12, md: 12 },
   County: { xs: 12, sm: 6 },
   District: { xs: 12, sm: 6 },
   Division: { xs: 12, sm: 6 },
@@ -44,7 +44,7 @@ const layout = {
   PhysicalAddress: { xs: 12, sm: 6 },
   MobileNumber: { xs: 12, sm: 6 },
   AlternateMobileNumber: { xs: 12, sm: 6 },
-  Email: { xs: 12, sm: 12 },           
+  Email: { xs: 12, sm: 12 },
   Profession: { xs: 12, sm: 6 },
   ProfessionSector: { xs: 12, sm: 6 },
   NomineeName: { xs: 12, sm: 8 },
@@ -59,7 +59,7 @@ const megaInputStyle = {
     background: 'rgba(255,255,255,0.05)',
     borderRadius: '16px',
     border: 'none',
-    minHeight: '62px', 
+    minHeight: '62px',
     minWidth: '120px',
     transition: 'all 0.3s ease',
     '&:hover': { background: 'rgba(255,255,255,0.08)' },
@@ -69,7 +69,7 @@ const megaInputStyle = {
     },
     '&:before, &:after': { display: 'none' },
   },
-  '& label': { 
+  '& label': {
     color: BRAND.textMuted,
     fontSize: '0.95rem',
     whiteSpace: 'nowrap',
@@ -153,19 +153,19 @@ const MemberRegistration = () => {
   };
 
   const stepFields = [
-    ["FullName","Salutation","IDType","IDNumber","DOB","MaritalStatus","Gender","KRAPin"],
-    ["County","District","Division","Address","PostalCode","PhysicalAddress","MobileNumber","AlternateMobileNumber","Email","Profession","ProfessionSector"],
-    ["NomineeName","NomineeIDNumber","NomineePhoneNumber","NomineeRelation"],
+    ["FullName", "Salutation", "IDType", "IDNumber", "DOB", "MaritalStatus", "Gender", "KRAPin"],
+    ["County", "District", "Division", "Address", "PostalCode", "PhysicalAddress", "MobileNumber", "AlternateMobileNumber", "Email", "Profession", "ProfessionSector"],
+    ["NomineeName", "NomineeIDNumber", "NomineePhoneNumber", "NomineeRelation"],
   ];
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       minHeight: "100vh",
       /* --- APPLIED BOSA STYLING HERE --- */
-      pt: { xs: 12, md: 18 }, 
+      pt: { xs: 12, md: 18 },
       pb: { xs: 6, md: 8 },
       backgroundColor: BRAND.dark,
-      backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(236, 155, 20, 0.05) 0%, transparent 70%)' 
+      backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(236, 155, 20, 0.05) 0%, transparent 70%)'
     }}>
       <Container maxWidth="md">
         <AnimatePresence mode="wait">
@@ -302,17 +302,41 @@ const MemberRegistration = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+      <Box sx={{ py: 6, textAlign: 'center' }}>
+        <Typography
+          sx={{
+            color: BRAND.gold,
+            letterSpacing: '3px',
+            fontWeight: 900,
+            textTransform: 'uppercase',
+            fontSize: { xs: '0.9rem', md: '1.35rem' }
+          }}
+        >
+          GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+        </Typography>
+        <Typography sx={{
+          color: BRAND.gold,
+          opacity: 0.85,
+          fontSize: '0.85rem',
+          fontWeight: 600,
+          mt: 1,
+          textTransform: 'uppercase',
+          letterSpacing: '1px'
+        }}>
+          All Rights Reserved
+        </Typography>
+      </Box>
     </Box>
   );
 };
 
-const countiesInKenya = ["Baringo","Bomet","Bungoma","Busia","Elgeyo-Marakwet","Embu","Garissa","Homa Bay","Isiolo","Kajiado","Kakamega","Kericho","Kiambu","Kilifi","Kirinyaga","Kisii","Kisumu","Kitui","Kwale","Laikipia","Lamu","Machakos","Makueni","Mandera","Marsabit","Meru","Migori","Mombasa","Murang'a","Nairobi","Nakuru","Nandi","Narok","Nyamira","Nyandarua","Nyeri","Samburu","Siaya","Taita Taveta","Tana River","Tharaka-Nithi","Trans Nzoia","Turkana","Uasin Gishu","Vihiga","Wajir","West Pokot"];
+const countiesInKenya = ["Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu", "Garissa", "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho", "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui", "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera", "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi", "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua", "Nyeri", "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka-Nithi", "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"];
 const selectOptions = {
   IDType: ["ID Card", "Certificate of Incorp", "Passport"],
   MaritalStatus: ["Married", "Single", "Divorced", "Separated"],
   Gender: ["Male", "Female", "Others"],
   Salutation: ["Mr", "Ms", "Mrs", "Miss", "Dr", "Prof"],
-  NomineeRelation: ["Wife","Husband","Grandfather","Grandmother","Cousin","Brother","Sister","Friend","Father","Mother","Daughter","Son","Uncle","Aunt"],
+  NomineeRelation: ["Wife", "Husband", "Grandfather", "Grandmother", "Cousin", "Brother", "Sister", "Friend", "Father", "Mother", "Daughter", "Son", "Uncle", "Aunt"],
 };
 
 export default MemberRegistration;
