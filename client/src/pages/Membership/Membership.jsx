@@ -6,7 +6,7 @@ import JoiningInstructions from './JoiningInstructions';
 import MembershipBenefits from './MembershipBenefits';
 import Footer from '../../components/Footer';
 
-// --- UNIFIED BRAND TOKENS ---
+
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
@@ -18,7 +18,7 @@ const Membership = () => {
   return (
     <Box>
 
-      {/* HERO SECTION */}
+      
       <Box
         role="banner"
         aria-label="Membership Hero Section"
@@ -35,10 +35,9 @@ const Membership = () => {
           px: { xs: 2, md: 10 },
           textAlign: 'center',
 
-          /* TEXT SHOULD OVERLAY ABOVE EVERYTHING */
+         
           color: BRAND.light,
 
-          /* UNIFIED DARK OVERLAY - Using BRAND.dark */
           '&::before': {
             content: '""',
             position: 'absolute',
@@ -51,7 +50,7 @@ const Membership = () => {
             zIndex: 1,
           },
 
-          /* UNIFIED GOLD EDGE GLOW - Using BRAND.gold */
+       
           '&::after': {
             content: '""',
             position: 'absolute',
@@ -77,7 +76,7 @@ const Membership = () => {
             py: { xs: 4, md: 6 },
           }}
         >
-          {/* ⭐ UNIFIED GOLD HEADING */}
+          
           <Typography
             variant="h3"
             fontWeight={900}
@@ -88,31 +87,31 @@ const Membership = () => {
               letterSpacing: '1px',
               lineHeight: 1.2,
 
-              /* SACCO BRAND GOLD GRADIENT */
+             
               background: `linear-gradient(to right, ${BRAND.gold}, #FFD38A)`,
               WebkitBackgroundClip: 'text',
               color: 'transparent',
 
-              /* UNIFIED GOLD GLOW */
-              textShadow: `0px 0px 12px ${BRAND.gold}A6`, // A6 is approx 65% opacity
+         
+              textShadow: `0px 0px 12px ${BRAND.gold}A6`, 
             }}
           >
             Join Us Today and Start Your Journey
           </Typography>
 
-          {/* ⭐ UNIFIED SUBHEADING (Warm Soft Gold) */}
+          
           <Typography
             variant="body1"
             sx={{
               mt: 2,
-              color: BRAND.light, // Unified light color for readability
+              color: BRAND.light, 
               opacity: 0.9,
               fontSize: { xs: '1rem', md: '1.2rem' },
               lineHeight: 1.65,
               maxWidth: '600px',
               mx: 'auto',
 
-              /* Subtle shadow for readability */
+           
               textShadow: '0px 0px 6px rgba(0,0,0,0.55)',
             }}
           >
@@ -121,7 +120,7 @@ const Membership = () => {
         </Box>
       </Box>
 
-      {/* Additional Sections (Now all unified) */}
+  
       <MembershipInfo />
       <JoiningInstructions />
       <MembershipBenefits />

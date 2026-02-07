@@ -47,17 +47,28 @@ const Navbar = () => {
     [`& .${tooltipClasses.tooltip}`]: {
       backgroundColor: BRAND_DARK,
       color: BRAND_GOLD,
-      border: `1px solid ${BRAND_GOLD}`,
+      border: `1.5px solid ${BRAND_GOLD}`,
       fontSize: '0.75rem',
       fontWeight: 800,
       textTransform: 'uppercase',
-      letterSpacing: '1px',
-      padding: '8px 12px',
-      boxShadow: '0px 4px 15px rgba(236, 155, 20, 0.4)',
+      letterSpacing: '1.5px',
+      padding: '10px 16px',
+      borderRadius: '4px',
+      boxShadow: `0px 0px 15px rgba(236, 155, 20, 0.5)`,
+
+      animation: 'pulseGlow 2s infinite ease-in-out',
+      '@keyframes pulseGlow': {
+        '0%': { boxShadow: '0px 0px 5px rgba(236, 155, 20, 0.4)' },
+        '50%': { boxShadow: '0px 0px 20px rgba(236, 155, 20, 0.8)' },
+        '100%': { boxShadow: '0px 0px 5px rgba(236, 155, 20, 0.4)' },
+      },
     },
     [`& .${tooltipClasses.arrow}`]: {
-      color: BRAND_DARK,
-      '&:before': { border: `1px solid ${BRAND_GOLD}` },
+      color: BRAND_GOLD,
+      '&:before': {
+        border: `1px solid ${BRAND_GOLD}`,
+        backgroundColor: BRAND_DARK,
+      },
     },
   };
 
@@ -79,7 +90,7 @@ const Navbar = () => {
         { to: '/products/fosa', label: 'FOSA' },
         { to: '/products/bosa', label: 'BOSA' },
         { to: '/products/savings', label: 'Savings' },
-         { to: '/products/loanCalculator', label: 'Loan Calculator' }
+        { to: '/products/loanCalculator', label: 'Loan Calculator' }
       ]
     },
     { to: '/services', label: 'Services' },
@@ -172,7 +183,7 @@ const Navbar = () => {
   return (
     <AppBar position="fixed" elevation={0} sx={{ background: 'rgba(2, 21, 15, 0.96)', borderBottom: `1px solid rgba(236, 155, 20, 0.2)`, zIndex: theme.zIndex.appBar }}>
       <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.6, md: 1 }, px: { md: 4 }, minHeight: { xs: 80, md: 100 } }}>
-        
+
         {/* LOGO AREA */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Link component={RouterLink} to="/" underline="none" sx={{ display: 'flex', alignItems: 'center', color: 'inherit' }}>
@@ -181,7 +192,7 @@ const Navbar = () => {
             <Stack spacing={0} sx={{ ml: 1.5 }}>
               <Typography sx={{ fontSize: { xs: '0.8rem', md: '1rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase' }}>Golden Generation</Typography>
               <Typography sx={{ fontSize: { xs: '0.8rem', md: '0.9rem' }, fontWeight: 900, color: BRAND_GOLD, textTransform: 'uppercase' }}>DT SACCO</Typography>
-              <Typography sx={{ fontSize: { xs: '0.65rem', md: '0.9rem' }, fontWeight: 900, color:'#FFFFFF', textTransform: 'uppercase' }}>Walking With You</Typography>
+              <Typography sx={{ fontSize: { xs: '0.65rem', md: '0.9rem' }, fontWeight: 900, color: '#FFFFFF', textTransform: 'uppercase' }}>Walking With You</Typography>
             </Stack>
           </Link>
         </Box>
@@ -197,10 +208,35 @@ const Navbar = () => {
               )
             ))}
             <Button component={RouterLink} to="/customer_registration" sx={premiumButtonStyle}>Register</Button>
-            
+
             {/* Desktop Phone Icon */}
-            <Tooltip title="Contact Us" arrow placement="bottom" sx={tooltipStyles}>
-              <IconButton onClick={handleContactClick} sx={{ color: BRAND_GOLD, border: `2px solid ${BRAND_GOLD}`, ml: 2 }}>
+            <Tooltip
+              title="Contact Us"
+              arrow
+              placement="bottom"
+              slotProps={{
+                popper: {
+                  modifiers: [{ name: 'offset', options: { offset: [0, 8] } }],
+                },
+              }}
+              sx={tooltipStyles}
+            >
+              <IconButton
+                onClick={handleContactClick}
+                component={motion.button} // Add motion here
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
+                sx={{
+                  color: BRAND_GOLD,
+                  border: `2px solid ${BRAND_GOLD}`,
+                  ml: 2,
+                  transition: '0.3s',
+                  '&:hover': {
+                    backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                    boxShadow: `0 0 10px ${BRAND_GOLD}`,
+                  }
+                }}
+              >
                 <PhoneIcon sx={{ fontSize: '1.3rem' }} />
               </IconButton>
             </Tooltip>
