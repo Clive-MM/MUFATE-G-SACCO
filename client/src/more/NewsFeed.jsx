@@ -3,10 +3,12 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Box, Typography, Container, Grid, Card, CardContent, CardMedia,
-    Tabs, Tab, Stack, TextField, Button, CardActionArea, CircularProgress
+    Tabs, Tab, Stack, TextField, Button, CardActionArea, CircularProgress,
+    IconButton // Added Import
 } from '@mui/material';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HomeIcon from '@mui/icons-material/Home';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'; // Added Import
 
 const BRAND = {
     gold: "#EC9B14",
@@ -27,6 +29,11 @@ const NewsFeed = () => {
     useEffect(() => {
         fetchPosts(CATEGORIES[activeTab]);
     }, [activeTab]);
+
+    // --- Added Functionality ---
+    const handleScrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     const fetchPosts = (category) => {
         axios.get(`https://mufate-g-sacco.onrender.com/news/posts?category=${category}`)
@@ -62,121 +69,118 @@ const NewsFeed = () => {
     };
 
     const PostCard = ({ post }) => {
-    const [expanded, setExpanded] = useState(false);
-    
-    // Strict check for the Financial Reports tab (Index 1)
-    const isReport = activeTab === 1;
+        const [expanded, setExpanded] = useState(false);
+        const isReport = activeTab === 1;
 
-    return (
-        <Grid item xs={12} sm={6} xl={4}>
-            <motion.div
-                layout
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-            >
-                <Card sx={{
-                    maxWidth: { xs: '100%', md: 420 },
-                    width: '100%',
-                    bgcolor: BRAND.cardBg,
-                    borderRadius: '16px',
-                    border: `1.5px solid rgba(236, 155, 20, 0.15)`,
-                    height: 'auto',
-                    mx: 'auto',
-                    transition: 'all 0.3s ease-in-out',
-                    '&:hover': {
-                        borderColor: BRAND.gold,
-                        boxShadow: `0 0 20px ${BRAND.gold}44`
-                    }
-                }}>
-                    <CardActionArea 
-                        onClick={() => !isReport && setExpanded(!expanded)} 
-                        sx={{ alignItems: 'flex-start' }}
-                    >
-                        <CardMedia
-                            component="img"
-                            sx={{
-                                height: { xs: 300, sm: 280, md: 370 },
-                                objectFit: 'cover',
-                                p: 0,
-                                bgcolor: 'rgba(255,255,255,0.03)',
-                                objectPosition: 'center'
-                            }}
-                            image={post.CoverImage || 'https://via.placeholder.com/320x140'}
-                        />
-                        <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
-                            <Typography variant="h6" sx={{
-                                color: '#FFF',
-                                fontWeight: 800,
-                                fontSize: { xs: '1rem', md: '1.1rem' },
-                                mb: 1.5
-                            }}>
-                                {post.Title}
-                            </Typography>
-
-                            <Typography variant="body2" sx={{
-                                color: BRAND.textMuted,
-                                fontSize: '0.85rem',
-                                lineHeight: 1.6,
-                                mb: 1,
-                                display: (expanded || isReport) ? 'block' : '-webkit-box',
-                                WebkitLineClamp: expanded ? 'none' : 3,
-                                WebkitBoxOrient: 'vertical',
-                                overflow: 'hidden',
-                            }}>
-                                {post.Content.replace(/<[^>]*>/g, '')}
-                            </Typography>
-
-                            {/* Conditional Download Functionality for Reports */}
-                            {isReport ? (
-                                <Button
-                                    variant="contained"
-                                    fullWidth
-                                    href={post.CoverImage} 
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    download
-                                    sx={{
-                                        bgcolor: BRAND.gold,
-                                        color: BRAND.dark,
-                                        fontWeight: 900,
-                                        my: 2,
-                                        '&:hover': { bgcolor: '#FFF' },
-                                        textTransform: 'uppercase'
-                                    }}
-                                >
-                                    Download Report
-                                </Button>
-                            ) : (
-                                <Typography sx={{ 
-                                    color: BRAND.gold, 
-                                    fontSize: '0.75rem', 
-                                    fontWeight: 800, 
-                                    mb: 3,
-                                    cursor: 'pointer',
-                                    textTransform: 'uppercase'
+        return (
+            <Grid item xs={12} sm={6} xl={4}>
+                <motion.div
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <Card sx={{
+                        maxWidth: { xs: '100%', md: 420 },
+                        width: '100%',
+                        bgcolor: BRAND.cardBg,
+                        borderRadius: '16px',
+                        border: `1.5px solid rgba(236, 155, 20, 0.15)`,
+                        height: 'auto',
+                        mx: 'auto',
+                        transition: 'all 0.3s ease-in-out',
+                        '&:hover': {
+                            borderColor: BRAND.gold,
+                            boxShadow: `0 0 20px ${BRAND.gold}44`
+                        }
+                    }}>
+                        <CardActionArea 
+                            onClick={() => !isReport && setExpanded(!expanded)} 
+                            sx={{ alignItems: 'flex-start' }}
+                        >
+                            <CardMedia
+                                component="img"
+                                sx={{
+                                    height: { xs: 300, sm: 280, md: 370 },
+                                    objectFit: 'cover',
+                                    p: 0,
+                                    bgcolor: 'rgba(255,255,255,0.03)',
+                                    objectPosition: 'center'
+                                }}
+                                image={post.CoverImage || 'https://via.placeholder.com/320x140'}
+                            />
+                            <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
+                                <Typography variant="h6" sx={{
+                                    color: '#FFF',
+                                    fontWeight: 800,
+                                    fontSize: { xs: '1rem', md: '1.1rem' },
+                                    mb: 1.5
                                 }}>
-                                    {expanded ? "Show Less ▲" : "Read More ▼"}
+                                    {post.Title}
                                 </Typography>
-                            )}
 
-                            <Stack direction="row" justifyContent="space-between" alignItems="center">
-                                <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
-                                    <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
-                                    <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
-                                        {formatDate(post.DatePosted)}
+                                <Typography variant="body2" sx={{
+                                    color: BRAND.textMuted,
+                                    fontSize: '0.85rem',
+                                    lineHeight: 1.6,
+                                    mb: 1,
+                                    display: (expanded || isReport) ? 'block' : '-webkit-box',
+                                    WebkitLineClamp: expanded ? 'none' : 3,
+                                    WebkitBoxOrient: 'vertical',
+                                    overflow: 'hidden',
+                                }}>
+                                    {post.Content.replace(/<[^>]*>/g, '')}
+                                </Typography>
+
+                                {isReport ? (
+                                    <Button
+                                        variant="contained"
+                                        fullWidth
+                                        href={post.CoverImage} 
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        download
+                                        sx={{
+                                            bgcolor: BRAND.gold,
+                                            color: BRAND.dark,
+                                            fontWeight: 900,
+                                            my: 2,
+                                            '&:hover': { bgcolor: '#FFF' },
+                                            textTransform: 'uppercase'
+                                        }}
+                                    >
+                                        Download Report
+                                    </Button>
+                                ) : (
+                                    <Typography sx={{ 
+                                        color: BRAND.gold, 
+                                        fontSize: '0.75rem', 
+                                        fontWeight: 800, 
+                                        mb: 3,
+                                        cursor: 'pointer',
+                                        textTransform: 'uppercase'
+                                    }}>
+                                        {expanded ? "Show Less ▲" : "Read More ▼"}
                                     </Typography>
+                                )}
+
+                                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                                    <Stack direction="row" spacing={0.5} alignItems="center" sx={{ color: BRAND.gold }}>
+                                        <CalendarMonthIcon sx={{ fontSize: '0.9rem' }} />
+                                        <Typography variant="caption" sx={{ fontWeight: 800, letterSpacing: 0.5 }}>
+                                            {formatDate(post.DatePosted)}
+                                        </Typography>
+                                    </Stack>
+                                    <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
                                 </Stack>
-                                <HomeIcon sx={{ fontSize: '1.1rem', color: BRAND.gold }} />
-                            </Stack>
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            </motion.div>
-        </Grid>
-    );
-};
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </motion.div>
+            </Grid>
+        );
+    };
 
     return (
         <Container maxWidth="xl" sx={{ pb: 10, mt: 4, px: { xs: 2, md: 4 } }}>
@@ -200,7 +204,6 @@ const NewsFeed = () => {
                 </Tabs>
             </Box>
 
-            {/* Layout Change: Column on mobile (xs), Row on Desktop (lg) */}
             <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 4, alignItems: 'flex-start' }}>
                 <Box sx={{ flex: 1, width: '100%' }}>
                     <Grid container spacing={3}>
@@ -212,7 +215,6 @@ const NewsFeed = () => {
                     </Grid>
                 </Box>
 
-                {/* Sidebar: Sticky on desktop, static full-width on mobile */}
                 <Box sx={{
                     width: { xs: '100%', lg: '320px' },
                     minWidth: { lg: '260px' },
@@ -291,18 +293,60 @@ const NewsFeed = () => {
                 </Box>
             </Box>
 
-            <Box sx={{ py: 6, textAlign: 'center', mt: 4 }}>
-                <Typography
-                    sx={{
-                        color: BRAND.gold,
-                        letterSpacing: '3px',
-                        fontWeight: 900,
-                        textTransform: 'uppercase',
-                        fontSize: { xs: '0.8rem', md: '1.35rem' }
-                    }}
-                >
-                    GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
-                </Typography>
+            {/* --- Updated Footer Section --- */}
+            <Box sx={{ py: 6, textAlign: 'center', position: 'relative', px: { xs: 2, md: 4 }, mt: 4 }}>
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative'
+                }}>
+                    <Box>
+                        <Typography
+                            sx={{
+                                color: BRAND.gold,
+                                letterSpacing: '3px',
+                                fontWeight: 900,
+                                textTransform: 'uppercase',
+                                fontSize: { xs: '0.9rem', md: '1.35rem' }
+                            }}
+                        >
+                            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+                        </Typography>
+
+                        <Typography sx={{
+                            color: BRAND.gold,
+                            opacity: 0.85,
+                            fontSize: '0.85rem',
+                            fontWeight: 600,
+                            mt: 1,
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px'
+                        }}>
+                            All Rights Reserved
+                        </Typography>
+                    </Box>
+
+                    <IconButton
+                        onClick={handleScrollToTop}
+                        component={motion.button}
+                        whileHover={{ y: -5 }}
+                        whileTap={{ scale: 0.9 }}
+                        sx={{
+                            position: 'absolute',
+                            right: 0,
+                            color: BRAND.gold,
+                            border: `2px solid ${BRAND.gold}`,
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                                backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                                boxShadow: `0 0 15px ${BRAND.gold}`,
+                            },
+                        }}
+                    >
+                        <ExpandLessIcon sx={{ fontSize: '2rem' }} />
+                    </IconButton>
+                </Box>
             </Box>
         </Container>
     );
