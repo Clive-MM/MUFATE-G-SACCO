@@ -16,9 +16,12 @@ import "lightgallery/css/lg-thumbnail.css";
 // Material UI
 import {
   Container, Typography, Grid, CardMedia, CircularProgress,
-  Box, Stack, useTheme, useMediaQuery
+  Box, Stack, useTheme, useMediaQuery, IconButton // Added IconButton
 } from "@mui/material";
-import { AutoAwesome as SparkleIcon } from "@mui/icons-material";
+import { 
+  AutoAwesome as SparkleIcon, 
+  ExpandLess as ExpandLessIcon // Added ExpandLessIcon
+} from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 
 const BRAND = {
@@ -48,7 +51,6 @@ const GlassCard = styled(motion.div)(({ theme }) => ({
       transform: "scale(1.1)" 
     }
   },
-  // On mobile, keep overlay slightly visible so users see the titles
   [theme.breakpoints.down('sm')]: {
     "& .card-overlay": { 
       opacity: 0.9, 
@@ -74,6 +76,11 @@ const SaccoGallery = () => {
       .catch(() => setLoading(false));
   }, []);
 
+  // --- Scroll Logic ---
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (loading) return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", bgcolor: BRAND.dark }}>
       <CircularProgress sx={{ color: BRAND.gold }} />
@@ -92,7 +99,7 @@ const SaccoGallery = () => {
       backgroundImage: `url(https://res.cloudinary.com/djydkcx01/image/upload/v1768163060/camera_4_si2lla.png)`,
       backgroundSize: "cover", 
       backgroundPosition: "center", 
-      backgroundAttachment: isMobile ? "scroll" : "fixed", // Performance boost for mobile
+      backgroundAttachment: isMobile ? "scroll" : "fixed",
       "&::before": {
         content: '""', position: "absolute", inset: 0,
         background: `radial-gradient(circle at center, rgba(2, 21, 15, 0.4) 0%, rgba(2, 21, 15, 0.9) 100%)`,
@@ -157,7 +164,7 @@ const SaccoGallery = () => {
                           display: 'flex', 
                           flexDirection: 'column', 
                           justifyContent: 'flex-end',
-                          transform: { xs: "none", md: "translateY(30px)" }, // Disable slide-up on mobile for better visibility
+                          transform: { xs: "none", md: "translateY(30px)" },
                           opacity: { xs: 1, md: 0 }, 
                           transition: "0.4s ease"
                         }}>
@@ -177,20 +184,63 @@ const SaccoGallery = () => {
           </Grid>
         </LightGallery>
 
-        {/* Brand Footer */}
-        <Box sx={{ py: 6, textAlign: 'center', mt: 4 }}>
-          <Typography
-            sx={{
-              color: BRAND.gold,
-              letterSpacing: isMobile ? '2px' : '3px',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              fontSize: { xs: '0.65rem', md: '1.1rem' }
-            }}
-          >
-            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
-          </Typography>
+        {/* --- Back to Top Footer --- */}
+        <Box sx={{ py: 6, position: "relative", mt: 4 }}>
+          <Box sx={{ 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center", 
+            position: "relative",
+            px: { xs: 1, md: 2 } 
+          }}>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography
+                sx={{
+                  color: BRAND.gold,
+                  letterSpacing: isMobile ? '2px' : '3px',
+                  fontWeight: 900,
+                  textTransform: 'uppercase',
+                  fontSize: { xs: '0.65rem', md: '1.1rem' }
+                }}
+              >
+                GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+              </Typography>
+              <Typography sx={{
+                color: BRAND.gold,
+                opacity: 0.7,
+                fontSize: { xs: '0.55rem', md: '0.75rem' },
+                fontWeight: 600,
+                mt: 0.5,
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
+              }}>
+                All Rights Reserved
+              </Typography>
+            </Box>
+
+            <IconButton
+              onClick={handleScrollToTop}
+              component={motion.button}
+              whileHover={{ y: -5 }}
+              whileTap={{ scale: 0.9 }}
+              sx={{
+                position: 'absolute',
+                right: 0,
+                color: BRAND.gold,
+                border: `1.5px solid ${BRAND.gold}`,
+                p: { xs: 0.5, md: 1 },
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                  boxShadow: `0 0 15px ${BRAND.gold}66`,
+                },
+              }}
+            >
+              <ExpandLessIcon sx={{ fontSize: { xs: '1.5rem', md: '2rem' } }} />
+            </IconButton>
+          </Box>
         </Box>
+
       </Container>
     </Box>
   );
