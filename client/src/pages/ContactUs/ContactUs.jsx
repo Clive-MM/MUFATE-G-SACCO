@@ -13,6 +13,12 @@ const ContactUs = () => {
   const theme = useTheme();
   const isSmallPhone = useMediaQuery('(max-width:360px)');
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
 
   return (
     <Box
@@ -21,7 +27,7 @@ const ContactUs = () => {
         minHeight: '100vh',
         position: 'relative',
         overflowX: 'hidden',
-        
+
         backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
         backgroundRepeat: 'no-repeat',
         backgroundSize: { xs: 'contain', md: 'cover' },
@@ -29,7 +35,7 @@ const ContactUs = () => {
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       }}
     >
-     
+
       <Box
         sx={{
           position: 'fixed',
@@ -43,7 +49,7 @@ const ContactUs = () => {
 
       <Box sx={{ position: 'relative', zIndex: 2 }}>
 
-       
+
         <Box
           sx={{
             height: { xs: '40vh', md: '65vh' },
@@ -97,7 +103,7 @@ const ContactUs = () => {
           </Container>
         </Box>
 
-        
+
         <Box sx={{
           mt: { xs: 2, md: -15 },
           pb: 10,
@@ -106,8 +112,28 @@ const ContactUs = () => {
           <ContactDetails />
         </Box>
 
-    
-        <Box sx={{ py: 6, textAlign: 'center' }}>
+
+        <Box sx={{ py: 6, textAlign: 'center', position: 'relative' }}>
+          {/* The Back to Top Arrow */}
+          <IconButton
+            onClick={handleScrollToTop}
+            component={motion.button}
+            whileHover={{ y: -5 }} // Subtle upward jump on hover
+            whileTap={{ scale: 0.9 }}
+            sx={{
+              mb: 3, // Space between arrow and text
+              color: BRAND.gold,
+              border: `2px solid ${BRAND.gold}`,
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                boxShadow: `0 0 15px ${BRAND.gold}`,
+              },
+            }}
+          >
+            <ExpandLessIcon sx={{ fontSize: '2rem' }} />
+          </IconButton>
+
           <Typography
             sx={{
               color: BRAND.gold,
@@ -119,11 +145,12 @@ const ContactUs = () => {
           >
             GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
           </Typography>
+
           <Typography sx={{
             color: BRAND.gold,
             opacity: 0.85,
             fontSize: '0.85rem',
-            fontWeight: 600, 
+            fontWeight: 600,
             mt: 1,
             textTransform: 'uppercase',
             letterSpacing: '1px'
