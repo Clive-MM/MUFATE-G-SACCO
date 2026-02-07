@@ -1,10 +1,10 @@
 import React from 'react';
-import { 
-  Box, 
-  Typography, 
-  Container, 
-  useMediaQuery, 
-  useTheme, 
+import {
+  Box,
+  Typography,
+  Container,
+  useMediaQuery,
+  useTheme,
   IconButton // Added this
 } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'; // Added this
@@ -120,49 +120,63 @@ const ContactUs = () => {
         </Box>
 
         {/* Footer Section with Back to Top */}
-        <Box sx={{ py: 6, textAlign: 'center', position: 'relative' }}>
-          <IconButton
-            onClick={handleScrollToTop}
-            component={motion.button}
-            whileHover={{ y: -5 }}
-            whileTap={{ scale: 0.9 }}
-            sx={{
-              mb: 3,
-              color: BRAND.gold,
-              border: `2px solid ${BRAND.gold}`,
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                backgroundColor: 'rgba(236, 155, 20, 0.1)',
-                boxShadow: `0 0 15px ${BRAND.gold}`,
-              },
-            }}
-          >
-            <ExpandLessIcon sx={{ fontSize: '2rem' }} />
-          </IconButton>
-
-          <Typography
-            sx={{
-              color: BRAND.gold,
-              letterSpacing: '3px',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              fontSize: { xs: '0.9rem', md: '1.35rem' }
-            }}
-          >
-            GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
-          </Typography>
-
-          <Typography sx={{
-            color: BRAND.gold,
-            opacity: 0.85,
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            mt: 1,
-            textTransform: 'uppercase',
-            letterSpacing: '1px'
+        <Box sx={{ py: 6, textAlign: 'center', position: 'relative', px: { xs: 2, md: 4 } }}>
+          {/* Flex container to keep text centered while button is pushed far right */}
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative'
           }}>
-            All Rights Reserved
-          </Typography>
+
+            {/* TYPOGRAPHY GROUP */}
+            <Box>
+              <Typography
+                sx={{
+                  color: BRAND.gold,
+                  letterSpacing: '3px',
+                  fontWeight: 900,
+                  textTransform: 'uppercase',
+                  fontSize: { xs: '0.9rem', md: '1.35rem' }
+                }}
+              >
+                GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+              </Typography>
+
+              <Typography sx={{
+                color: BRAND.gold,
+                opacity: 0.85,
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                mt: 1,
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
+              }}>
+                All Rights Reserved
+              </Typography>
+            </Box>
+
+            {/* BACK TO TOP ARROW - Positioned at far right */}
+            <IconButton
+              onClick={handleScrollToTop}
+              component={motion.button}
+              whileHover={{ y: -5 }}
+              whileTap={{ scale: 0.9 }}
+              sx={{
+                position: 'absolute',
+                right: 0, // Pushes it to the far right margin
+                color: BRAND.gold,
+                border: `2px solid ${BRAND.gold}`,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                  boxShadow: `0 0 15px ${BRAND.gold}`,
+                },
+              }}
+            >
+              <ExpandLessIcon sx={{ fontSize: '2rem' }} />
+            </IconButton>
+          </Box>
         </Box>
       </Box>
     </Box>
