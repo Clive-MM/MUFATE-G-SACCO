@@ -1,5 +1,13 @@
 import React from 'react';
-import { Box, Typography, Container, useMediaQuery, useTheme } from '@mui/material';
+import { 
+  Box, 
+  Typography, 
+  Container, 
+  useMediaQuery, 
+  useTheme, 
+  IconButton // Added this
+} from '@mui/material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'; // Added this
 import { motion } from 'framer-motion';
 import ContactDetails from './ContactDetails';
 
@@ -13,6 +21,7 @@ const ContactUs = () => {
   const theme = useTheme();
   const isSmallPhone = useMediaQuery('(max-width:360px)');
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const handleScrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -27,7 +36,6 @@ const ContactUs = () => {
         minHeight: '100vh',
         position: 'relative',
         overflowX: 'hidden',
-
         backgroundImage: 'url(https://res.cloudinary.com/djydkcx01/image/upload/v1755499112/ChatGPT_Image_Aug_18_2025_09_37_29_AM_qzkjzi.png)',
         backgroundRepeat: 'no-repeat',
         backgroundSize: { xs: 'contain', md: 'cover' },
@@ -35,7 +43,7 @@ const ContactUs = () => {
         backgroundAttachment: isMobile ? 'scroll' : 'fixed',
       }}
     >
-
+      {/* Background Overlay */}
       <Box
         sx={{
           position: 'fixed',
@@ -48,8 +56,7 @@ const ContactUs = () => {
       />
 
       <Box sx={{ position: 'relative', zIndex: 2 }}>
-
-
+        {/* Header Section */}
         <Box
           sx={{
             height: { xs: '40vh', md: '65vh' },
@@ -103,7 +110,7 @@ const ContactUs = () => {
           </Container>
         </Box>
 
-
+        {/* Contact Details Section */}
         <Box sx={{
           mt: { xs: 2, md: -15 },
           pb: 10,
@@ -112,16 +119,15 @@ const ContactUs = () => {
           <ContactDetails />
         </Box>
 
-
+        {/* Footer Section with Back to Top */}
         <Box sx={{ py: 6, textAlign: 'center', position: 'relative' }}>
-          {/* The Back to Top Arrow */}
           <IconButton
             onClick={handleScrollToTop}
             component={motion.button}
-            whileHover={{ y: -5 }} // Subtle upward jump on hover
+            whileHover={{ y: -5 }}
             whileTap={{ scale: 0.9 }}
             sx={{
-              mb: 3, // Space between arrow and text
+              mb: 3,
               color: BRAND.gold,
               border: `2px solid ${BRAND.gold}`,
               transition: 'all 0.3s ease',
