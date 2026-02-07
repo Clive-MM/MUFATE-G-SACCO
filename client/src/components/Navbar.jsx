@@ -55,7 +55,6 @@ const Navbar = () => {
       padding: '10px 16px',
       borderRadius: '4px',
       boxShadow: `0px 0px 15px rgba(236, 155, 20, 0.5)`,
-
       animation: 'pulseGlow 2s infinite ease-in-out',
       '@keyframes pulseGlow': {
         '0%': { boxShadow: '0px 0px 5px rgba(236, 155, 20, 0.4)' },
@@ -216,29 +215,30 @@ const Navbar = () => {
               placement="bottom"
               slotProps={{
                 popper: {
-                  modifiers: [{ name: 'offset', options: { offset: [0, 8] } }],
+                  modifiers: [{ name: 'offset', options: { offset: [0, 12] } }],
                 },
               }}
               sx={tooltipStyles}
             >
-              <IconButton
-                onClick={handleContactClick}
-                component={motion.button} // Add motion here
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-                sx={{
-                  color: BRAND_GOLD,
-                  border: `2px solid ${BRAND_GOLD}`,
-                  ml: 2,
-                  transition: '0.3s',
-                  '&:hover': {
-                    backgroundColor: 'rgba(236, 155, 20, 0.1)',
-                    boxShadow: `0 0 10px ${BRAND_GOLD}`,
-                  }
-                }}
-              >
-                <PhoneIcon sx={{ fontSize: '1.3rem' }} />
-              </IconButton>
+              <Box sx={{ ml: 2 }}> {/* Wrapper to ensure style application */}
+                <IconButton
+                  onClick={handleContactClick}
+                  component={motion.button}
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  whileTap={{ scale: 0.9 }}
+                  sx={{
+                    color: BRAND_GOLD,
+                    border: `2px solid ${BRAND_GOLD}`,
+                    transition: '0.3s',
+                    '&:hover': {
+                      backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                      boxShadow: `0 0 12px ${BRAND_GOLD}`,
+                    }
+                  }}
+                >
+                  <PhoneIcon sx={{ fontSize: '1.3rem' }} />
+                </IconButton>
+              </Box>
             </Tooltip>
           </Stack>
         ) : (
@@ -281,7 +281,6 @@ const Navbar = () => {
               </React.Fragment>
             ))}
 
-            {/* MOBILE CONTACT LINK (Inside the list like you wanted) */}
             <ListItemButton onClick={handleContactClick} sx={{ mt: 2, borderTop: `1px solid rgba(236, 155, 20, 0.1)` }}>
               <ListItemIcon sx={{ minWidth: 40 }}><PhoneIcon sx={{ color: BRAND_GOLD }} /></ListItemIcon>
               <ListItemText primary="Contact Us" primaryTypographyProps={{ sx: { fontWeight: 700, color: BRAND_GOLD } }} />
