@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Typography, Grid, Paper, Container } from '@mui/material';
+import { Box, Typography, Grid, Paper, Container, IconButton } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const BRAND = {
   gold: '#EC9B14',
@@ -11,7 +12,6 @@ const BRAND = {
   textMuted: 'rgba(244, 244, 244, 0.7)',
 };
 
-// Defined video data to avoid unused 'setVideos' error
 const VIDEO_DATA = [
   { id: 1, title: 'Annual Special Delegate Meeting 2026', category: 'OFFICIAL EVENT' },
   { id: 2, title: 'Member Success Stories', category: 'TESTIMONIALS' },
@@ -19,6 +19,11 @@ const VIDEO_DATA = [
 ];
 
 const Videos = () => {
+  // Back to top logic
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <Box sx={{ 
       bgcolor: BRAND.dark, 
@@ -27,7 +32,8 @@ const Videos = () => {
       pb: 12 
     }}>
       <Container maxWidth="xl">
-        <Box sx={{ mb: 8, textAlign: { xs: 'center', md: 'left' } }}>
+        {/* Adjusted Header: Centered Position */}
+        <Box sx={{ mb: 8, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -55,7 +61,8 @@ const Videos = () => {
                 fontWeight: 300,
                 maxWidth: '800px',
                 lineHeight: 1.8,
-                fontSize: { xs: '1rem', md: '1.2rem' }
+                fontSize: { xs: '1rem', md: '1.2rem' },
+                mx: 'auto' // Ensures horizontal centering within the flex box
               }}
             >
               Experience the Golden Generation journey. Watch our latest highlights, 
@@ -64,6 +71,7 @@ const Videos = () => {
           </motion.div>
         </Box>
 
+        {/* Video Grid */}
         <Grid container spacing={5}>
           <AnimatePresence>
             {VIDEO_DATA.map((video, index) => (
@@ -148,6 +156,66 @@ const Videos = () => {
             ))}
           </AnimatePresence>
         </Grid>
+
+        {/* --- Footer Section with Back to Top --- */}
+        <Box sx={{ py: 6, mt: 8, position: 'relative', px: { xs: 2, md: 4 } }}>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative'
+          }}>
+            {/* TYPOGRAPHY GROUP */}
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography
+                sx={{
+                  color: BRAND.gold,
+                  letterSpacing: '3px',
+                  fontWeight: 900,
+                  textTransform: 'uppercase',
+                  fontSize: { xs: '0.9rem', md: '1.35rem' }
+                }}
+              >
+                GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
+              </Typography>
+              <Typography
+                sx={{
+                  color: BRAND.gold,
+                  opacity: 0.85,
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  mt: 1,
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px'
+                }}>
+                All Rights Reserved
+              </Typography>
+            </Box>
+
+            {/* BACK TO TOP ARROW */}
+            <IconButton
+              onClick={handleScrollToTop}
+              component={motion.button}
+              whileHover={{ y: -5 }}
+              whileTap={{ scale: 0.9 }}
+              sx={{
+                position: 'absolute',
+                right: 0,
+                color: BRAND.gold,
+                border: `2px solid ${BRAND.gold}`,
+                p: { xs: 0.5, md: 1 },
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                  boxShadow: `0 0 15px ${BRAND.gold}`,
+                },
+              }}
+            >
+              <ExpandLessIcon sx={{ fontSize: '2rem' }} />
+            </IconButton>
+          </Box>
+        </Box>
+
       </Container>
     </Box>
   );
