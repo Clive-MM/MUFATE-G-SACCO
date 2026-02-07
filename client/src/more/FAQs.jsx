@@ -10,9 +10,11 @@ import {
 import axios from 'axios';
 import Footer from '../components/Footer';
 
-const GOLD = '#FFD700';
-const LIGHT_GOLD = '#FFEFA8';
-const DEEP_GREEN = '#004225';
+// Updated constants to match Footer BRAND colors exactly
+const BRAND_GOLD = '#EC9B14';
+const BRAND_DARK = '#02150F';
+const BRAND_TEXT_LIGHT = '#F4F4F4';
+const BRAND_TEXT_MUTED = 'rgba(244, 244, 244, 0.6)';
 
 const FAQs = () => {
   const [faqs, setFaqs] = useState([]);
@@ -36,18 +38,20 @@ const FAQs = () => {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        background: `linear-gradient(135deg, #02160c 0%, ${DEEP_GREEN} 45%, #001009 100%)`,
+        // Background matches footer color exactly
+        backgroundColor: BRAND_DARK,
       }}
     >
       <Card
         sx={{
           m: 0,
           borderRadius: 0,
-          boxShadow: 6,
+          boxShadow: 0,
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          height: { xs: 'auto', md: '70vh' },
+          height: { xs: 'auto', md: '75vh' }, // Slightly increased to fit content
           backgroundColor: 'transparent',
+          borderBottom: `1px solid rgba(255,255,255,0.05)`,
         }}
       >
         {/* FAQ Section */}
@@ -55,29 +59,27 @@ const FAQs = () => {
           sx={{
             flex: 1,
             px: { xs: 2.5, sm: 3, md: 5 },
-            py: { xs: 2.5, sm: 3, md: 4 },
+            py: { xs: 5, sm: 6, md: 8 },
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            background: 'rgba(0, 0, 0, 0.45)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            borderRight: { xs: 'none', md: `1px solid rgba(255, 215, 0, 0.25)` },
+            background: BRAND_DARK,
+            borderRight: { xs: 'none', md: `1px solid rgba(255, 255, 255, 0.05)` },
           }}
         >
           <Typography
             variant={isMobile ? 'h5' : 'h4'}
             sx={{
-              fontWeight: 800,
-              mb: 3,
-              color: GOLD,
+              fontWeight: 900, // Matches footer weight
+              mb: 4,
+              color: BRAND_GOLD,
               textAlign: isMobile ? 'center' : 'left',
-              textShadow: '0 0 10px rgba(0,0,0,0.8)',
-              letterSpacing: '0.03em',
+              letterSpacing: '2px', // Matches footer letter spacing
+              textTransform: 'uppercase',
             }}
           >
-            FREQUENTLY ASKED QUESTIONS
+            Frequently Asked Questions
           </Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
@@ -87,42 +89,39 @@ const FAQs = () => {
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 sx={{
-                  p: 1.8,
-                  borderRadius: '12px',
+                  p: 2,
+                  borderRadius: '8px',
                   backgroundColor:
                     hoveredIndex === index
-                      ? 'rgba(255, 215, 0, 0.08)'
+                      ? 'rgba(236, 155, 20, 0.05)'
                       : 'transparent',
                   border:
                     hoveredIndex === index
-                      ? `1px solid rgba(255, 215, 0, 0.4)`
-                      : '1px solid rgba(255,255,255,0.06)',
-                  boxShadow:
-                    hoveredIndex === index
-                      ? '0 0 18px rgba(0,0,0,0.7)'
-                      : 'none',
-                  transition: 'all 0.25s ease-in-out',
+                      ? `1px solid ${BRAND_GOLD}`
+                      : '1px solid rgba(255,255,255,0.05)',
+                  transition: '0.3s ease',
                   cursor: 'pointer',
                 }}
               >
                 <Typography
                   sx={{
-                    fontSize: '1.05rem',
-                    fontWeight: 600,
-                    color: GOLD,
+                    fontSize: '0.95rem',
+                    fontWeight: 700,
+                    color: hoveredIndex === index ? BRAND_GOLD : BRAND_TEXT_LIGHT,
                     display: 'flex',
                     alignItems: 'flex-start',
-                    gap: 1,
+                    gap: 1.5,
+                    transition: '0.3s',
                   }}
                 >
                   <Box
                     component="span"
                     sx={{
-                      mt: '6px',
-                      width: 7,
-                      height: 7,
+                      mt: '7px',
+                      width: 6,
+                      height: 6,
                       borderRadius: '50%',
-                      backgroundColor: GOLD,
+                      backgroundColor: BRAND_GOLD,
                       flexShrink: 0,
                     }}
                   />
@@ -132,11 +131,11 @@ const FAQs = () => {
                 {hoveredIndex === index && (
                   <Typography
                     sx={{
-                      mt: 1,
-                      fontSize: '0.95rem',
-                      color: LIGHT_GOLD,
+                      mt: 1.5,
+                      fontSize: '0.88rem',
+                      color: BRAND_TEXT_MUTED, // Matches footer text muted style
                       pl: 3,
-                      lineHeight: 1.5,
+                      lineHeight: 1.8,
                     }}
                   >
                     {faq.Answer}
@@ -152,16 +151,17 @@ const FAQs = () => {
           component="img"
           sx={{
             flex: 1,
-            height: { xs: 260, sm: 320, md: '100%' },
+            height: { xs: 300, sm: 350, md: '100%' },
             objectFit: 'cover',
-            filter: 'grayscale(100%)',
-            borderTop: { xs: `1px solid rgba(255,215,0,0.35)`, md: 'none' },
+            filter: 'brightness(0.6) grayscale(100%)', // Muted to match footer vibe
+            borderTop: { xs: `1px solid rgba(255,255,255,0.05)`, md: 'none' },
           }}
           image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
           alt="Support Agent"
         />
       </Card>
 
+      {/* Footer fits seamlessly now */}
       <Footer />
     </Box>
   );
