@@ -3,7 +3,7 @@ import { Box, Typography, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { motion } from 'framer-motion';
 
-// --- UNIFIED BRAND TOKENS ---
+// --- UNIFIED BRAND TOKENS (Synced with Footer) ---
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
@@ -19,21 +19,19 @@ const instructions = [
   'Open a savings account and start making deposits.',
 ];
 
-// Updated palette based on your specific BRAND.gold
+// Unified Palette for Vertical Bars
 const GOLD_BARS = [BRAND.gold, '#FFB84D', '#FFD38A', '#D1870D'];
 
 const JoiningInstructions = () => {
   const width = window.innerWidth;
-
-  // FIXED: mobile now shows ZERO bars (solves drop issue)
   const barCount = width < 600 ? 0 : width < 960 ? 2 : 4;
 
   return (
     <Box
       sx={{
         position: 'relative',
-        // Updated to BRAND.dark
-        background: `linear-gradient(to bottom, ${BRAND.dark}, #03241A)`,
+        // Updated to use BRAND.dark as the base
+        background: `linear-gradient(180deg, ${BRAND.dark} 0%, #031c14 100%)`,
         borderBottomLeftRadius: '18px',
         borderBottomRightRadius: '18px',
         px: { xs: 2, md: 8 },
@@ -44,10 +42,12 @@ const JoiningInstructions = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         overflow: 'hidden',
+        // Subtle top border for section separation consistency
+        borderTop: `1px solid rgba(255,255,255,0.05)`
       }}
     >
 
-      {/* GOLD VERTICAL BARS — HIDDEN ON MOBILE */}
+      {/* GOLD VERTICAL BARS */}
       {barCount > 0 && (
         <motion.div
           initial={{ opacity: 0, x: 100 }}
@@ -76,8 +76,7 @@ const JoiningInstructions = () => {
                 width: width < 960 ? '50px' : '70px',
                 backgroundColor: color,
                 borderRadius: '12px',
-                // Updated glow with brand gold
-                boxShadow: `0 0 25px ${BRAND.gold}88`, 
+                boxShadow: `0 0 25px ${BRAND.gold}66`, 
               }}
             />
           ))}
@@ -97,11 +96,9 @@ const JoiningInstructions = () => {
             textTransform: 'uppercase',
             fontSize: { xs: '1.5rem', md: '2.2rem' },
             mb: 3,
-            // Updated Gradient to BRAND.gold
-            background: `linear-gradient(to right, ${BRAND.gold}, #FFD38A)`,
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            textShadow: `0 0 12px ${BRAND.gold}73`,
+            // Solid Brand Gold for consistency with footer style
+            color: BRAND.gold,
+            letterSpacing: '1px',
             zIndex: 2,
           }}
         >
@@ -128,11 +125,12 @@ const JoiningInstructions = () => {
           >
             <Typography
               sx={{
-                color: BRAND.light, // Using light brand color
+                color: BRAND.light,
                 opacity: 0.9,
                 fontSize: { xs: '1rem', md: '1.15rem' },
                 lineHeight: 1.6,
-                textShadow: '0 0 6px rgba(0,0,0,0.35)',
+                fontWeight: 400,
+                textShadow: '0 2px 4px rgba(0,0,0,0.5)',
               }}
             >
               {item}
@@ -156,7 +154,7 @@ const JoiningInstructions = () => {
             download
             startIcon={<DownloadIcon />}
             sx={{
-              // Keeping the green theme for the button but syncing the gold border
+              // Deep Sacco Green remains for action buttons
               background: 'linear-gradient(135deg, #013D19, #0A5A2A)',
               border: `1px solid ${BRAND.gold}73`,
               color: BRAND.light,
@@ -166,11 +164,11 @@ const JoiningInstructions = () => {
               fontSize: '0.95rem',
               textTransform: 'uppercase',
               borderRadius: '12px',
-              boxShadow: `0 0 18px ${BRAND.gold}73`,
+              boxShadow: `0 4px 15px rgba(0,0,0,0.3)`,
               '&:hover': {
                 background: 'linear-gradient(135deg, #014A21, #0C6E30)',
                 transform: 'scale(1.04)',
-                boxShadow: `0 0 28px ${BRAND.gold}`,
+                boxShadow: `0 0 20px ${BRAND.gold}66`,
               },
             }}
           >
