@@ -153,7 +153,7 @@ const FAQs = () => {
             flex: 1,
             height: { xs: 300, sm: 350, md: '100%' },
             objectFit: 'cover',
-            filter: 'brightness(0.6) grayscale(100%)', // Muted to match footer vibe
+            filter: 'brightness(0.6) grayscale(100%)', 
             borderTop: { xs: `1px solid rgba(255,255,255,0.05)`, md: 'none' },
           }}
           image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
@@ -161,7 +161,7 @@ const FAQs = () => {
         />
       </Card>
 
-      {/* Footer fits seamlessly now */}
+    
       <Footer />
     </Box>
   );

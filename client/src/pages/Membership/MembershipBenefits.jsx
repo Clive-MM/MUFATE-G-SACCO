@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 
-// --- UNIFIED BRAND TOKENS ---
+// --- UNIFIED BRAND TOKENS (Sourced from Footer) ---
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
@@ -22,8 +22,8 @@ const MembershipBenefits = () => {
     <Box
       sx={{
         width: '100%',
-        // Updated to use your unified BRAND.dark color
-        background: `linear-gradient(to bottom, ${BRAND.dark}, #03241A)`, 
+        // Applied BRAND.dark to match Footer background
+        background: `linear-gradient(180deg, ${BRAND.dark} 0%, #031c14 100%)`, 
         color: BRAND.light,
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
@@ -35,6 +35,8 @@ const MembershipBenefits = () => {
         maxWidth: '1600px',
         mx: 'auto',
         height: { xs: 'auto', md: '75vh' },
+        // Added top border to match Footer's subtle separation
+        borderTop: `1px solid rgba(255,255,255,0.05)`
       }}
     >
       {/* LEFT: IMAGE */}
@@ -47,7 +49,6 @@ const MembershipBenefits = () => {
           height: { xs: '250px', md: 'calc(75vh - 96px)' },
           ml: 0,
           flexShrink: 0,
-          // Added a subtle gold border to tie the image into the theme
           borderRight: { md: `1px solid ${BRAND.gold}33` } 
         }}
       >
@@ -60,6 +61,8 @@ const MembershipBenefits = () => {
             height: '100%',
             objectFit: 'cover',
             display: 'block',
+            // Slight darkening to match Footer image style
+            filter: 'brightness(0.9)', 
           }}
         />
       </Paper>
@@ -75,7 +78,7 @@ const MembershipBenefits = () => {
           gap: 2,
         }}
       >
-        {/* GOLDEN HEADING - Updated with BRAND.gold */}
+        {/* GOLDEN HEADING */}
         <Typography
           variant="h4"
           sx={{
@@ -83,10 +86,9 @@ const MembershipBenefits = () => {
             textTransform: 'uppercase',
             fontSize: { xs: '1.4rem', md: '2rem' },
             mb: 1,
-            background: `linear-gradient(to right, ${BRAND.gold}, #FFD38A)`,
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            textShadow: `0px 0px 10px ${BRAND.gold}66`, // Matches registration glow
+            // Using precise BRAND.gold
+            color: BRAND.gold, 
+            letterSpacing: '2px',
           }}
         >
           Membership Benefits
@@ -95,16 +97,17 @@ const MembershipBenefits = () => {
         {/* BENEFITS LIST */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           {benefits.map((benefit, idx) => (
-            <Box key={idx} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              {/* Added a small gold bullet for extra brand alignment */}
-              <Box sx={{ width: 6, height: 6, bgcolor: BRAND.gold, borderRadius: '50%' }} />
+            <Box key={idx} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+              {/* Gold bullet point */}
+              <Box sx={{ width: 8, height: 8, bgcolor: BRAND.gold, borderRadius: '50%', mt: 1 }} />
               <Typography
                 sx={{
-                  fontSize: { xs: '1rem', md: '1.15rem' },
+                  fontSize: { xs: '1rem', md: '1.1rem' },
                   lineHeight: 1.6,
+                  // Using BRAND.light for readability against dark background
                   color: BRAND.light,
+                  fontWeight: 400,
                   opacity: 0.9,
-                  textShadow: '0px 0px 4px rgba(0,0,0,0.4)',
                 }}
               >
                 {benefit}
