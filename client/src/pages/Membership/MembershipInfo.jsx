@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 
-// --- UNIFIED BRAND TOKENS ---
+// --- UNIFIED BRAND TOKENS (Synced with Footer) ---
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
@@ -14,8 +14,8 @@ const MembershipInfo = () => {
   return (
     <Box
       sx={{
-        // Updated to use your unified BRAND.dark color
-        background: `linear-gradient(to bottom, ${BRAND.dark}, #03241A)`, 
+        // Updated to use the deep BRAND.dark from Footer for seamless section flow
+        background: `linear-gradient(180deg, ${BRAND.dark} 0%, #031c14 100%)`, 
         boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
@@ -27,10 +27,12 @@ const MembershipInfo = () => {
         gap: { xs: 4, md: 3 },
         position: 'relative',
         overflow: 'hidden',
+        // Matching the Footer's subtle top separation
+        borderTop: `1px solid rgba(255,255,255,0.05)`
       }}
     >
 
-      {/* SOFT GOLD BACKLIGHT - Updated with BRAND.gold */}
+      {/* SOFT GOLD BACKLIGHT */}
       <Box
         sx={{
           position: 'absolute',
@@ -38,7 +40,8 @@ const MembershipInfo = () => {
           left: '-10%',
           width: '50%',
           height: '60%',
-          background: `radial-gradient(circle, ${BRAND.gold}2E, transparent)`, // 2E is ~18% opacity
+          // Radial glow using your specific BRAND.gold
+          background: `radial-gradient(circle, ${BRAND.gold}1F, transparent)`, 
           filter: 'blur(55px)',
           zIndex: 0,
         }}
@@ -52,7 +55,7 @@ const MembershipInfo = () => {
           transition={{ duration: 0.8 }}
         >
 
-          {/* GOLD TITLE - Updated with BRAND.gold */}
+          {/* BRAND GOLD TITLE */}
           <Typography
             variant="h4"
             sx={{
@@ -60,23 +63,24 @@ const MembershipInfo = () => {
               textTransform: 'uppercase',
               fontSize: { xs: '1.7rem', md: '2.2rem' },
               mb: 2,
-              background: `linear-gradient(to right, ${BRAND.gold}, #FFD38A)`,
-              WebkitBackgroundClip: 'text',
-              color: 'transparent',
-              textShadow: `0 0 12px ${BRAND.gold}66`, // 66 is ~40% opacity
+              // Switched to solid BRAND.gold to match Footer headers
+              color: BRAND.gold,
+              letterSpacing: '1px',
             }}
           >
             Membership
           </Typography>
 
-          {/* GOLDEN BODY TEXT - Updated to BRAND.light with slight opacity for readability */}
+          {/* LIGHT BODY TEXT */}
           <Typography
             sx={{
               fontSize: { xs: '1rem', md: '1.15rem' },
               lineHeight: 1.65,
+              // Using BRAND.light for consistent contrast across the site
               color: BRAND.light, 
               opacity: 0.9,
-              textShadow: '0px 0px 6px rgba(0,0,0,0.6)',
+              fontWeight: 400,
+              textShadow: '0px 2px 4px rgba(0,0,0,0.5)',
             }}
           >
             Becoming a member of GOLDEN GENERATION DT SACCO means joining a
@@ -99,9 +103,9 @@ const MembershipInfo = () => {
             maxWidth: '360px',
             height: 'auto',
             borderRadius: '18px',
-            // Updated box shadow glow to BRAND.gold
+            // Updated shadow to use BRAND.gold glow
             boxShadow:
-              `0 0 25px ${BRAND.gold}40, 0 10px 25px rgba(0,0,0,0.45)`,
+              `0 0 30px ${BRAND.gold}33, 0 10px 30px rgba(0,0,0,0.5)`,
             transition: 'transform 0.3s ease',
             cursor: 'pointer',
           }}
