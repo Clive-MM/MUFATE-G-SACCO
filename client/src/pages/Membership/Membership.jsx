@@ -6,7 +6,7 @@ import JoiningInstructions from './JoiningInstructions';
 import MembershipBenefits from './MembershipBenefits';
 import Footer from '../../components/Footer';
 
-
+// --- UNIFIED BRAND TOKENS (Synced with Footer) ---
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
@@ -17,8 +17,7 @@ const BRAND = {
 const Membership = () => {
   return (
     <Box>
-
-      
+      {/* HERO SECTION */}
       <Box
         role="banner"
         aria-label="Membership Hero Section"
@@ -34,10 +33,9 @@ const Membership = () => {
           justifyContent: 'center',
           px: { xs: 2, md: 10 },
           textAlign: 'center',
-
-         
           color: BRAND.light,
 
+          // DARK OVERLAY - Synced with BRAND.dark for seamless transition
           '&::before': {
             content: '""',
             position: 'absolute',
@@ -46,11 +44,11 @@ const Membership = () => {
             width: '100%',
             height: '100%',
             background:
-              `linear-gradient(to right, rgba(2, 21, 15, 0.85), rgba(2, 21, 15, 0.45), transparent)`,
+              `linear-gradient(to right, rgba(2, 21, 15, 0.9), rgba(2, 21, 15, 0.5), transparent)`,
             zIndex: 1,
           },
 
-       
+          // GOLDEN BOTTOM FADE
           '&::after': {
             content: '""',
             position: 'absolute',
@@ -59,7 +57,7 @@ const Membership = () => {
             width: '100%',
             height: '22%',
             background:
-              `linear-gradient(to top, ${BRAND.gold}47, transparent)`, // 47 is approx 28% opacity
+              `linear-gradient(to top, ${BRAND.gold}33, transparent)`, // ~20% opacity gold
             zIndex: 1,
           },
         }}
@@ -72,47 +70,41 @@ const Membership = () => {
           sx={{
             position: 'relative',
             zIndex: 2,
-            maxWidth: { xs: '95%', md: '700px' },
+            maxWidth: { xs: '95%', md: '800px' },
             py: { xs: 4, md: 6 },
           }}
         >
-          
+          {/* HERO TITLE - Solid Brand Gold */}
           <Typography
             variant="h3"
             fontWeight={900}
             gutterBottom
             sx={{
-              fontSize: { xs: '1.8rem', md: '2.8rem' },
+              fontSize: { xs: '1.8rem', md: '3.2rem' },
               textTransform: 'uppercase',
-              letterSpacing: '1px',
-              lineHeight: 1.2,
-
-             
-              background: `linear-gradient(to right, ${BRAND.gold}, #FFD38A)`,
-              WebkitBackgroundClip: 'text',
-              color: 'transparent',
-
-         
-              textShadow: `0px 0px 12px ${BRAND.gold}A6`, 
+              letterSpacing: '2px',
+              lineHeight: 1.1,
+              color: BRAND.gold,
+              // Subtle glow to make text pop against dark overlay
+              textShadow: `0px 4px 15px rgba(0,0,0,0.8)`, 
             }}
           >
             Join Us Today and Start Your Journey
           </Typography>
 
-          
+          {/* HERO SUBTEXT */}
           <Typography
             variant="body1"
             sx={{
               mt: 2,
               color: BRAND.light, 
-              opacity: 0.9,
-              fontSize: { xs: '1rem', md: '1.2rem' },
-              lineHeight: 1.65,
-              maxWidth: '600px',
+              opacity: 0.95,
+              fontWeight: 500,
+              fontSize: { xs: '1rem', md: '1.25rem' },
+              lineHeight: 1.6,
+              maxWidth: '650px',
               mx: 'auto',
-
-           
-              textShadow: '0px 0px 6px rgba(0,0,0,0.55)',
+              textShadow: '0px 2px 8px rgba(0,0,0,0.7)',
             }}
           >
             Empowering communities through savings, investment, and unity for a better tomorrow.
@@ -120,7 +112,7 @@ const Membership = () => {
         </Box>
       </Box>
 
-  
+      {/* SUBSEQUENT SECTIONS */}
       <MembershipInfo />
       <JoiningInstructions />
       <MembershipBenefits />
