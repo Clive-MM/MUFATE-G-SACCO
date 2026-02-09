@@ -409,3 +409,16 @@ class NewsletterSubscription(db.Model):
     SubID = db.Column(db.Integer, primary_key=True)
     ContactInfo = db.Column(db.String(100), nullable=False, unique=True) # Email or Phone
     SubscribedAt = db.Column(db.DateTime, default=datetime.utcnow)
+
+class SaccoVideo(db.Model):
+    __tablename__ = 'Sacco_Videos'
+
+    VideoID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Title = db.Column(db.String(255), nullable=False)
+    VideoURL = db.Column(db.Text, nullable=False)  
+    ThumbnailURL = db.Column(db.String(500))      
+    Description = db.Column(db.String(1000))           
+    # Matching your IsActive relationship pattern
+    IsActiveID = db.Column(db.Integer, db.ForeignKey('IsActive.ID'), default=1)
+    is_active = db.relationship('IsActive', backref='sacco_videos')
+    CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)

@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
 from datetime import datetime
-from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Posts, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket, PostsCategory, NewsletterSubscription
+from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Posts, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket, PostsCategory, NewsletterSubscription, SaccoVideo
 import cloudinary.uploader
 import re
 import traceback
@@ -2163,3 +2163,30 @@ Golden Generation DT SACCO
             'message': '❌ Failed to process subscription.',
             'error': str(e)
         }), 500
+
+# ✅ Public Route to View All Active SaccoVideos
+@routes.route('/videos', methods=['GET'])
+def view_videos():
+    try:
+        # Fetch only active videos (IsActiveID = 1) ordered by newest first
+        videos = SaccoVideo.query.filter_by(IsActiveID=1).order_by(SaccoVideo.CreatedAt.desc()).all()
+        
+        if not videos:
+            return jsonify({'message': 'ℹ️ No active videos found.', 'videos': []}), 200
+
+        video_list = []
+        for video in videos:
+            video_list.append({
+                'VideoID': video.VideoID,
+                'Title': video.Title,
+                'VideoURL': video.VideoURL,
+                'ThumbnailURL': video.ThumbnailURL,
+                'Description': video.Description,
+                'CreatedAt': video.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        return jsonify({'success': True, 'videos': video_list}), 200
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({'message': '❌ Failed to fetch videos.', 'error': str(e)}), 500
