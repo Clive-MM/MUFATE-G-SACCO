@@ -10,7 +10,6 @@ import {
 import axios from 'axios';
 import Footer from '../components/Footer';
 
-// Updated constants to match Footer BRAND colors exactly
 const BRAND_GOLD = '#EC9B14';
 const BRAND_DARK = '#02150F';
 const BRAND_TEXT_LIGHT = '#F4F4F4';
@@ -38,104 +37,106 @@ const FAQs = () => {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        // Background matches footer color exactly
         backgroundColor: BRAND_DARK,
+        // PUSH CONTENT DOWN: Adjust '80px' to match your actual Navbar height
+        pt: { xs: '70px', md: '90px' }, 
       }}
     >
+      {/* SECTION TITLE - Standardized Style applied here */}
+      <Typography
+        variant="h4"
+        align="center"
+        sx={{
+          fontWeight: 900,
+          textTransform: 'uppercase',
+          mt: 4, // Space from top padding
+          mb: 6,
+          letterSpacing: '3px',
+          color: BRAND_GOLD,
+          fontSize: { xs: '1.5rem', md: '2.2rem' },
+          textShadow: `0 0 15px ${BRAND_GOLD}33`,
+        }}
+      >
+        Frequently Asked Questions
+      </Typography>
+
       <Card
         sx={{
-          m: 0,
-          borderRadius: 0,
+          mx: { xs: 2, md: 5 }, // Slight margin so it doesn't hit screen edges
+          mb: 8,
+          borderRadius: '16px', // Added slight rounding for better look
           boxShadow: 0,
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          height: { xs: 'auto', md: '75vh' }, // Slightly increased to fit content
-          backgroundColor: 'transparent',
-          borderBottom: `1px solid rgba(255,255,255,0.05)`,
+          minHeight: { xs: 'auto', md: '65vh' }, 
+          backgroundColor: 'rgba(255, 255, 255, 0.02)', // Subtle lift from background
+          border: `1px solid rgba(255,255,255,0.05)`,
+          overflow: 'hidden', // Ensures image doesn't bleed out of radius
         }}
       >
-        {/* FAQ Section */}
+        {/* FAQ List Section */}
         <Box
           sx={{
-            flex: 1,
+            flex: 1.2,
             px: { xs: 2.5, sm: 3, md: 5 },
-            py: { xs: 5, sm: 6, md: 8 },
-            overflowY: 'auto',
+            py: { xs: 4, md: 6 },
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            background: BRAND_DARK,
-            borderRight: { xs: 'none', md: `1px solid rgba(255, 255, 255, 0.05)` },
+            justifyContent: 'flex-start',
           }}
         >
-          <Typography
-            variant={isMobile ? 'h5' : 'h4'}
-            sx={{
-              fontWeight: 900, // Matches footer weight
-              mb: 4,
-              color: BRAND_GOLD,
-              textAlign: isMobile ? 'center' : 'left',
-              letterSpacing: '2px', // Matches footer letter spacing
-              textTransform: 'uppercase',
-            }}
-          >
-            Frequently Asked Questions
-          </Typography>
-
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {faqs.map((faq, index) => (
               <Box
                 key={faq.FAQID}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 sx={{
-                  p: 2,
-                  borderRadius: '8px',
+                  p: 2.5,
+                  borderRadius: '12px',
                   backgroundColor:
                     hoveredIndex === index
-                      ? 'rgba(236, 155, 20, 0.05)'
+                      ? 'rgba(236, 155, 20, 0.08)'
                       : 'transparent',
                   border:
                     hoveredIndex === index
                       ? `1px solid ${BRAND_GOLD}`
-                      : '1px solid rgba(255,255,255,0.05)',
-                  transition: '0.3s ease',
+                      : '1px solid rgba(255,255,255,0.08)',
+                  transition: 'all 0.3s ease',
                   cursor: 'pointer',
                 }}
               >
                 <Typography
                   sx={{
-                    fontSize: '0.95rem',
+                    fontSize: '1rem',
                     fontWeight: 700,
                     color: hoveredIndex === index ? BRAND_GOLD : BRAND_TEXT_LIGHT,
                     display: 'flex',
-                    alignItems: 'flex-start',
+                    alignItems: 'center',
                     gap: 1.5,
-                    transition: '0.3s',
                   }}
                 >
                   <Box
-                    component="span"
                     sx={{
-                      mt: '7px',
-                      width: 6,
-                      height: 6,
+                      width: 8,
+                      height: 8,
                       borderRadius: '50%',
                       backgroundColor: BRAND_GOLD,
                       flexShrink: 0,
+                      boxShadow: hoveredIndex === index ? `0 0 10px ${BRAND_GOLD}` : 'none',
                     }}
                   />
-                  <span>{faq.Question}</span>
+                  {faq.Question}
                 </Typography>
 
                 {hoveredIndex === index && (
                   <Typography
                     sx={{
-                      mt: 1.5,
-                      fontSize: '0.88rem',
-                      color: BRAND_TEXT_MUTED, // Matches footer text muted style
-                      pl: 3,
-                      lineHeight: 1.8,
+                      mt: 2,
+                      fontSize: '0.9rem',
+                      color: BRAND_TEXT_MUTED,
+                      pl: 3.5,
+                      lineHeight: 1.7,
                     }}
                   >
                     {faq.Answer}
@@ -146,22 +147,25 @@ const FAQs = () => {
           </Box>
         </Box>
 
-        {/* Image Section */}
+        {/* Image Section - Adjusted to match layout drop */}
         <CardMedia
           component="img"
           sx={{
-            flex: 1,
-            height: { xs: 300, sm: 350, md: '100%' },
+            flex: 0.8,
+            height: { xs: 300, md: 'auto' },
+            minHeight: '400px',
             objectFit: 'cover',
-            filter: 'brightness(0.6) grayscale(100%)', 
-            borderTop: { xs: `1px solid rgba(255,255,255,0.05)`, md: 'none' },
+            filter: 'brightness(0.7) grayscale(30%)', // Slightly less grayscale for vibrance
+            transition: '0.5s ease',
+            '&:hover': {
+                filter: 'brightness(0.9) grayscale(0%)',
+            }
           }}
           image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
           alt="Support Agent"
         />
       </Card>
 
-    
       <Footer />
     </Box>
   );
