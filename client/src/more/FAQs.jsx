@@ -7,6 +7,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import Footer from '../components/Footer';
 
@@ -14,6 +15,10 @@ const BRAND_GOLD = '#EC9B14';
 const BRAND_DARK = '#02150F';
 const BRAND_TEXT_LIGHT = '#F4F4F4';
 const BRAND_TEXT_MUTED = 'rgba(244, 244, 244, 0.6)';
+
+// Motion components for MUI
+const MotionBox = motion(Box);
+const MotionTypography = motion(Typography);
 
 const FAQs = () => {
   const [faqs, setFaqs] = useState([]);
@@ -38,7 +43,6 @@ const FAQs = () => {
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: BRAND_DARK,
-        // Standardized drop: pushes content below the navbar
         pt: isMobile ? 12 : 18, 
       }}
     >
@@ -66,14 +70,13 @@ const FAQs = () => {
           borderRadius: '16px',
           boxShadow: 0,
           display: 'flex',
-          // Stack on mobile, side-by-side on desktop
           flexDirection: { xs: 'column', md: 'row' },
           backgroundColor: 'rgba(255, 255, 255, 0.02)',
           border: `1px solid rgba(255,255,255,0.05)`,
           overflow: 'hidden',
         }}
       >
-        {/* FAQ List Section - Set to flex: 1 for 50% width */}
+        {/* FAQ List Section */}
         <Box
           sx={{
             flex: 1,
@@ -85,10 +88,20 @@ const FAQs = () => {
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {faqs.map((faq, index) => (
-              <Box
+              <MotionBox
                 key={faq.FAQID}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                // Entrance Stagger Animation
+                initial={{ opacity: 0, x: isMobile ? -10 : -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                // Visual Depth (3D Tilt / Liftoff Effect)
+                whileHover={{ 
+                  x: 10, 
+                  scale: 1.02,
+                  transition: { duration: 0.2 }
+                }}
                 sx={{
                   p: 2.5,
                   borderRadius: '12px',
@@ -100,7 +113,7 @@ const FAQs = () => {
                     hoveredIndex === index
                       ? `1px solid ${BRAND_GOLD}`
                       : '1px solid rgba(255,255,255,0.08)',
-                  transition: 'all 0.3s ease',
+                  transition: 'background-color 0.3s ease, border 0.3s ease',
                   cursor: 'pointer',
                 }}
               >
@@ -114,7 +127,13 @@ const FAQs = () => {
                     gap: 1.5,
                   }}
                 >
-                  <Box
+                  {/* Interactive Indicator (Pulses on hover) */}
+                  <MotionBox
+                    animate={hoveredIndex === index ? { 
+                      scale: [1, 1.5, 1],
+                      boxShadow: `0 0 12px ${BRAND_GOLD}`
+                    } : { scale: 1 }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
                     sx={{
                       width: 8,
                       height: 8,
@@ -126,25 +145,31 @@ const FAQs = () => {
                   {faq.Question}
                 </Typography>
 
-                {hoveredIndex === index && (
-                  <Typography
-                    sx={{
-                      mt: 2,
-                      fontSize: '0.9rem',
-                      color: BRAND_TEXT_MUTED,
-                      pl: 3.5,
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    {faq.Answer}
-                  </Typography>
-                )}
-              </Box>
+                <AnimatePresence>
+                  {hoveredIndex === index && (
+                    <MotionTypography
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      sx={{
+                        mt: 2,
+                        fontSize: '0.9rem',
+                        color: BRAND_TEXT_MUTED,
+                        pl: 3.5,
+                        lineHeight: 1.7,
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {faq.Answer}
+                    </MotionTypography>
+                  )}
+                </AnimatePresence>
+              </MotionBox>
             ))}
           </Box>
         </Box>
 
-        {/* Image Section - Set to flex: 1 for 50% width */}
+        {/* Image Section */}
         <Box sx={{ flex: 1, position: 'relative' }}>
           <CardMedia
             component="img"
@@ -153,7 +178,6 @@ const FAQs = () => {
               width: '100%',
               objectFit: 'cover',
               filter: 'brightness(0.8) grayscale(20%)',
-              // Ensures the image fills the 50% container perfectly
               position: { md: 'absolute' },
               top: 0,
               left: 0,
