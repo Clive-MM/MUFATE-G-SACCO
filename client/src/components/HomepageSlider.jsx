@@ -8,9 +8,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 
-
 const revealImage = keyframes`
-  0% { transform: scale(1.08); opacity: 0; }
+  0% { transform: scale(1.1); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 `;
 
@@ -37,9 +36,9 @@ const HomepageSlider = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 1500,
+    speed: 1000,
     autoplay: true,
-    autoplaySpeed: 3500,
+    autoplaySpeed: 4000,
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
@@ -48,7 +47,7 @@ const HomepageSlider = () => {
   };
 
   if (loading) return (
-    <Box sx={{ height: '600px', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
+    <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
       <CircularProgress sx={{ color: BRAND.gold }} />
     </Box>
   );
@@ -57,111 +56,95 @@ const HomepageSlider = () => {
     <Box sx={{ width: '100%', bgcolor: BRAND.dark, overflow: 'hidden' }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
-          <Box key={index} sx={{ position: 'relative', width: '100%' }}>
+          <Box key={index}>
             <Box
               sx={{
                 width: '100%',
-                height: '100vh',
+                height: { xs: 'auto', md: '100vh' },
                 display: 'flex',
                 flexDirection: { xs: 'column', md: 'row' },
                 bgcolor: BRAND.dark,
               }}
             >
-              {/* IMAGE SECTION */}
-              <Box
-                sx={{
-                  width: { xs: '100%', md: '100%' },
-                  height: { xs: '60%', md: '100vh' },
-                  backgroundImage: `url(${slide.ImagePath})`,
-                  backgroundSize: 'contain', 
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: { xs: 'bottom center', md: 'right center' },
-                  position: { md: 'absolute' },
-                  right: 0,
-                  top: 0,
-                  zIndex: 1,
-                  pt: { xs: 2, md: 0 },
-                  animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : 'none',
-                }}
-              />
-
-              {/* CONTENT SECTION */}
+              {/* CONTENT SECTION (Left side on Desktop, Bottom on Mobile) */}
               <Box sx={{ 
-                position: 'relative', 
-                zIndex: 2, 
-                width: '100%', 
-                height: { xs: '40%', md: '100vh' },
+                order: { xs: 2, md: 1 },
+                width: { xs: '100%', md: '45%' }, 
+                height: { xs: 'auto', md: '100vh' },
                 display: 'flex',
-                alignItems: { xs: 'flex-start', md: 'center' }, 
-                pt: { xs: 3, md: 0 } 
+                alignItems: 'center',
+                py: { xs: 6, md: 0 },
+                zIndex: 2,
+                background: BRAND.dark
               }}>
-                <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
-                  
+                <Container sx={{ px: { xs: 3, md: 6 } }}>
                   <motion.div
-                    key={`title-${currentSlide}`}
+                    key={`content-${currentSlide}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.2 }}
+                    transition={{ duration: 0.8 }}
                   >
                     <Typography variant="h1" sx={{
                       color: BRAND.gold,
                       fontWeight: 900,
                       textTransform: 'uppercase',
-                      maxWidth: { xs: "100%", md: "420px" },
-                      mb: { xs: 1, md: 2 },
+                      mb: 2,
                       lineHeight: 1.1,
-                      fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.8rem' },
+                      fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.8rem' },
                     }}>
                       {slide.Title}
                     </Typography>
-                  </motion.div>
-
-                  <motion.div
-                    key={`desc-${currentSlide}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                  >
+                    
                     <Typography sx={{
                       color: BRAND.light,
-                      maxWidth: { xs: "100%", md: "340px" },
                       fontWeight: 400,
-                      lineHeight: 1.4,
-                      fontSize: { xs: '0.8rem', md: '0.78rem' },
-                      mb: { xs: 2, md: 4 },
+                      lineHeight: 1.6,
+                      fontSize: { xs: '0.9rem', md: '1rem' },
+                      mb: 4,
                       opacity: 0.9,
                     }}>
                       {slide.Description?.replace(/<[^>]*>/g, '')}
                     </Typography>
-                  </motion.div>
 
-                  <Stack 
-                    direction="row" 
-                    spacing={2}
-                    component={motion.div}
-                    key={`btns-${currentSlide}`}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                  >
-                    <Button 
-                      component={RouterLink} to="/customer_registration" 
-                      sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
-                    >
-                      Join Us
-                    </Button>
-                    <Button 
-                      component={RouterLink} to="/products/bosa" 
-                      sx={{ 
-                        ...ButtonStyle, 
-                        border: `1.5px solid ${BRAND.gold}`, 
-                        color: BRAND.gold,
-                      }}
-                    >
-                      Products
-                    </Button>
-                  </Stack>
+                    <Stack direction="row" spacing={2}>
+                      <Button component={RouterLink} to="/customer_registration" sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}>
+                        Join Us
+                      </Button>
+                      <Button component={RouterLink} to="/products/bosa" sx={{ ...ButtonStyle, border: `1.5px solid ${BRAND.gold}`, color: BRAND.gold }}>
+                        Products
+                      </Button>
+                    </Stack>
+                  </motion.div>
                 </Container>
+              </Box>
+
+              {/* IMAGE SECTION (Right side on Desktop, Top on Mobile) */}
+              <Box
+                sx={{
+                  order: { xs: 1, md: 2 },
+                  width: { xs: '100%', md: '55%' },
+                  height: { xs: '350px', sm: '450px', md: '100vh' },
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                <Box
+                  component="img"
+                  src={slide.ImagePath}
+                  alt={slide.Title}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    /* 'objectFit: cover' combined with a dedicated width/height 
+                       container ensures the image fills the space but keeps 
+                       the people visible and CLEAR without fading.
+                    */
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                    display: 'block',
+                    animation: currentSlide === index ? `${revealImage} 1.5s ease-out forwards` : 'none',
+                  }}
+                />
               </Box>
             </Box>
           </Box>
@@ -173,10 +156,10 @@ const HomepageSlider = () => {
 
 const ButtonStyle = {
   fontWeight: 700,
-  px: { xs: 2.5, md: 3 },
-  py: { xs: 0.8, md: 1 },
+  px: { xs: 3, md: 4 },
+  py: { xs: 1, md: 1.2 },
   borderRadius: '4px',
-  fontSize: '0.7rem',
+  fontSize: '0.8rem',
   textTransform: 'uppercase',
 };
 
