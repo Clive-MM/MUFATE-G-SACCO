@@ -1511,8 +1511,8 @@ def get_recent_resources():
 @routes.route('/career-hero', methods=['GET'])
 def get_career_hero_image():
     try:
-        # Query the image with ImageID = 4
-        image = HomepageSlider.query.filter_by(ImageID=4, IsActiveID=1).first()
+        # Query the image with ImageID = 6
+        image = HomepageSlider.query.filter_by(ImageID=6, IsActiveID=1).first()
 
         if not image:
             return jsonify({'message': 'No active career hero image found.'}), 404
@@ -1533,15 +1533,15 @@ def get_career_hero_image():
         return jsonify({'message': '❌ Error fetching career hero image.', 'error': str(e)}), 500
 
 
-# Route to fetch second career hero image (ImageID = 6)
+# Route to fetch second career hero image (ImageID = 7)
 @routes.route('/career-hero-2', methods=['GET'])
 def get_career_hero_image_2():
     try:
-        # Query the image with ImageID = 5
-        image = HomepageSlider.query.filter_by(ImageID=5, IsActiveID=1).first()
+        # Query the image with ImageID = 7
+        image = HomepageSlider.query.filter_by(ImageID=7, IsActiveID=1).first()
 
         if not image:
-            return jsonify({'message': 'No active image found with ImageID = 5'}), 404
+            return jsonify({'message': 'No active image found with ImageID =7'}), 404
 
         image_data = {
             'ImageID': image.ImageID,
