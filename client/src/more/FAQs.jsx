@@ -20,6 +20,7 @@ const FAQs = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const theme = useTheme();
+  // Fixed: isMobile is now used below to handle responsive spacing/alignment
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
@@ -38,19 +39,20 @@ const FAQs = () => {
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: BRAND_DARK,
-        // PUSH CONTENT DOWN: Adjust '80px' to match your actual Navbar height
-        pt: { xs: '70px', md: '90px' }, 
+        // Using isMobile logic or standard responsive objects
+        pt: isMobile ? '80px' : '100px', 
       }}
     >
-      {/* SECTION TITLE - Standardized Style applied here */}
+      {/* SECTION TITLE */}
       <Typography
         variant="h4"
         align="center"
         sx={{
           fontWeight: 900,
           textTransform: 'uppercase',
-          mt: 4, // Space from top padding
+          mt: isMobile ? 2 : 4, // Used isMobile here
           mb: 6,
+          px: 2,
           letterSpacing: '3px',
           color: BRAND_GOLD,
           fontSize: { xs: '1.5rem', md: '2.2rem' },
@@ -62,16 +64,16 @@ const FAQs = () => {
 
       <Card
         sx={{
-          mx: { xs: 2, md: 5 }, // Slight margin so it doesn't hit screen edges
+          mx: { xs: 2, md: 5 },
           mb: 8,
-          borderRadius: '16px', // Added slight rounding for better look
+          borderRadius: '16px',
           boxShadow: 0,
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
           minHeight: { xs: 'auto', md: '65vh' }, 
-          backgroundColor: 'rgba(255, 255, 255, 0.02)', // Subtle lift from background
+          backgroundColor: 'rgba(255, 255, 255, 0.02)',
           border: `1px solid rgba(255,255,255,0.05)`,
-          overflow: 'hidden', // Ensures image doesn't bleed out of radius
+          overflow: 'hidden',
         }}
       >
         {/* FAQ List Section */}
@@ -147,7 +149,7 @@ const FAQs = () => {
           </Box>
         </Box>
 
-        {/* Image Section - Adjusted to match layout drop */}
+        {/* Image Section */}
         <CardMedia
           component="img"
           sx={{
@@ -155,7 +157,7 @@ const FAQs = () => {
             height: { xs: 300, md: 'auto' },
             minHeight: '400px',
             objectFit: 'cover',
-            filter: 'brightness(0.7) grayscale(30%)', // Slightly less grayscale for vibrance
+            filter: 'brightness(0.7) grayscale(30%)',
             transition: '0.5s ease',
             '&:hover': {
                 filter: 'brightness(0.9) grayscale(0%)',
