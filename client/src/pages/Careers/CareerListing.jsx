@@ -6,12 +6,22 @@ import {
   Chip,
   Divider,
   CircularProgress,
+  Container
 } from '@mui/material';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+
+// Aligned with your Footer branding
+const BRAND = {
+  gold: '#EC9B14',
+  dark: '#02150F',
+  light: '#F4F4F4',
+  textMuted: 'rgba(244, 244, 244, 0.6)',
+  cardBg: 'rgba(255, 255, 255, 0.03)'
+};
 
 const CareerListing = () => {
   const [careers, setCareers] = useState([]);
@@ -33,8 +43,8 @@ const CareerListing = () => {
 
   if (loading) {
     return (
-      <Box sx={{ py: 6, textAlign: 'center' }}>
-        <CircularProgress sx={{ color: '#E8C46A' }} />
+      <Box sx={{ py: 10, textAlign: 'center', bgcolor: BRAND.dark }}>
+        <CircularProgress sx={{ color: BRAND.gold }} />
       </Box>
     );
   }
@@ -42,177 +52,145 @@ const CareerListing = () => {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(to bottom, #011B0A, #012A12)',
-        px: { xs: 2, md: 8 },
-        py: { xs: 6, md: 10 },
-        fontFamily: `'Segoe UI', sans-serif`,
+        bgcolor: BRAND.dark,
+        color: BRAND.light,
+        px: { xs: 2, md: 0 },
+        py: { xs: 8, md: 12 },
+        minHeight: '60vh'
       }}
     >
-      {/* SECTION TITLE */}
-      <Typography
-        variant="h4"
-        sx={{
-          textAlign: 'center',
-          fontWeight: 900,
-          background: 'linear-gradient(to right, #FFD700, #FFF4B2)',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          mb: 5,
-          letterSpacing: '1px',
-          textTransform: 'uppercase',
-          textShadow: '0 0 18px rgba(255,215,0,0.55)',
-        }}
-      >
-        Explore Current Vacancies
-      </Typography>
-
-      {careers.length === 0 ? (
+      <Container maxWidth="lg">
+        {/* SECTION TITLE */}
         <Typography
-          textAlign="center"
+          variant="h4"
           sx={{
-            color: '#FFECA8',
-            fontSize: '1.1rem',
-            textShadow: '0 0 8px rgba(0,0,0,0.4)',
+            textAlign: 'center',
+            fontWeight: 900,
+            color: BRAND.gold,
+            mb: 6,
+            letterSpacing: '2px',
+            textTransform: 'uppercase',
           }}
         >
-          No vacant career opportunities at the moment.
+          Explore Current Vacancies
         </Typography>
-      ) : (
-        careers.map((job) => (
-          <motion.div
-            key={job.CareerID}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            whileHover={{ scale: 1.02 }}
-            style={{
-              backgroundColor: 'rgba(255,255,255,0.07)',
-              borderRadius: '18px',
-              padding: '26px',
-              marginBottom: '40px',
-              maxWidth: '900px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              border: '1px solid rgba(255,215,0,0.35)',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-              backdropFilter: 'blur(6px)',
+
+        {careers.length === 0 ? (
+          <Typography
+            textAlign="center"
+            sx={{
+              color: BRAND.textMuted,
+              fontSize: '1.1rem',
+              fontStyle: 'italic'
             }}
           >
-            <CardContent>
-              {/* JOB TITLE */}
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 800,
-                  fontSize: '1.45rem',
-                  mb: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  background: 'linear-gradient(to right, #FFD700, #FFF4B2)',
-                  WebkitBackgroundClip: 'text',
-                  color: 'transparent',
-                  textShadow: '0 0 10px rgba(255,215,0,0.5)',
-                }}
-              >
-                <WorkOutlineIcon sx={{ fontSize: 26, color: '#FFD700' }} />
-                {job.JobTitle}
-              </Typography>
+            No vacant career opportunities at the moment.
+          </Typography>
+        ) : (
+          careers.map((job) => (
+            <motion.div
+              key={job.CareerID}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ y: -5 }}
+              style={{
+                backgroundColor: BRAND.cardBg,
+                borderRadius: '12px',
+                marginBottom: '32px',
+                border: '1px solid rgba(236, 155, 20, 0.15)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+              }}
+            >
+              <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+                {/* JOB TITLE */}
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 800,
+                    mb: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    color: BRAND.gold,
+                  }}
+                >
+                  <WorkOutlineIcon />
+                  {job.JobTitle}
+                </Typography>
 
-              {/* JOB TYPE */}
-              <Chip
-                label={job.JobType}
-                sx={{
-                  backgroundColor: '#013D19',
-                  color: '#FFD700',
-                  fontWeight: 700,
-                  mb: 2,
-                  px: 2.5,
-                  border: '1px solid rgba(255,215,0,0.55)',
-                }}
-              />
+                {/* JOB TYPE */}
+                <Chip
+                  label={job.JobType}
+                  sx={{
+                    backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                    color: BRAND.gold,
+                    fontWeight: 700,
+                    mb: 3,
+                    borderRadius: '4px',
+                    border: `1px solid ${BRAND.gold}`,
+                    height: '28px'
+                  }}
+                />
 
-              {/* DESCRIPTION LABEL */}
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontWeight: 700,
-                  color: '#FFECA8',
-                  mb: 1,
-                  fontSize: '1.1rem',
-                }}
-              >
-                Job Description:
-              </Typography>
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: 700, color: BRAND.light, mb: 1 }}
+                >
+                  Job Description
+                </Typography>
 
-              {/* JOB DESCRIPTION */}
-              <Typography
-                variant="body1"
-                sx={{
-                  color: '#FFF',
-                  opacity: 0.85,
-                  fontSize: '1.05rem',
-                  lineHeight: 1.6,
-                }}
-              >
-                {job.JobDescription}
-              </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: BRAND.textMuted,
+                    fontSize: '1rem',
+                    lineHeight: 1.7,
+                    mb: 3
+                  }}
+                >
+                  {job.JobDescription}
+                </Typography>
 
-              {/* REQUIREMENTS */}
-              <Typography
-                variant="body2"
-                sx={{
-                  mt: 1.5,
-                  fontStyle: 'italic',
-                  color: '#FFECA8',
-                  fontSize: '1rem',
-                }}
-              >
-                <strong>Requirements:</strong> {job.Requirements}
-              </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                  <Typography variant="body2" sx={{ color: BRAND.light }}>
+                    <strong style={{ color: BRAND.gold }}>Requirements:</strong> {job.Requirements}
+                  </Typography>
 
-              {/* DEADLINE */}
-              <Typography
-                variant="body2"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  fontWeight: 'bold',
-                  color: '#FFF4B2',
-                  mt: 2,
-                }}
-              >
-                <AccessTimeIcon sx={{ fontSize: 18, color: '#FFD700' }} />
-                Deadline: {job.Deadline}
-              </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      fontWeight: 'bold',
+                      color: BRAND.gold,
+                    }}
+                  >
+                    <AccessTimeIcon fontSize="small" />
+                    Deadline: {job.Deadline}
+                  </Typography>
+                </Box>
 
-              <Divider
-                sx={{
-                  my: 2,
-                  borderColor: 'rgba(255,215,0,0.3)',
-                }}
-              />
+                <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.05)' }} />
 
-              {/* APPLICATION INSTRUCTIONS */}
-              <Typography
-                variant="body2"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  color: '#FFF',
-                  opacity: 0.85,
-                  fontSize: '1rem',
-                }}
-              >
-                <MailOutlineIcon sx={{ fontSize: 18, color: '#FFD700' }} />
-                <strong>How to Apply:</strong> {job.ApplicationInstructions}
-              </Typography>
-            </CardContent>
-          </motion.div>
-        ))
-      )}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    color: BRAND.textMuted,
+                  }}
+                >
+                  <MailOutlineIcon fontSize="small" sx={{ color: BRAND.gold }} />
+                  <strong>How to Apply:</strong> {job.ApplicationInstructions}
+                </Typography>
+              </CardContent>
+            </motion.div>
+          ))
+        )}
+      </Container>
     </Box>
   );
 };
