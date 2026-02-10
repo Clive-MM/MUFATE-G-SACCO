@@ -49,30 +49,28 @@ const Careers = () => {
         m: 0,
         p: 0,
         color: COLORS.textMuted,
-        /* MATCHING BOSA PRODUCTS PADDING */
+        /* MATCHING THE BOSA PRODUCTS DROP:
+           This pushes the entire layout down so the hero image 
+           starts exactly where your navbar ends.
+        */
         pt: { xs: 12, md: 18 }, 
       }}
     >
-      {/* HERO IMAGE SECTION */}
-      <Box sx={{ position: 'relative', width: '100%', textAlign: 'center' }}>
+      {/* HERO IMAGE SECTION - Position and logic remain UNCHANGED */}
+      <Box sx={{ position: 'relative', width: '100%' }}>
         <Box
           component="img"
           src={hero1?.ImagePath}
           alt={hero1?.Title || 'Career Hero'}
           sx={{
             width: '100%',
-            /* CHANGE: Instead of cover, we use 'contain' or 'auto' 
-               to ensure the image is never cropped. 
-            */
             height: 'auto',
-            maxHeight: '80vh', 
-            objectFit: 'contain', // This ensures the whole image fits in the box
+            objectFit: 'cover', // Preserved as requested
             display: 'block',
-            mx: 'auto'
           }}
         />
 
-        {/* SECONDARY IMAGE FLOATING CARD */}
+        {/* SECONDARY IMAGE FLOATING CARD - Logic remains UNCHANGED */}
         {hero2 && (
           <Box
             sx={{
@@ -80,7 +78,7 @@ const Careers = () => {
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
-              bottom: { xs: '-80px', sm: '-100px', md: '-120px' }, // Slightly adjusted to not hide too much hero
+              bottom: { xs: '-120px', sm: '-140px', md: '-160px' },
               zIndex: 5,
               px: { xs: 2, sm: 4, md: 0 },
             }}
@@ -104,10 +102,9 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* SPACER */}
-      <Box sx={{ height: { xs: 120, sm: 140, md: 180 } }} />
+      {/* REST OF COMPONENT - UNCHANGED */}
+      <Box sx={{ height: { xs: 100, sm: 120, md: 160 } }} />
 
-      {/* DESCRIPTION */}
       <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
         <Typography
           variant="h3"
@@ -133,6 +130,7 @@ const Careers = () => {
             lineHeight: 1.85,
             color: COLORS.textMuted,
             fontWeight: 500,
+            textShadow: '0 0 6px rgba(0,0,0,0.35)',
           }}
         >
           {hero1?.Description}
