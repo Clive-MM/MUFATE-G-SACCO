@@ -15,7 +15,7 @@ const Careers = () => {
     gold: '#EC9B14',      // Matches BRAND.gold
     dark: '#02150F',      // Matches BRAND.dark
     light: '#F4F4F4',
-    textMuted: '#FFECA8', // Kept your specific light gold text color
+    textMuted: '#FFECA8', // Specific light gold text color
   };
 
   useEffect(() => {
@@ -59,6 +59,11 @@ const Careers = () => {
         m: 0,
         p: 0,
         color: COLORS.textMuted,
+        /* MATCHING BOSA PRODUCTS PADDING:
+           This effectively drops the entire component content so the 
+           Hero Image starts below your fixed Navbar.
+        */
+        pt: { xs: 12, md: 18 }, 
       }}
     >
       {/* HERO IMAGE SECTION */}
@@ -69,7 +74,8 @@ const Careers = () => {
           alt={hero1?.Title || 'Career Hero'}
           sx={{
             width: '100%',
-            height: 'auto',
+            height: 'auto', // Ensures image appears full and maintains aspect ratio
+            maxHeight: { md: '600px' }, // Optional: keeps it from becoming too massive on wide screens
             objectFit: 'cover',
             display: 'block',
           }}
@@ -115,7 +121,7 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* SPACER BELOW IMAGE */}
+      {/* SPACER BELOW IMAGE - Necessary for the absolute positioned card overlap */}
       <Box sx={{ height: { xs: 100, sm: 120, md: 160 } }} />
 
       {/* PAGE DESCRIPTION */}
