@@ -20,7 +20,6 @@ const FAQs = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const theme = useTheme();
-  // Fixed: isMobile is now used below to handle responsive spacing/alignment
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
@@ -39,8 +38,8 @@ const FAQs = () => {
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: BRAND_DARK,
-        // Using isMobile logic or standard responsive objects
-        pt: isMobile ? '80px' : '100px', 
+        // Standardized drop: pushes content below the navbar
+        pt: isMobile ? 12 : 18, 
       }}
     >
       {/* SECTION TITLE */}
@@ -50,9 +49,7 @@ const FAQs = () => {
         sx={{
           fontWeight: 900,
           textTransform: 'uppercase',
-          mt: isMobile ? 2 : 4, // Used isMobile here
           mb: 6,
-          px: 2,
           letterSpacing: '3px',
           color: BRAND_GOLD,
           fontSize: { xs: '1.5rem', md: '2.2rem' },
@@ -69,22 +66,21 @@ const FAQs = () => {
           borderRadius: '16px',
           boxShadow: 0,
           display: 'flex',
+          // Stack on mobile, side-by-side on desktop
           flexDirection: { xs: 'column', md: 'row' },
-          minHeight: { xs: 'auto', md: '65vh' }, 
           backgroundColor: 'rgba(255, 255, 255, 0.02)',
           border: `1px solid rgba(255,255,255,0.05)`,
           overflow: 'hidden',
         }}
       >
-        {/* FAQ List Section */}
+        {/* FAQ List Section - Set to flex: 1 for 50% width */}
         <Box
           sx={{
-            flex: 1.2,
+            flex: 1,
             px: { xs: 2.5, sm: 3, md: 5 },
             py: { xs: 4, md: 6 },
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'flex-start',
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -125,7 +121,6 @@ const FAQs = () => {
                       borderRadius: '50%',
                       backgroundColor: BRAND_GOLD,
                       flexShrink: 0,
-                      boxShadow: hoveredIndex === index ? `0 0 10px ${BRAND_GOLD}` : 'none',
                     }}
                   />
                   {faq.Question}
@@ -149,23 +144,24 @@ const FAQs = () => {
           </Box>
         </Box>
 
-        {/* Image Section */}
-        <CardMedia
-          component="img"
-          sx={{
-            flex: 0.8,
-            height: { xs: 300, md: 'auto' },
-            minHeight: '400px',
-            objectFit: 'cover',
-            filter: 'brightness(0.7) grayscale(30%)',
-            transition: '0.5s ease',
-            '&:hover': {
-                filter: 'brightness(0.9) grayscale(0%)',
-            }
-          }}
-          image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
-          alt="Support Agent"
-        />
+        {/* Image Section - Set to flex: 1 for 50% width */}
+        <Box sx={{ flex: 1, position: 'relative' }}>
+          <CardMedia
+            component="img"
+            sx={{
+              height: '100%',
+              width: '100%',
+              objectFit: 'cover',
+              filter: 'brightness(0.8) grayscale(20%)',
+              // Ensures the image fills the 50% container perfectly
+              position: { md: 'absolute' },
+              top: 0,
+              left: 0,
+            }}
+            image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
+            alt="Support Agent"
+          />
+        </Box>
       </Card>
 
       <Footer />
