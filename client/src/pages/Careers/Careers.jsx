@@ -10,12 +10,11 @@ const Careers = () => {
   const [hero2, setHero2] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Standardized Brand Colors
   const COLORS = {
-    gold: '#EC9B14',      // Matches BRAND.gold
-    dark: '#02150F',      // Matches BRAND.dark
+    gold: '#EC9B14',
+    dark: '#02150F',
     light: '#F4F4F4',
-    textMuted: '#FFECA8', // Specific light gold text color
+    textMuted: '#FFECA8',
   };
 
   useEffect(() => {
@@ -31,21 +30,12 @@ const Careers = () => {
         setLoading(false);
       }
     };
-
     fetchImages();
   }, []);
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          height: '90vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: COLORS.dark,
-        }}
-      >
+      <Box sx={{ height: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: COLORS.dark }}>
         <CircularProgress sx={{ color: COLORS.gold }} />
       </Box>
     );
@@ -59,25 +49,26 @@ const Careers = () => {
         m: 0,
         p: 0,
         color: COLORS.textMuted,
-        /* MATCHING BOSA PRODUCTS PADDING:
-           This effectively drops the entire component content so the 
-           Hero Image starts below your fixed Navbar.
-        */
+        /* MATCHING BOSA PRODUCTS PADDING */
         pt: { xs: 12, md: 18 }, 
       }}
     >
       {/* HERO IMAGE SECTION */}
-      <Box sx={{ position: 'relative', width: '100%' }}>
+      <Box sx={{ position: 'relative', width: '100%', textAlign: 'center' }}>
         <Box
           component="img"
           src={hero1?.ImagePath}
           alt={hero1?.Title || 'Career Hero'}
           sx={{
             width: '100%',
-            height: 'auto', // Ensures image appears full and maintains aspect ratio
-            maxHeight: { md: '600px' }, // Optional: keeps it from becoming too massive on wide screens
-            objectFit: 'cover',
+            /* CHANGE: Instead of cover, we use 'contain' or 'auto' 
+               to ensure the image is never cropped. 
+            */
+            height: 'auto',
+            maxHeight: '80vh', 
+            objectFit: 'contain', // This ensures the whole image fits in the box
             display: 'block',
+            mx: 'auto'
           }}
         />
 
@@ -89,30 +80,22 @@ const Careers = () => {
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
-              bottom: { xs: '-120px', sm: '-140px', md: '-160px' },
+              bottom: { xs: '-80px', sm: '-100px', md: '-120px' }, // Slightly adjusted to not hide too much hero
               zIndex: 5,
               px: { xs: 2, sm: 4, md: 0 },
             }}
           >
-            <Box
-              sx={{
-                width: '100%',
-                maxWidth: { xs: '90%', sm: '80%', md: '600px' },
-              }}
-            >
+            <Box sx={{ width: '100%', maxWidth: { xs: '90%', sm: '80%', md: '600px' } }}>
               <motion.img
                 src={hero2.ImagePath}
                 alt="Career Sub Image"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1 }}
-                whileHover={{
-                  scale: 1.03,
-                  boxShadow: `0 0 35px ${COLORS.gold}88`,
-                }}
+                whileHover={{ scale: 1.03, boxShadow: `0 0 35px ${COLORS.gold}88` }}
                 style={{
                   width: '100%',
-                  borderRadius: '22px', // Standardized brand radius
+                  borderRadius: '22px',
                   border: `1px solid ${COLORS.gold}44`
                 }}
               />
@@ -121,17 +104,17 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* SPACER BELOW IMAGE - Necessary for the absolute positioned card overlap */}
-      <Box sx={{ height: { xs: 100, sm: 120, md: 160 } }} />
+      {/* SPACER */}
+      <Box sx={{ height: { xs: 120, sm: 140, md: 180 } }} />
 
-      {/* PAGE DESCRIPTION */}
+      {/* DESCRIPTION */}
       <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
         <Typography
           variant="h3"
           sx={{
             fontWeight: 900,
             fontSize: { xs: '1.6rem', sm: '2rem', md: '2.6rem' },
-            letterSpacing: '3px', // Standardized brand spacing
+            letterSpacing: '3px',
             mb: 2,
             textTransform: 'uppercase',
             color: COLORS.gold,
@@ -150,17 +133,13 @@ const Careers = () => {
             lineHeight: 1.85,
             color: COLORS.textMuted,
             fontWeight: 500,
-            textShadow: '0 0 6px rgba(0,0,0,0.35)',
           }}
         >
           {hero1?.Description}
         </Typography>
       </Box>
 
-      {/* CAREER LISTINGS */}
       <CareerListing />
-
-      {/* FOOTER */}
       <Footer />
     </Box>
   );
