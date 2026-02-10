@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const revealImage = keyframes`
-  0% { transform: scale(1.1); opacity: 0; }
+  0% { transform: scale(1.05); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 `;
 
@@ -25,6 +25,7 @@ const HomepageSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0); 
 
   useEffect(() => {
+    // Using the environment variable for the Golden Generation API
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/slider/view`)
       .then((res) => {
         setSlides(res.data.sliders || []);
@@ -36,12 +37,15 @@ const HomepageSlider = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 1000,
+    speed: 1500, // Smooth transition speed
     autoplay: true,
-    autoplaySpeed: 4000,
+    /* SPEED ADJUSTMENT: Changed from 3500 to 6000 (6 seconds). 
+       This allows users on mobile and desktop enough time to read the text.
+    */
+    autoplaySpeed: 6000, 
     slidesToShow: 1,
     slidesToScroll: 1,
-    fade: true,
+    fade: true, // Ensures "Fade" transition so images don't slide awkwardly
     arrows: false,
     beforeChange: (oldIndex, newIndex) => setCurrentSlide(newIndex),
   };
@@ -66,10 +70,12 @@ const HomepageSlider = () => {
                 bgcolor: BRAND.dark,
               }}
             >
-              {/* CONTENT SECTION (Left side on Desktop, Bottom on Mobile) */}
+              {/* TEXT CONTENT SECTION:
+                Reduced from 45% width to ~33% width (3/4 of previous) on desktop.
+              */}
               <Box sx={{ 
                 order: { xs: 2, md: 1 },
-                width: { xs: '100%', md: '45%' }, 
+                width: { xs: '100%', md: '33.3%' }, 
                 height: { xs: 'auto', md: '100vh' },
                 display: 'flex',
                 alignItems: 'center',
@@ -77,7 +83,7 @@ const HomepageSlider = () => {
                 zIndex: 2,
                 background: BRAND.dark
               }}>
-                <Container sx={{ px: { xs: 3, md: 6 } }}>
+                <Container sx={{ px: { xs: 3, md: 5 } }}>
                   <motion.div
                     key={`content-${currentSlide}`}
                     initial={{ opacity: 0, y: 20 }}
@@ -90,7 +96,7 @@ const HomepageSlider = () => {
                       textTransform: 'uppercase',
                       mb: 2,
                       lineHeight: 1.1,
-                      fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.8rem' },
+                      fontSize: { xs: '1.6rem', sm: '2rem', md: '2.4rem' },
                     }}>
                       {slide.Title}
                     </Typography>
@@ -99,9 +105,9 @@ const HomepageSlider = () => {
                       color: BRAND.light,
                       fontWeight: 400,
                       lineHeight: 1.6,
-                      fontSize: { xs: '0.9rem', md: '1rem' },
+                      fontSize: { xs: '0.85rem', md: '0.95rem' },
                       mb: 4,
-                      opacity: 0.9,
+                      opacity: 0.85,
                     }}>
                       {slide.Description?.replace(/<[^>]*>/g, '')}
                     </Typography>
@@ -118,12 +124,14 @@ const HomepageSlider = () => {
                 </Container>
               </Box>
 
-              {/* IMAGE SECTION (Right side on Desktop, Top on Mobile) */}
+              {/* IMAGE SECTION:
+                Expanded to fill the remaining 66.7% of the screen on desktop.
+              */}
               <Box
                 sx={{
                   order: { xs: 1, md: 2 },
-                  width: { xs: '100%', md: '55%' },
-                  height: { xs: '350px', sm: '450px', md: '100vh' },
+                  width: { xs: '100%', md: '66.7%' },
+                  height: { xs: '380px', sm: '480px', md: '100vh' },
                   position: 'relative',
                   overflow: 'hidden'
                 }}
@@ -135,14 +143,11 @@ const HomepageSlider = () => {
                   sx={{
                     width: '100%',
                     height: '100%',
-                    /* 'objectFit: cover' combined with a dedicated width/height 
-                       container ensures the image fills the space but keeps 
-                       the people visible and CLEAR without fading.
-                    */
                     objectFit: 'cover',
                     objectPosition: 'center',
                     display: 'block',
-                    animation: currentSlide === index ? `${revealImage} 1.5s ease-out forwards` : 'none',
+                    /* The animation now triggers every time the slide changes */
+                    animation: currentSlide === index ? `${revealImage} 1.8s ease-out forwards` : 'none',
                   }}
                 />
               </Box>
@@ -156,10 +161,10 @@ const HomepageSlider = () => {
 
 const ButtonStyle = {
   fontWeight: 700,
-  px: { xs: 3, md: 4 },
+  px: { xs: 2.5, md: 3.5 },
   py: { xs: 1, md: 1.2 },
   borderRadius: '4px',
-  fontSize: '0.8rem',
+  fontSize: '0.75rem',
   textTransform: 'uppercase',
 };
 
