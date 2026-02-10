@@ -17,6 +17,12 @@ const Careers = () => {
     textMuted: '#FFECA8',
   };
 
+  // Animation Variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } }
+  };
+
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -36,7 +42,7 @@ const Careers = () => {
   if (loading) {
     return (
       <Box sx={{ height: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: COLORS.dark }}>
-        <CircularProgress sx={{ color: COLORS.gold }} />
+        <CircularProgress sx={{ color: COLORS.gold, thickness: 5 }} />
       </Box>
     );
   }
@@ -49,28 +55,32 @@ const Careers = () => {
         m: 0,
         p: 0,
         color: COLORS.textMuted,
-        /* MATCHING THE BOSA PRODUCTS DROP:
-           This pushes the entire layout down so the hero image 
-           starts exactly where your navbar ends.
-        */
         pt: { xs: 12, md: 18 }, 
       }}
     >
-      {/* HERO IMAGE SECTION - Position and logic remain UNCHANGED */}
+      {/* HERO IMAGE SECTION */}
       <Box sx={{ position: 'relative', width: '100%' }}>
-        <Box
-          component="img"
-          src={hero1?.ImagePath}
-          alt={hero1?.Title || 'Career Hero'}
-          sx={{
-            width: '100%',
-            height: 'auto',
-            objectFit: 'cover', // Preserved as requested
-            display: 'block',
-          }}
-        />
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+        >
+          <Box
+            component="img"
+            src={hero1?.ImagePath}
+            alt={hero1?.Title || 'Career Hero'}
+            sx={{
+              width: '100%',
+              height: 'auto',
+              objectFit: 'cover',
+              display: 'block',
+              filter: 'brightness(0.85) contrast(1.1)', // Subtle punchy look
+            }}
+          />
+        </motion.div>
 
-        {/* SECONDARY IMAGE FLOATING CARD - Logic remains UNCHANGED */}
+        {/* SECONDARY IMAGE WITH FLOAT ANIMATION */}
         {hero2 && (
           <Box
             sx={{
@@ -87,14 +97,24 @@ const Careers = () => {
               <motion.img
                 src={hero2.ImagePath}
                 alt="Career Sub Image"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1 }}
-                whileHover={{ scale: 1.03, boxShadow: `0 0 35px ${COLORS.gold}88` }}
+                /* Idle Floating Animation */
+                animate={{ 
+                  y: [0, -15, 0],
+                }}
+                transition={{ 
+                  duration: 4, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                whileHover={{ 
+                  scale: 1.05, 
+                  boxShadow: `0 0 45px ${COLORS.gold}AA` 
+                }}
                 style={{
                   width: '100%',
                   borderRadius: '22px',
-                  border: `1px solid ${COLORS.gold}44`
+                  border: `2px solid ${COLORS.gold}66`, // Made border slightly thicker
+                  cursor: 'pointer'
                 }}
               />
             </Box>
@@ -102,20 +122,27 @@ const Careers = () => {
         )}
       </Box>
 
-      {/* REST OF COMPONENT - UNCHANGED */}
       <Box sx={{ height: { xs: 100, sm: 120, md: 160 } }} />
 
-      <Box sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}>
+      {/* PAGE DESCRIPTION WITH REVEAL */}
+      <Box 
+        component={motion.div}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+        sx={{ textAlign: 'center', mt: 4, px: 2, mb: 6 }}
+      >
         <Typography
           variant="h3"
           sx={{
             fontWeight: 900,
             fontSize: { xs: '1.6rem', sm: '2rem', md: '2.6rem' },
-            letterSpacing: '3px',
+            letterSpacing: '5px', // More spacing for a premium feel
             mb: 2,
             textTransform: 'uppercase',
             color: COLORS.gold,
-            textShadow: `0 0 18px ${COLORS.gold}73`,
+            textShadow: `2px 2px 20px ${COLORS.gold}44`,
           }}
         >
           Careers
@@ -124,20 +151,24 @@ const Careers = () => {
         <Typography
           variant="body1"
           sx={{
-            maxWidth: '900px',
+            maxWidth: '800px', // Slightly narrower for better readability
             mx: 'auto',
             fontSize: { xs: '1rem', md: '1.15rem' },
             lineHeight: 1.85,
             color: COLORS.textMuted,
             fontWeight: 500,
-            textShadow: '0 0 6px rgba(0,0,0,0.35)',
+            opacity: 0.9
           }}
         >
           {hero1?.Description}
         </Typography>
       </Box>
 
-      <CareerListing />
+      {/* CAREER LISTINGS SECTION */}
+      <Box sx={{ pb: 8 }}>
+        <CareerListing />
+      </Box>
+
       <Footer />
     </Box>
   );
