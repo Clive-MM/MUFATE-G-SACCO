@@ -14,13 +14,22 @@ import {
   Button,
   Alert,
   Divider,
+  keyframes, // Added for the glow animation
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion"; // Added for counting numbers
 
 /* ---------------- API CONFIG ---------------- */
 const API_BASE =
   process.env.REACT_APP_API_BASE?.replace(/\/$/, "") ||
   "https://mufate-g-sacco.onrender.com";
+
+/* ---------------- ANIMATIONS ---------------- */
+const glowPulse = keyframes`
+  0% { box-shadow: 0 0 5px rgba(236, 155, 20, 0.2); border-color: rgba(236, 155, 20, 0.1); }
+  50% { box-shadow: 0 0 20px rgba(236, 155, 20, 0.5); border-color: rgba(236, 155, 20, 0.6); }
+  100% { box-shadow: 0 0 5px rgba(236, 155, 20, 0.2); border-color: rgba(236, 155, 20, 0.1); }
+`;
 
 /* ---------------- STYLED COMPONENTS ---------------- */
 const PageWrapper = styled("div")({
@@ -93,6 +102,8 @@ const SummaryGoldCard = styled(Box)({
   marginBottom: "14px",
   textAlign: "center",
   color: "#02150F",
+  /* Glow effect applied here */
+  animation: `${glowPulse} 3s infinite ease-in-out`,
   "& .label": {
     fontSize: "0.65rem",
     fontWeight: 900,
@@ -118,7 +129,20 @@ async function getJSON(url, opts) {
   return r.json();
 }
 
-/* ---------------- COMPONENT ---------------- */
+/* ---------------- COUNT UP SUB-COMPONENT ---------------- */
+const AnimatedNumber = ({ value }) => {
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (latest) => formatMoney(latest));
+
+  useEffect(() => {
+    const controls = animate(count, value, { duration: 1.5, ease: "easeOut" });
+    return controls.stop;
+  }, [value, count]);
+
+  return <motion.div>{rounded}</motion.div>;
+};
+
+/* ---------------- MAIN COMPONENT ---------------- */
 export default function LoanCalculator() {
   const [products, setProducts] = useState([]);
   const [selectedKey, setSelectedKey] = useState("");
@@ -134,7 +158,6 @@ export default function LoanCalculator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  /* Load products */
   useEffect(() => {
     (async () => {
       try {
@@ -213,11 +236,9 @@ export default function LoanCalculator() {
         </Typography>
 
         <Grid container spacing={4}>
-          {/* ================= SPECIFY LOAN ================= */}
           <Grid item xs={12} md={8}>
             <NeoCard>
               <CardHeader>Specify Your Loan</CardHeader>
-
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} md={4}>
                   <InputLabel>
@@ -328,7 +349,6 @@ export default function LoanCalculator() {
                 >
                   {loading ? "Calculating..." : "CALCULATE"}
                 </Button>
-
                 <Button
                   fullWidth
                   onClick={() => window.location.reload()}
@@ -345,11 +365,9 @@ export default function LoanCalculator() {
             </NeoCard>
           </Grid>
 
-          {/* ================= SUMMARY ================= */}
           <Grid item xs={12} md={4}>
             <NeoCard>
               <CardHeader>Summary</CardHeader>
-
               {!summary ? (
                 <Typography sx={{ opacity: 0.4, textAlign: "center", mt: 6 }}>
                   Run calculation to view results.
@@ -359,7 +377,7 @@ export default function LoanCalculator() {
                   <SummaryGoldCard>
                     <div className="label">Loan Amount</div>
                     <div className="value">
-                      {formatMoney(summary.Principal)}
+                      <AnimatedNumber value={summary.Principal} />
                     </div>
                   </SummaryGoldCard>
 
@@ -374,14 +392,14 @@ export default function LoanCalculator() {
                       Total Interest
                     </div>
                     <div className="value">
-                      {formatMoney(summary.TotalInterest)}
+                      <AnimatedNumber value={summary.TotalInterest} />
                     </div>
                   </SummaryGoldCard>
 
                   <SummaryGoldCard sx={{ mt: "auto" }}>
                     <div className="label">Total Payable</div>
                     <div className="value">
-                      {formatMoney(summary.TotalPayable)}
+                      <AnimatedNumber value={summary.TotalPayable} />
                     </div>
                   </SummaryGoldCard>
                 </>
@@ -389,11 +407,9 @@ export default function LoanCalculator() {
             </NeoCard>
           </Grid>
 
-          {/* ================= SCHEDULE (EXPANDED) ================= */}
           <Grid item xs={12}>
             <NeoCard>
               <CardHeader>Repayment Schedule</CardHeader>
-
               {!schedule.length ? (
                 <Typography
                   sx={{
@@ -437,32 +453,17 @@ export default function LoanCalculator() {
                         ))}
                       </TableRow>
                     </TableHead>
-
                     <TableBody>
                       {schedule.map((row) => (
                         <TableRow 
                           key={row.period}
                           sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.02)' } }}
                         >
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>
-                            {row.period}
-                          </TableCell>
-
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>
-                            {row.date}
-                          </TableCell>
-
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>
-                            {formatMoney(row.principal)}
-                          </TableCell>
-
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>
-                            {formatMoney(row.interest)}
-                          </TableCell>
-
-                          <TableCell sx={{ color: "#EC9B14", fontWeight: 900, padding: "18px 24px" }}>
-                            {formatMoney(row.balance)}
-                          </TableCell>
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>{row.period}</TableCell>
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>{row.date}</TableCell>
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>{formatMoney(row.principal)}</TableCell>
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 700, padding: "18px 24px" }}>{formatMoney(row.interest)}</TableCell>
+                          <TableCell sx={{ color: "#EC9B14", fontWeight: 900, padding: "18px 24px" }}>{formatMoney(row.balance)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -473,17 +474,12 @@ export default function LoanCalculator() {
           </Grid>
         </Grid>
 
-        {/* FOOTER */}
         <Box sx={{ mt: 10, textAlign: "center" }}>
           <Divider sx={{ mb: 3, borderColor: "rgba(255,255,255,0.08)" }} />
-          <Typography
-            sx={{ color: "#EC9B14", fontWeight: 900, letterSpacing: "2px" }}
-          >
+          <Typography sx={{ color: "#EC9B14", fontWeight: 900, letterSpacing: "2px" }}>
             GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
           </Typography>
-          <Typography sx={{ opacity: 0.6, fontSize: "0.7rem" }}>
-            ALL RIGHTS RESERVED
-          </Typography>
+          <Typography sx={{ opacity: 0.6, fontSize: "0.7rem" }}>ALL RIGHTS RESERVED</Typography>
         </Box>
       </Container>
     </PageWrapper>

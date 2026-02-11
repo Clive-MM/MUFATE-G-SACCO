@@ -7,14 +7,18 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import Footer from '../components/Footer';
 
-// Updated constants to match Footer BRAND colors exactly
 const BRAND_GOLD = '#EC9B14';
 const BRAND_DARK = '#02150F';
 const BRAND_TEXT_LIGHT = '#F4F4F4';
 const BRAND_TEXT_MUTED = 'rgba(244, 244, 244, 0.6)';
+
+// Motion components for MUI
+const MotionBox = motion(Box);
+const MotionTypography = motion(Typography);
 
 const FAQs = () => {
   const [faqs, setFaqs] = useState([]);
@@ -38,130 +42,152 @@ const FAQs = () => {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        // Background matches footer color exactly
         backgroundColor: BRAND_DARK,
+        pt: isMobile ? 12 : 18, 
       }}
     >
+      {/* SECTION TITLE */}
+      <Typography
+        variant="h4"
+        align="center"
+        sx={{
+          fontWeight: 900,
+          textTransform: 'uppercase',
+          mb: 6,
+          letterSpacing: '3px',
+          color: BRAND_GOLD,
+          fontSize: { xs: '1.5rem', md: '2.2rem' },
+          textShadow: `0 0 15px ${BRAND_GOLD}33`,
+        }}
+      >
+        Frequently Asked Questions
+      </Typography>
+
       <Card
         sx={{
-          m: 0,
-          borderRadius: 0,
+          mx: { xs: 2, md: 5 },
+          mb: 8,
+          borderRadius: '16px',
           boxShadow: 0,
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          height: { xs: 'auto', md: '75vh' }, // Slightly increased to fit content
-          backgroundColor: 'transparent',
-          borderBottom: `1px solid rgba(255,255,255,0.05)`,
+          backgroundColor: 'rgba(255, 255, 255, 0.02)',
+          border: `1px solid rgba(255,255,255,0.05)`,
+          overflow: 'hidden',
         }}
       >
-        {/* FAQ Section */}
+        {/* FAQ List Section */}
         <Box
           sx={{
             flex: 1,
             px: { xs: 2.5, sm: 3, md: 5 },
-            py: { xs: 5, sm: 6, md: 8 },
-            overflowY: 'auto',
+            py: { xs: 4, md: 6 },
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            background: BRAND_DARK,
-            borderRight: { xs: 'none', md: `1px solid rgba(255, 255, 255, 0.05)` },
           }}
         >
-          <Typography
-            variant={isMobile ? 'h5' : 'h4'}
-            sx={{
-              fontWeight: 900, // Matches footer weight
-              mb: 4,
-              color: BRAND_GOLD,
-              textAlign: isMobile ? 'center' : 'left',
-              letterSpacing: '2px', // Matches footer letter spacing
-              textTransform: 'uppercase',
-            }}
-          >
-            Frequently Asked Questions
-          </Typography>
-
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {faqs.map((faq, index) => (
-              <Box
+              <MotionBox
                 key={faq.FAQID}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                // Entrance Stagger Animation
+                initial={{ opacity: 0, x: isMobile ? -10 : -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                // Visual Depth (3D Tilt / Liftoff Effect)
+                whileHover={{ 
+                  x: 10, 
+                  scale: 1.02,
+                  transition: { duration: 0.2 }
+                }}
                 sx={{
-                  p: 2,
-                  borderRadius: '8px',
+                  p: 2.5,
+                  borderRadius: '12px',
                   backgroundColor:
                     hoveredIndex === index
-                      ? 'rgba(236, 155, 20, 0.05)'
+                      ? 'rgba(236, 155, 20, 0.08)'
                       : 'transparent',
                   border:
                     hoveredIndex === index
                       ? `1px solid ${BRAND_GOLD}`
-                      : '1px solid rgba(255,255,255,0.05)',
-                  transition: '0.3s ease',
+                      : '1px solid rgba(255,255,255,0.08)',
+                  transition: 'background-color 0.3s ease, border 0.3s ease',
                   cursor: 'pointer',
                 }}
               >
                 <Typography
                   sx={{
-                    fontSize: '0.95rem',
+                    fontSize: '1rem',
                     fontWeight: 700,
                     color: hoveredIndex === index ? BRAND_GOLD : BRAND_TEXT_LIGHT,
                     display: 'flex',
-                    alignItems: 'flex-start',
+                    alignItems: 'center',
                     gap: 1.5,
-                    transition: '0.3s',
                   }}
                 >
-                  <Box
-                    component="span"
+                  {/* Interactive Indicator (Pulses on hover) */}
+                  <MotionBox
+                    animate={hoveredIndex === index ? { 
+                      scale: [1, 1.5, 1],
+                      boxShadow: `0 0 12px ${BRAND_GOLD}`
+                    } : { scale: 1 }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
                     sx={{
-                      mt: '7px',
-                      width: 6,
-                      height: 6,
+                      width: 8,
+                      height: 8,
                       borderRadius: '50%',
                       backgroundColor: BRAND_GOLD,
                       flexShrink: 0,
                     }}
                   />
-                  <span>{faq.Question}</span>
+                  {faq.Question}
                 </Typography>
 
-                {hoveredIndex === index && (
-                  <Typography
-                    sx={{
-                      mt: 1.5,
-                      fontSize: '0.88rem',
-                      color: BRAND_TEXT_MUTED, // Matches footer text muted style
-                      pl: 3,
-                      lineHeight: 1.8,
-                    }}
-                  >
-                    {faq.Answer}
-                  </Typography>
-                )}
-              </Box>
+                <AnimatePresence>
+                  {hoveredIndex === index && (
+                    <MotionTypography
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      sx={{
+                        mt: 2,
+                        fontSize: '0.9rem',
+                        color: BRAND_TEXT_MUTED,
+                        pl: 3.5,
+                        lineHeight: 1.7,
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {faq.Answer}
+                    </MotionTypography>
+                  )}
+                </AnimatePresence>
+              </MotionBox>
             ))}
           </Box>
         </Box>
 
         {/* Image Section */}
-        <CardMedia
-          component="img"
-          sx={{
-            flex: 1,
-            height: { xs: 300, sm: 350, md: '100%' },
-            objectFit: 'cover',
-            filter: 'brightness(0.6) grayscale(100%)', 
-            borderTop: { xs: `1px solid rgba(255,255,255,0.05)`, md: 'none' },
-          }}
-          image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
-          alt="Support Agent"
-        />
+        <Box sx={{ flex: 1, position: 'relative' }}>
+          <CardMedia
+            component="img"
+            sx={{
+              height: '100%',
+              width: '100%',
+              objectFit: 'cover',
+              filter: 'brightness(0.8) grayscale(20%)',
+              position: { md: 'absolute' },
+              top: 0,
+              left: 0,
+            }}
+            image="https://res.cloudinary.com/djydkcx01/image/upload/v1755502358/ChatGPT_Image_Aug_18_2025_10_32_14_AM_zmmyks.png"
+            alt="Support Agent"
+          />
+        </Box>
       </Card>
 
-    
       <Footer />
     </Box>
   );
