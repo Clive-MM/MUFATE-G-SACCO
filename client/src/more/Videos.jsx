@@ -46,20 +46,55 @@ const Videos = () => {
   };
 
   return (
-    <Box sx={{ bgcolor: BRAND.dark, minHeight: '100vh', pt: { xs: 10, md: 15 }, pb: 12 }}>
+    <Box sx={{ 
+      bgcolor: BRAND.dark, 
+      minHeight: '100vh',
+      pt: { xs: 15, md: 20 }, 
+      pb: 12 
+    }}>
       <Container maxWidth="xl">
-        <Box sx={{ mb: 8, textAlign: 'left' }}>
-          <Typography 
-            variant="h4" 
-            fontWeight={900} 
-            sx={{ color: '#FFF', mb: 1, textTransform: 'uppercase', letterSpacing: '1px' }}
+        
+        {/* --- RESTORED CENTERED HEADER --- */}
+        <Box sx={{ mb: 10, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            Recommended Videos
-          </Typography>
-          <Box sx={{ height: '4px', width: '60px', bgcolor: BRAND.gold, borderRadius: '2px' }} />
+            <Typography 
+              variant="h2" 
+              fontWeight={900} 
+              sx={{ 
+                color: BRAND.gold, 
+                mb: 2,
+                fontSize: { xs: '2.8rem', md: '4.5rem' },
+                textTransform: 'uppercase',
+                letterSpacing: '4px',
+                lineHeight: 1
+              }}
+            >
+              Media Gallery
+            </Typography>
+
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: BRAND.textMuted,
+                fontWeight: 300,
+                maxWidth: '800px',
+                lineHeight: 1.8,
+                fontSize: { xs: '1rem', md: '1.2rem' },
+                mx: 'auto'
+              }}
+            >
+              Experience the Golden Generation journey. Watch our latest highlights, 
+              member success stories, and official Sacco updates in high definition.
+            </Typography>
+          </motion.div>
         </Box>
 
-        <Grid container spacing={3}>
+        {/* --- YOUTUBE STYLE VIDEO GRID --- */}
+        <Grid container spacing={4}>
           <AnimatePresence>
             {VIDEO_DATA.map((video, index) => (
               <Grid item xs={12} sm={6} lg={4} key={video.id}>
@@ -67,30 +102,35 @@ const Videos = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ y: -8 }}
                 >
-                  {/* VIDEO THUMBNAIL AREA */}
+                  {/* Thumbnail (16:9 Landscape) */}
                   <Paper
                     elevation={0}
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      aspectRatio: '16 / 9', // Forces YouTube Shape
-                      borderRadius: '12px', // Slightly rounded like modern YT
+                      aspectRatio: '16 / 9',
+                      borderRadius: '16px',
                       overflow: 'hidden',
-                      bgcolor: '#1a1a1a',
+                      bgcolor: '#000',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      '&:hover .play-btn': { opacity: 1, transform: 'scale(1.2)' }
+                      border: '1px solid rgba(236, 155, 20, 0.1)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        borderColor: BRAND.gold,
+                        boxShadow: `0 10px 30px rgba(0,0,0,0.5)`,
+                        '& .play-btn': { opacity: 1, transform: 'scale(1.1)' }
+                      }
                     }}
                   >
-                    {/* Duration Badge */}
                     <Box sx={{ 
-                      position: 'absolute', bottom: 8, right: 8, 
+                      position: 'absolute', bottom: 12, right: 12, 
                       bgcolor: 'rgba(0,0,0,0.8)', color: '#fff', 
-                      px: 0.8, py: 0.2, borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, zIndex: 2 
+                      px: 1, py: 0.3, borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700, zIndex: 2 
                     }}>
                       {video.duration}
                     </Box>
@@ -98,32 +138,52 @@ const Videos = () => {
                     <PlayCircleFilledWhiteIcon 
                       className="play-btn"
                       sx={{ 
-                        fontSize: '4rem', 
+                        fontSize: '4.5rem', 
                         color: BRAND.gold, 
                         zIndex: 2, 
                         opacity: 0.7, 
-                        transition: '0.3s ease' 
+                        transition: 'all 0.3s ease' 
                       }} 
                     />
                   </Paper>
 
-                  {/* INFO AREA (Below the video) */}
-                  <Box sx={{ mt: 2, display: 'flex', gap: 1.5 }}>
-                    <Avatar sx={{ bgcolor: BRAND.gold, width: 36, height: 36, fontWeight: 'bold', fontSize: '0.8rem' }}>GG</Avatar>
+                  {/* Metadata below video */}
+                  <Box sx={{ mt: 2.5, display: 'flex', gap: 2 }}>
+                    <Avatar 
+                      sx={{ 
+                        bgcolor: BRAND.gold, 
+                        width: 40, 
+                        height: 40, 
+                        fontWeight: 800, 
+                        color: BRAND.dark 
+                      }}
+                    >
+                      GG
+                    </Avatar>
                     
                     <Box sx={{ flex: 1 }}>
                       <Typography 
-                        variant="subtitle1" 
-                        sx={{ color: '#FFF', fontWeight: 700, lineHeight: 1.3, mb: 0.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                        variant="h6" 
+                        sx={{ 
+                          color: '#FFF', 
+                          fontWeight: 700, 
+                          lineHeight: 1.3, 
+                          fontSize: '1.1rem',
+                          mb: 0.5,
+                          display: '-webkit-box', 
+                          WebkitLineClamp: 2, 
+                          WebkitBoxOrient: 'vertical', 
+                          overflow: 'hidden' 
+                        }}
                       >
                         {video.title}
                       </Typography>
                       
-                      <Typography variant="body2" sx={{ color: BRAND.textMuted, fontSize: '0.85rem' }}>
+                      <Typography variant="body2" sx={{ color: BRAND.textMuted, fontWeight: 500 }}>
                         Golden Generation Sacco • {video.category}
                       </Typography>
                       
-                      <Typography variant="body2" sx={{ color: BRAND.textMuted, fontSize: '0.85rem' }}>
+                      <Typography variant="body2" sx={{ color: BRAND.textMuted, opacity: 0.8 }}>
                         {video.views} • {video.time}
                       </Typography>
                     </Box>
@@ -138,15 +198,63 @@ const Videos = () => {
           </AnimatePresence>
         </Grid>
 
-        {/* Footer */}
-        <Box sx={{ mt: 15, borderTop: `1px solid ${BRAND.cardBg}`, pt: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography sx={{ color: BRAND.gold, fontWeight: 700, fontSize: '0.8rem' }}>
+        {/* --- RESTORED ORIGINAL CENTERED FOOTER --- */}
+        <Box sx={{ py: 6, mt: 12, position: 'relative', px: { xs: 2, md: 4 } }}>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative'
+          }}>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography
+                sx={{
+                  color: BRAND.gold,
+                  letterSpacing: '3px',
+                  fontWeight: 900,
+                  textTransform: 'uppercase',
+                  fontSize: { xs: '0.9rem', md: '1.35rem' }
+                }}
+              >
                 GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
-            </Typography>
-            <IconButton onClick={handleScrollToTop} sx={{ color: BRAND.gold, border: `1px solid ${BRAND.gold}` }}>
-                <ExpandLessIcon />
+              </Typography>
+              <Typography
+                sx={{
+                  color: BRAND.gold,
+                  opacity: 0.85,
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  mt: 1,
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px'
+                }}>
+                All Rights Reserved
+              </Typography>
+            </Box>
+
+            <IconButton
+              onClick={handleScrollToTop}
+              component={motion.button}
+              whileHover={{ y: -5 }}
+              whileTap={{ scale: 0.9 }}
+              sx={{
+                position: 'absolute',
+                right: 0,
+                color: BRAND.gold,
+                border: `2px solid ${BRAND.gold}`,
+                p: { xs: 0.5, md: 1 },
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                  boxShadow: `0 0 15px ${BRAND.gold}`,
+                },
+              }}
+            >
+              <ExpandLessIcon sx={{ fontSize: '2rem' }} />
             </IconButton>
+          </Box>
         </Box>
+
       </Container>
     </Box>
   );
