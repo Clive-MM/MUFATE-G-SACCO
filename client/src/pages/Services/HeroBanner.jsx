@@ -7,13 +7,19 @@ import AppleIcon from '@mui/icons-material/Apple';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const HeroBanner = () => {
- 
+  // Design System Constants (Matches FosaProducts)
+  const COLORS = {
+    gold: '#EC9B14',
+    dark: '#02150F',
+    light: '#F4F4F4',
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3, 
+        staggerChildren: 0.3,
         delayChildren: 0.2,
       },
     },
@@ -31,7 +37,8 @@ const HeroBanner = () => {
         backgroundImage: `url("https://res.cloudinary.com/djydkcx01/image/upload/v1747941107/ChatGPT_Image_May_22_2025_10_11_23_PM_aoofyb.png")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        height: { xs: '80vh', md: '75vh' }, 
+        // Changed to minHeight to ensure content never overflows on small laptop screens
+        minHeight: { xs: '80vh', md: '75vh' }, 
         width: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -39,7 +46,6 @@ const HeroBanner = () => {
         px: { xs: 2, md: 10 },
         overflow: 'hidden',
 
-       
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -62,22 +68,24 @@ const HeroBanner = () => {
         whileInView="visible"
         viewport={{ once: true }}
         sx={{ 
-            position: 'relative', 
-            zIndex: 2, 
-            maxWidth: '600px',
-            textAlign: { xs: 'center', md: 'left' } 
+          position: 'relative', 
+          zIndex: 2, 
+          maxWidth: '600px',
+          textAlign: { xs: 'center', md: 'left' },
+          /* --- Updated Padding to prevent Navbar overlap --- */
+          pt: { xs: 12, md: 18 }, 
+          pb: { xs: 6, md: 8 }, 
         }}
       >
-      
         <motion.div variants={itemVariants}>
           <Typography
             variant="h3"
-            fontWeight={900}
             sx={{
+              fontWeight: 900,
               mb: 2,
               fontSize: { xs: '2rem', md: '3.5rem' },
               lineHeight: 1.1,
-              color: '#EC9B14',
+              color: COLORS.gold, // Unified with design system
               textTransform: 'uppercase',
               letterSpacing: '1.5px',
               textShadow: '3px 3px 15px rgba(0,0,0,0.6)',
@@ -87,7 +95,6 @@ const HeroBanner = () => {
           </Typography>
         </motion.div>
 
-       
         <motion.div variants={itemVariants}>
           <Typography
             variant="body1"
@@ -95,7 +102,7 @@ const HeroBanner = () => {
               fontSize: { xs: '0.95rem', md: '1.1rem' },
               fontWeight: 500,
               lineHeight: 1.8,
-              color: '#EC9B14',
+              color: COLORS.gold, // Unified with design system
               mb: 4,
               textShadow: '1px 1px 8px rgba(0,0,0,0.8)',
             }}
@@ -107,7 +114,6 @@ const HeroBanner = () => {
           </Typography>
         </motion.div>
 
-       
         <motion.div variants={itemVariants}>
           <Stack 
             direction={{ xs: 'column', sm: 'row' }} 
@@ -121,8 +127,8 @@ const HeroBanner = () => {
               variant="contained"
               endIcon={<ArrowForwardIcon />}
               sx={{
-                bgcolor: '#EC9B14',
-                color: '#02150F',
+                bgcolor: COLORS.gold,
+                color: COLORS.dark,
                 fontWeight: 900,
                 px: 4,
                 py: 1.8,
@@ -132,7 +138,7 @@ const HeroBanner = () => {
                 boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
                 '&:hover': { 
                   bgcolor: '#FFFFFF', 
-                  color: '#02150F',
+                  color: COLORS.dark,
                   transform: 'translateY(-3px)' 
                 },
                 transition: '0.3s'
@@ -141,7 +147,6 @@ const HeroBanner = () => {
               Become a Member
             </Button>
             
-           
             <Stack spacing={1} alignItems={{ xs: 'center', md: 'flex-start' }}>
                <Typography 
                  sx={{ 
@@ -154,7 +159,7 @@ const HeroBanner = () => {
                >
                  Download the mobile app here:
                </Typography>
-               <Stack direction="row" spacing={2} sx={{ color: '#EC9B14' }}>
+               <Stack direction="row" spacing={2} sx={{ color: COLORS.gold }}>
                 <AppleIcon sx={{ fontSize: '2.2rem', cursor: 'pointer', '&:hover': { color: '#FFF' } }} />
                 <PlayArrowIcon sx={{ fontSize: '2.2rem', cursor: 'pointer', '&:hover': { color: '#FFF' } }} />
               </Stack>
