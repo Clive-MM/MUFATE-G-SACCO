@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const revealImage = keyframes`
-  0% { transform: scale(1.1); opacity: 0; }
+  0% { transform: scale(1.08); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 `;
 
@@ -57,36 +57,39 @@ const HomepageSlider = () => {
       width: '100%', 
       bgcolor: BRAND.dark, 
       overflow: 'hidden',
-      // Updated to match FosaProducts padding: pt: { xs: 12, md: 18 } (MUI spacing units)
+      // Consistent top padding to prevent navbar overlap
       pt: { xs: 12, md: 18 } 
     }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <Box key={index} sx={{ outline: 'none', position: "relative" }}>
             
+            {/* 1. CONTAINER: Now uses height "auto" to adapt to image like AboutHero */}
             <Box sx={{ 
               position: "relative", 
               width: "100%", 
-              height: { xs: "70vh", md: "85vh" }, 
-              overflow: "hidden" 
+              height: "auto", 
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column"
             }}>
               
-              {/* THE IMAGE */}
+              {/* 2. THE IMAGE: Adopted logic from AboutHero */}
               <Box
                 component="img"
                 src={slide.ImagePath}
                 alt={slide.Title}
                 sx={{
                   width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
+                  height: "auto", // Prevents cropping
                   display: "block",
-                  filter: "brightness(0.55)",
-                  animation: currentSlide === index ? `${revealImage} 1.5s ease-out forwards` : "none",
+                  zIndex: 1,
+                  filter: "brightness(0.55)", 
+                  animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : "none",
                 }}
               />
 
-              {/* OVERLAY CONTENT */}
+              {/* 3. OVERLAY CONTENT: Positioned absolute to sit ON TOP of the natural image */}
               <Box sx={{
                 position: "absolute",
                 top: 0,
@@ -112,7 +115,7 @@ const HomepageSlider = () => {
                           textTransform: 'uppercase',
                           mb: 1.5,
                           lineHeight: 1.1,
-                          fontSize: { xs: '1.6rem', sm: '2.2rem', md: '3.2rem' },
+                          fontSize: { xs: '1.2rem', sm: '2rem', md: '3.2rem' }, // Scaled down mobile font slightly for shorter images
                           maxWidth: { xs: "100%", md: "700px" }
                         }}>
                           {slide.Title}
@@ -121,9 +124,9 @@ const HomepageSlider = () => {
                         <Typography sx={{
                           color: BRAND.light,
                           fontWeight: 500,
-                          lineHeight: 1.5,
-                          fontSize: { xs: '0.9rem', md: '1.05rem' },
-                          mb: 4,
+                          lineHeight: 1.4,
+                          fontSize: { xs: '0.75rem', md: '1.05rem' }, // Scaled down for mobile to fit on the image
+                          mb: { xs: 2, md: 4 },
                           maxWidth: "600px",
                           textShadow: "1px 1px 4px rgba(0,0,0,0.8)"
                         }}>
@@ -159,10 +162,10 @@ const HomepageSlider = () => {
 
 const ButtonStyle = (isPrimary) => ({
   fontWeight: 800,
-  px: { xs: 2.5, md: 4 },
-  py: { xs: 1, md: 1.5 },
+  px: { xs: 2, md: 4 }, // Adjusted padding for mobile
+  py: { xs: 0.8, md: 1.5 },
   borderRadius: '4px',
-  fontSize: '0.8rem',
+  fontSize: { xs: '0.65rem', md: '0.8rem' }, // Smaller buttons for mobile to prevent overflow
   textTransform: 'uppercase',
   transition: '0.3s all ease',
   bgcolor: isPrimary ? BRAND.gold : "transparent",
