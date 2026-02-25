@@ -72,7 +72,7 @@ const HomepageSlider = () => {
               flexDirection: "column"
             }}>
               
-              {/* IMAGE: Full clarity brightness 1 */}
+              
               <Box
                 component="img"
                 src={slide.ImagePath}
@@ -87,7 +87,7 @@ const HomepageSlider = () => {
                 }}
               />
 
-              {/* OVERLAY: Bottom-aligned and Centralized */}
+             
               <Box sx={{
                 position: "absolute",
                 top: 0,
@@ -97,7 +97,7 @@ const HomepageSlider = () => {
                 display: "flex",
                 alignItems: "flex-end", 
                 justifyContent: "center",
-                // Subtle gradient to support the new glassmorphism layer
+              
                 background: "linear-gradient(to top, rgba(2,21,15,0.6) 0%, rgba(2,21,15,0.2) 20%, transparent 40%)",
                 zIndex: 4,
                 pb: { xs: 4, md: 8 } 
@@ -111,7 +111,7 @@ const HomepageSlider = () => {
                         transition={{ duration: 0.8 }}
                         style={{ textAlign: 'center' }}
                       >
-                        {/* TITLE: Dual-Layer Shadow & Letter Spacing */}
+                        
                         <Typography variant="h1" sx={{
                           color: BRAND.gold,
                           fontWeight: 900,
@@ -119,10 +119,10 @@ const HomepageSlider = () => {
                           mb: 2,
                           lineHeight: 1.1,
                           fontSize: { xs: '1.2rem', sm: '1.7rem', md: '2.6rem' },
-                          letterSpacing: '2px', // Improved recognition
+                          letterSpacing: '2px', 
                           maxWidth: "900px",
                           mx: "auto",
-                          // Dual-layer: Hard edge + Soft glow
+                         
                           textShadow: `
                             1px 1px 2px rgba(0,0,0,1), 
                             0px 0px 15px rgba(0,0,0,0.8)
@@ -131,21 +131,21 @@ const HomepageSlider = () => {
                           {slide.Title}
                         </Typography>
 
-                        {/* DESCRIPTION: Glassmorphism & Semi-Bold Weight */}
+                       
                         <Box sx={{
                           mx: "auto",
                           mb: { xs: 3, md: 4 },
                           maxWidth: "750px",
                           p: { xs: 1.5, md: 2 },
                           borderRadius: '12px',
-                          // Subtle glassmorphism backdrop
+                        
                           backdropFilter: 'blur(6px)',
                           backgroundColor: 'rgba(2, 21, 15, 0.25)',
                           border: '1px solid rgba(255, 255, 255, 0.05)',
                         }}>
                           <Typography sx={{
                             color: BRAND.light,
-                            fontWeight: 600, // Semi-bold for legibility
+                            fontWeight: 600, 
                             lineHeight: 1.5,
                             fontSize: { xs: '0.75rem', md: '0.9rem' },
                             textShadow: "1px 1px 4px rgba(0,0,0,0.8)"
