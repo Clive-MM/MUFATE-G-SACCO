@@ -8,9 +8,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-// Your preferred Reveal Animation
 const revealImage = keyframes`
-  0% { transform: scale(1.08); opacity: 0; }
+  0% { transform: scale(1.1); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 `;
 
@@ -37,9 +36,9 @@ const HomepageSlider = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 1200,
+    speed: 1000,
     autoplay: true,
-    autoplaySpeed: 7500, // 7.5 seconds for better readability
+    autoplaySpeed: 7000,
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
@@ -54,98 +53,103 @@ const HomepageSlider = () => {
   );
 
   return (
-    <Box sx={{ width: '100%', bgcolor: BRAND.dark, overflow: 'hidden' }}>
+    <Box sx={{ 
+      width: '100%', 
+      bgcolor: BRAND.dark, 
+      overflow: 'hidden',
+      // FIX: Pushes the hero below the fixed navbar
+      pt: { xs: "80px", md: "100px" } 
+    }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
-          <Box key={index} sx={{ outline: 'none' }}>
-            {/* 1. TOP IMAGE LAYER (Styled like your AboutHero) */}
-            <Box sx={{ position: "relative", width: "100%", overflow: "hidden" }}>
+          <Box key={index} sx={{ outline: 'none', position: "relative" }}>
+            
+            <Box sx={{ 
+              position: "relative", 
+              width: "100%", 
+              height: { xs: "70vh", md: "85vh" }, // Defined height for full-view feel
+              overflow: "hidden" 
+            }}>
+              
+              {/* THE IMAGE (Now a full Background) */}
               <Box
                 component="img"
                 src={slide.ImagePath}
                 alt={slide.Title}
                 sx={{
                   width: "100%",
-                  height: { xs: "auto", md: "75vh" }, // Natural height on mobile, cinematic on desktop
+                  height: "100%",
                   objectFit: "cover",
                   display: "block",
-                  animation: currentSlide === index ? `${revealImage} 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards` : "none",
+                  filter: "brightness(0.55)", // Darkens image so text is readable
+                  animation: currentSlide === index ? `${revealImage} 1.5s ease-out forwards` : "none",
                 }}
               />
-              
-              {/* TOP GRADIENT (Navbar Protector) */}
+
+              {/* OVERLAY CONTENT (Text OVER the image) */}
               <Box sx={{
-                position: "absolute", top: 0, left: 0, width: "100%", height: "120px",
-                background: "linear-gradient(to bottom, rgba(2,21,15,0.8) 0%, transparent 100%)",
-                zIndex: 2
-              }} />
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                background: "linear-gradient(to right, rgba(2,21,15,0.7) 0%, transparent 100%)",
+                zIndex: 4
+              }}>
+                <Container maxWidth="lg">
+                  <AnimatePresence mode="wait">
+                    {currentSlide === index && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8 }}
+                      >
+                        <Typography variant="h1" sx={{
+                          color: BRAND.gold,
+                          fontWeight: 900,
+                          textTransform: 'uppercase',
+                          mb: 1.5,
+                          lineHeight: 1.1,
+                          // Slightly smaller font for overlay balance
+                          fontSize: { xs: '1.6rem', sm: '2.2rem', md: '3.2rem' },
+                          maxWidth: { xs: "100%", md: "700px" }
+                        }}>
+                          {slide.Title}
+                        </Typography>
 
-              {/* BOTTOM BLEND (Smooth transition to text) */}
-              <Box sx={{
-                position: "absolute", bottom: -1, left: 0, width: "100%", height: "30%",
-                background: "linear-gradient(to top, #02150F 15%, transparent 100%)",
-                zIndex: 3
-              }} />
-            </Box>
+                        <Typography sx={{
+                          color: BRAND.light,
+                          fontWeight: 500,
+                          lineHeight: 1.5,
+                          fontSize: { xs: '0.9rem', md: '1.05rem' },
+                          mb: 4,
+                          maxWidth: "600px",
+                          textShadow: "1px 1px 4px rgba(0,0,0,0.8)" // Ensures text visibility
+                        }}>
+                          {slide.Description?.replace(/<[^>]*>/g, '')}
+                        </Typography>
 
-            {/* 2. CENTERED CONTENT SECTION (Below the Image) */}
-            <Box sx={{ 
-              bgcolor: BRAND.dark, 
-              pt: { xs: 2, md: 4 }, 
-              pb: { xs: 8, md: 10 }, 
-              textAlign: "center" 
-            }}>
-              <Container maxWidth="md">
-                <AnimatePresence mode="wait">
-                  {currentSlide === index && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8 }}
-                    >
-                      <Typography variant="h1" sx={{
-                        color: BRAND.gold,
-                        fontWeight: 900,
-                        textTransform: 'uppercase',
-                        mb: 2,
-                        lineHeight: 1.2,
-                        // Fluid Typography for better visibility
-                        fontSize: { xs: 'clamp(1.5rem, 5vw, 2.2rem)', md: 'clamp(2.2rem, 4vw, 3.5rem)' },
-                      }}>
-                        {slide.Title}
-                      </Typography>
-
-                      <Typography sx={{
-                        color: BRAND.light,
-                        fontWeight: 400,
-                        lineHeight: 1.7,
-                        fontSize: { xs: '0.95rem', md: '1.1rem' },
-                        mb: 4,
-                        opacity: 0.85,
-                        maxWidth: "800px",
-                        mx: "auto"
-                      }}>
-                        {slide.Description?.replace(/<[^>]*>/g, '')}
-                      </Typography>
-
-                      <Stack direction="row" spacing={2} justifyContent="center">
-                        <Button
-                          component={RouterLink} to="/customer_registration"
-                          sx={ButtonStyle(true)}
-                        >
-                          Join Us Now
-                        </Button>
-                        <Button
-                          component={RouterLink} to="/products/bosa"
-                          sx={ButtonStyle(false)}
-                        >
-                          Our Products
-                        </Button>
-                      </Stack>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </Container>
+                        <Stack direction="row" spacing={2}>
+                          <Button
+                            component={RouterLink} to="/customer_registration"
+                            sx={ButtonStyle(true)}
+                          >
+                            Join Us Now
+                          </Button>
+                          <Button
+                            component={RouterLink} to="/products/bosa"
+                            sx={ButtonStyle(false)}
+                          >
+                            Products
+                          </Button>
+                        </Stack>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Container>
+              </Box>
             </Box>
           </Box>
         ))}
@@ -154,13 +158,12 @@ const HomepageSlider = () => {
   );
 };
 
-// Reusable Button Logic to keep code clean
 const ButtonStyle = (isPrimary) => ({
   fontWeight: 800,
-  px: { xs: 3, md: 5 },
-  py: { xs: 1.2, md: 1.8 },
+  px: { xs: 2.5, md: 4 },
+  py: { xs: 1, md: 1.5 },
   borderRadius: '4px',
-  fontSize: '0.85rem',
+  fontSize: '0.8rem',
   textTransform: 'uppercase',
   transition: '0.3s all ease',
   bgcolor: isPrimary ? BRAND.gold : "transparent",
@@ -169,7 +172,8 @@ const ButtonStyle = (isPrimary) => ({
   '&:hover': {
     bgcolor: isPrimary ? BRAND.light : BRAND.gold,
     color: BRAND.dark,
-    transform: 'translateY(-3px)'
+    transform: 'translateY(-2px)',
+    boxShadow: isPrimary ? `0 4px 20px ${BRAND.gold}44` : 'none'
   }
 });
 
