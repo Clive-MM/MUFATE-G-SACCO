@@ -57,8 +57,8 @@ const HomepageSlider = () => {
       width: '100%', 
       bgcolor: BRAND.dark, 
       overflow: 'hidden',
-      // FIX: Pushes the hero below the fixed navbar
-      pt: { xs: "80px", md: "100px" } 
+      // Updated to match FosaProducts padding: pt: { xs: 12, md: 18 } (MUI spacing units)
+      pt: { xs: 12, md: 18 } 
     }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
@@ -67,11 +67,11 @@ const HomepageSlider = () => {
             <Box sx={{ 
               position: "relative", 
               width: "100%", 
-              height: { xs: "70vh", md: "85vh" }, // Defined height for full-view feel
+              height: { xs: "70vh", md: "85vh" }, 
               overflow: "hidden" 
             }}>
               
-              {/* THE IMAGE (Now a full Background) */}
+              {/* THE IMAGE */}
               <Box
                 component="img"
                 src={slide.ImagePath}
@@ -81,12 +81,12 @@ const HomepageSlider = () => {
                   height: "100%",
                   objectFit: "cover",
                   display: "block",
-                  filter: "brightness(0.55)", // Darkens image so text is readable
+                  filter: "brightness(0.55)",
                   animation: currentSlide === index ? `${revealImage} 1.5s ease-out forwards` : "none",
                 }}
               />
 
-              {/* OVERLAY CONTENT (Text OVER the image) */}
+              {/* OVERLAY CONTENT */}
               <Box sx={{
                 position: "absolute",
                 top: 0,
@@ -112,7 +112,6 @@ const HomepageSlider = () => {
                           textTransform: 'uppercase',
                           mb: 1.5,
                           lineHeight: 1.1,
-                          // Slightly smaller font for overlay balance
                           fontSize: { xs: '1.6rem', sm: '2.2rem', md: '3.2rem' },
                           maxWidth: { xs: "100%", md: "700px" }
                         }}>
@@ -126,7 +125,7 @@ const HomepageSlider = () => {
                           fontSize: { xs: '0.9rem', md: '1.05rem' },
                           mb: 4,
                           maxWidth: "600px",
-                          textShadow: "1px 1px 4px rgba(0,0,0,0.8)" // Ensures text visibility
+                          textShadow: "1px 1px 4px rgba(0,0,0,0.8)"
                         }}>
                           {slide.Description?.replace(/<[^>]*>/g, '')}
                         </Typography>
