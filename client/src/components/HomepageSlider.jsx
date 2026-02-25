@@ -57,7 +57,6 @@ const HomepageSlider = () => {
       width: '100%', 
       bgcolor: BRAND.dark, 
       overflow: 'hidden',
-      // CHANGE 1: Removed pt: { xs: 12, md: 18 } to remove the green band
       pt: 0 
     }}>
       <Slider {...settings}>
@@ -73,6 +72,7 @@ const HomepageSlider = () => {
               flexDirection: "column"
             }}>
               
+              {/* IMAGE: Full clarity brightness 1 */}
               <Box
                 component="img"
                 src={slide.ImagePath}
@@ -82,12 +82,12 @@ const HomepageSlider = () => {
                   height: "auto",
                   display: "block",
                   zIndex: 1,
-                  // CHANGE 2: Set brightness to 1 for a clear image (was 0.55)
                   filter: "brightness(1)", 
                   animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : "none",
                 }}
               />
 
+              {/* OVERLAY: Bottom-aligned and Centralized */}
               <Box sx={{
                 position: "absolute",
                 top: 0,
@@ -95,29 +95,33 @@ const HomepageSlider = () => {
                 width: "100%",
                 height: "100%",
                 display: "flex",
-                alignItems: "center",
-                // CHANGE 3: Removed the dark linear-gradient background for maximum clarity
-                background: "transparent",
-                zIndex: 4
+                alignItems: "flex-end", // Positions text at the bottom
+                justifyContent: "center",
+                // Subtle gradient only at the bottom to protect text visibility
+                background: "linear-gradient(to top, rgba(2,21,15,0.7) 0%, rgba(2,21,15,0.3) 25%, transparent 50%)",
+                zIndex: 4,
+                pb: { xs: 4, md: 8 } // Space from bottom edge
               }}>
                 <Container maxWidth="lg">
                   <AnimatePresence mode="wait">
                     {currentSlide === index && (
                       <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
+                        style={{ textAlign: 'center' }}
                       >
                         <Typography variant="h1" sx={{
                           color: BRAND.gold,
                           fontWeight: 900,
                           textTransform: 'uppercase',
-                          mb: 1.5,
+                          mb: 1,
                           lineHeight: 1.1,
-                          fontSize: { xs: '1.2rem', sm: '2rem', md: '3.2rem' },
-                          maxWidth: { xs: "100%", md: "700px" },
-                          // Added text shadow to ensure text is readable on a clear image
-                          textShadow: "2px 2px 8px rgba(0,0,0,0.8)"
+                          // Reduced font sizes
+                          fontSize: { xs: '1.3rem', sm: '1.8rem', md: '2.8rem' },
+                          maxWidth: "900px",
+                          mx: "auto",
+                          textShadow: "2px 2px 10px rgba(0,0,0,0.7)"
                         }}>
                           {slide.Title}
                         </Typography>
@@ -126,15 +130,17 @@ const HomepageSlider = () => {
                           color: BRAND.light,
                           fontWeight: 500,
                           lineHeight: 1.4,
-                          fontSize: { xs: '0.75rem', md: '1.05rem' },
-                          mb: { xs: 2, md: 4 },
-                          maxWidth: "600px",
-                          textShadow: "2px 2px 8px rgba(0,0,0,0.8)"
+                          // Reduced font sizes
+                          fontSize: { xs: '0.8rem', md: '0.95rem' },
+                          mb: { xs: 3, md: 4 },
+                          maxWidth: "750px",
+                          mx: "auto",
+                          textShadow: "1px 1px 8px rgba(0,0,0,0.7)"
                         }}>
                           {slide.Description?.replace(/<[^>]*>/g, '')}
                         </Typography>
 
-                        <Stack direction="row" spacing={2}>
+                        <Stack direction="row" spacing={2} justifyContent="center">
                           <Button
                             component={RouterLink} to="/customer_registration"
                             sx={ButtonStyle(true)}
@@ -163,10 +169,10 @@ const HomepageSlider = () => {
 
 const ButtonStyle = (isPrimary) => ({
   fontWeight: 800,
-  px: { xs: 2, md: 4 },
-  py: { xs: 0.8, md: 1.5 },
+  px: { xs: 2.5, md: 4 },
+  py: { xs: 0.8, md: 1.2 },
   borderRadius: '4px',
-  fontSize: { xs: '0.65rem', md: '0.8rem' },
+  fontSize: { xs: '0.65rem', md: '0.75rem' },
   textTransform: 'uppercase',
   transition: '0.3s all ease',
   bgcolor: isPrimary ? BRAND.gold : "transparent",
