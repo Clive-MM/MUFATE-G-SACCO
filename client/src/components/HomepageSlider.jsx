@@ -57,14 +57,13 @@ const HomepageSlider = () => {
       width: '100%', 
       bgcolor: BRAND.dark, 
       overflow: 'hidden',
-      // Consistent top padding to prevent navbar overlap
-      pt: { xs: 12, md: 18 } 
+      // CHANGE 1: Removed pt: { xs: 12, md: 18 } to remove the green band
+      pt: 0 
     }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <Box key={index} sx={{ outline: 'none', position: "relative" }}>
             
-            {/* 1. CONTAINER: Now uses height "auto" to adapt to image like AboutHero */}
             <Box sx={{ 
               position: "relative", 
               width: "100%", 
@@ -74,22 +73,21 @@ const HomepageSlider = () => {
               flexDirection: "column"
             }}>
               
-              {/* 2. THE IMAGE: Adopted logic from AboutHero */}
               <Box
                 component="img"
                 src={slide.ImagePath}
                 alt={slide.Title}
                 sx={{
                   width: "100%",
-                  height: "auto", // Prevents cropping
+                  height: "auto",
                   display: "block",
                   zIndex: 1,
-                  filter: "brightness(0.55)", 
+                  // CHANGE 2: Set brightness to 1 for a clear image (was 0.55)
+                  filter: "brightness(1)", 
                   animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : "none",
                 }}
               />
 
-              {/* 3. OVERLAY CONTENT: Positioned absolute to sit ON TOP of the natural image */}
               <Box sx={{
                 position: "absolute",
                 top: 0,
@@ -98,7 +96,8 @@ const HomepageSlider = () => {
                 height: "100%",
                 display: "flex",
                 alignItems: "center",
-                background: "linear-gradient(to right, rgba(2,21,15,0.7) 0%, transparent 100%)",
+                // CHANGE 3: Removed the dark linear-gradient background for maximum clarity
+                background: "transparent",
                 zIndex: 4
               }}>
                 <Container maxWidth="lg">
@@ -115,8 +114,10 @@ const HomepageSlider = () => {
                           textTransform: 'uppercase',
                           mb: 1.5,
                           lineHeight: 1.1,
-                          fontSize: { xs: '1.2rem', sm: '2rem', md: '3.2rem' }, // Scaled down mobile font slightly for shorter images
-                          maxWidth: { xs: "100%", md: "700px" }
+                          fontSize: { xs: '1.2rem', sm: '2rem', md: '3.2rem' },
+                          maxWidth: { xs: "100%", md: "700px" },
+                          // Added text shadow to ensure text is readable on a clear image
+                          textShadow: "2px 2px 8px rgba(0,0,0,0.8)"
                         }}>
                           {slide.Title}
                         </Typography>
@@ -125,10 +126,10 @@ const HomepageSlider = () => {
                           color: BRAND.light,
                           fontWeight: 500,
                           lineHeight: 1.4,
-                          fontSize: { xs: '0.75rem', md: '1.05rem' }, // Scaled down for mobile to fit on the image
+                          fontSize: { xs: '0.75rem', md: '1.05rem' },
                           mb: { xs: 2, md: 4 },
                           maxWidth: "600px",
-                          textShadow: "1px 1px 4px rgba(0,0,0,0.8)"
+                          textShadow: "2px 2px 8px rgba(0,0,0,0.8)"
                         }}>
                           {slide.Description?.replace(/<[^>]*>/g, '')}
                         </Typography>
@@ -162,10 +163,10 @@ const HomepageSlider = () => {
 
 const ButtonStyle = (isPrimary) => ({
   fontWeight: 800,
-  px: { xs: 2, md: 4 }, // Adjusted padding for mobile
+  px: { xs: 2, md: 4 },
   py: { xs: 0.8, md: 1.5 },
   borderRadius: '4px',
-  fontSize: { xs: '0.65rem', md: '0.8rem' }, // Smaller buttons for mobile to prevent overflow
+  fontSize: { xs: '0.65rem', md: '0.8rem' },
   textTransform: 'uppercase',
   transition: '0.3s all ease',
   bgcolor: isPrimary ? BRAND.gold : "transparent",
