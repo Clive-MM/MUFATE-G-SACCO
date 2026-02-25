@@ -95,12 +95,12 @@ const HomepageSlider = () => {
                 width: "100%",
                 height: "100%",
                 display: "flex",
-                alignItems: "flex-end", // Positions text at the bottom
+                alignItems: "flex-end", 
                 justifyContent: "center",
-                // Subtle gradient only at the bottom to protect text visibility
-                background: "linear-gradient(to top, rgba(2,21,15,0.7) 0%, rgba(2,21,15,0.3) 25%, transparent 50%)",
+                // Subtle gradient to support the new glassmorphism layer
+                background: "linear-gradient(to top, rgba(2,21,15,0.6) 0%, rgba(2,21,15,0.2) 20%, transparent 40%)",
                 zIndex: 4,
-                pb: { xs: 4, md: 8 } // Space from bottom edge
+                pb: { xs: 4, md: 8 } 
               }}>
                 <Container maxWidth="lg">
                   <AnimatePresence mode="wait">
@@ -111,34 +111,48 @@ const HomepageSlider = () => {
                         transition={{ duration: 0.8 }}
                         style={{ textAlign: 'center' }}
                       >
+                        {/* TITLE: Dual-Layer Shadow & Letter Spacing */}
                         <Typography variant="h1" sx={{
                           color: BRAND.gold,
                           fontWeight: 900,
                           textTransform: 'uppercase',
-                          mb: 1,
+                          mb: 2,
                           lineHeight: 1.1,
-                          // Reduced font sizes
-                          fontSize: { xs: '1.3rem', sm: '1.8rem', md: '2.8rem' },
+                          fontSize: { xs: '1.2rem', sm: '1.7rem', md: '2.6rem' },
+                          letterSpacing: '2px', // Improved recognition
                           maxWidth: "900px",
                           mx: "auto",
-                          textShadow: "2px 2px 10px rgba(0,0,0,0.7)"
+                          // Dual-layer: Hard edge + Soft glow
+                          textShadow: `
+                            1px 1px 2px rgba(0,0,0,1), 
+                            0px 0px 15px rgba(0,0,0,0.8)
+                          `
                         }}>
                           {slide.Title}
                         </Typography>
 
-                        <Typography sx={{
-                          color: BRAND.light,
-                          fontWeight: 500,
-                          lineHeight: 1.4,
-                          // Reduced font sizes
-                          fontSize: { xs: '0.8rem', md: '0.95rem' },
+                        {/* DESCRIPTION: Glassmorphism & Semi-Bold Weight */}
+                        <Box sx={{
+                          mx: "auto",
                           mb: { xs: 3, md: 4 },
                           maxWidth: "750px",
-                          mx: "auto",
-                          textShadow: "1px 1px 8px rgba(0,0,0,0.7)"
+                          p: { xs: 1.5, md: 2 },
+                          borderRadius: '12px',
+                          // Subtle glassmorphism backdrop
+                          backdropFilter: 'blur(6px)',
+                          backgroundColor: 'rgba(2, 21, 15, 0.25)',
+                          border: '1px solid rgba(255, 255, 255, 0.05)',
                         }}>
-                          {slide.Description?.replace(/<[^>]*>/g, '')}
-                        </Typography>
+                          <Typography sx={{
+                            color: BRAND.light,
+                            fontWeight: 600, // Semi-bold for legibility
+                            lineHeight: 1.5,
+                            fontSize: { xs: '0.75rem', md: '0.9rem' },
+                            textShadow: "1px 1px 4px rgba(0,0,0,0.8)"
+                          }}>
+                            {slide.Description?.replace(/<[^>]*>/g, '')}
+                          </Typography>
+                        </Box>
 
                         <Stack direction="row" spacing={2} justifyContent="center">
                           <Button
