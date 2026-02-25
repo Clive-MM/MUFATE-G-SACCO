@@ -8,6 +8,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+// Your preferred Reveal Animation
 const revealImage = keyframes`
   0% { transform: scale(1.08); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
@@ -36,19 +37,18 @@ const HomepageSlider = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 1500,         // Smooth transition time
+    speed: 1200,
     autoplay: true,
-    autoplaySpeed: 7500,  // Optimized for readability (7.5 seconds)
+    autoplaySpeed: 7500, // 7.5 seconds for better readability
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
     arrows: false,
-    pauseOnHover: true,   // UX: Let them stop the slide to read by touching/hovering
     beforeChange: (oldIndex, newIndex) => setCurrentSlide(newIndex),
   };
 
   if (loading) return (
-    <Box sx={{ height: '600px', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
+    <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
       <CircularProgress sx={{ color: BRAND.gold }} />
     </Box>
   );
@@ -57,104 +57,95 @@ const HomepageSlider = () => {
     <Box sx={{ width: '100%', bgcolor: BRAND.dark, overflow: 'hidden' }}>
       <Slider {...settings}>
         {slides.map((slide, index) => (
-          <Box key={index} sx={{ position: 'relative', width: '100%' }}>
-            <Box
-              sx={{
-                width: '100%',
-                // Fix: svh ensures mobile buttons stay above browser UI bars
-                height: { xs: '100svh', md: '100vh' }, 
-                display: 'flex',
-                flexDirection: { xs: 'column', md: 'row' },
-                bgcolor: BRAND.dark,
-                position: 'relative'
-              }}
-            >
-              {/* IMAGE SECTION - Performance Optimized while keeping your exact layout */}
+          <Box key={index} sx={{ outline: 'none' }}>
+            {/* 1. TOP IMAGE LAYER (Styled like your AboutHero) */}
+            <Box sx={{ position: "relative", width: "100%", overflow: "hidden" }}>
               <Box
                 component="img"
                 src={slide.ImagePath}
                 alt={slide.Title}
                 sx={{
-                  width: '100%',
-                  height: { xs: '60%', md: '100%' },
-                  objectFit: 'cover', // Exactly like background-size: cover
-                  position: 'absolute',
-                  right: 0,
-                  top: 0,
-                  zIndex: 1,
-                  opacity: 0.6, // Ensures text pops
-                  animation: currentSlide === index ? `${revealImage} 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards` : 'none',
+                  width: "100%",
+                  height: { xs: "auto", md: "75vh" }, // Natural height on mobile, cinematic on desktop
+                  objectFit: "cover",
+                  display: "block",
+                  animation: currentSlide === index ? `${revealImage} 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards` : "none",
                 }}
               />
-
-              {/* CONTENT SECTION */}
+              
+              {/* TOP GRADIENT (Navbar Protector) */}
               <Box sx={{
-                position: 'relative',
-                zIndex: 2,
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: { xs: 'flex-start', md: 'center' },
-                pt: { xs: '65%', md: 0 } // Positions text below the image on mobile
-              }}>
-                <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
-                  
-                  <motion.div
-                    key={`content-${currentSlide}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                  >
-                    <Typography variant="h1" sx={{
-                      color: BRAND.gold,
-                      fontWeight: 900,
-                      textTransform: 'uppercase',
-                      maxWidth: { xs: "100%", md: "600px" },
-                      mb: { xs: 1, md: 2 },
-                      lineHeight: 1.1,
-                      // Fix: Fluid Typography (clamp)
-                      fontSize: { 
-                        xs: 'clamp(1.4rem, 6vw, 2rem)', 
-                        md: 'clamp(2rem, 4vw, 3.5rem)' 
-                      },
-                    }}>
-                      {slide.Title}
-                    </Typography>
+                position: "absolute", top: 0, left: 0, width: "100%", height: "120px",
+                background: "linear-gradient(to bottom, rgba(2,21,15,0.8) 0%, transparent 100%)",
+                zIndex: 2
+              }} />
 
-                    <Typography sx={{
-                      color: BRAND.light,
-                      maxWidth: { xs: "100%", md: "500px" },
-                      fontWeight: 400,
-                      lineHeight: 1.5,
-                      // Fix: Readable Body Text for mobile
-                      fontSize: { xs: '0.95rem', md: '1.1rem' },
-                      mb: { xs: 3, md: 5 },
-                      opacity: 0.9,
-                    }}>
-                      {slide.Description?.replace(/<[^>]*>/g, '')}
-                    </Typography>
+              {/* BOTTOM BLEND (Smooth transition to text) */}
+              <Box sx={{
+                position: "absolute", bottom: -1, left: 0, width: "100%", height: "30%",
+                background: "linear-gradient(to top, #02150F 15%, transparent 100%)",
+                zIndex: 3
+              }} />
+            </Box>
 
-                    <Stack direction="row" spacing={2}>
-                      <Button
-                        component={RouterLink} to="/customer_registration"
-                        sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
-                      >
-                        Join Us
-                      </Button>
-                      <Button
-                        component={RouterLink} to="/products/bosa"
-                        sx={{
-                          ...ButtonStyle,
-                          border: `1.5px solid ${BRAND.gold}`,
-                          color: BRAND.gold,
-                        }}
-                      >
-                        Products
-                      </Button>
-                    </Stack>
-                  </motion.div>
-                </Container>
-              </Box>
+            {/* 2. CENTERED CONTENT SECTION (Below the Image) */}
+            <Box sx={{ 
+              bgcolor: BRAND.dark, 
+              pt: { xs: 2, md: 4 }, 
+              pb: { xs: 8, md: 10 }, 
+              textAlign: "center" 
+            }}>
+              <Container maxWidth="md">
+                <AnimatePresence mode="wait">
+                  {currentSlide === index && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8 }}
+                    >
+                      <Typography variant="h1" sx={{
+                        color: BRAND.gold,
+                        fontWeight: 900,
+                        textTransform: 'uppercase',
+                        mb: 2,
+                        lineHeight: 1.2,
+                        // Fluid Typography for better visibility
+                        fontSize: { xs: 'clamp(1.5rem, 5vw, 2.2rem)', md: 'clamp(2.2rem, 4vw, 3.5rem)' },
+                      }}>
+                        {slide.Title}
+                      </Typography>
+
+                      <Typography sx={{
+                        color: BRAND.light,
+                        fontWeight: 400,
+                        lineHeight: 1.7,
+                        fontSize: { xs: '0.95rem', md: '1.1rem' },
+                        mb: 4,
+                        opacity: 0.85,
+                        maxWidth: "800px",
+                        mx: "auto"
+                      }}>
+                        {slide.Description?.replace(/<[^>]*>/g, '')}
+                      </Typography>
+
+                      <Stack direction="row" spacing={2} justifyContent="center">
+                        <Button
+                          component={RouterLink} to="/customer_registration"
+                          sx={ButtonStyle(true)}
+                        >
+                          Join Us Now
+                        </Button>
+                        <Button
+                          component={RouterLink} to="/products/bosa"
+                          sx={ButtonStyle(false)}
+                        >
+                          Our Products
+                        </Button>
+                      </Stack>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Container>
             </Box>
           </Box>
         ))}
@@ -163,15 +154,23 @@ const HomepageSlider = () => {
   );
 };
 
-const ButtonStyle = {
+// Reusable Button Logic to keep code clean
+const ButtonStyle = (isPrimary) => ({
   fontWeight: 800,
-  px: { xs: 3, md: 4 },
-  py: { xs: 1, md: 1.5 },
+  px: { xs: 3, md: 5 },
+  py: { xs: 1.2, md: 1.8 },
   borderRadius: '4px',
-  fontSize: '0.8rem',
+  fontSize: '0.85rem',
   textTransform: 'uppercase',
   transition: '0.3s all ease',
-  '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }
-};
+  bgcolor: isPrimary ? BRAND.gold : "transparent",
+  color: isPrimary ? BRAND.dark : BRAND.gold,
+  border: isPrimary ? "none" : `1.5px solid ${BRAND.gold}`,
+  '&:hover': {
+    bgcolor: isPrimary ? BRAND.light : BRAND.gold,
+    color: BRAND.dark,
+    transform: 'translateY(-3px)'
+  }
+});
 
 export default HomepageSlider;
