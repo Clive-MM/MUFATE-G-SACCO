@@ -1,365 +1,194 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
-
 import Slider from 'react-slick';
-
-import { motion } from 'framer-motion';
-
+import { motion, AnimatePresence } from 'framer-motion';
 import { Box, Typography, Button, Container, CircularProgress, Stack, keyframes } from '@mui/material';
-
 import { Link as RouterLink } from 'react-router-dom';
 
-
-
 import "slick-carousel/slick/slick.css";
-
 import "slick-carousel/slick/slick-theme.css";
 
-
-
-
-
-const revealImage = keyframes`
-
-  0% { transform: scale(1.08); opacity: 0; }
-
-  100% { transform: scale(1); opacity: 1; }
-
+// Keyframes for a smoother "Ken Burns" effect on the image
+const zoomEffect = keyframes`
+  0% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 `;
 
-
-
 const BRAND = {
-
   gold: "#EC9B14",
-
   dark: "#02150F",
-
   light: "#F4F4F4",
-
 };
-
-
 
 const HomepageSlider = () => {
-
   const [slides, setSlides] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
   const [currentSlide, setCurrentSlide] = useState(0);
 
-
-
   useEffect(() => {
-
-    axios.get(`${process.env.REACT_APP_API_BASE_URL}/slider/view`)
-
+    // AbortController prevents memory leaks if component unmounts
+    const controller = new AbortController();
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/slider/view`, { signal: controller.signal })
       .then((res) => {
-
         setSlides(res.data.sliders || []);
-
         setLoading(false);
-
       })
-
       .catch(() => setLoading(false));
-
+    return () => controller.abort();
   }, []);
 
-
-
   const settings = {
-
     dots: true,
-
     infinite: true,
-
-    speed: 1500,
-
+    speed: 1000,         // Slightly faster transition (1s)
     autoplay: true,
-
-    autoplaySpeed: 3500,
-
+    autoplaySpeed: 6500,  // MUCH longer stay (6.5s) to allow reading
     slidesToShow: 1,
-
     slidesToScroll: 1,
-
-    fade: true,
-
+    fade: true,           // Fade is better for performance than sliding
     arrows: false,
-
+    pauseOnHover: true,   // Let the user pause to read by hovering
     beforeChange: (oldIndex, newIndex) => setCurrentSlide(newIndex),
-
+    appendDots: dots => (
+      <Box sx={{ position: 'absolute', bottom: 30, width: '100%' }}>
+        <ul style={{ margin: "0px" }}> {dots} </ul>
+      </Box>
+    ),
   };
 
-
-
   if (loading) return (
-
-    <Box sx={{ height: '600px', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
-
+    <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: BRAND.dark }}>
       <CircularProgress sx={{ color: BRAND.gold }} />
-
     </Box>
-
   );
-
-
 
   return (
-
     <Box sx={{ width: '100%', bgcolor: BRAND.dark, overflow: 'hidden' }}>
-
       <Slider {...settings}>
-
         {slides.map((slide, index) => (
-
-          <Box key={index} sx={{ position: 'relative', width: '100%' }}>
-
+          <Box key={index} sx={{ position: 'relative' }}>
             <Box
-
               sx={{
-
                 width: '100%',
-
-                height: '100vh',
-
+                height: { xs: '100svh', md: '100vh' }, // Mobile-friendly height
                 display: 'flex',
-
-                flexDirection: { xs: 'column', md: 'row' },
-
-                bgcolor: BRAND.dark,
-
+                flexDirection: 'column',
+                justifyContent: 'center',
+                position: 'relative',
+                overflow: 'hidden'
               }}
-
             >
-
-              {/* IMAGE SECTION */}
-
+              {/* IMAGE SECTION - High Performance approach */}
               <Box
-
+                component="img"
+                src={slide.ImagePath}
+                alt={slide.Title}
                 sx={{
-
-                  width: { xs: '100%', md: '100%' },
-
-                  height: { xs: '60%', md: '100vh' },
-
-                  backgroundImage: `url(${slide.ImagePath})`,
-
-                  backgroundSize: 'contain',
-
-                  backgroundRepeat: 'no-repeat',
-
-                  backgroundPosition: { xs: 'bottom center', md: 'right center' },
-
-                  position: { md: 'absolute' },
-
-                  right: 0,
-
+                  position: 'absolute',
                   top: 0,
-
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover', // Fills the screen properly
+                  objectPosition: 'center',
                   zIndex: 1,
-
-                  pt: { xs: 2, md: 0 },
-
-                  animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : 'none',
-
+                  filter: 'brightness(0.6)', // Darken image to make text pop
+                  animation: currentSlide === index ? `${zoomEffect} 7s ease-out forwards` : 'none',
                 }}
-
               />
 
-
+              {/* OVERLAY GRADIENT for Text Legibility */}
+              <Box sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(to right, rgba(2,21,15,0.9) 0%, rgba(2,21,15,0.4) 100%)',
+                zIndex: 2
+              }} />
 
               {/* CONTENT SECTION */}
-
-              <Box sx={{
-
-                position: 'relative',
-
-                zIndex: 2,
-
-                width: '100%',
-
-                height: { xs: '40%', md: '100vh' },
-
-                display: 'flex',
-
-                alignItems: { xs: 'flex-start', md: 'center' },
-
-                pt: { xs: 3, md: 0 }
-
-              }}>
-
-                <Container maxWidth="xl" sx={{ px: { xs: 3, md: 8 }, mx: 0 }}>
-
-                 
-
-                  <motion.div
-
-                    key={`title-${currentSlide}`}
-
-                    initial={{ opacity: 0, y: 20 }}
-
-                    animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
-
-                    transition={{ duration: 0.8, delay: 0.2 }}
-
-                  >
-
-                    <Typography variant="h1" sx={{
-
-                      color: BRAND.gold,
-
-                      fontWeight: 900,
-
-                      textTransform: 'uppercase',
-
-                      maxWidth: { xs: "100%", md: "420px" },
-
-                      mb: { xs: 1, md: 2 },
-
-                      lineHeight: 1.1,
-
-                      fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.8rem' },
-
-                    }}>
-
-                      {slide.Title}
-
-                    </Typography>
-
-                  </motion.div>
-
-
-
-                  <motion.div
-
-                    key={`desc-${currentSlide}`}
-
-                    initial={{ opacity: 0, y: 20 }}
-
-                    animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
-
-                    transition={{ duration: 0.8, delay: 0.4 }}
-
-                  >
-
-                    <Typography sx={{
-
-                      color: BRAND.light,
-
-                      maxWidth: { xs: "100%", md: "340px" },
-
-                      fontWeight: 400,
-
-                      lineHeight: 1.4,
-
-                      fontSize: { xs: '0.8rem', md: '0.78rem' },
-
-                      mb: { xs: 2, md: 4 },
-
-                      opacity: 0.9,
-
-                    }}>
-
-                      {slide.Description?.replace(/<[^>]*>/g, '')}
-
-                    </Typography>
-
-                  </motion.div>
-
-
-
-                  <Stack
-
-                    direction="row"
-
-                    spacing={2}
-
-                    component={motion.div}
-
-                    key={`btns-${currentSlide}`}
-
-                    initial={{ opacity: 0, y: 15 }}
-
-                    animate={currentSlide === index ? { opacity: 1, y: 0 } : {}}
-
-                    transition={{ duration: 0.8, delay: 0.6 }}
-
-                  >
-
-                    <Button
-
-                      component={RouterLink} to="/customer_registration"
-
-                      sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark }}
-
-                    >
-
-                      Join Us
-
-                    </Button>
-
-                    <Button
-
-                      component={RouterLink} to="/products/bosa"
-
-                      sx={{
-
-                        ...ButtonStyle,
-
-                        border: `1.5px solid ${BRAND.gold}`,
-
-                        color: BRAND.gold,
-
-                      }}
-
-                    >
-
-                      Products
-
-                    </Button>
-
-                  </Stack>
-
-                </Container>
-
-              </Box>
-
+              <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 3, px: { xs: 3, md: 8 } }}>
+                <Stack spacing={2} sx={{ maxWidth: { xs: '100%', md: '600px' } }}>
+                  
+                  <AnimatePresence mode="wait">
+                    {currentSlide === index && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        <Typography variant="h1" sx={{
+                          color: BRAND.gold,
+                          fontWeight: 900,
+                          textTransform: 'uppercase',
+                          lineHeight: 1.1,
+                          fontSize: { 
+                            xs: 'clamp(1.8rem, 8vw, 2.5rem)', 
+                            md: 'clamp(2.5rem, 5vw, 4rem)' 
+                          },
+                          mb: 1
+                        }}>
+                          {slide.Title}
+                        </Typography>
+
+                        <Typography sx={{
+                          color: BRAND.light,
+                          fontWeight: 400,
+                          lineHeight: 1.6,
+                          fontSize: { xs: '1rem', md: '1.1rem' },
+                          mb: 4,
+                          opacity: 0.9,
+                          maxWidth: '500px'
+                        }}>
+                          {slide.Description?.replace(/<[^>]*>/g, '')}
+                        </Typography>
+
+                        <Stack direction="row" spacing={2}>
+                          <Button
+                            component={RouterLink} to="/customer_registration"
+                            variant="contained"
+                            sx={{ ...ButtonStyle, bgcolor: BRAND.gold, color: BRAND.dark, '&:hover': { bgcolor: '#fff' } }}
+                          >
+                            Join Us Now
+                          </Button>
+                          <Button
+                            component={RouterLink} to="/products/bosa"
+                            variant="outlined"
+                            sx={{
+                              ...ButtonStyle,
+                              borderColor: BRAND.gold,
+                              color: BRAND.gold,
+                              '&:hover': { borderColor: '#fff', color: '#fff' }
+                            }}
+                          >
+                            Our Products
+                          </Button>
+                        </Stack>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                </Stack>
+              </Container>
             </Box>
-
           </Box>
-
         ))}
-
       </Slider>
-
     </Box>
-
   );
-
 };
-
-
 
 const ButtonStyle = {
-
-  fontWeight: 700,
-
-  px: { xs: 2.5, md: 3 },
-
-  py: { xs: 0.8, md: 1 },
-
+  fontWeight: 800,
+  px: { xs: 3, md: 4 },
+  py: { xs: 1.2, md: 1.5 },
   borderRadius: '4px',
-
-  fontSize: '0.7rem',
-
+  fontSize: { xs: '0.8rem', md: '0.9rem' },
   textTransform: 'uppercase',
-
+  transition: '0.3s all ease'
 };
-
-
 
 export default HomepageSlider;
