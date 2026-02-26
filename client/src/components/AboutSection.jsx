@@ -1,10 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
   Button,
   Card,
-  CardContent,
   CardActionArea,
   Stack,
   Container,
@@ -30,7 +29,7 @@ const BRAND = {
   textMuted: "rgba(244, 244, 244, 0.7)",
 };
 
-// PERFORMANCE: Moved outside component to prevent re-creation on every render
+// PERFORMANCE: Constant data outside the component
 const SERVICES = [
   {
     title: "Smart Savings & Investment",
@@ -75,7 +74,6 @@ const AboutSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -143,7 +141,7 @@ const AboutSection = () => {
             </motion.div>
           </Box>
 
-          {/* MOBILE: Snap Slider | DESKTOP: Grid */}
+          {/* PERFORMANCE: Optimized Grid/Slider logic using isMobile */}
           
           <Box
             component={motion.div}
@@ -154,30 +152,36 @@ const AboutSection = () => {
             sx={{
               width: '100%',
               display: 'flex',
+              // Dynamic Layout: Row for horizontal scroll on mobile, wrap for grid on laptop
               flexDirection: 'row',
-              // Performance & UX: Enable horizontal scroll on mobile
-              flexWrap: { xs: 'nowrap', sm: 'wrap' },
-              overflowX: { xs: 'auto', sm: 'visible' },
-              scrollSnapType: { xs: 'x mandatory', sm: 'none' },
+              flexWrap: isMobile ? 'nowrap' : 'wrap',
+              overflowX: isMobile ? 'auto' : 'visible',
+              scrollSnapType: isMobile ? 'x mandatory' : 'none',
               gap: { xs: 2, md: 4 },
-              px: { xs: 2, sm: 0 },
-              // Hide scrollbars for cleaner Look
+              px: isMobile ? 2 : 0,
+              pb: isMobile ? 4 : 0,
+              // Performance: Hide scrollbars for a clean "App" feel
               '&::-webkit-scrollbar': { display: 'none' },
               msOverflowStyle: 'none',
               scrollbarWidth: 'none',
-              // Grid behavior for Desktop
-              justifyContent: { sm: 'center' },
-              '& > div': {
-                minWidth: { xs: '85%', sm: 'calc(50% - 16px)', md: 'calc(33.33% - 28px)' },
-                scrollSnapAlign: 'center',
-              }
+              justifyContent: isMobile ? 'flex-start' : 'center',
             }}
           >
             {SERVICES.map((service, index) => (
-              <Box key={index} component={motion.div} variants={cardVariants}>
+              <Box 
+                key={index} 
+                component={motion.div} 
+                variants={cardVariants}
+                sx={{
+                  // Mobile shows 85% of one card to hint at more | Laptop shows 3 per row
+                  minWidth: isMobile ? '85%' : 'calc(33.33% - 28px)',
+                  maxWidth: isMobile ? '85%' : 'none',
+                  scrollSnapAlign: 'center',
+                }}
+              >
                 <Card 
-                  onMouseEnter={() => setHoveredCard(index)}
-                  onMouseLeave={() => setHoveredCard(null)}
+                  onMouseEnter={() => !isMobile && setHoveredCard(index)}
+                  onMouseLeave={() => !isMobile && setHoveredCard(null)}
                   elevation={0}
                   sx={{ 
                     bgcolor: 'rgba(255, 255, 255, 0.03)',
@@ -186,8 +190,6 @@ const AboutSection = () => {
                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                     height: '100%',
                     backdropFilter: 'blur(12px)',
-                    position: 'relative',
-                    overflow: 'hidden'
                   }}
                 >
                   <CardActionArea
@@ -198,15 +200,15 @@ const AboutSection = () => {
                       p: { xs: 4, md: 5 },
                       display: 'flex',
                       flexDirection: 'column',
-                      alignItems: 'flex-start', // Left aligned for easier reading
+                      alignItems: 'flex-start',
                       textAlign: 'left',
                     }}
                   >
                     <Box sx={{ 
                       mb: 3, 
                       color: BRAND.gold, 
-                      transform: hoveredCard === index ? 'scale(1.1) rotate(-5deg)' : 'scale(1)',
-                      transition: '0.4s' 
+                      transition: '0.4s',
+                      transform: hoveredCard === index ? 'scale(1.1)' : 'scale(1)'
                     }}>
                       {service.icon}
                     </Box>
@@ -235,7 +237,6 @@ const AboutSection = () => {
                       {service.desc}
                     </Typography>
 
-                    {/* Member UX: Clear Call to Action inside the card */}
                     <Box sx={{ 
                       mt: 'auto', 
                       display: 'flex', 
@@ -243,7 +244,7 @@ const AboutSection = () => {
                       color: BRAND.gold,
                       fontWeight: 700,
                       fontSize: '0.85rem',
-                      opacity: hoveredCard === index ? 1 : 0.7,
+                      opacity: isMobile || hoveredCard === index ? 1 : 0.6,
                       transition: '0.3s'
                     }}>
                       LEARN MORE <ArrowForwardIcon sx={{ ml: 1, fontSize: 18 }} />
@@ -254,32 +255,26 @@ const AboutSection = () => {
             ))}
           </Box>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+          <Button 
+            component={RouterLink} 
+            to="/about/who-we-are" 
+            sx={{ 
+              color: BRAND.gold,
+              fontWeight: 800,
+              borderBottom: `2px solid ${BRAND.gold}`,
+              borderRadius: 0,
+              px: 2,
+              pb: 1,
+              letterSpacing: '0.2em',
+              '&:hover': {
+                bgcolor: 'transparent',
+                color: BRAND.light,
+                borderColor: BRAND.light
+              }
+            }}
           >
-            <Button 
-              component={RouterLink} 
-              to="/about/who-we-are" 
-              sx={{ 
-                color: BRAND.gold,
-                fontWeight: 800,
-                borderBottom: `2px solid ${BRAND.gold}`,
-                borderRadius: 0,
-                px: 2,
-                pb: 1,
-                letterSpacing: '0.2em',
-                '&:hover': {
-                  bgcolor: 'transparent',
-                  color: BRAND.light,
-                  borderColor: BRAND.light
-                }
-              }}
-            >
-              DISCOVER OUR HISTORY
-            </Button>
-          </motion.div>
+            DISCOVER OUR HISTORY
+          </Button>
 
         </Stack>
       </Container>
