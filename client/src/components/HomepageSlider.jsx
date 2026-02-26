@@ -30,7 +30,6 @@ const HomepageSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const theme = useTheme();
-  // Using 'md' as the pivot point to ensure laptop (Lg/Xl) remains unchanged
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
@@ -68,82 +67,48 @@ const HomepageSlider = () => {
           <Box key={index} sx={{ outline: 'none' }}>
             <Box sx={{ 
               position: "relative", 
+              width: "100%",
+              // Mobile uses auto height to avoid cropping; Laptop uses your initial height logic
+              height: isMobile ? "auto" : { md: "85vh", lg: "90vh" }, 
               display: "flex",
               flexDirection: "column",
-              // Navbar safety padding only on mobile
-              pt: { xs: "65px", md: "0px" },
-              // Laptop maintains a fixed high-impact height
-              height: { xs: "auto", md: "85vh" },
-              minHeight: { md: "600px" }
+              pt: isMobile ? "65px" : 0
             }}>
               
               {/* IMAGE LAYER */}
-              <Box sx={{ 
-                position: isMobile ? "relative" : "absolute", 
-                width: "100%",
-                height: "100%",
-                top: 0,
-                left: 0,
-                zIndex: 1
-              }}>
-                <Box
-                  component="img"
-                  src={slide.ImagePath}
-                  alt={slide.Title}
-                  sx={{
-                    width: "100%",
-                    height: { xs: "auto", md: "100%" },
-                    objectFit: "cover",
-                    display: "block",
-                    animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : "none",
-                  }}
-                />
-
-                {/* BOTTOM BLEND - Only high visibility on mobile to transition to dark BG */}
-                <Box sx={{
-                  position: "absolute",
-                  bottom: -1,
-                  left: 0,
+              <Box
+                component="img"
+                src={slide.ImagePath}
+                alt={slide.Title}
+                sx={{
                   width: "100%",
-                  height: { xs: "25%", md: "40%" },
-                  background: isMobile 
-                    ? "linear-gradient(to top, #02150F 15%, transparent 100%)"
-                    : "linear-gradient(to top, rgba(2,21,15,0.7) 0%, transparent 100%)",
-                  zIndex: 2,
-                  pointerEvents: "none",
-                  animation: currentSlide === index ? `${fadeUp} 1s ease-out forwards` : "none",
-                }} />
-                
-                {/* TOP PROTECTION - Only on mobile for Navbar readability */}
-                {isMobile && (
-                  <Box sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "80px",
-                    background: "linear-gradient(to bottom, rgba(2,21,15,1) 0%, transparent 100%)",
-                    zIndex: 2
-                  }} />
-                )}
-              </Box>
+                  // Restore initial laptop "auto" or "100%" height while keeping mobile auto
+                  height: isMobile ? "auto" : "100%",
+                  objectFit: isMobile ? "contain" : "cover",
+                  display: "block",
+                  zIndex: 1,
+                  animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : "none",
+                }}
+              />
 
-              {/* CONTENT LAYER */}
+              {/* OVERLAY / CONTENT LAYER */}
               <Box sx={{
-                // Absolute overlay for Laptop, Relative flow for Mobile
-                position: { xs: "relative", md: "absolute" },
+                // THE KEY FIX: Absolute for Laptop (Overlay), Relative for Mobile (Stacked)
+                position: isMobile ? "relative" : "absolute",
                 top: 0,
                 left: 0,
                 width: "100%",
-                height: "100%",
+                height: isMobile ? "auto" : "100%",
                 display: "flex",
-                // Laptop content sits at the bottom overlay, Mobile starts after image
-                alignItems: { xs: "flex-start", md: "flex-end" },
+                // Initial laptop alignment: flex-end
+                alignItems: isMobile ? "flex-start" : "flex-end", 
                 justifyContent: "center",
+                // Initial laptop gradient
+                background: isMobile ? "none" : "linear-gradient(to top, rgba(2,21,15,0.7) 0%, rgba(2,21,15,0.2) 20%, transparent 40%)",
                 zIndex: 4,
-                pb: { xs: 6, md: 12 }, // More padding on laptop for cleaner look
-                px: 2,
-                bgcolor: { xs: BRAND.dark, md: "transparent" }
+                pb: isMobile ? 6 : { md: 8, lg: 10 },
+                px: isMobile ? 2 : 0,
+                bgcolor: isMobile ? BRAND.dark : "transparent"
               }}>
                 <Container maxWidth="lg">
                   <AnimatePresence mode="wait">
@@ -154,45 +119,45 @@ const HomepageSlider = () => {
                         transition={{ duration: 0.8 }}
                         style={{ textAlign: 'center' }}
                       >
+                        {/* Title: Mobile-First typography vs Initial Laptop typography */}
                         <Typography variant="h1" sx={{
                           color: BRAND.gold,
                           fontWeight: 900,
                           textTransform: 'uppercase',
-                          mb: { xs: 1.5, md: 2.5 },
+                          mb: 2,
                           lineHeight: 1.1,
-                          fontSize: { xs: '1.6rem', sm: '2rem', md: '3.2rem', lg: '4rem' },
-                          letterSpacing: { xs: '1px', md: '3px' },
-                          // Shadow restored for laptop readability over image
-                          textShadow: isMobile ? 'none' : '2px 4px 15px rgba(0,0,0,0.8)'
+                          fontSize: isMobile ? '1.6rem' : { md: '2.6rem', lg: '3.5rem' },
+                          letterSpacing: '2px',
+                          textShadow: isMobile ? "none" : "2px 2px 10px rgba(0,0,0,0.8)"
                         }}>
                           {slide.Title}
                         </Typography>
 
-                        {/* Description Box - Backdrop blur restored for Laptop only */}
+                        {/* Description Box: Backdrop blur only on Laptop */}
                         <Box sx={{
                           mx: "auto",
                           mb: 4,
-                          maxWidth: "850px",
-                          p: isMobile ? 0 : { md: 2, lg: 3 },
+                          maxWidth: "800px",
+                          p: isMobile ? 0 : 2,
                           borderRadius: '12px',
-                          backdropFilter: isMobile ? 'none' : 'blur(8px)',
-                          backgroundColor: isMobile ? 'transparent' : 'rgba(2, 21, 15, 0.4)',
-                          border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+                          backdropFilter: isMobile ? 'none' : 'blur(6px)',
+                          backgroundColor: isMobile ? 'transparent' : 'rgba(2, 21, 15, 0.25)',
+                          border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.05)',
                         }}>
                           <Typography sx={{
                             color: BRAND.light,
-                            fontWeight: { xs: 400, md: 500 },
-                            lineHeight: 1.6,
-                            fontSize: { xs: '0.95rem', md: '1.1rem', lg: '1.25rem' },
-                            textShadow: isMobile ? "none" : "1px 1px 4px rgba(0,0,0,0.8)"
+                            fontWeight: 600,
+                            lineHeight: 1.5,
+                            fontSize: isMobile ? '0.9rem' : '1.1rem',
+                            textShadow: "1px 1px 4px rgba(0,0,0,0.8)"
                           }}>
                             {slide.Description?.replace(/<[^>]*>/g, '')}
                           </Typography>
                         </Box>
 
                         <Stack 
-                          direction={{ xs: "column", sm: "row" }} 
-                          spacing={3} 
+                          direction={isMobile ? "column" : "row"} 
+                          spacing={2} 
                           justifyContent="center"
                           alignItems="center"
                         >
@@ -224,22 +189,21 @@ const HomepageSlider = () => {
 
 const ButtonStyle = (isPrimary, isMobile) => ({
   fontWeight: 800,
-  width: isMobile ? '85%' : 'auto',
-  minWidth: { md: '200px' },
-  px: { xs: 3, md: 5 },
-  py: { xs: 1.2, md: 1.8 },
+  width: isMobile ? '80%' : 'auto',
+  px: { xs: 3, md: 4 },
+  py: { xs: 1.2, md: 1.5 },
   borderRadius: '4px',
-  fontSize: { xs: '0.85rem', md: '0.9rem' },
+  fontSize: isMobile ? '0.85rem' : '0.9rem',
   textTransform: 'uppercase',
-  transition: '0.4s all ease',
+  transition: '0.3s all ease',
   bgcolor: isPrimary ? BRAND.gold : "transparent",
   color: isPrimary ? BRAND.dark : BRAND.gold,
-  border: `2px solid ${BRAND.gold}`,
+  border: `2.2px solid ${BRAND.gold}`,
   '&:hover': {
     bgcolor: isPrimary ? BRAND.light : BRAND.gold,
     color: BRAND.dark,
-    transform: 'translateY(-3px)',
-    boxShadow: isPrimary ? `0 8px 25px ${BRAND.gold}66` : `0 8px 25px ${BRAND.gold}22`
+    transform: 'translateY(-2px)',
+    boxShadow: isPrimary ? `0 4px 20px ${BRAND.gold}44` : 'none'
   }
 });
 
