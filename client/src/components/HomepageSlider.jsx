@@ -8,6 +8,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+// Animations from AboutHero
 const revealImage = keyframes`
   0% { transform: scale(1.08); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
@@ -30,7 +31,6 @@ const HomepageSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const theme = useTheme();
-  // Pivot at 'md' to protect the initial Laptop (Lg/Xl) layout
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
@@ -66,50 +66,78 @@ const HomepageSlider = () => {
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <Box key={index} sx={{ outline: 'none' }}>
+            {/* 1. MAIN CONTAINER 
+               Switches to flex-column to ensure the image determines the height (No Cropping)
+            */}
             <Box sx={{ 
               position: "relative", 
               width: "100%",
-              // Laptop: 85vh height (Initial Logic) | Mobile: auto (No-crop Logic)
-              height: isMobile ? "auto" : "85vh", 
+              backgroundColor: BRAND.dark,
               display: "flex",
               flexDirection: "column",
-              pt: isMobile ? "65px" : 0 
+              // Navbar padding matches AboutHero
+              pt: { xs: "65px", sm: "80px", md: "0px" }, 
             }}>
               
-              {/* IMAGE LAYER */}
-              <Box
-                component="img"
-                src={slide.ImagePath}
-                alt={slide.Title}
-                sx={{
-                  width: "100%",
-                  height: isMobile ? "auto" : "100%",
-                  objectFit: isMobile ? "contain" : "cover",
-                  display: "block",
-                  zIndex: 1,
-                  animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : "none",
-                }}
-              />
+              {/* 2. IMAGE LAYER - height: auto ensures no cropping */}
+              <Box sx={{ position: "relative", width: "100%", zIndex: 1 }}>
+                <Box
+                  component="img"
+                  src={slide.ImagePath}
+                  alt={slide.Title}
+                  sx={{
+                    width: "100%",
+                    height: "auto", 
+                    display: "block",
+                    animation: currentSlide === index ? `${revealImage} 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards` : "none",
+                  }}
+                />
 
-              {/* CONTENT LAYER - THE CONTROLLER */}
+                {/* 3. RESPONSIVE NAVBAR PROTECTOR (From AboutHero) */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: { xs: "80px", md: "160px" },
+                    background: {
+                      xs: "linear-gradient(to bottom, rgba(2,21,15,1) 0%, transparent 100%)",
+                      md: "linear-gradient(to bottom, rgba(2,21,15,0.8) 0%, transparent 100%)"
+                    },
+                    zIndex: 2,
+                    pointerEvents: "none",
+                  }}
+                />
+
+                {/* 4. BOTTOM BLEND (From AboutHero) */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    bottom: -1,
+                    left: 0,
+                    width: "100%",
+                    height: { xs: "15%", md: "35%" },
+                    background: `linear-gradient(to top, ${BRAND.dark} 15%, transparent 100%)`,
+                    zIndex: 3,
+                    pointerEvents: "none",
+                    animation: currentSlide === index ? `${fadeUp} 1s ease-out forwards` : "none",
+                  }}
+                />
+              </Box>
+
+              {/* 5. CONTENT LAYER 
+                 On Laptop, we use Absolute positioning to overlay the bottom blend.
+                 On Mobile, it stays Relative to flow below the image.
+              */}
               <Box sx={{
-                // Absolute overlay for Laptop | Relative stack for Mobile
-                position: isMobile ? "relative" : "absolute",
-                top: 0,
+                position: { xs: "relative", md: "absolute" },
+                bottom: 0,
                 left: 0,
                 width: "100%",
-                height: isMobile ? "auto" : "100%",
-                display: "flex",
-                alignItems: isMobile ? "flex-start" : "flex-end", 
-                justifyContent: "center",
-                // Gradient only for Laptop (Initial Logic)
-                background: isMobile ? "none" : "linear-gradient(to top, rgba(2,21,15,0.6) 0%, rgba(2,21,15,0.2) 20%, transparent 40%)",
                 zIndex: 4,
-                pb: isMobile ? 6 : { md: 8, lg: 10 },
-                px: isMobile ? 2 : 0,
-                bgcolor: isMobile ? BRAND.dark : "transparent",
-                // FIX: Applying fadeUp to the mobile container to use the variable
-                animation: (isMobile && currentSlide === index) ? `${fadeUp} 0.8s ease-out forwards` : "none",
+                pb: { xs: 6, md: 8 },
+                mt: { xs: -2, md: 0 }, // Slight pull-up for mobile flow
               }}>
                 <Container maxWidth="lg">
                   <AnimatePresence mode="wait">
@@ -126,29 +154,28 @@ const HomepageSlider = () => {
                           textTransform: 'uppercase',
                           mb: 2,
                           lineHeight: 1.1,
-                          fontSize: isMobile ? '1.5rem' : { md: '2.6rem', lg: '3.5rem' },
+                          fontSize: { xs: '1.4rem', sm: '1.8rem', md: '3rem', lg: '3.8rem' },
                           letterSpacing: '2px',
-                          textShadow: isMobile ? "none" : "1px 1px 2px rgba(0,0,0,1), 0px 0px 15px rgba(0,0,0,0.8)"
+                          textShadow: "2px 2px 10px rgba(0,0,0,0.8)"
                         }}>
                           {slide.Title}
                         </Typography>
 
-                        {/* Description Box - Initial Laptop Blur vs Mobile Plain */}
                         <Box sx={{
                           mx: "auto",
                           mb: 4,
-                          maxWidth: "800px",
+                          maxWidth: "850px",
                           p: isMobile ? 0 : 2,
-                          borderRadius: '12px',
+                          // Only apply glass effect on laptop for cleaner mobile UI
                           backdropFilter: isMobile ? 'none' : 'blur(6px)',
                           backgroundColor: isMobile ? 'transparent' : 'rgba(2, 21, 15, 0.25)',
-                          border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.05)',
+                          borderRadius: '12px',
                         }}>
                           <Typography sx={{
                             color: BRAND.light,
-                            fontWeight: 600,
-                            lineHeight: 1.5,
-                            fontSize: isMobile ? '0.85rem' : '1.1rem',
+                            fontWeight: 500,
+                            lineHeight: 1.6,
+                            fontSize: { xs: '0.9rem', md: '1.1rem' },
                             textShadow: "1px 1px 4px rgba(0,0,0,0.8)"
                           }}>
                             {slide.Description?.replace(/<[^>]*>/g, '')}
@@ -190,15 +217,16 @@ const HomepageSlider = () => {
 const ButtonStyle = (isPrimary, isMobile) => ({
   fontWeight: 800,
   width: isMobile ? '85%' : 'auto',
-  px: { xs: 3, md: 4 },
-  py: { xs: 1.1, md: 1.2 },
+  minWidth: { md: '180px' },
+  px: { xs: 3, md: 5 },
+  py: { xs: 1.2, md: 1.5 },
   borderRadius: '4px',
-  fontSize: isMobile ? '0.8rem' : '0.85rem',
+  fontSize: { xs: '0.8rem', md: '0.9rem' },
   textTransform: 'uppercase',
   transition: '0.3s all ease',
   bgcolor: isPrimary ? BRAND.gold : "transparent",
   color: isPrimary ? BRAND.dark : BRAND.gold,
-  border: isPrimary ? "none" : `1.5px solid ${BRAND.gold}`,
+  border: `2px solid ${BRAND.gold}`,
   '&:hover': {
     bgcolor: isPrimary ? BRAND.light : BRAND.gold,
     color: BRAND.dark,
