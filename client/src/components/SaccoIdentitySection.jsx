@@ -8,7 +8,8 @@ import {
   CardActionArea,
   Container,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Stack // Added missing Stack import
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import FlagIcon from '@mui/icons-material/Flag';
@@ -40,9 +41,9 @@ const SaccoIdentitySection = () => {
 
     Promise.all([fetchProfile, fetchCoreValues])
       .then(([profileRes, valuesRes]) => {
-        setMission(profileRes.data.MissionStatement);
-        setVision(profileRes.data.VisionStatement);
-        setCoreValues(valuesRes.data.core_values.map((v) => v.CoreValueName));
+        setMission(profileRes.data.MissionStatement || "");
+        setVision(profileRes.data.VisionStatement || "");
+        setCoreValues(valuesRes.data.core_values?.map((v) => v.CoreValueName) || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -51,7 +52,7 @@ const SaccoIdentitySection = () => {
       });
   }, []);
 
-  // IMPROVED AUTOMATIC SCROLL FOR MOBILE
+  // AUTOMATIC SCROLL FOR MOBILE (6s Interval)
   useEffect(() => {
     if (!isMobile || loading) return;
 
@@ -62,7 +63,6 @@ const SaccoIdentitySection = () => {
           const container = scrollRef.current;
           const card = container.children[next];
           if (card) {
-            const extraPadding = 16; // Account for the gap
             container.scrollTo({
               left: card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2,
               behavior: 'smooth'
@@ -122,6 +122,7 @@ const SaccoIdentitySection = () => {
               ref={scrollRef}
               sx={{
                 width: '100%',
+                // DESKTOP: Grid | MOBILE: Horizontal Flex
                 display: isMobile ? 'flex' : 'grid',
                 flexDirection: isMobile ? 'row' : 'unset',
                 overflowX: isMobile ? 'auto' : 'visible',
@@ -201,6 +202,7 @@ const SaccoIdentitySection = () => {
             </Box>
 
             {/* DOT INDICATORS FOR MOBILE */}
+            
             {isMobile && (
               <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ mt: 2 }}>
                 {identityCards.map((_, i) => (
