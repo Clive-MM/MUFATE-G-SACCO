@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
   Button,
   Card,
+  CardContent,
   CardActionArea,
   Stack,
   Container,
@@ -20,7 +21,6 @@ import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturi
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PaymentsIcon from '@mui/icons-material/Payments';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const BRAND = {
   gold: "#EC9B14",
@@ -29,93 +29,109 @@ const BRAND = {
   textMuted: "rgba(244, 244, 244, 0.7)",
 };
 
-// PERFORMANCE: Constant data outside the component
-const SERVICES = [
-  {
-    title: "Smart Savings & Investment",
-    desc: "Build your financial future through disciplined savings and rewarding investment accounts. From goal-based savings to competitive fixed deposits.",
-    icon: <SavingsIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
-    link: "/products/savings"
-  },
-  {
-    title: "Tailored & Affordable Loans",
-    desc: "Tailored loan products to meet diverse needs — from development and agribusiness to business expansion, education, and emergencies.",
-    icon: <AccountBalanceIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
-    link: "/products/loans"
-  },
-  {
-    title: "Asset Financing",
-    desc: "Acquire the equipment, machinery, or tools you need today. We fund your purchase and use the asset as security while you repay in installments.",
-    icon: <PrecisionManufacturingIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
-    link: "/products/asset-financing"
-  },
-  {
-    title: "Mobile Banking & Digital Lending",
-    desc: "Secure 24/7 access via USSD and mobile platforms. Deposit, withdraw, and apply for loans instantly — anytime, anywhere.",
-    icon: <PhoneIphoneIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
-    link: "/services/mobile-banking"
-  },
-  {
-    title: "Benevolent Funeral Cover",
-    desc: "Standing by our members when it matters most. Our Benevolent Fund offers a helping hand with funeral expenses for contributors.",
-    icon: <FavoriteIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
-    link: "/services/benevolent"
-  },
-  {
-    title: "Timely Salary Processing",
-    desc: "Reliable payroll and check-off platform ensuring tea farmers, teachers, and civil servants receive payments promptly and seamlessly.",
-    icon: <PaymentsIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
-    link: "/services/fosa"
-  },
-];
-
 const AboutSection = () => {
+  const [selectedCard, setSelectedCard] = useState(0);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const scrollRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const services = [
+    {
+      title: "Smart Savings & Investment Solutions",
+      desc: "Build your financial future through disciplined savings and rewarding investment accounts. From goal-based savings and fixed deposits to dividend-earning investments, our products help you grow your money safely while earning competitive returns.",
+      icon: <SavingsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+    },
+    {
+      title: "Tailored & Affordable Loans",
+      desc: "Built on the strength of our members’ savings and shared trust, we offer tailored loan products to meet diverse needs — from development and agribusiness support to business expansion, education, and emergencies. Enjoy affordable rates, flexible terms, and quick access to credit when you need it most.",
+      icon: <AccountBalanceIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+    },
+    {
+      title: "Asset Financing",
+      desc: "Acquire the equipment, machinery, or tools you need today through our flexible asset financing. We fund your purchase and use the asset as security while you repay in affordable installments — giving you full ownership once the loan is cleared.",
+      icon: <PrecisionManufacturingIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+    },
+    {
+      title: "Mobile Banking & Digital Lending",
+      desc: "Enjoy secure 24/7 access to your SACCO account through our USSD and mobile platforms. Deposit, withdraw, transfer funds, and even apply for loans instantly — anytime, anywhere, right from your phone.",
+      icon: <PhoneIphoneIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+    },
+    {
+      title: "Benevolent Funeral Cover",
+      desc: "We believe in standing by our members when it matters most. Our Benevolent Fund offers a helping hand with funeral expenses for active contributors and their families.",
+      icon: <FavoriteIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+    },
+    {
+      title: "Timely Salary Processing",
+      desc: "We provide a reliable payroll and check-off platform that ensures tea farmers, teachers, civil servants, and institutional employees receive their payments on time. Once funds or cheques are received, we promptly process and credit accounts to guarantee timely and seamless salary disbursement.",
+      icon: <PaymentsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
+    },
+  ];
+
+  // AUTOMATIC SCROLL LOGIC FOR MOBILE
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const interval = setInterval(() => {
+      setSelectedCard((prev) => {
+        const next = (prev + 1) % services.length;
+        if (scrollRef.current) {
+          const cardWidth = scrollRef.current.offsetWidth * 0.85; // Matches the minWidth below
+          scrollRef.current.scrollTo({
+            left: next * (cardWidth + 16), // 16 is the gap
+            behavior: 'smooth'
+          });
+        }
+        return next;
+      });
+    }, 4000); // 4-second interval
+
+    return () => clearInterval(interval);
+  }, [isMobile, services.length]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 }
+      transition: { staggerChildren: 0.15 }
     }
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 50 },
     visible: { 
       opacity: 1, 
       y: 0, 
-      transition: { duration: 0.6, ease: "easeOut" } 
+      transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] } 
     }
   };
 
   return (
     <Box sx={{ 
       bgcolor: BRAND.dark, 
-      py: { xs: 8, md: 15 }, 
+      py: { xs: 10, md: 15 }, 
       width: '100%', 
       overflow: 'hidden',
       position: 'relative' 
     }}>
-      {/* Decorative Glow */}
       <Box sx={{
         position: 'absolute',
-        top: '20%',
-        right: '-10%',
-        width: { xs: '300px', md: '600px' },
-        height: { xs: '300px', md: '600px' },
+        top: '10%',
+        right: '-5%',
+        width: '400px',
+        height: '400px',
         bgcolor: BRAND.gold,
-        filter: 'blur(180px)',
-        opacity: 0.04,
+        filter: 'blur(150px)',
+        opacity: 0.05,
+        borderRadius: '50%',
         zIndex: 0
       }} />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-        <Stack spacing={{ xs: 5, md: 8 }} alignItems="center">
+        <Stack spacing={{ xs: 6, md: 10 }} alignItems="center">
           
-          <Box sx={{ textAlign: 'center', maxWidth: '800px' }}>
+          <Box sx={{ textAlign: 'center', px: 2 }}>
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -128,153 +144,160 @@ const AboutSection = () => {
                   color: BRAND.gold,
                   fontWeight: 900,
                   textTransform: 'uppercase',
-                  fontSize: { xs: "2.2rem", md: "4rem" },
-                  letterSpacing: "0.05em",
-                  mb: 2
+                  fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.5rem" },
+                  letterSpacing: { xs: "0.05em", md: "0.1em" },
+                  filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.5))',
+                  mb: 3
                 }}
               >
                 Why Choose Us
               </Typography>
-              <Typography sx={{ color: BRAND.textMuted, fontSize: '1.1rem' }}>
-                Empowering the Golden Generation through secure, accessible, and rewarding financial growth.
-              </Typography>
             </motion.div>
           </Box>
 
-          {/* PERFORMANCE: Optimized Grid/Slider logic using isMobile */}
-          
+          {/* DYNAMIC GRID / SLIDER CONTAINER */}
           <Box
+            ref={scrollRef}
             component={motion.div}
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={{ once: true, margin: "-100px" }}
             sx={{
               width: '100%',
-              display: 'flex',
-              // Dynamic Layout: Row for horizontal scroll on mobile, wrap for grid on laptop
-              flexDirection: 'row',
-              flexWrap: isMobile ? 'nowrap' : 'wrap',
+              // SWITCH: Grid on Desktop, Flex-Scroll on Mobile
+              display: isMobile ? 'flex' : 'grid',
+              flexDirection: isMobile ? 'row' : 'unset',
               overflowX: isMobile ? 'auto' : 'visible',
               scrollSnapType: isMobile ? 'x mandatory' : 'none',
+              gridTemplateColumns: {
+                sm: 'repeat(2, 1fr)',
+                md: 'repeat(3, 1fr)'
+              },
               gap: { xs: 2, md: 4 },
-              px: isMobile ? 2 : 0,
+              perspective: '1500px',
               pb: isMobile ? 4 : 0,
-              // Performance: Hide scrollbars for a clean "App" feel
+              // Hide Scrollbars
               '&::-webkit-scrollbar': { display: 'none' },
-              msOverflowStyle: 'none',
               scrollbarWidth: 'none',
-              justifyContent: isMobile ? 'flex-start' : 'center',
             }}
           >
-            {SERVICES.map((service, index) => (
-              <Box 
+            {services.map((service, index) => (
+              <motion.div 
                 key={index} 
-                component={motion.div} 
                 variants={cardVariants}
-                sx={{
-                  // Mobile shows 85% of one card to hint at more | Laptop shows 3 per row
-                  minWidth: isMobile ? '85%' : 'calc(33.33% - 28px)',
-                  maxWidth: isMobile ? '85%' : 'none',
+                onMouseEnter={() => setHoveredCard(index)}
+                onMouseLeave={() => setHoveredCard(null)}
+                style={{
+                  minWidth: isMobile ? '85%' : 'auto', // Shows a peek of the next card
                   scrollSnapAlign: 'center',
                 }}
               >
                 <Card 
-                  onMouseEnter={() => !isMobile && setHoveredCard(index)}
-                  onMouseLeave={() => !isMobile && setHoveredCard(null)}
+                  component={motion.div}
+                  whileHover={!isMobile ? { 
+                    scale: 1.04,
+                    rotateX: 4,
+                    rotateY: -4,
+                    y: -12
+                  } : {}}
+                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
                   elevation={0}
                   sx={{ 
-                    bgcolor: 'rgba(255, 255, 255, 0.03)',
-                    borderRadius: '20px',
-                    border: `1px solid ${hoveredCard === index ? BRAND.gold : 'rgba(255, 255, 255, 0.1)'}`,
-                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.06)' : 'rgba(255, 255, 255, 0.02)',
+                    borderRadius: '24px',
+                    border: `1px solid ${selectedCard === index ? BRAND.gold : 'rgba(255, 255, 255, 0.08)'}`,
+                    transition: 'background-color 0.4s, border-color 0.4s',
                     height: '100%',
-                    backdropFilter: 'blur(12px)',
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: selectedCard === index 
+                      ? `0 20px 40px rgba(0,0,0,0.4)` 
+                      : '0 10px 30px rgba(0,0,0,0.2)',
                   }}
                 >
                   <CardActionArea
-                    component={RouterLink}
-                    to={service.link}
+                    onClick={() => setSelectedCard(index)}
                     sx={{
                       height: '100%',
                       p: { xs: 4, md: 5 },
                       display: 'flex',
                       flexDirection: 'column',
-                      alignItems: 'flex-start',
-                      textAlign: 'left',
+                      alignItems: 'center',
+                      textAlign: 'center',
                     }}
                   >
-                    <Box sx={{ 
-                      mb: 3, 
-                      color: BRAND.gold, 
-                      transition: '0.4s',
-                      transform: hoveredCard === index ? 'scale(1.1)' : 'scale(1)'
-                    }}>
+                    <Box sx={{ mb: 4, color: BRAND.gold, transition: '0.4s' }}>
                       {service.icon}
                     </Box>
                     
-                    <Typography 
-                      variant="h5" 
-                      sx={{ 
-                        fontWeight: 800, 
-                        color: BRAND.gold, 
-                        fontSize: { xs: '1.1rem', md: '1.3rem' },
-                        mb: 2,
-                        lineHeight: 1.3
-                      }}
+                    <CardContent 
+                      component={motion.div}
+                      animate={{ y: hoveredCard === index ? -8 : 0 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      sx={{ p: 0 }}
                     >
-                      {service.title}
-                    </Typography>
-                    
-                    <Typography 
-                      sx={{ 
-                        color: BRAND.textMuted, 
-                        fontSize: '0.95rem', 
-                        lineHeight: 1.7,
-                        mb: 3
-                      }}
-                    >
-                      {service.desc}
-                    </Typography>
-
-                    <Box sx={{ 
-                      mt: 'auto', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      color: BRAND.gold,
-                      fontWeight: 700,
-                      fontSize: '0.85rem',
-                      opacity: isMobile || hoveredCard === index ? 1 : 0.6,
-                      transition: '0.3s'
-                    }}>
-                      LEARN MORE <ArrowForwardIcon sx={{ ml: 1, fontSize: 18 }} />
-                    </Box>
+                      <Typography 
+                        variant="h5" 
+                        sx={{ 
+                          fontWeight: 900, 
+                          color: BRAND.gold, 
+                          textTransform: 'uppercase',
+                          fontSize: { xs: '1.1rem', md: '1.25rem' },
+                          mb: 2.5,
+                          letterSpacing: '0.1em',
+                        }}
+                      >
+                        {service.title}
+                      </Typography>
+                      <Typography 
+                        sx={{ 
+                          color: BRAND.textMuted, 
+                          fontSize: { xs: '0.9rem', md: '0.95rem' }, 
+                          lineHeight: 1.8,
+                          fontWeight: 400
+                        }}
+                      >
+                        {service.desc}
+                      </Typography>
+                    </CardContent>
                   </CardActionArea>
                 </Card>
-              </Box>
+              </motion.div>
             ))}
           </Box>
 
-          <Button 
-            component={RouterLink} 
-            to="/about/who-we-are" 
-            sx={{ 
-              color: BRAND.gold,
-              fontWeight: 800,
-              borderBottom: `2px solid ${BRAND.gold}`,
-              borderRadius: 0,
-              px: 2,
-              pb: 1,
-              letterSpacing: '0.2em',
-              '&:hover': {
-                bgcolor: 'transparent',
-                color: BRAND.light,
-                borderColor: BRAND.light
-              }
-            }}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            DISCOVER OUR HISTORY
-          </Button>
+            <Button 
+              component={RouterLink} 
+              to="/about/who-we-are" 
+              variant="contained" 
+              sx={{ 
+                bgcolor: BRAND.gold,
+                color: BRAND.dark,
+                fontWeight: 900,
+                px: { xs: 6, md: 10 },
+                py: 2.5,
+                borderRadius: '4px', 
+                fontSize: '1rem',
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                boxShadow: `0 15px 30px rgba(0,0,0,0.4)`,
+                transition: '0.4s ease',
+                '&:hover': {
+                  bgcolor: BRAND.light,
+                  boxShadow: `0 0 30px ${BRAND.gold}`,
+                }
+              }}
+            >
+              Discover More
+            </Button>
+          </motion.div>
 
         </Stack>
       </Container>
