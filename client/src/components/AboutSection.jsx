@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -7,7 +7,9 @@ import {
   CardContent,
   CardActionArea,
   Stack,
-  Container
+  Container,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -19,6 +21,7 @@ import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturi
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PaymentsIcon from '@mui/icons-material/Payments';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const BRAND = {
   gold: "#EC9B14",
@@ -27,88 +30,94 @@ const BRAND = {
   textMuted: "rgba(244, 244, 244, 0.7)",
 };
 
+// PERFORMANCE: Moved outside component to prevent re-creation on every render
+const SERVICES = [
+  {
+    title: "Smart Savings & Investment",
+    desc: "Build your financial future through disciplined savings and rewarding investment accounts. From goal-based savings to competitive fixed deposits.",
+    icon: <SavingsIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
+    link: "/products/savings"
+  },
+  {
+    title: "Tailored & Affordable Loans",
+    desc: "Tailored loan products to meet diverse needs — from development and agribusiness to business expansion, education, and emergencies.",
+    icon: <AccountBalanceIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
+    link: "/products/loans"
+  },
+  {
+    title: "Asset Financing",
+    desc: "Acquire the equipment, machinery, or tools you need today. We fund your purchase and use the asset as security while you repay in installments.",
+    icon: <PrecisionManufacturingIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
+    link: "/products/asset-financing"
+  },
+  {
+    title: "Mobile Banking & Digital Lending",
+    desc: "Secure 24/7 access via USSD and mobile platforms. Deposit, withdraw, and apply for loans instantly — anytime, anywhere.",
+    icon: <PhoneIphoneIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
+    link: "/services/mobile-banking"
+  },
+  {
+    title: "Benevolent Funeral Cover",
+    desc: "Standing by our members when it matters most. Our Benevolent Fund offers a helping hand with funeral expenses for contributors.",
+    icon: <FavoriteIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
+    link: "/services/benevolent"
+  },
+  {
+    title: "Timely Salary Processing",
+    desc: "Reliable payroll and check-off platform ensuring tea farmers, teachers, and civil servants receive payments promptly and seamlessly.",
+    icon: <PaymentsIcon sx={{ fontSize: { xs: 35, md: 45 } }} />,
+    link: "/services/fosa"
+  },
+];
+
 const AboutSection = () => {
-  const [selectedCard, setSelectedCard] = useState(0);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const services = [
-    {
-      title: "Smart Savings & Investment Solutions",
-      desc: "Build your financial future through disciplined savings and rewarding investment accounts. From goal-based savings and fixed deposits to dividend-earning investments, our products help you grow your money safely while earning competitive returns.",
-      icon: <SavingsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    },
-    {
-      title: "Tailored & Affordable Loans",
-      desc: "Built on the strength of our members’ savings and shared trust, we offer tailored loan products to meet diverse needs — from development and agribusiness support to business expansion, education, and emergencies. Enjoy affordable rates, flexible terms, and quick access to credit when you need it most.",
-      icon: <AccountBalanceIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    },
-    {
-      title: "Asset Financing",
-      desc: "Acquire the equipment, machinery, or tools you need today through our flexible asset financing. We fund your purchase and use the asset as security while you repay in affordable installments — giving you full ownership once the loan is cleared.",
-      icon: <PrecisionManufacturingIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    },
-    {
-      title: "Mobile Banking & Digital Lending",
-      desc: "Enjoy secure 24/7 access to your SACCO account through our USSD and mobile platforms. Deposit, withdraw, transfer funds, and even apply for loans instantly — anytime, anywhere, right from your phone.",
-      icon: <PhoneIphoneIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    },
-    {
-      title: "Benevolent Funeral Cover",
-      desc: "We believe in standing by our members when it matters most. Our Benevolent Fund offers a helping hand with funeral expenses for active contributors and their families.",
-      icon: <FavoriteIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    },
-    {
-      title: "Timely Salary Processing",
-      desc: "We provide a reliable payroll and check-off platform that ensures tea farmers, teachers, civil servants, and institutional employees receive their payments on time. Once funds or cheques are received, we promptly process and credit accounts to guarantee timely and seamless salary disbursement.",
-      icon: <PaymentsIcon sx={{ fontSize: { xs: 40, md: 50 } }} />
-    },
-  ];
-
-  // 1. Waterfall Entry Variants
+  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 }
+      transition: { staggerChildren: 0.1 }
     }
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 30 },
     visible: { 
       opacity: 1, 
       y: 0, 
-      transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] } 
+      transition: { duration: 0.6, ease: "easeOut" } 
     }
   };
 
   return (
     <Box sx={{ 
       bgcolor: BRAND.dark, 
-      py: { xs: 10, md: 15 }, 
+      py: { xs: 8, md: 15 }, 
       width: '100%', 
       overflow: 'hidden',
       position: 'relative' 
     }}>
-      {/* BACKGROUND DECORATION */}
+      {/* Decorative Glow */}
       <Box sx={{
         position: 'absolute',
-        top: '10%',
-        right: '-5%',
-        width: '400px',
-        height: '400px',
+        top: '20%',
+        right: '-10%',
+        width: { xs: '300px', md: '600px' },
+        height: { xs: '300px', md: '600px' },
         bgcolor: BRAND.gold,
-        filter: 'blur(150px)',
-        opacity: 0.05,
-        borderRadius: '50%',
+        filter: 'blur(180px)',
+        opacity: 0.04,
         zIndex: 0
       }} />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-        <Stack spacing={{ xs: 6, md: 10 }} alignItems="center">
+        <Stack spacing={{ xs: 5, md: 8 }} alignItems="center">
           
-          {/* HEADER SECTION */}
-          <Box sx={{ textAlign: 'center', px: 2 }}>
+          <Box sx={{ textAlign: 'center', maxWidth: '800px' }}>
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -121,153 +130,154 @@ const AboutSection = () => {
                   color: BRAND.gold,
                   fontWeight: 900,
                   textTransform: 'uppercase',
-                  fontSize: { xs: "2.5rem", sm: "3.5rem", md: "4.5rem" },
-                  letterSpacing: { xs: "0.05em", md: "0.1em" },
-                  filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.5))',
-                  mb: 3
+                  fontSize: { xs: "2.2rem", md: "4rem" },
+                  letterSpacing: "0.05em",
+                  mb: 2
                 }}
               >
                 Why Choose Us
               </Typography>
+              <Typography sx={{ color: BRAND.textMuted, fontSize: '1.1rem' }}>
+                Empowering the Golden Generation through secure, accessible, and rewarding financial growth.
+              </Typography>
             </motion.div>
           </Box>
 
-          {/* INTERACTIVE GRID (Waterfall Effect) */}
+          {/* MOBILE: Snap Slider | DESKTOP: Grid */}
+          
           <Box
             component={motion.div}
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: "-50px" }}
             sx={{
               width: '100%',
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: '1fr',
-                sm: 'repeat(2, 1fr)',
-                md: 'repeat(3, 1fr)'
-              },
-              gap: { xs: 3, md: 4 },
-              perspective: '1500px' // High perspective for 3D tilt
+              display: 'flex',
+              flexDirection: 'row',
+              // Performance & UX: Enable horizontal scroll on mobile
+              flexWrap: { xs: 'nowrap', sm: 'wrap' },
+              overflowX: { xs: 'auto', sm: 'visible' },
+              scrollSnapType: { xs: 'x mandatory', sm: 'none' },
+              gap: { xs: 2, md: 4 },
+              px: { xs: 2, sm: 0 },
+              // Hide scrollbars for cleaner Look
+              '&::-webkit-scrollbar': { display: 'none' },
+              msOverflowStyle: 'none',
+              scrollbarWidth: 'none',
+              // Grid behavior for Desktop
+              justifyContent: { sm: 'center' },
+              '& > div': {
+                minWidth: { xs: '85%', sm: 'calc(50% - 16px)', md: 'calc(33.33% - 28px)' },
+                scrollSnapAlign: 'center',
+              }
             }}
           >
-            {services.map((service, index) => (
-              <motion.div 
-                key={index} 
-                variants={cardVariants}
-                onMouseEnter={() => setHoveredCard(index)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
+            {SERVICES.map((service, index) => (
+              <Box key={index} component={motion.div} variants={cardVariants}>
                 <Card 
-                  component={motion.div}
-                  // 2. Tilt & Scale Hover
-                  whileHover={{ 
-                    scale: 1.04,
-                    rotateX: 4,
-                    rotateY: -4,
-                    y: -12
-                  }}
-                  transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                  onMouseEnter={() => setHoveredCard(index)}
+                  onMouseLeave={() => setHoveredCard(null)}
                   elevation={0}
                   sx={{ 
-                    bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.06)' : 'rgba(255, 255, 255, 0.02)',
-                    borderRadius: '24px',
-                    border: `1px solid ${selectedCard === index ? BRAND.gold : 'rgba(255, 255, 255, 0.08)'}`,
-                    transition: 'background-color 0.4s, border-color 0.4s',
+                    bgcolor: 'rgba(255, 255, 255, 0.03)',
+                    borderRadius: '20px',
+                    border: `1px solid ${hoveredCard === index ? BRAND.gold : 'rgba(255, 255, 255, 0.1)'}`,
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                     height: '100%',
-                    backdropFilter: 'blur(10px)',
-                    boxShadow: selectedCard === index 
-                      ? `0 20px 40px rgba(0,0,0,0.4)` 
-                      : '0 10px 30px rgba(0,0,0,0.2)',
-                    '&:hover': {
-                      borderColor: BRAND.gold,
-                      boxShadow: `0 25px 50px rgba(0, 0, 0, 0.5)`,
-                    }
+                    backdropFilter: 'blur(12px)',
+                    position: 'relative',
+                    overflow: 'hidden'
                   }}
                 >
                   <CardActionArea
-                    onClick={() => setSelectedCard(index)}
+                    component={RouterLink}
+                    to={service.link}
                     sx={{
                       height: '100%',
                       p: { xs: 4, md: 5 },
                       display: 'flex',
                       flexDirection: 'column',
-                      alignItems: 'center',
-                      textAlign: 'center',
+                      alignItems: 'flex-start', // Left aligned for easier reading
+                      textAlign: 'left',
                     }}
                   >
-                    <Box sx={{ mb: 4, color: BRAND.gold, transition: '0.4s' }}>
+                    <Box sx={{ 
+                      mb: 3, 
+                      color: BRAND.gold, 
+                      transform: hoveredCard === index ? 'scale(1.1) rotate(-5deg)' : 'scale(1)',
+                      transition: '0.4s' 
+                    }}>
                       {service.icon}
                     </Box>
                     
-                    {/* 3. Text Slide Content */}
-                    <CardContent 
-                      component={motion.div}
-                      animate={{ y: hoveredCard === index ? -8 : 0 }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                      sx={{ p: 0 }}
+                    <Typography 
+                      variant="h5" 
+                      sx={{ 
+                        fontWeight: 800, 
+                        color: BRAND.gold, 
+                        fontSize: { xs: '1.1rem', md: '1.3rem' },
+                        mb: 2,
+                        lineHeight: 1.3
+                      }}
                     >
-                      <Typography 
-                        variant="h5" 
-                        sx={{ 
-                          fontWeight: 900, 
-                          color: BRAND.gold, 
-                          textTransform: 'uppercase',
-                          fontSize: { xs: '1.1rem', md: '1.25rem' },
-                          mb: 2.5,
-                          letterSpacing: '0.1em',
-                        }}
-                      >
-                        {service.title}
-                      </Typography>
-                      <Typography 
-                        sx={{ 
-                          color: BRAND.textMuted, 
-                          fontSize: { xs: '0.9rem', md: '0.95rem' }, 
-                          lineHeight: 1.8,
-                          fontWeight: 400
-                        }}
-                      >
-                        {service.desc}
-                      </Typography>
-                    </CardContent>
+                      {service.title}
+                    </Typography>
+                    
+                    <Typography 
+                      sx={{ 
+                        color: BRAND.textMuted, 
+                        fontSize: '0.95rem', 
+                        lineHeight: 1.7,
+                        mb: 3
+                      }}
+                    >
+                      {service.desc}
+                    </Typography>
+
+                    {/* Member UX: Clear Call to Action inside the card */}
+                    <Box sx={{ 
+                      mt: 'auto', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      color: BRAND.gold,
+                      fontWeight: 700,
+                      fontSize: '0.85rem',
+                      opacity: hoveredCard === index ? 1 : 0.7,
+                      transition: '0.3s'
+                    }}>
+                      LEARN MORE <ArrowForwardIcon sx={{ ml: 1, fontSize: 18 }} />
+                    </Box>
                   </CardActionArea>
                 </Card>
-              </motion.div>
+              </Box>
             ))}
           </Box>
 
-          {/* ACTION BUTTON */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             <Button 
               component={RouterLink} 
               to="/about/who-we-are" 
-              variant="contained" 
               sx={{ 
-                bgcolor: BRAND.gold,
-                color: BRAND.dark,
-                fontWeight: 900,
-                px: { xs: 6, md: 10 },
-                py: 2.5,
-                borderRadius: '4px', 
-                fontSize: '1rem',
+                color: BRAND.gold,
+                fontWeight: 800,
+                borderBottom: `2px solid ${BRAND.gold}`,
+                borderRadius: 0,
+                px: 2,
+                pb: 1,
                 letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                boxShadow: `0 15px 30px rgba(0,0,0,0.4)`,
-                transition: '0.4s ease',
                 '&:hover': {
-                  bgcolor: BRAND.light,
-                  boxShadow: `0 0 30px ${BRAND.gold}`,
+                  bgcolor: 'transparent',
+                  color: BRAND.light,
+                  borderColor: BRAND.light
                 }
               }}
             >
-              Discover More
+              DISCOVER OUR HISTORY
             </Button>
           </motion.div>
 
