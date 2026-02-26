@@ -69,11 +69,10 @@ const HomepageSlider = () => {
               position: "relative", 
               display: "flex",
               flexDirection: "column",
-              // Mobile: padding top for navbar safety like AboutHero
               pt: { xs: "65px", md: "0px" } 
             }}>
               
-              {/* IMAGE LAYER - Responsive Height */}
+              {/* IMAGE LAYER */}
               <Box sx={{ position: "relative", width: "100%" }}>
                 <Box
                   component="img"
@@ -81,7 +80,7 @@ const HomepageSlider = () => {
                   alt={slide.Title}
                   sx={{
                     width: "100%",
-                    height: { xs: "auto", md: "85vh" }, // Keeps full image on mobile, fixed height on laptop
+                    height: { xs: "auto", md: "85vh" },
                     objectFit: "cover",
                     display: "block",
                     zIndex: 1,
@@ -89,7 +88,6 @@ const HomepageSlider = () => {
                   }}
                 />
 
-                {/* BOTTOM BLEND - Inspired by AboutHero */}
                 <Box sx={{
                   position: "absolute",
                   bottom: -1,
@@ -99,24 +97,26 @@ const HomepageSlider = () => {
                   background: "linear-gradient(to top, #02150F 15%, transparent 100%)",
                   zIndex: 2,
                   pointerEvents: "none",
+                  // Utilizing fadeUp here for the blend layer
+                  animation: currentSlide === index ? `${fadeUp} 1s ease-out forwards` : "none",
                 }} />
                 
-                {/* NAVBAR PROTECTOR - Inspired by AboutHero */}
                 <Box sx={{
                   position: "absolute",
                   top: 0,
                   left: 0,
                   width: "100%",
                   height: { xs: "80px", md: "160px" },
-                  background: "linear-gradient(to bottom, rgba(2,21,15,1) 0%, transparent 100%)",
+                  background: isMobile 
+                    ? "linear-gradient(to bottom, rgba(2,21,15,1) 0%, transparent 100%)"
+                    : "linear-gradient(to bottom, rgba(2,21,15,0.8) 0%, transparent 100%)",
                   zIndex: 2,
-                  display: { xs: 'block', md: 'none' } // Only show on mobile to protect logo/menu
+                  display: { xs: 'block', md: 'none' }
                 }} />
               </Box>
 
               {/* CONTENT LAYER */}
               <Box sx={{
-                // SWITCH POSITIONING: Absolute for laptop overlay, Relative for mobile stack
                 position: { xs: "relative", md: "absolute" },
                 top: 0,
                 left: 0,
@@ -126,7 +126,7 @@ const HomepageSlider = () => {
                 alignItems: { xs: "flex-start", md: "flex-end" },
                 justifyContent: "center",
                 zIndex: 4,
-                mt: { xs: -2, md: 0 }, // Pull text up slightly to meet the gradient
+                mt: { xs: -2, md: 0 },
                 pb: { xs: 6, md: 10 },
                 px: 2,
                 bgcolor: { xs: BRAND.dark, md: "transparent" }
@@ -148,7 +148,7 @@ const HomepageSlider = () => {
                           lineHeight: 1.1,
                           fontSize: { xs: '1.6rem', sm: '2rem', md: '3.5rem' },
                           letterSpacing: '1px',
-                          textShadow: '2px 2px 8px rgba(0,0,0,0.4)'
+                          textShadow: isMobile ? 'none' : '2px 2px 8px rgba(0,0,0,0.4)'
                         }}>
                           {slide.Title}
                         </Typography>
