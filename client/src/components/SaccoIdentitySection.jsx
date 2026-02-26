@@ -51,7 +51,7 @@ const SaccoIdentitySection = () => {
       });
   }, []);
 
-  // AUTOMATIC SCROLL FOR MOBILE (6s Interval)
+  // IMPROVED AUTOMATIC SCROLL FOR MOBILE
   useEffect(() => {
     if (!isMobile || loading) return;
 
@@ -59,11 +59,15 @@ const SaccoIdentitySection = () => {
       setSelectedCard((prev) => {
         const next = (prev + 1) % 3; 
         if (scrollRef.current) {
-          const cardWidth = scrollRef.current.offsetWidth * 0.85;
-          scrollRef.current.scrollTo({
-            left: next * (cardWidth + 16),
-            behavior: 'smooth'
-          });
+          const container = scrollRef.current;
+          const card = container.children[next];
+          if (card) {
+            const extraPadding = 16; // Account for the gap
+            container.scrollTo({
+              left: card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2,
+              behavior: 'smooth'
+            });
+          }
         }
         return next;
       });
@@ -113,88 +117,119 @@ const SaccoIdentitySection = () => {
             <CircularProgress sx={{ color: BRAND.gold }} />
           </Box>
         ) : (
-          <Box
-            ref={scrollRef}
-            sx={{
-              width: '100%',
-              display: isMobile ? 'flex' : 'grid',
-              flexDirection: isMobile ? 'row' : 'unset',
-              overflowX: isMobile ? 'auto' : 'visible',
-              scrollSnapType: isMobile ? 'x mandatory' : 'none',
-              gridTemplateColumns: {
-                sm: 'repeat(2, 1fr)',
-                md: 'repeat(3, 1fr)'
-              },
-              justifyContent: 'center', 
-              gap: { xs: 2, md: 4 },
-              maxWidth: '1200px',
-              mx: 'auto',
-              '&::-webkit-scrollbar': { display: 'none' },
-              scrollbarWidth: 'none',
-              pb: isMobile ? 4 : 0
-            }}
-          >
-            {identityCards.map((card, index) => (
-              <Box 
-                key={card.id} 
-                sx={{ 
-                  minWidth: isMobile ? '85%' : 'auto', 
-                  scrollSnapAlign: 'center',
-                }}
-              >
-                <Card 
-                  component={motion.div}
-                  whileHover={!isMobile ? { y: -8 } : {}}
+          <Stack spacing={4} alignItems="center">
+            <Box
+              ref={scrollRef}
+              sx={{
+                width: '100%',
+                display: isMobile ? 'flex' : 'grid',
+                flexDirection: isMobile ? 'row' : 'unset',
+                overflowX: isMobile ? 'auto' : 'visible',
+                scrollSnapType: isMobile ? 'x mandatory' : 'none',
+                gridTemplateColumns: {
+                  sm: 'repeat(2, 1fr)',
+                  md: 'repeat(3, 1fr)'
+                },
+                gap: { xs: 2, md: 4 },
+                maxWidth: '1200px',
+                mx: 'auto',
+                '&::-webkit-scrollbar': { display: 'none' },
+                scrollbarWidth: 'none',
+              }}
+            >
+              {identityCards.map((card, index) => (
+                <Box 
+                  key={card.id} 
                   sx={{ 
-                    bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.05)' : 'rgba(255, 255, 255, 0.03)', 
-                    border: selectedCard === index ? `1px solid ${BRAND.gold}` : '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '24px',
-                    color: BRAND.light,
-                    transition: 'all 0.4s ease-in-out',
-                    height: '100%',
-                    display: 'flex',
-                    boxShadow: selectedCard === index ? `0 0 30px rgba(236, 155, 20, 0.15)` : 'none',
+                    minWidth: isMobile ? '85%' : 'auto', 
+                    scrollSnapAlign: 'center',
+                    flexShrink: 0
                   }}
                 >
-                  <CardActionArea
-                    onClick={() => setSelectedCard(index)}
-                    sx={{ width: '100%', p: { xs: 3, md: 4 } }}
+                  <Card 
+                    component={motion.div}
+                    whileHover={!isMobile ? { y: -8 } : {}}
+                    sx={{ 
+                      bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.08)' : 'rgba(255, 255, 255, 0.03)', 
+                      border: selectedCard === index ? `2px solid ${BRAND.gold}` : '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '24px',
+                      color: BRAND.light,
+                      transition: 'all 0.4s ease-in-out',
+                      height: '100%',
+                      display: 'flex',
+                      boxShadow: selectedCard === index ? `0 0 30px rgba(236, 155, 20, 0.2)` : 'none',
+                    }}
                   >
-                    <CardContent sx={{ 
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      alignItems: 'center', 
-                      textAlign: 'center',
-                    }}>
-                      <Box sx={{ color: BRAND.gold, mb: 3 }}>
-                        {card.icon}
-                      </Box>
-                      <Typography 
-                        variant="h5" 
-                        sx={{ 
-                          color: BRAND.gold, 
-                          fontWeight: 800, 
-                          mb: 3, 
-                          textTransform: 'uppercase', 
-                          letterSpacing: '0.1rem',
-                          fontSize: { xs: '1.2rem', md: '1.5rem' }
-                        }}
-                      >
-                        {card.title}
-                      </Typography>
-                      <Box sx={{ 
-                        opacity: 0.9, 
-                        lineHeight: 1.8, 
-                        fontSize: { xs: '0.95rem', md: '1.05rem' }
+                    <CardActionArea
+                      onClick={() => setSelectedCard(index)}
+                      sx={{ width: '100%', p: { xs: 3, md: 4 } }}
+                    >
+                      <CardContent sx={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'center', 
+                        textAlign: 'center',
                       }}>
-                        {card.content}
-                      </Box>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Box>
-            ))}
-          </Box>
+                        <Box sx={{ color: BRAND.gold, mb: 3 }}>
+                          {card.icon}
+                        </Box>
+                        <Typography 
+                          variant="h5" 
+                          sx={{ 
+                            color: BRAND.gold, 
+                            fontWeight: 800, 
+                            mb: 3, 
+                            textTransform: 'uppercase', 
+                            letterSpacing: '0.1rem',
+                            fontSize: { xs: '1.2rem', md: '1.5rem' }
+                          }}
+                        >
+                          {card.title}
+                        </Typography>
+                        <Box sx={{ 
+                          opacity: 0.9, 
+                          lineHeight: 1.8, 
+                          fontSize: { xs: '0.95rem', md: '1.05rem' }
+                        }}>
+                          {card.content}
+                        </Box>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Box>
+              ))}
+            </Box>
+
+            {/* DOT INDICATORS FOR MOBILE */}
+            {isMobile && (
+              <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ mt: 2 }}>
+                {identityCards.map((_, i) => (
+                  <Box
+                    key={i}
+                    onClick={() => {
+                      setSelectedCard(i);
+                      if (scrollRef.current) {
+                        const container = scrollRef.current;
+                        const card = container.children[i];
+                        container.scrollTo({
+                          left: card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }}
+                    sx={{
+                      width: selectedCard === i ? 24 : 8,
+                      height: 8,
+                      borderRadius: 4,
+                      bgcolor: selectedCard === i ? BRAND.gold : 'rgba(255, 255, 255, 0.2)',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
+                    }}
+                  />
+                ))}
+              </Stack>
+            )}
+          </Stack>
         )}
       </Container>
     </Box>
