@@ -8,7 +8,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-// Animations from AboutHero
 const revealImage = keyframes`
   0% { transform: scale(1.08); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
@@ -66,20 +65,15 @@ const HomepageSlider = () => {
       <Slider {...settings}>
         {slides.map((slide, index) => (
           <Box key={index} sx={{ outline: 'none' }}>
-            {/* 1. MAIN CONTAINER 
-               Switches to flex-column to ensure the image determines the height (No Cropping)
-            */}
             <Box sx={{ 
               position: "relative", 
               width: "100%",
               backgroundColor: BRAND.dark,
               display: "flex",
               flexDirection: "column",
-              // Navbar padding matches AboutHero
               pt: { xs: "65px", sm: "80px", md: "0px" }, 
             }}>
               
-              {/* 2. IMAGE LAYER - height: auto ensures no cropping */}
               <Box sx={{ position: "relative", width: "100%", zIndex: 1 }}>
                 <Box
                   component="img"
@@ -93,7 +87,6 @@ const HomepageSlider = () => {
                   }}
                 />
 
-                {/* 3. RESPONSIVE NAVBAR PROTECTOR (From AboutHero) */}
                 <Box
                   sx={{
                     position: "absolute",
@@ -110,15 +103,14 @@ const HomepageSlider = () => {
                   }}
                 />
 
-                {/* 4. BOTTOM BLEND (From AboutHero) */}
                 <Box
                   sx={{
                     position: "absolute",
                     bottom: -1,
                     left: 0,
                     width: "100%",
-                    height: { xs: "15%", md: "35%" },
-                    background: `linear-gradient(to top, ${BRAND.dark} 15%, transparent 100%)`,
+                    height: { xs: "20%", md: "45%" }, // Increased height for better text contrast
+                    background: `linear-gradient(to top, ${BRAND.dark} 25%, rgba(2, 21, 15, 0.6) 60%, transparent 100%)`,
                     zIndex: 3,
                     pointerEvents: "none",
                     animation: currentSlide === index ? `${fadeUp} 1s ease-out forwards` : "none",
@@ -126,18 +118,14 @@ const HomepageSlider = () => {
                 />
               </Box>
 
-              {/* 5. CONTENT LAYER 
-                 On Laptop, we use Absolute positioning to overlay the bottom blend.
-                 On Mobile, it stays Relative to flow below the image.
-              */}
               <Box sx={{
                 position: { xs: "relative", md: "absolute" },
                 bottom: 0,
                 left: 0,
                 width: "100%",
                 zIndex: 4,
-                pb: { xs: 6, md: 8 },
-                mt: { xs: -2, md: 0 }, // Slight pull-up for mobile flow
+                pb: { xs: 6, md: 8, lg: 10 },
+                mt: { xs: -1, md: 0 }, 
               }}>
                 <Container maxWidth="lg">
                   <AnimatePresence mode="wait">
@@ -155,8 +143,12 @@ const HomepageSlider = () => {
                           mb: 2,
                           lineHeight: 1.1,
                           fontSize: { xs: '1.4rem', sm: '1.8rem', md: '3rem', lg: '3.8rem' },
-                          letterSpacing: '2px',
-                          textShadow: "2px 2px 10px rgba(0,0,0,0.8)"
+                          letterSpacing: '0.05em', // Improved legibility
+                          // Enhanced multi-layered shadow
+                          textShadow: `
+                            2px 2px 4px rgba(0,0,0,0.5),
+                            0px 0px 20px rgba(0,0,0,0.3)
+                          `
                         }}>
                           {slide.Title}
                         </Typography>
@@ -165,18 +157,19 @@ const HomepageSlider = () => {
                           mx: "auto",
                           mb: 4,
                           maxWidth: "850px",
-                          p: isMobile ? 0 : 2,
-                          // Only apply glass effect on laptop for cleaner mobile UI
-                          backdropFilter: isMobile ? 'none' : 'blur(6px)',
-                          backgroundColor: isMobile ? 'transparent' : 'rgba(2, 21, 15, 0.25)',
+                          p: isMobile ? 1 : 2,
+                          backdropFilter: isMobile ? 'none' : 'blur(8px)',
+                          backgroundColor: isMobile ? 'transparent' : 'rgba(2, 21, 15, 0.4)', // Slightly darker for better contrast
                           borderRadius: '12px',
+                          border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
                         }}>
                           <Typography sx={{
                             color: BRAND.light,
-                            fontWeight: 500,
-                            lineHeight: 1.6,
-                            fontSize: { xs: '0.9rem', md: '1.1rem' },
-                            textShadow: "1px 1px 4px rgba(0,0,0,0.8)"
+                            fontWeight: 600, // Thicker weight for visibility
+                            lineHeight: 1.7,
+                            fontSize: { xs: '0.9rem', md: '1.05rem' },
+                            letterSpacing: '0.02em',
+                            textShadow: "1px 1px 3px rgba(0,0,0,0.9)"
                           }}>
                             {slide.Description?.replace(/<[^>]*>/g, '')}
                           </Typography>
@@ -226,12 +219,12 @@ const ButtonStyle = (isPrimary, isMobile) => ({
   transition: '0.3s all ease',
   bgcolor: isPrimary ? BRAND.gold : "transparent",
   color: isPrimary ? BRAND.dark : BRAND.gold,
-  border: `2px solid ${BRAND.gold}`,
+  border: `2.2px solid ${BRAND.gold}`, // Slightly thicker border for visibility
   '&:hover': {
     bgcolor: isPrimary ? BRAND.light : BRAND.gold,
     color: BRAND.dark,
     transform: 'translateY(-2px)',
-    boxShadow: isPrimary ? `0 4px 20px ${BRAND.gold}44` : 'none'
+    boxShadow: isPrimary ? `0 4px 20px ${BRAND.gold}66` : 'none'
   }
 });
 
