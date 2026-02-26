@@ -9,7 +9,7 @@ import {
   Container,
   useTheme,
   useMediaQuery,
-  Stack // Added missing Stack import
+  Stack 
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import FlagIcon from '@mui/icons-material/Flag';
@@ -52,7 +52,6 @@ const SaccoIdentitySection = () => {
       });
   }, []);
 
-  // AUTOMATIC SCROLL FOR MOBILE (6s Interval)
   useEffect(() => {
     if (!isMobile || loading) return;
 
@@ -77,22 +76,22 @@ const SaccoIdentitySection = () => {
   }, [isMobile, loading]);
 
   const identityCards = [
-    { id: 0, title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: 50 }} />, content: mission },
+    { id: 0, title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: { xs: 40, md: 50 } }} />, content: mission },
     {
       id: 1,
       title: 'Our Values',
-      icon: <StarIcon sx={{ fontSize: 50 }} />,
+      icon: <StarIcon sx={{ fontSize: { xs: 40, md: 50 } }} />,
       content: (
-        <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
+        <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
           {coreValues.map((v, i) => (
-            <Typography key={i} component="li" sx={{ color: BRAND.lightGold, mb: 0.5, fontWeight: 500 }}>
-              {v}
+            <Typography key={i} component="li" sx={{ color: BRAND.lightGold, fontWeight: 500, fontSize: { xs: '0.8rem', md: '0.95rem' } }}>
+              • {v}
             </Typography>
           ))}
         </Box>
       ),
     },
-    { id: 2, title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: 50 }} />, content: vision },
+    { id: 2, title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: { xs: 40, md: 50 } }} />, content: vision },
   ];
 
   return (
@@ -106,7 +105,8 @@ const SaccoIdentitySection = () => {
             fontWeight: 900, 
             mb: { xs: 6, md: 10 }, 
             textTransform: 'uppercase',
-            fontSize: { xs: '2rem', md: '3.5rem' } 
+            fontSize: { xs: '1.8rem', md: '3.5rem' },
+            letterSpacing: '0.1rem'
           }}
         >
           Our Identity
@@ -122,7 +122,6 @@ const SaccoIdentitySection = () => {
               ref={scrollRef}
               sx={{
                 width: '100%',
-                // DESKTOP: Grid | MOBILE: Horizontal Flex
                 display: isMobile ? 'flex' : 'grid',
                 flexDirection: isMobile ? 'row' : 'unset',
                 overflowX: isMobile ? 'auto' : 'visible',
@@ -144,7 +143,8 @@ const SaccoIdentitySection = () => {
                   sx={{ 
                     minWidth: isMobile ? '85%' : 'auto', 
                     scrollSnapAlign: 'center',
-                    flexShrink: 0
+                    flexShrink: 0,
+                    height: '100%'
                   }}
                 >
                   <Card 
@@ -156,22 +156,25 @@ const SaccoIdentitySection = () => {
                       borderRadius: '24px',
                       color: BRAND.light,
                       transition: 'all 0.4s ease-in-out',
-                      height: '100%',
+                      height: isMobile ? '380px' : '450px', // Standardized height
                       display: 'flex',
+                      flexDirection: 'column',
                       boxShadow: selectedCard === index ? `0 0 30px rgba(236, 155, 20, 0.2)` : 'none',
                     }}
                   >
                     <CardActionArea
                       onClick={() => setSelectedCard(index)}
-                      sx={{ width: '100%', p: { xs: 3, md: 4 } }}
+                      sx={{ height: '100%', width: '100%', p: { xs: 2, md: 3 } }}
                     >
                       <CardContent sx={{ 
+                        height: '100%',
                         display: 'flex', 
                         flexDirection: 'column', 
                         alignItems: 'center', 
                         textAlign: 'center',
+                        justifyContent: 'center'
                       }}>
-                        <Box sx={{ color: BRAND.gold, mb: 3 }}>
+                        <Box sx={{ color: BRAND.gold, mb: 2 }}>
                           {card.icon}
                         </Box>
                         <Typography 
@@ -179,18 +182,25 @@ const SaccoIdentitySection = () => {
                           sx={{ 
                             color: BRAND.gold, 
                             fontWeight: 800, 
-                            mb: 3, 
+                            mb: 2, 
                             textTransform: 'uppercase', 
-                            letterSpacing: '0.1rem',
-                            fontSize: { xs: '1.2rem', md: '1.5rem' }
+                            letterSpacing: '0.05rem',
+                            fontSize: { xs: '1.1rem', md: '1.4rem' }
                           }}
                         >
                           {card.title}
                         </Typography>
+                        
+                        {/* THE FIX: Fixed height box with overflow control for typography */}
                         <Box sx={{ 
                           opacity: 0.9, 
-                          lineHeight: 1.8, 
-                          fontSize: { xs: '0.95rem', md: '1.05rem' }
+                          lineHeight: 1.6, 
+                          fontSize: { xs: '0.85rem', md: '1rem' },
+                          // Use Clamp to prevent elongated cards
+                          display: '-webkit-box',
+                          WebkitLineClamp: isMobile ? 6 : 8, 
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden'
                         }}>
                           {card.content}
                         </Box>
@@ -201,8 +211,7 @@ const SaccoIdentitySection = () => {
               ))}
             </Box>
 
-            {/* DOT INDICATORS FOR MOBILE */}
-            
+            {/* DOT INDICATORS */}
             {isMobile && (
               <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ mt: 2 }}>
                 {identityCards.map((_, i) => (
