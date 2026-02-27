@@ -70,32 +70,39 @@ const SaccoIdentitySection = () => {
         }
         return next;
       });
-    }, 6000); 
+    }, 7000); // Increased to 7s to allow reading of broken-down statements
 
     return () => clearInterval(interval);
   }, [isMobile, loading]);
 
   const identityCards = [
-    { id: 0, title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: { xs: 35, md: 50 } }} />, content: mission },
+    { id: 0, title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: { xs: 38, md: 50 } }} />, content: mission },
     {
       id: 1,
       title: 'Our Values',
-      icon: <StarIcon sx={{ fontSize: { xs: 35, md: 50 } }} />,
+      icon: <StarIcon sx={{ fontSize: { xs: 38, md: 50 } }} />,
       content: (
-        <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        <Box component="ul" sx={{ 
+          listStyle: 'none', 
+          p: 0, 
+          m: 0, 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(2, 1fr)', // Break values into 2 columns for better space
+          gap: 1 
+        }}>
           {coreValues.map((v, i) => (
-            <Typography key={i} component="li" sx={{ color: BRAND.lightGold, fontWeight: 500, fontSize: { xs: '0.8rem', md: '0.95rem' } }}>
+            <Typography key={i} component="li" sx={{ color: BRAND.lightGold, fontWeight: 600, fontSize: { xs: '0.75rem', md: '0.9rem' } }}>
               • {v}
             </Typography>
           ))}
         </Box>
       ),
     },
-    { id: 2, title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: { xs: 35, md: 50 } }} />, content: vision },
+    { id: 2, title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: { xs: 38, md: 50 } }} />, content: vision },
   ];
 
   return (
-    <Box sx={{ bgcolor: BRAND.dark, py: { xs: 8, md: 12 }, width: '100%' }}>
+    <Box sx={{ bgcolor: BRAND.dark, py: { xs: 8, md: 15 }, width: '100%' }}>
       <Container maxWidth="xl">
         <Typography 
           variant="h2" 
@@ -103,10 +110,10 @@ const SaccoIdentitySection = () => {
           sx={{ 
             color: BRAND.gold, 
             fontWeight: 900, 
-            mb: { xs: 4, md: 10 }, 
+            mb: { xs: 6, md: 10 }, 
             textTransform: 'uppercase',
-            fontSize: { xs: '1.8rem', md: '3.5rem' },
-            letterSpacing: '0.1rem'
+            fontSize: { xs: '2rem', md: '3.5rem' },
+            letterSpacing: '0.15rem'
           }}
         >
           Our Identity
@@ -130,10 +137,10 @@ const SaccoIdentitySection = () => {
                   sm: 'repeat(2, 1fr)',
                   md: 'repeat(3, 1fr)'
                 },
-                gap: { xs: 2, md: 4 },
+                gap: { xs: 2.5, md: 4 },
                 maxWidth: '1200px',
                 mx: 'auto',
-                '&::-webkit-scrollbar': { display: 'none' },
+                '&::-webkit-scrollbar': { display: 'none' }, // Completely hides scroll styling
                 scrollbarWidth: 'none',
               }}
             >
@@ -144,67 +151,72 @@ const SaccoIdentitySection = () => {
                     minWidth: isMobile ? '88%' : 'auto', 
                     scrollSnapAlign: 'center',
                     flexShrink: 0,
-                    height: '100%'
+                    display: 'flex'
                   }}
                 >
                   <Card 
                     component={motion.div}
-                    whileHover={!isMobile ? { y: -8 } : {}}
+                    whileHover={!isMobile ? { y: -10, boxShadow: `0 20px 40px rgba(0,0,0,0.4)` } : {}}
                     sx={{ 
-                      bgcolor: selectedCard === index ? 'rgba(236, 155, 20, 0.08)' : 'rgba(255, 255, 255, 0.03)', 
-                      border: selectedCard === index ? `2px solid ${BRAND.gold}` : '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '24px',
+                      bgcolor: 'rgba(255, 255, 255, 0.03)', 
+                      border: selectedCard === index ? `2.5px solid ${BRAND.gold}` : '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '32px',
                       color: BRAND.light,
-                      transition: 'all 0.4s ease-in-out',
-                      // THE FIX: Standardized height prevents rectangular elongation
-                      height: { xs: '320px', md: '450px' }, 
+                      transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                      width: '100%',
+                      minHeight: { xs: '380px', md: '480px' }, // Balanced height
                       display: 'flex',
                       flexDirection: 'column',
-                      boxShadow: selectedCard === index ? `0 0 30px rgba(236, 155, 20, 0.2)` : 'none',
+                      boxShadow: selectedCard === index ? `0 15px 40px rgba(236, 155, 20, 0.15)` : 'none',
                     }}
                   >
                     <CardActionArea
                       onClick={() => setSelectedCard(index)}
-                      sx={{ height: '100%', width: '100%' }}
+                      sx={{ height: '100%', width: '100%', display: 'flex', alignItems: 'stretch' }}
                     >
                       <CardContent sx={{ 
-                        height: '100%',
+                        width: '100%',
                         display: 'flex', 
                         flexDirection: 'column', 
                         alignItems: 'center', 
                         textAlign: 'center',
-                        justifyContent: 'center',
-                        p: { xs: 2.5, md: 4 }
+                        p: { xs: 3, md: 5 }
                       }}>
-                        <Box sx={{ color: BRAND.gold, mb: 2 }}>
+                        <Box sx={{ 
+                          color: BRAND.gold, 
+                          mb: 3, 
+                          transform: selectedCard === index ? 'scale(1.1)' : 'scale(1)',
+                          transition: '0.4s'
+                        }}>
                           {card.icon}
                         </Box>
                         <Typography 
                           variant="h5" 
                           sx={{ 
                             color: BRAND.gold, 
-                            fontWeight: 800, 
-                            mb: 2, 
+                            fontWeight: 900, 
+                            mb: 3, 
                             textTransform: 'uppercase', 
-                            fontSize: { xs: '1rem', md: '1.4rem' }
+                            letterSpacing: '0.1rem',
+                            fontSize: { xs: '1.25rem', md: '1.6rem' }
                           }}
                         >
                           {card.title}
                         </Typography>
                         
-                        <Box sx={{ 
+                        {/* Typography Fix: No Scroll, Better Breakdowns */}
+                        <Typography sx={{ 
                           opacity: 0.9, 
-                          lineHeight: 1.6, 
-                          fontSize: { xs: '0.8rem', md: '1rem' },
-                          // Performance & UX Fix: Standardize text block
-                          overflowY: 'auto',
-                          maxHeight: '140px',
-                          pr: 0.5,
-                          '&::-webkit-scrollbar': { width: '4px' },
-                          '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(236, 155, 20, 0.3)', borderRadius: '10px' }
+                          lineHeight: { xs: 1.6, md: 1.8 }, 
+                          fontSize: { xs: '0.9rem', md: '1.1rem' },
+                          fontWeight: 500,
+                          // Breaks long statements into readable chunks
+                          wordBreak: 'break-word',
+                          hyphens: 'auto',
+                          textAlign: 'center'
                         }}>
                           {card.content}
-                        </Box>
+                        </Typography>
                       </CardContent>
                     </CardActionArea>
                   </Card>
@@ -214,16 +226,16 @@ const SaccoIdentitySection = () => {
 
             {/* DOT INDICATORS */}
             {isMobile && (
-              <Stack direction="row" spacing={1.2} justifyContent="center">
+              <Stack direction="row" spacing={1.5} sx={{ mt: 2 }}>
                 {identityCards.map((_, i) => (
                   <Box
                     key={i}
                     sx={{
-                      width: selectedCard === i ? 20 : 8,
+                      width: selectedCard === i ? 24 : 8,
                       height: 8,
                       borderRadius: 4,
                       bgcolor: selectedCard === i ? BRAND.gold : 'rgba(255, 255, 255, 0.2)',
-                      transition: 'all 0.3s ease',
+                      transition: '0.4s all ease',
                     }}
                   />
                 ))}
