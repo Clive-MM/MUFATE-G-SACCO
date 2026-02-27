@@ -52,7 +52,7 @@ const SaccoIdentitySection = () => {
       });
   }, []);
 
-  // Sync state with manual scroll
+  // Sync scroll position with dot indicators
   const handleScroll = () => {
     if (scrollRef.current && isMobile) {
       const scrollPosition = scrollRef.current.scrollLeft;
@@ -69,7 +69,13 @@ const SaccoIdentitySection = () => {
       title: 'Our Values',
       icon: <StarIcon sx={{ fontSize: { xs: 38, md: 50 } }} />,
       content: (
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1, width: '100%' }}>
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(2, 1fr)', 
+          gap: 1, 
+          width: '100%',
+          textAlign: 'left' 
+        }}>
           {coreValues.map((v, i) => (
             <Typography key={i} sx={{ color: BRAND.lightGold, fontWeight: 600, fontSize: { xs: '0.7rem', md: '0.9rem' } }}>
               • {v}
@@ -93,6 +99,7 @@ const SaccoIdentitySection = () => {
             mb: { xs: 6, md: 10 }, 
             textTransform: 'uppercase',
             fontSize: { xs: '2rem', md: '3.5rem' },
+            letterSpacing: '0.1rem'
           }}
         >
           Our Identity
@@ -135,18 +142,21 @@ const SaccoIdentitySection = () => {
                   }}
                 >
                   <Card 
+                    component={motion.div}
+                    // RE-ADDED MOTION: Restores the laptop hover effect and fixes lint error
+                    whileHover={!isMobile ? { y: -10 } : {}}
                     sx={{ 
                       bgcolor: 'rgba(255, 255, 255, 0.03)', 
                       border: selectedCard === index ? `2px solid ${BRAND.gold}` : '1px solid rgba(255, 255, 255, 0.1)',
                       borderRadius: '32px',
                       color: BRAND.light,
                       width: '100%',
-                      // THE FIX: minHeight ensures a solid shape, but text wrapping handles the length
-                      minHeight: { xs: '350px', md: '450px' }, 
+                      minHeight: { xs: '380px', md: '450px' }, 
                       display: 'flex',
+                      transition: 'border 0.4s ease, background 0.4s ease'
                     }}
                   >
-                    <CardActionArea sx={{ display: 'flex', alignItems: 'center' }}>
+                    <CardActionArea sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
                       <CardContent sx={{ 
                         width: '100%',
                         display: 'flex', 
@@ -171,15 +181,15 @@ const SaccoIdentitySection = () => {
                           {card.title}
                         </Typography>
                         
-                        {/* TEXT WRAPPING LOGIC */}
+                        {/* THE FIX: MaxWidth forces long statements to wrap into short chunks */}
                         <Typography sx={{ 
                           opacity: 0.9, 
                           lineHeight: 1.6, 
-                          fontSize: { xs: '0.85rem', md: '1.05rem' },
+                          fontSize: { xs: '0.88rem', md: '1.05rem' },
                           fontWeight: 500,
-                          // Force wrapping into a "laptop-style" block
                           maxWidth: { xs: '260px', md: '100%' }, 
                           mx: 'auto',
+                          wordBreak: 'break-word'
                         }}>
                           {card.content}
                         </Typography>
@@ -192,7 +202,7 @@ const SaccoIdentitySection = () => {
 
             {/* DOT INDICATORS */}
             {isMobile && (
-              <Stack direction="row" spacing={1.5}>
+              <Stack direction="row" spacing={1.5} sx={{ mt: 1 }}>
                 {identityCards.map((_, i) => (
                   <Box
                     key={i}
