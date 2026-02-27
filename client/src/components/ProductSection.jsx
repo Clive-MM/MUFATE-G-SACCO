@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react'; // Removed useEffect
 import {
   Box,
   Typography,
@@ -10,7 +10,7 @@ import {
   Stack,
   useTheme,
   useMediaQuery,
-  CircularProgress
+  // Removed CircularProgress
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import SavingsIcon from '@mui/icons-material/Savings';
@@ -56,13 +56,15 @@ const ProductsSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Sync scroll position with state for active border highlighting
   const handleScroll = () => {
     if (scrollRef.current && isMobile) {
       const scrollPosition = scrollRef.current.scrollLeft;
-      const cardWidth = scrollRef.current.offsetWidth * 0.88;
-      const index = Math.round(scrollPosition / cardWidth);
-      if (index !== selectedProduct) setSelectedProduct(index);
+      // Using clientWidth for more accurate snapping calculation
+      const cardWidth = scrollRef.current.clientWidth * 0.88;
+      const index = Math.round(scrollPosition / (cardWidth + 20)); // Added gap compensation
+      if (index !== selectedProduct && index >= 0 && index < products.length) {
+        setSelectedProduct(index);
+      }
     }
   };
 
@@ -124,7 +126,6 @@ const ProductsSection = () => {
                     borderRadius: '32px',
                     color: BRAND.light,
                     width: '100%',
-                    // Standardized height for clean alignment
                     minHeight: { xs: '360px', md: '450px' }, 
                     display: 'flex',
                     transition: 'border 0.4s ease, background 0.4s ease',
@@ -189,7 +190,6 @@ const ProductsSection = () => {
             ))}
           </Box>
 
-          {/* DOT INDICATORS FOR MOBILE NAVIGATION */}
           {isMobile && (
             <Stack direction="row" spacing={1.5} sx={{ mt: 1 }}>
               {products.map((_, i) => (
