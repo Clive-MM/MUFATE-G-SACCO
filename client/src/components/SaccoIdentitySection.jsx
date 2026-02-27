@@ -76,11 +76,11 @@ const SaccoIdentitySection = () => {
   }, [isMobile, loading]);
 
   const identityCards = [
-    { id: 0, title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: { xs: 40, md: 50 } }} />, content: mission },
+    { id: 0, title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: { xs: 35, md: 50 } }} />, content: mission },
     {
       id: 1,
       title: 'Our Values',
-      icon: <StarIcon sx={{ fontSize: { xs: 40, md: 50 } }} />,
+      icon: <StarIcon sx={{ fontSize: { xs: 35, md: 50 } }} />,
       content: (
         <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
           {coreValues.map((v, i) => (
@@ -91,7 +91,7 @@ const SaccoIdentitySection = () => {
         </Box>
       ),
     },
-    { id: 2, title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: { xs: 40, md: 50 } }} />, content: vision },
+    { id: 2, title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: { xs: 35, md: 50 } }} />, content: vision },
   ];
 
   return (
@@ -103,7 +103,7 @@ const SaccoIdentitySection = () => {
           sx={{ 
             color: BRAND.gold, 
             fontWeight: 900, 
-            mb: { xs: 6, md: 10 }, 
+            mb: { xs: 4, md: 10 }, 
             textTransform: 'uppercase',
             fontSize: { xs: '1.8rem', md: '3.5rem' },
             letterSpacing: '0.1rem'
@@ -141,7 +141,7 @@ const SaccoIdentitySection = () => {
                 <Box 
                   key={card.id} 
                   sx={{ 
-                    minWidth: isMobile ? '85%' : 'auto', 
+                    minWidth: isMobile ? '88%' : 'auto', 
                     scrollSnapAlign: 'center',
                     flexShrink: 0,
                     height: '100%'
@@ -156,7 +156,8 @@ const SaccoIdentitySection = () => {
                       borderRadius: '24px',
                       color: BRAND.light,
                       transition: 'all 0.4s ease-in-out',
-                      height: isMobile ? '380px' : '450px', // Standardized height
+                      // THE FIX: Standardized height prevents rectangular elongation
+                      height: { xs: '320px', md: '450px' }, 
                       display: 'flex',
                       flexDirection: 'column',
                       boxShadow: selectedCard === index ? `0 0 30px rgba(236, 155, 20, 0.2)` : 'none',
@@ -164,7 +165,7 @@ const SaccoIdentitySection = () => {
                   >
                     <CardActionArea
                       onClick={() => setSelectedCard(index)}
-                      sx={{ height: '100%', width: '100%', p: { xs: 2, md: 3 } }}
+                      sx={{ height: '100%', width: '100%' }}
                     >
                       <CardContent sx={{ 
                         height: '100%',
@@ -172,7 +173,8 @@ const SaccoIdentitySection = () => {
                         flexDirection: 'column', 
                         alignItems: 'center', 
                         textAlign: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        p: { xs: 2.5, md: 4 }
                       }}>
                         <Box sx={{ color: BRAND.gold, mb: 2 }}>
                           {card.icon}
@@ -184,23 +186,22 @@ const SaccoIdentitySection = () => {
                             fontWeight: 800, 
                             mb: 2, 
                             textTransform: 'uppercase', 
-                            letterSpacing: '0.05rem',
-                            fontSize: { xs: '1.1rem', md: '1.4rem' }
+                            fontSize: { xs: '1rem', md: '1.4rem' }
                           }}
                         >
                           {card.title}
                         </Typography>
                         
-                        {/* THE FIX: Fixed height box with overflow control for typography */}
                         <Box sx={{ 
                           opacity: 0.9, 
                           lineHeight: 1.6, 
-                          fontSize: { xs: '0.85rem', md: '1rem' },
-                          // Use Clamp to prevent elongated cards
-                          display: '-webkit-box',
-                          WebkitLineClamp: isMobile ? 6 : 8, 
-                          WebkitBoxOrient: 'vertical',
-                          overflow: 'hidden'
+                          fontSize: { xs: '0.8rem', md: '1rem' },
+                          // Performance & UX Fix: Standardize text block
+                          overflowY: 'auto',
+                          maxHeight: '140px',
+                          pr: 0.5,
+                          '&::-webkit-scrollbar': { width: '4px' },
+                          '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(236, 155, 20, 0.3)', borderRadius: '10px' }
                         }}>
                           {card.content}
                         </Box>
@@ -213,28 +214,16 @@ const SaccoIdentitySection = () => {
 
             {/* DOT INDICATORS */}
             {isMobile && (
-              <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ mt: 2 }}>
+              <Stack direction="row" spacing={1.2} justifyContent="center">
                 {identityCards.map((_, i) => (
                   <Box
                     key={i}
-                    onClick={() => {
-                      setSelectedCard(i);
-                      if (scrollRef.current) {
-                        const container = scrollRef.current;
-                        const card = container.children[i];
-                        container.scrollTo({
-                          left: card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2,
-                          behavior: 'smooth'
-                        });
-                      }
-                    }}
                     sx={{
-                      width: selectedCard === i ? 24 : 8,
+                      width: selectedCard === i ? 20 : 8,
                       height: 8,
                       borderRadius: 4,
                       bgcolor: selectedCard === i ? BRAND.gold : 'rgba(255, 255, 255, 0.2)',
                       transition: 'all 0.3s ease',
-                      cursor: 'pointer'
                     }}
                   />
                 ))}
