@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -16,13 +16,27 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-// Brand colors - unified with AboutSection
 const BRAND = {
   gold: "#EC9B14",
   dark: "#02150F",
   light: "#F4F4F4",
   textMuted: "rgba(244, 244, 244, 0.7)",
 };
+
+// PERFORMANCE: Define static styles and icons outside to prevent re-renders
+const ICON_STYLE = {
+  fontSize: { xs: 30, sm: 40, md: 50 },
+  color: BRAND.gold,
+  mb: { xs: 1, md: 2 },
+  filter: `drop-shadow(0 0 10px rgba(236, 155, 20, 0.4))`,
+};
+
+const ICONS = [
+  <CalendarTodayIcon sx={ICON_STYLE} />,
+  <GroupsIcon sx={ICON_STYLE} />,
+  <PhoneIphoneIcon sx={ICON_STYLE} />,
+  <LocationCityIcon sx={ICON_STYLE} />,
+];
 
 const SaccoStatsSection = () => {
   const [stats, setStats] = useState(null);
@@ -41,29 +55,16 @@ const SaccoStatsSection = () => {
       });
   }, []);
 
-  const iconStyle = {
-    // Responsive icon sizes
-    fontSize: { xs: 35, sm: 40, md: 50 },
-    color: BRAND.gold,
-    mb: 2,
-    filter: `drop-shadow(0 0 10px rgba(236, 155, 20, 0.4))`,
-  };
-
-  const iconMap = [
-    <CalendarTodayIcon sx={iconStyle} />,
-    <GroupsIcon sx={iconStyle} />,
-    <PhoneIphoneIcon sx={iconStyle} />,
-    <LocationCityIcon sx={iconStyle} />,
-  ];
-
-  const statItems = stats
-    ? [
-        { label: 'Years of Service', value: stats.YearsOfService },
-        { label: 'Active Members', value: stats.ActiveMembers },
-        { label: 'Mobile Banking Users', value: stats.MobileBankingUsers },
-        { label: 'Total Branches', value: stats.BranchCount },
-      ]
-    : [];
+  // PERFORMANCE: useMemo ensures this list is only recalculated when API data changes
+  const statItems = useMemo(() => {
+    if (!stats) return [];
+    return [
+      { label: 'Years of Service', value: stats.YearsOfService },
+      { label: 'Active Members', value: stats.ActiveMembers },
+      { label: 'Mobile Users', value: stats.MobileBankingUsers }, // Shortened for mobile fit
+      { label: 'Total Branches', value: stats.BranchCount },
+    ];
+  }, [stats]);
 
   return (
     <Box
@@ -75,13 +76,12 @@ const SaccoStatsSection = () => {
         position: 'relative',
       }}
     >
-      {/* Background Decoration Glow */}
       <Box sx={{
         position: 'absolute',
         top: '20%',
         left: '-5%',
-        width: { xs: '250px', md: '400px' }, // Smaller glow on mobile
-        height: { xs: '250px', md: '400px' },
+        width: { xs: '200px', md: '400px' },
+        height: { xs: '200px', md: '400px' },
         bgcolor: BRAND.gold,
         filter: 'blur(100px)',
         opacity: 0.05,
@@ -90,8 +90,7 @@ const SaccoStatsSection = () => {
       }} />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
-        {/* HEADER SECTION */}
-        <Box sx={{ textAlign: 'center', mb: { xs: 6, md: 10 }, px: 1 }}>
+        <Box sx={{ textAlign: 'center', mb: { xs: 5, md: 10 } }}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -104,33 +103,16 @@ const SaccoStatsSection = () => {
                 color: BRAND.gold,
                 fontWeight: 900,
                 textTransform: 'uppercase',
-                // Smoother scaling for mobile titles
-                fontSize: { xs: "1.8rem", sm: "2.8rem", md: "4rem" },
-                letterSpacing: { xs: "0.02em", md: "0.1em" },
-                mb: { xs: 2, md: 3 }
+                fontSize: { xs: "1.8rem", md: "4rem" },
+                letterSpacing: "0.05em",
+                mb: 2
               }}
             >
-              Our Impact In Numbers 
-            </Typography>
-            <Typography 
-              sx={{ 
-                color: BRAND.light, 
-                maxWidth: "850px", 
-                mx: 'auto', 
-                fontSize: { xs: "0.9rem", md: "1.15rem" }, 
-                opacity: 0.85,
-                lineHeight: { xs: 1.6, md: 1.8 },
-                fontWeight: 300,
-                px: { xs: 2, md: 0 }
-              }}
-            >
-              Golden Generation DT SACCO continues to grow with our members—expanding 
-              our service, reach, and digital convenience across the region.
+              Our Impact In Numbers
             </Typography>
           </motion.div>
         </Box>
 
-        {/* STATS GRID */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
             <CircularProgress sx={{ color: BRAND.gold }} />
@@ -138,46 +120,43 @@ const SaccoStatsSection = () => {
         ) : (
           <Grid 
             container 
-            spacing={{ xs: 2, sm: 3, md: 4 }}
+            spacing={{ xs: 1.5, sm: 3, md: 4 }} // Tighter spacing on mobile
             justifyContent="center"
-            alignItems="stretch"
           >
             {statItems.map((item, index) => (
-              // xs=12 (full width on phones), sm=6 (2 per row on tablets), md=3 (4 per row on desktop)
-              <Grid item xs={12} sm={6} md={3} key={index} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Grid 
+                item 
+                xs={6} // THE KEY CHANGE: 2 cards per row on mobile (6/12)
+                sm={6} 
+                md={3} 
+                key={index}
+              >
                 <Box
                   component={motion.div}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
                   whileHover={{ y: -10 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  sx={{ width: '100%', maxWidth: { xs: '320px', sm: '100%' } }} 
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <Paper
                     elevation={0}
                     sx={{
-                      py: { xs: 4, md: 8 }, 
-                      px: { xs: 2, md: 3 },
-                      height: '100%',
+                      py: { xs: 3, md: 8 }, 
+                      px: { xs: 1, md: 3 },
                       textAlign: 'center',
-                      borderRadius: '24px',
-                      backdropFilter: 'blur(10px)',
+                      borderRadius: { xs: '16px', md: '24px' },
                       background: 'rgba(255, 255, 255, 0.02)',
                       border: '1px solid rgba(255, 255, 255, 0.08)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                      transition: '0.3s all ease',
                       '&:hover': {
                         borderColor: BRAND.gold,
                         bgcolor: 'rgba(236, 155, 20, 0.06)',
-                        boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(236, 155, 20, 0.1)`,
                       },
                     }}
                   >
-                    <Box sx={{ mb: { xs: 1.5, md: 3 } }}>
-                      {iconMap[index]}
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                      {ICONS[index]}
                     </Box>
 
                     <Typography
@@ -185,9 +164,9 @@ const SaccoStatsSection = () => {
                       sx={{
                         fontWeight: 900,
                         color: BRAND.gold,
-                        fontSize: { xs: '2rem', sm: '2.5rem', md: '3.2rem' }, 
+                        // Scaled down mobile font so large numbers like 16,000 don't break
+                        fontSize: { xs: '1.4rem', sm: '2rem', md: '3.2rem' }, 
                         mb: 0.5,
-                        letterSpacing: -1,
                         fontFamily: 'serif',
                       }}
                     >
@@ -204,9 +183,9 @@ const SaccoStatsSection = () => {
                       sx={{
                         color: BRAND.textMuted,
                         fontWeight: 700,
-                        letterSpacing: '0.1em',
                         textTransform: 'uppercase',
-                        fontSize: { xs: '0.7rem', md: '0.9rem' }, 
+                        fontSize: { xs: '0.6rem', md: '0.9rem' }, 
+                        lineHeight: 1.2
                       }}
                     >
                       {item.label}
