@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -9,16 +9,19 @@ import {
   CircularProgress,
   Container,
   Stack,
+  TextField,
+  InputAdornment,
   useTheme,
   useMediaQuery
 } from '@mui/material';
-import { CloudDownload } from '@mui/icons-material';
+import { CloudDownload, Search as SearchIcon } from '@mui/icons-material';
 import Footer from '../components/Footer';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const ResourcesPage = () => {
+const Resources = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const [activeStep, setActiveStep] = useState(0);
   
   const scrollRef = useRef(null);
@@ -44,6 +47,13 @@ const ResourcesPage = () => {
       });
   }, []);
 
+  // PERFORMANCE: Filter resources based on search term
+  const filteredResources = useMemo(() => {
+    return resources.filter(res => 
+      res.Title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [resources, searchTerm]);
+
   const handleDownload = (fileUrl) => {
     window.open(fileUrl, '_blank');
   };
@@ -53,7 +63,7 @@ const ResourcesPage = () => {
       const scrollPosition = scrollRef.current.scrollLeft;
       const cardWidth = scrollRef.current.offsetWidth * 0.85;
       const index = Math.round(scrollPosition / cardWidth);
-      if (index !== activeStep && index >= 0 && index < resources.length) {
+      if (index !== activeStep && index >= 0 && index < filteredResources.length) {
         setActiveStep(index);
       }
     }
@@ -84,7 +94,7 @@ const ResourcesPage = () => {
             sx={{
               fontWeight: 900,
               textTransform: 'uppercase',
-              mb: { xs: 6, md: 10 },
+              mb: 4,
               letterSpacing: '0.1rem',
               color: COLORS.gold,
               fontSize: { xs: '1.8rem', md: '3.5rem' },
@@ -93,6 +103,37 @@ const ResourcesPage = () => {
             Resources
           </Typography>
         </motion.div>
+
+        {/* 🔍 SEARCH BAR COMPONENT */}
+        <Box sx={{ maxWidth: '600px', mx: 'auto', mb: { xs: 6, md: 10 }, px: 2 }}>
+          <TextField
+            fullWidth
+            placeholder="Search documents (e.g. Loan Form)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: COLORS.gold }} />
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                color: COLORS.light,
+                borderRadius: '15px',
+                bgcolor: 'rgba(255,255,255,0.05)',
+                '& fieldset': { borderColor: 'rgba(236, 155, 20, 0.3)' },
+                '&:hover fieldset': { borderColor: COLORS.gold },
+                '&.Mui-focused fieldset': { borderColor: COLORS.gold },
+              },
+              '& .MuiInputBase-input::placeholder': {
+                color: 'rgba(244, 244, 244, 0.5)',
+                fontSize: '0.9rem'
+              }
+            }}
+          />
+        </Box>
 
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
@@ -105,7 +146,6 @@ const ResourcesPage = () => {
               onScroll={handleScroll}
               sx={{
                 width: '100%',
-                // Grid for Desktop, Horizontal Flex for Mobile
                 display: isMobile ? 'flex' : 'grid',
                 flexDirection: isMobile ? 'row' : 'unset',
                 overflowX: isMobile ? 'auto' : 'visible',
@@ -122,81 +162,90 @@ const ResourcesPage = () => {
                 pb: isMobile ? 4 : 0
               }}
             >
-              {resources.map((res, idx) => (
-                <Box 
-                  key={idx} 
-                  sx={{ 
-                    minWidth: isMobile ? '85%' : 'auto', 
-                    scrollSnapAlign: 'center',
-                    flexShrink: 0,
-                    display: 'flex'
-                  }}
-                >
-                  <Card
-                    component={motion.div}
-                    whileHover={!isMobile ? { y: -8, scale: 1.02 } : {}}
-                    sx={{
-                      borderRadius: '24px',
-                      p: { xs: 2, md: 3 },
-                      backgroundColor: activeStep === idx && isMobile ? 'rgba(236, 155, 20, 0.08)' : 'rgba(255,255,255,0.03)',
-                      border: activeStep === idx && isMobile ? `2px solid ${COLORS.gold}` : `1px solid rgba(255,255,255,0.1)`,
-                      boxShadow: activeStep === idx && isMobile ? `0 15px 40px rgba(236, 155, 20, 0.2)` : '0 8px 28px rgba(0,0,0,0.25)',
-                      transition: '0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                      width: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <CardContent sx={{ textAlign: 'center' }}>
-                      <Typography
-                        variant="h6"
+              <AnimatePresence mode="popLayout">
+                {filteredResources.length > 0 ? (
+                  filteredResources.map((res, idx) => (
+                    <Box 
+                      key={res.ID || idx} 
+                      component={motion.div}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      sx={{ 
+                        minWidth: isMobile ? '85%' : 'auto', 
+                        scrollSnapAlign: 'center',
+                        flexShrink: 0,
+                        display: 'flex'
+                      }}
+                    >
+                      <Card
                         sx={{
-                          fontWeight: 800,
-                          mb: 4,
-                          color: COLORS.light,
-                          fontSize: { xs: '1rem', md: '1.2rem' },
-                          minHeight: '3rem',
+                          borderRadius: '24px',
+                          p: { xs: 3, md: 4 },
+                          backgroundColor: activeStep === idx && isMobile ? 'rgba(236, 155, 20, 0.08)' : 'rgba(255,255,255,0.03)',
+                          border: activeStep === idx && isMobile ? `2px solid ${COLORS.gold}` : `1px solid rgba(255,255,255,0.1)`,
+                          boxShadow: activeStep === idx && isMobile ? `0 15px 40px rgba(236, 155, 20, 0.2)` : '0 8px 28px rgba(0,0,0,0.25)',
+                          transition: 'all 0.3s ease',
+                          width: '100%',
                           display: 'flex',
-                          alignItems: 'center',
+                          flexDirection: 'column',
                           justifyContent: 'center'
                         }}
                       >
-                        {res.Title}
-                      </Typography>
+                        <CardContent sx={{ textAlign: 'center' }}>
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: 800,
+                              mb: 4,
+                              color: COLORS.light,
+                              fontSize: { xs: '1rem', md: '1.2rem' },
+                              minHeight: '3.5rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              textTransform: 'uppercase'
+                            }}
+                          >
+                            {res.Title}
+                          </Typography>
 
-                      <Button
-                        onClick={() => handleDownload(res.FilePath)}
-                        variant="contained"
-                        startIcon={<CloudDownload />}
-                        fullWidth={isMobile}
-                        sx={{
-                          background: COLORS.gold,
-                          color: COLORS.dark,
-                          px: 4,
-                          py: 1.5,
-                          fontWeight: 900,
-                          borderRadius: '12px',
-                          textTransform: 'uppercase',
-                          fontSize: '0.75rem',
-                          letterSpacing: '1px',
-                          '&:hover': {
-                            background: COLORS.light,
-                          },
-                        }}
-                      >
-                        Download
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Box>
-              ))}
+                          <Button
+                            onClick={() => handleDownload(res.FilePath)}
+                            variant="contained"
+                            startIcon={<CloudDownload />}
+                            fullWidth
+                            sx={{
+                              background: COLORS.gold,
+                              color: COLORS.dark,
+                              py: 1.5,
+                              fontWeight: 900,
+                              borderRadius: '12px',
+                              textTransform: 'uppercase',
+                              '&:hover': { background: COLORS.light },
+                            }}
+                          >
+                            Download
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </Box>
+                  ))
+                ) : (
+                  <Box sx={{ gridColumn: '1 / -1', textAlign: 'center', py: 10, width: '100%' }}>
+                    <Typography sx={{ color: 'rgba(244, 244, 244, 0.5)', fontStyle: 'italic' }}>
+                      No documents found matching "{searchTerm}"
+                    </Typography>
+                  </Box>
+                )}
+              </AnimatePresence>
             </Box>
 
-            {/* Dot Indicators for Mobile */}
-            {isMobile && resources.length > 0 && (
+            {/* Dot Indicators */}
+            {isMobile && filteredResources.length > 1 && (
               <Stack direction="row" spacing={1.5}>
-                {resources.map((_, i) => (
+                {filteredResources.map((_, i) => (
                   <Box
                     key={i}
                     sx={{
@@ -214,11 +263,10 @@ const ResourcesPage = () => {
         )}
       </Container>
 
-      {/* Standardized Divider */}
       <Box sx={{ height: '1px', background: `linear-gradient(90deg, transparent, ${COLORS.gold}, transparent)`, mt: 10, opacity: 0.3 }} />
       <Footer />
     </Box>
   );
 };
 
-export default ResourcesPage;
+export default Resources;
