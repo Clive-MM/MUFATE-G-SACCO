@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef } from 'react'; // Removed useMemo
 import axios from 'axios';
 import {
   Box,
   Typography,
-  Grid,
   Card,
   CardContent,
   CardMedia,
@@ -13,7 +12,7 @@ import {
   useTheme,
   useMediaQuery,
   CircularProgress
-} from '@mui/material';
+} from '@mui/material'; // Removed Grid
 import { motion } from 'framer-motion';
 import Footer from '../../components/Footer';
 
@@ -119,7 +118,7 @@ const StrategicPartners = () => {
                 onScroll={handleScroll}
                 sx={{
                   width: '100%',
-                  // Laptop: Professional Grid | Mobile: Smooth Slider
+                  // Layout Strategy: Grid for Laptop, Flex for Mobile Slider
                   display: isMobile ? 'flex' : 'grid',
                   flexDirection: isMobile ? 'row' : 'unset',
                   overflowX: isMobile ? 'auto' : 'visible',
@@ -167,11 +166,10 @@ const StrategicPartners = () => {
                             image={partner.LogoImageURL}
                             alt={partner.PartnerName}
                             sx={{
-                              height: { xs: 160, md: 200 },
+                              height: { xs: 160, md: 220 },
                               objectFit: 'contain',
                               backgroundColor: '#ffffff',
                               p: 4,
-                              filter: 'grayscale(20%) contrast(110%)',
                             }}
                           />
                         )}
@@ -209,8 +207,8 @@ const StrategicPartners = () => {
                 ))}
               </Box>
 
-              {/* Dot Indicators for Mobile */}
-              {isMobile && (
+              {/* Dot Indicators for Mobile Navigation */}
+              {isMobile && partners.length > 0 && (
                 <Stack direction="row" spacing={1.5}>
                   {partners.map((_, i) => (
                     <Box
