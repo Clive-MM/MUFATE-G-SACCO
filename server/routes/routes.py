@@ -1585,7 +1585,6 @@ def get_holiday_message():
 #  ✅ Public route to submit feedback
 
 
-
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
@@ -1613,71 +1612,49 @@ def submit_feedback():
             StatusID=1  # Unread
         )
         db.session.add(feedback)
-        db.session.commit()
+        db.session.commit() # Database record is now permanent
 
-        # 3️⃣ Prepare admin email
+        # 3️⃣ Prepare Emails (Logic remains the same)
         admin_msg = Message(
             subject=f"📥 New Website Feedback: {subject}",
             sender=current_app.config['MAIL_USERNAME'],
             recipients=["maderumoyia@mudetesacco.co.ke"],
-            body=f"""
-New feedback received via the website.
-
-From: {email}
-Phone: {phone or 'N/A'}
-Subject: {subject}
-
-Message:
-{message}
-
-Submitted At: {feedback.SubmittedAt.strftime('%Y-%m-%d %H:%M:%S')}
-"""
+            body=f"New feedback received.\n\nFrom: {email}\nPhone: {phone or 'N/A'}\nSubject: {subject}\n\nMessage:\n{message}"
         )
 
-        # 4️⃣ Prepare user acknowledgement email
         user_msg = Message(
             subject="✅ Thank you for contacting Golden Generation DT SACCO",
             sender=current_app.config['MAIL_USERNAME'],
             recipients=[email],
-            body=f"""
-Dear Member,
-
-Thank you for contacting Golden Generation DT SACCO.
-
-We have successfully received your message regarding:
-"{subject}"
-
-Our team is currently reviewing your inquiry and you will hear from us very soon.
-
-If your matter is urgent, you may reach us via:
-📞 +254 791 331 932,+254 794 515 407
-📧 info@mudetesacco.co.ke
-
-Warm regards,
-Golden Generation DT SACCO
-"Walking With You"
-"""
+            body=f"Dear Member,\n\nWe have successfully received your message regarding: \"{subject}\".\n\nWarm regards,\nGolden Generation DT SACCO"
         )
 
-        # 5️⃣ Send emails
+        # 4️⃣ SAFE SEND LOGIC
+        # We wrap this in a separate try-except so a slow mail server 
+        # doesn't trigger a 502 Bad Gateway for the user.
         if mail:
-            mail.send(admin_msg)
-            mail.send(user_msg)
+            try:
+                mail.send(admin_msg)
+                mail.send(user_msg)
+            except Exception as email_err:
+                # Log the error to Render console so you can debug Safaricom SMTP
+                print(f"📧 SMTP Error (Non-critical): {email_err}")
+                # We do NOT return an error here; the DB save was already successful.
 
-        # 6️⃣ Return success response
+        # 5️⃣ Return success response
         return jsonify({
             'message': '😊 Thank you! Your feedback has been received.',
             'feedback_id': feedback.FeedbackID
         }), 201
 
     except Exception as e:
+        # This block now only catches Database or Validation errors
         db.session.rollback()
         traceback.print_exc()
         return jsonify({
             'message': '❌ Failed to submit feedback.',
             'error': str(e)
         }), 500
-
 
 
 
