@@ -3,7 +3,7 @@ import {
   Box, Typography, IconButton, Link, Container, Stack, Divider, Grid, Tooltip, Zoom
 } from '@mui/material';
 import {
-  LocationOn, Email, AccessTime, Phone, ArrowUpward,
+  LocationOn, Email,  Phone, ArrowUpward,
   Facebook, X as XIcon, Apple, Android
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
