@@ -73,7 +73,7 @@ const AboutUsSection = () => {
               scrollSnapType: isMobile ? 'x mandatory' : 'none',
               '&::-webkit-scrollbar': { display: 'none' },
               scrollbarWidth: 'none',
-              ...(isMobile ? {} : glassCardStyle) // Only apply glass border to the whole block on Desktop
+              ...(isMobile ? {} : glassCardStyle) 
             }}
           >
             {sections.map((item, index) => (
@@ -137,7 +137,7 @@ const SectionItem = ({ icon, title, content, isMobile, isActive }) => (
           borderRadius: '24px',
           border: `1px solid ${isActive ? BRAND.gold : 'rgba(255, 255, 255, 0.1)'}`,
           mx: 1,
-          height: '280px', // Standardized mobile height
+          height: '280px', 
           justifyContent: 'center'
         })
       }}
@@ -151,7 +151,7 @@ const SectionItem = ({ icon, title, content, isMobile, isActive }) => (
         </Typography>
         <Typography sx={{
           ...bodyStyle,
-          maxWidth: isMobile ? '240px' : '100%', // Text wrapping logic
+          maxWidth: isMobile ? '240px' : '100%', 
           mx: 'auto'
         }}>
           {content}

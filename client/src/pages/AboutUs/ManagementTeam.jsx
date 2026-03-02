@@ -21,8 +21,8 @@ const ManagementTeam = () => {
 
   // Standardized Brand Colors to match Footer and BOD
   const COLORS = {
-    gold: '#EC9B14',      // Matches BRAND.gold from Footer
-    dark: '#02150F',      // Matches BRAND.dark from Footer
+    gold: '#EC9B14',      
+    dark: '#02150F',      
     textMuted: 'rgba(244, 244, 244, 0.6)', 
     light: '#F4F4F4',
   };
@@ -123,7 +123,7 @@ const ManagementTeam = () => {
                     py: 0.8,
                     borderRadius: '4px',
                     background: COLORS.gold,
-                    color: COLORS.dark, // Dark text for contrast
+                    color: COLORS.dark, 
                     fontWeight: 800,
                     fontSize: '0.75rem',
                     letterSpacing: '0.5px',

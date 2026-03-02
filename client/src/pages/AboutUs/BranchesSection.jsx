@@ -5,7 +5,7 @@ import {
   Favorite as FavoriteIcon, 
   Verified as VerifiedIcon, 
   Map as MapIcon,
-  Directions as DirectionsIcon // Corrected typo
+  Directions as DirectionsIcon 
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -41,10 +41,7 @@ const BranchesSection = ({ branches = [], coreValues = [] }) => {
         
         <Box sx={{ textAlign: 'center', mb: { xs: 5, md: 10 } }}>
           <motion.div initial={{ opacity: 0, y: -20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 900, letterSpacing: 3 }}>
-              OUR NETWORK
-            </Typography>
-            <Typography variant="h2" sx={{ 
+                        <Typography variant="h2" sx={{ 
               fontWeight: 900, 
               color: BRAND.gold, 
               mt: 1,
