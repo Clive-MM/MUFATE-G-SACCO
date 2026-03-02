@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
-  Box, Typography, IconButton, Link, Container, Stack, Divider, Grid
+  Box, Typography, IconButton, Link, Container, Stack, Divider, Grid, Tooltip, Zoom
 } from '@mui/material';
 import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
-  Facebook, X as XIcon
+  Facebook, X as XIcon, Apple, Android
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
-import axios from 'axios';
 
 const BRAND = {
   gold: '#EC9B14',
@@ -19,14 +18,6 @@ const BRAND = {
 };
 
 const Footer = () => {
-  const [postImages, setPostImages] = useState([]);
-
-  useEffect(() => {
-    axios.get('https://mufate-g-sacco.onrender.com/posts/images')
-      .then((res) => setPostImages(res.data.images || []))
-      .catch((err) => console.error('❌ Failed to fetch recent post images:', err));
-  }, []);
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -41,35 +32,31 @@ const Footer = () => {
     '&:hover': { color: BRAND.dark, background: BRAND.gold, transform: 'translateY(-3px)' }
   };
 
-  const contactItemStyle = {
+  const appButtonStyle = {
     display: 'flex',
-    alignItems: 'flex-start',
-    gap: 2,
-    mb: 2.5,
-  };
-
-  const iconWrapperStyle = {
-    color: BRAND.gold,
-    fontSize: '1.2rem',
-    mt: 0.4
+    alignItems: 'center',
+    gap: 1.5,
+    p: '10px 20px',
+    borderRadius: '12px',
+    border: `1px solid rgba(236, 155, 20, 0.3)`,
+    color: BRAND.light,
+    textDecoration: 'none',
+    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+    background: 'rgba(255,255,255,0.03)',
+    '&:hover': {
+      borderColor: BRAND.gold,
+      background: 'rgba(236, 155, 20, 0.08)',
+      transform: 'scale(1.05)',
+      boxShadow: `0 10px 20px rgba(0,0,0,0.3)`
+    }
   };
 
   return (
-    <Box
-      sx={{
-        bgcolor: BRAND.dark,
-        color: BRAND.light,
-        pt: 10,
-        pb: 2,
-        position: 'relative',
-        borderTop: `1px solid rgba(255,255,255,0.05)`
-      }}
-    >
+    <Box sx={{ bgcolor: BRAND.dark, color: BRAND.light, pt: 10, pb: 2, position: 'relative', borderTop: `1px solid rgba(255,255,255,0.05)` }}>
       <Container maxWidth="xl">
-        {/* Main Grid with even distribution */}
         <Grid container spacing={4} justifyContent="space-between">
 
-          {/* Column 1: Logo + Short Phrases Description */}
+          {/* Column 1: Branding */}
           <Grid item xs={12} md={3.5}>
             <Box>
               <img
@@ -80,76 +67,68 @@ const Footer = () => {
               <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 2, letterSpacing: '2px', fontSize: '0.9rem' }}>
                 WALKING WITH YOU
               </Typography>
-              <Typography
-                sx={{
-                  color: BRAND.textMuted,
-                  lineHeight: 1.8,
-                  mb: 4,
-                  fontSize: '0.85rem',
-                  fontWeight: 400,
-                  letterSpacing: '0.3px'
-                }}
-              >
-                Golden Generation DT Sacco,<br />
-                formerly Mufate G Sacco,<br />
-                expanding and modernizing<br />
-                to serve our members effectively.
+              <Typography sx={{ color: BRAND.textMuted, lineHeight: 1.8, mb: 4, fontSize: '0.85rem' }}>
+                Golden Generation DT Sacco, formerly Mufate G Sacco, expanding and modernizing to serve our members effectively.
               </Typography>
 
               <Stack direction="row" spacing={1.5}>
-                <IconButton component="a" href="https://x.com/GMufate" target="_blank" sx={socialIconStyle}>
-                  <XIcon fontSize="small" />
-                </IconButton>
-                <IconButton component="a" href="https://www.facebook.com/share/1CLhxfKxb2/" target="_blank" sx={socialIconStyle}>
-                  <Facebook fontSize="small" />
-                </IconButton>
-                <IconButton
-                  component="a" href="https://wa.me/254791331932" target="_blank"
-                  sx={{ ...socialIconStyle, '&:hover': { background: BRAND.success, color: '#FFF' } }}
-                >
-                  <FaWhatsapp size={18} />
-                </IconButton>
+                <IconButton component="a" href="https://x.com/GMufate" target="_blank" sx={socialIconStyle}><XIcon fontSize="small" /></IconButton>
+                <IconButton component="a" href="https://www.facebook.com/share/1CLhxfKxb2/" target="_blank" sx={socialIconStyle}><Facebook fontSize="small" /></IconButton>
+                <IconButton component="a" href="https://wa.me/254791331932" target="_blank" sx={{ ...socialIconStyle, '&:hover': { background: BRAND.success, color: '#FFF' } }}><FaWhatsapp size={18} /></IconButton>
               </Stack>
             </Box>
           </Grid>
 
-          {/* Column 2: Recent Posts (Centered in distribution) */}
-          <Grid item xs={12} sm={6} md={2}>
+          {/* Column 2: Repurposed for Mobile Apps */}
+          <Grid item xs={12} md={3}>
             <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
-              Recent Posts
+              Mobile Banking
             </Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1.5 }}>
-              {postImages.slice(0, 4).map((post, idx) => (
-                <Link key={idx} component={RouterLink} to="/news">
-                  <Box
-                    component="img"
-                    src={post.CoverImage}
-                    sx={{
-                      width: '100%',
-                      height: '75px',
-                      objectFit: 'cover',
-                      borderRadius: '8px',
-                      transition: '0.3s',
-                      filter: 'brightness(0.8)',
-                      '&:hover': { filter: 'brightness(1.1)', transform: 'scale(1.05)' }
-                    }}
-                  />
-                </Link>
-              ))}
-            </Box>
+            <Typography sx={{ color: BRAND.textMuted, fontSize: '0.85rem', mb: 3 }}>
+              Access your accounts 24/7. Download our official M-Sacco app today.
+            </Typography>
+            <Stack spacing={2}>
+              <Tooltip title="Coming soon to Play Store" TransitionComponent={Zoom} arrow>
+                <Box component="a" href="#" sx={appButtonStyle}>
+                  <Android sx={{ color: BRAND.gold, fontSize: '2rem' }} />
+                  <Box>
+                    <Typography sx={{ fontSize: '0.65rem', opacity: 0.7, mb: -0.5 }}>GET IT ON</Typography>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.9rem' }}>Google Play</Typography>
+                  </Box>
+                </Box>
+              </Tooltip>
+
+              <Tooltip title="Coming soon to App Store" TransitionComponent={Zoom} arrow>
+                <Box component="a" href="#" sx={appButtonStyle}>
+                  <Apple sx={{ color: BRAND.gold, fontSize: '2rem' }} />
+                  <Box>
+                    <Typography sx={{ fontSize: '0.65rem', opacity: 0.7, mb: -0.5 }}>DOWNLOAD ON THE</Typography>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.9rem' }}>App Store</Typography>
+                  </Box>
+                </Box>
+              </Tooltip>
+            </Stack>
           </Grid>
 
-          {/* Column 3: Quick Links (Centered in distribution) */}
-          <Grid item xs={12} sm={6} md={2}>
+          {/* Column 3: Quick Links - Corrected Routes */}
+          <Grid item xs={12} sm={6} md={2.5}>
             <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
-              Quick Links
+              Our Navigation
             </Typography>
-            <Stack spacing={1.8}>
-              {['Home', 'About Us', 'Services', 'Our Products', 'Blogs & Posts', 'FAQs', 'Membership', 'Contact Us'].map((text) => (
+            <Stack spacing={1.5}>
+              {[
+                { name: 'Home', path: '/' },
+                { name: 'About Who We Are', path: '/about/who-we-are' },
+                { name: 'FOSA Products', path: '/products/fosa' },
+                { name: 'BOSA Products', path: '/products/bosa' },
+                { name: 'Savings Accounts', path: '/products/savings' },
+                { name: 'Resources', path: '/resources' },
+                { name: 'FAQs', path: '/faqs' },
+              ].map((link) => (
                 <Link
-                  key={text}
+                  key={link.name}
                   component={RouterLink}
-                  to={`/${text.toLowerCase().replace(/\s+/g, '-')}`}
+                  to={link.path}
                   sx={{
                     color: BRAND.textMuted,
                     textDecoration: 'none',
@@ -158,46 +137,31 @@ const Footer = () => {
                     '&:hover': { color: BRAND.gold, transform: 'translateX(5px)' }
                   }}
                 >
-                  {text}
+                  {link.name}
                 </Link>
               ))}
             </Stack>
           </Grid>
 
-          {/* Column 4: Contact Info (Aligned to the right) */}
-          <Grid item xs={12} md={3}>
+          {/* Column 4: Contact Info */}
+          <Grid item xs={12} md={2.5}>
             <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
-              Contact Us
+              Reach Out
             </Typography>
-
-            <Box sx={contactItemStyle}>
-              <Phone sx={iconWrapperStyle} />
-              <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem', lineHeight: 1.6 }}>
-                +254 791 331 932<br />+254 794 515 407
-              </Typography>
-            </Box>
-
-            <Box sx={contactItemStyle}>
-              <LocationOn sx={iconWrapperStyle} />
-              <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>
-                Khayega - Kakamega
-              </Typography>
-            </Box>
-
-            <Box sx={contactItemStyle}>
-              <Email sx={iconWrapperStyle} />
-              <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>
-                info@mudetesacco.co.ke
-              </Typography>
-            </Box>
-
-            <Box sx={contactItemStyle}>
-              <AccessTime sx={iconWrapperStyle} />
-              <Box>
-                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>Mon - Fri: 8:30AM - 4:00PM</Typography>
-                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>Sat: 8:30AM - 12:30PM</Typography>
+            <Stack spacing={2.5}>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Phone sx={{ color: BRAND.gold, fontSize: '1.2rem' }} />
+                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>+254 791 331 932<br />+254 794 515 407</Typography>
               </Box>
-            </Box>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <LocationOn sx={{ color: BRAND.gold, fontSize: '1.2rem' }} />
+                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>Khayega - Kakamega</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Email sx={{ color: BRAND.gold, fontSize: '1.2rem' }} />
+                <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>info@mudetesacco.co.ke</Typography>
+              </Box>
+            </Stack>
           </Grid>
         </Grid>
 
@@ -207,23 +171,15 @@ const Footer = () => {
           <Typography sx={{ color: BRAND.gold, letterSpacing: '3px', fontWeight: 900, fontSize: { xs: '0.8rem', md: '1.2rem' } }}>
             GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
           </Typography>
-          <Typography sx={{ color: BRAND.textMuted, fontSize: '0.75rem', mt: 1, textTransform: 'uppercase', letterSpacing: '1px' }}>
-            All Rights Reserved
-          </Typography>
         </Box>
       </Container>
 
-      {/* Scroll Up Button */}
       <IconButton
         onClick={scrollToTop}
         sx={{
-          position: 'absolute',
-          right: { xs: 20, md: 40 },
-          bottom: { xs: 80, md: 100 },
-          bgcolor: BRAND.gold,
-          color: BRAND.dark,
-          width: 45,
-          height: 45,
+          position: 'absolute', right: { xs: 20, md: 40 }, bottom: { xs: 80, md: 100 },
+          bgcolor: BRAND.gold, color: BRAND.dark,
+          width: 45, height: 45,
           '&:hover': { bgcolor: BRAND.light, color: BRAND.dark, transform: 'translateY(-5px)' },
           transition: '0.3s'
         }}
