@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'; // Added useCallback
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -46,7 +46,7 @@ const AssetFinancing = () => {
       });
   }, []);
 
-  // 2. Wrap handleNext in useCallback to fix the dependency warning
+  // 2. Wrap handleNext in useCallback
   const handleNext = useCallback(() => {
     setAssetData((prevData) => {
       if (prevData.length === 0) return prevData;
@@ -69,7 +69,7 @@ const AssetFinancing = () => {
     }, ROTATION_INTERVAL_SEC * 1000);
 
     return () => clearInterval(timer);
-  }, [loading, error, assetData.length, isPlaying, handleNext]); // handleNext is now a stable dependency
+  }, [loading, error, assetData.length, isPlaying, handleNext]);
 
   if (loading) {
     return (
@@ -81,6 +81,14 @@ const AssetFinancing = () => {
         <Box sx={{ width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <CircularProgress sx={{ color: BRAND.gold }} />
         </Box>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card sx={{ bgcolor: BRAND.dark, p: 8, textAlign: 'center', borderRadius: '16px', mb: 6 }}>
+        <Typography sx={{ color: '#EF5350' }}>{error}</Typography>
       </Card>
     );
   }
@@ -97,18 +105,15 @@ const AssetFinancing = () => {
         boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
         border: `1px solid rgba(255,255,255,0.05)`,
         mb: 6,
-        minHeight: { md: '500px' }
       }}
     >
-      {/* LEFT SIDE: PHOTO PANE (Side by side) */}
       {/* LEFT SIDE: PHOTO PANE */}
       <Box
         sx={{
           position: 'relative',
           width: { xs: '100%', md: '60%' },
-          // Fix: Use a consistent height instead of 'auto' to eliminate white space
           height: { xs: '300px', md: '550px' },
-          bgcolor: '#000', // Keeps background dark if an image takes a micro-second to load
+          bgcolor: '#000',
           overflow: 'hidden'
         }}
       >
@@ -128,7 +133,6 @@ const AssetFinancing = () => {
                 position: 'absolute',
                 width: '100%',
                 height: '100%',
-
                 objectFit: 'cover',
                 objectPosition: 'center'
               }}
@@ -137,7 +141,7 @@ const AssetFinancing = () => {
         ))}
       </Box>
 
-      {/* RIGHT SIDE: CONTENT PANE (Media Control Style) */}
+      {/* RIGHT SIDE: CONTENT PANE */}
       <Box sx={{ display: 'flex', flexDirection: 'column', width: { xs: '100%', md: '40%' } }}>
         <CardContent sx={{ flex: '1 0 auto', p: { xs: 4, md: 6 }, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <Typography variant="h4" sx={{ color: BRAND.gold, fontWeight: 800, mb: 2, textTransform: 'uppercase' }}>
@@ -147,9 +151,23 @@ const AssetFinancing = () => {
             Acquire the equipment, machinery, or tools you need today through our
             flexible asset financing. Repay in affordable installments while using the asset as security.
           </Typography>
-          {/* <Link href="/products/asset-financing" sx={{ color: BRAND.gold, fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 1.5, mb: 4 }}>
-            Apply Now <ArrowForward />
-          </Link> */}
+          
+          {/* Re-enabled Link and ArrowForward */}
+          <Link 
+            href="/products/asset-financing" 
+            sx={{ 
+              color: BRAND.gold, 
+              fontWeight: 700, 
+              textDecoration: 'none', 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: 1.5, 
+              mb: 2,
+              '&:hover': { color: BRAND.light, transform: 'translateX(5px)', transition: '0.3s' }
+            }}
+          >
+            Apply Now <ArrowForward sx={{ fontSize: '1.2rem' }} />
+          </Link>
         </CardContent>
 
         {/* CONTROLS */}
@@ -158,7 +176,16 @@ const AssetFinancing = () => {
             {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
           </IconButton>
           <IconButton onClick={() => setIsPlaying(!isPlaying)} sx={{ color: BRAND.gold }}>
-            <PlayArrowIcon sx={{ height: 38, width: 38, transform: isPlaying ? 'rotate(90deg)' : 'none', transition: '0.3s' }} />
+            <PlayArrowIcon 
+              sx={{ 
+                height: 38, 
+                width: 38, 
+                transform: isPlaying ? 'rotate(90deg)' : 'none', 
+                transition: '0.3s',
+                // Visual indicator for pause
+                color: isPlaying ? BRAND.gold : BRAND.light 
+              }} 
+            />
           </IconButton>
           <IconButton onClick={handleNext} sx={{ color: BRAND.gold }}>
             {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
