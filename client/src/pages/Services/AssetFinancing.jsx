@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import {
-  Box, Typography, Link, Grid, Zoom, Skeleton
+  Box, Typography, Link, Grid, Zoom, Skeleton, CircularProgress
 } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 
 // --- CONFIGURATION ---
-const ASSET_API_URL = '/asset-financing';
+// Utilizing the environment variable pattern from your example
+const ASSET_API_URL = `${process.env.REACT_APP_API_BASE_URL}/asset-financing`;
 const ROTATION_INTERVAL_SEC = 12;
 
 // --- SACCO BRANDING ---
@@ -99,27 +101,25 @@ const AssetFinancing = () => {
   const [nextImageUrl, setNextImageUrl] = useState(null); 
   const preloadRef = useRef(new Image());
 
-  // 1. Fetch Data from your specified route
+  // 1. Fetch Data using Axios (matching your example pattern)
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(ASSET_API_URL);
-        const json = await response.json();
-
-        if (json.success && json.assets && json.assets.length > 0) {
-          setAssetData(json.assets);
+    setLoading(true);
+    axios.get(ASSET_API_URL)
+      .then((res) => {
+        // Checking for success based on the structure shown in your previous error handling
+        if (res.data.success && res.data.assets?.length > 0) {
+          setAssetData(res.data.assets);
+          setError(null);
         } else {
-          setError(json.message || 'No financing records found.');
+          setError(res.data.message || 'No financing records found.');
         }
-      } catch (e) {
-        setError('Network error: Unable to load asset images.');
-      } finally {
         setLoading(false);
-      }
-    };
-    fetchData();
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+        setError('Network error: Unable to reach the server.');
+        setLoading(false);
+      });
   }, []);
 
   // 2. Preload and Rotation Logic
@@ -152,8 +152,12 @@ const AssetFinancing = () => {
     return (
       <CardContainer>
         <Grid container>
-          <PhotoPane><Skeleton variant="rectangular" width="100%" height="100%" /></PhotoPane>
-          <ContentPane><Skeleton variant="rectangular" width="100%" height="300px" /></ContentPane>
+          <PhotoPane>
+             <Box sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <CircularProgress sx={{ color: BRAND.gold }} />
+             </Box>
+          </PhotoPane>
+          <ContentPane><Skeleton variant="rectangular" width="100%" height="300px" sx={{ bgcolor: 'rgba(255,255,255,0.05)' }} /></ContentPane>
         </Grid>
       </CardContainer>
     );
@@ -163,7 +167,10 @@ const AssetFinancing = () => {
     return (
       <CardContainer>
         <Box sx={{ p: 8, textAlign: 'center' }}>
-          <Typography sx={{ color: BRAND.error, mb: 1 }}>{error}</Typography>
+          <Typography sx={{ color: BRAND.error, mb: 1, fontWeight: 'bold' }}>{error}</Typography>
+          <Typography variant="body2" sx={{ color: BRAND.textMuted }}>
+            Ensure your backend is running and REACT_APP_API_BASE_URL is set correctly.
+          </Typography>
         </Box>
       </CardContainer>
     );
@@ -171,15 +178,15 @@ const AssetFinancing = () => {
 
   return (
     <CardContainer>
-      {/* Hidden preloader for linting and performance */}
+      {/* Hidden preloader for performance */}
       {nextImageUrl && <Box component="img" src={nextImageUrl} sx={{ display: 'none' }} alt="" />}
 
       <Grid container spacing={0}>
-        {/* --- LEFT: PHOTO PANE (Dynamic AssetUrl) --- */}
+        {/* --- LEFT: PHOTO PANE --- */}
         <PhotoPane>
           {assetData.map((asset, index) => (
             <Zoom
-              key={asset.id}
+              key={asset.id || index}
               in={index === currentIndex}
               timeout={{ enter: 1200, exit: 900 }}
               mountOnEnter
@@ -188,7 +195,7 @@ const AssetFinancing = () => {
               <Box
                 component="img"
                 src={asset.image_url}
-                alt="Golden Generation Asset Financing"
+                alt="Asset Financing"
                 sx={{
                   position: 'absolute',
                   top: 0,
@@ -208,7 +215,7 @@ const AssetFinancing = () => {
           }} />
         </PhotoPane>
 
-        {/* --- RIGHT: CONTENT PANE (Updated Wordings) --- */}
+        {/* --- RIGHT: CONTENT PANE --- */}
         <ContentPane>
           <Box>
             <EtchedClawIcon />
