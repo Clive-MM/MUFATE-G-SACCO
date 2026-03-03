@@ -422,3 +422,18 @@ class SaccoVideo(db.Model):
     IsActiveID = db.Column(db.Integer, db.ForeignKey('IsActive.ID'), default=1)
     is_active = db.relationship('IsActive', backref='sacco_videos')
     CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class AssetFinancing(db.Model):
+    __tablename__ = 'AssetFinancing'
+
+    AssetID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    
+    AssetFinancee = db.Column(db.String(255), nullable=False)
+    
+    AssetUrl = db.Column(db.String(2083), nullable=True)
+    
+    CreatedAt = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Asset {self.AssetID}: {self.AssetFinancee}>"
