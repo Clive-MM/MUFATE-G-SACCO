@@ -148,7 +148,7 @@ const AssetFinancing = () => {
             Asset Financing
           </Typography>
           <Typography sx={{ color: BRAND.light, mb: 4, lineHeight: 1.8, opacity: 0.9 }}>
-           Acquire the equipment, machinery, or tools you need today through our flexible asset financing.
+           Acquire the equipment or machinery you need today through our flexible asset financing.
            We fund your purchase and use the asset as security while you repay in affordable installments — 
            giving you full ownership once the loan is cleared.
           </Typography>
