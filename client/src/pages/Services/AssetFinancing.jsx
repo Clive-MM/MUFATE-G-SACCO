@@ -124,9 +124,9 @@ const AssetFinancing = () => {
             Acquire the equipment, machinery, or tools you need today through our 
             flexible asset financing. Repay in affordable installments while using the asset as security.
           </Typography>
-          <Link href="/products/asset-financing" sx={{ color: BRAND.gold, fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 1.5, mb: 4 }}>
+          {/* <Link href="/products/asset-financing" sx={{ color: BRAND.gold, fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 1.5, mb: 4 }}>
             Apply Now <ArrowForward />
-          </Link>
+          </Link> */}
         </CardContent>
 
         {/* CONTROLS */}
