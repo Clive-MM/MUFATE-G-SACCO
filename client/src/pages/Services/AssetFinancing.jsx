@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'; // Added useCallback
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -18,7 +18,6 @@ const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
   light: '#F4F4F4',
-  textMuted: 'rgba(244, 244, 244, 0.6)',
 };
 
 const AssetFinancing = () => {
@@ -47,7 +46,21 @@ const AssetFinancing = () => {
       });
   }, []);
 
-  // 2. Rotation Logic (Play/Pause aware)
+  // 2. Wrap handleNext in useCallback to fix the dependency warning
+  const handleNext = useCallback(() => {
+    setAssetData((prevData) => {
+      if (prevData.length === 0) return prevData;
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % prevData.length);
+      return prevData;
+    });
+  }, []);
+
+  const handlePrevious = () => {
+    if (assetData.length === 0) return;
+    setCurrentIndex((prev) => (prev === 0 ? assetData.length - 1 : prev - 1));
+  };
+
+  // 3. Rotation Logic
   useEffect(() => {
     if (loading || error || assetData.length <= 1 || !isPlaying) return;
 
@@ -56,35 +69,18 @@ const AssetFinancing = () => {
     }, ROTATION_INTERVAL_SEC * 1000);
 
     return () => clearInterval(timer);
-  }, [assetData, loading, error, isPlaying]);
-
-  // Navigation Handlers
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % assetData.length);
-  };
-
-  const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? assetData.length - 1 : prev - 1));
-  };
+  }, [loading, error, assetData.length, isPlaying, handleNext]); // handleNext is now a stable dependency
 
   if (loading) {
     return (
-      <Card sx={{ display: 'flex', bgcolor: BRAND.dark, borderRadius: '16px', mb: 6, minHeight: '400px' }}>
+      <Card sx={{ display: 'flex', bgcolor: BRAND.dark, borderRadius: '16px', mb: 6, minHeight: '450px' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, p: 4 }}>
           <Skeleton variant="text" width="60%" height={40} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
-          <Skeleton variant="rectangular" width="100%" height={150} sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.05)' }} />
+          <Skeleton variant="rectangular" width="100%" height={200} sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.05)' }} />
         </Box>
-        <Box sx={{ width: { md: '50%', xs: '100%' }, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <CircularProgress sx={{ color: BRAND.gold }} />
         </Box>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Card sx={{ bgcolor: BRAND.dark, p: 8, textAlign: 'center', borderRadius: '16px', mb: 6 }}>
-        <Typography sx={{ color: '#EF5350' }}>{error}</Typography>
       </Card>
     );
   }
@@ -93,7 +89,7 @@ const AssetFinancing = () => {
     <Card 
       sx={{ 
         display: 'flex', 
-        flexDirection: { xs: 'column', md: 'row' }, // Stack on mobile, row on desktop
+        flexDirection: { xs: 'column', md: 'row' },
         bgcolor: BRAND.dark, 
         color: BRAND.light,
         borderRadius: '16px',
@@ -104,106 +100,44 @@ const AssetFinancing = () => {
         minHeight: { md: '500px' }
       }}
     >
-      {/* LEFT SIDE: DYNAMIC IMAGE PANE */}
-      <Box 
-        sx={{ 
-          position: 'relative', 
-          width: { xs: '100%', md: '60%' }, 
-          height: { xs: '300px', md: 'auto' },
-          overflow: 'hidden'
-        }}
-      >
+      {/* LEFT SIDE: PHOTO PANE (Side by side) */}
+      <Box sx={{ position: 'relative', width: { xs: '100%', md: '60%' }, height: { xs: '300px', md: 'auto' } }}>
         {assetData.map((asset, index) => (
-          <Zoom
-            key={asset.id || index}
-            in={index === currentIndex}
-            timeout={{ enter: 1000, exit: 800 }}
-            mountOnEnter
-            unmountOnExit
-          >
+          <Zoom key={asset.id || index} in={index === currentIndex} timeout={1000} mountOnEnter unmountOnExit>
             <CardMedia
               component="img"
               image={asset.image_url}
-              alt="Financing Asset"
-              sx={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
+              alt="Financing"
+              sx={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </Zoom>
         ))}
-        {/* Visual blend overlay */}
-        <Box sx={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-          background: `linear-gradient(to right, transparent 80%, ${BRAND.dark} 100%)`,
-          zIndex: 2,
-          display: { xs: 'none', md: 'block' }
-        }} />
       </Box>
 
-      {/* RIGHT SIDE: CONTENT & CONTROLS PANE */}
+      {/* RIGHT SIDE: CONTENT PANE (Media Control Style) */}
       <Box sx={{ display: 'flex', flexDirection: 'column', width: { xs: '100%', md: '40%' } }}>
         <CardContent sx={{ flex: '1 0 auto', p: { xs: 4, md: 6 }, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <Typography 
-            variant="h4" 
-            sx={{ 
-              color: BRAND.gold, 
-              fontWeight: 800, 
-              mb: 2, 
-              textTransform: 'uppercase' 
-            }}
-          >
+          <Typography variant="h4" sx={{ color: BRAND.gold, fontWeight: 800, mb: 2, textTransform: 'uppercase' }}>
             Asset Financing
           </Typography>
-
           <Typography sx={{ color: BRAND.light, mb: 4, lineHeight: 1.8, opacity: 0.9 }}>
             Acquire the equipment, machinery, or tools you need today through our 
-            flexible asset financing. We fund your purchase and use the asset as 
-            security while you repay in affordable installments.
+            flexible asset financing. Repay in affordable installments while using the asset as security.
           </Typography>
-
-          <Link
-            href="/products/asset-financing"
-            sx={{
-              color: BRAND.gold,
-              fontWeight: 700,
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 1.5,
-              mb: 4,
-              '&:hover': { transform: 'translateX(5px)', transition: '0.3s' }
-            }}
-          >
+          <Link href="/products/asset-financing" sx={{ color: BRAND.gold, fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 1.5, mb: 4 }}>
             Apply Now <ArrowForward />
           </Link>
         </CardContent>
 
-        {/* MEDIA CONTROLS (Adapted from MediaControlCard) */}
+        {/* CONTROLS */}
         <Box sx={{ display: 'flex', alignItems: 'center', pl: 4, pb: 4 }}>
-          <IconButton 
-            onClick={handlePrevious}
-            sx={{ color: BRAND.gold }}
-            aria-label="previous"
-          >
+          <IconButton onClick={handlePrevious} sx={{ color: BRAND.gold }}>
             {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
           </IconButton>
-          
-          <IconButton 
-            onClick={() => setIsPlaying(!isPlaying)}
-            sx={{ color: BRAND.gold }}
-            aria-label="play/pause"
-          >
+          <IconButton onClick={() => setIsPlaying(!isPlaying)} sx={{ color: BRAND.gold }}>
             <PlayArrowIcon sx={{ height: 38, width: 38, transform: isPlaying ? 'rotate(90deg)' : 'none', transition: '0.3s' }} />
           </IconButton>
-          
-          <IconButton 
-            onClick={handleNext}
-            sx={{ color: BRAND.gold }}
-            aria-label="next"
-          >
+          <IconButton onClick={handleNext} sx={{ color: BRAND.gold }}>
             {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
           </IconButton>
         </Box>
