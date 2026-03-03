@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+// Removed useRef from the import to clear the linting error
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   Box, Typography, Link, Grid, Zoom, Skeleton, CircularProgress
@@ -7,7 +8,7 @@ import { ArrowForward } from '@mui/icons-material';
 
 // --- CONFIGURATION ---
 const ASSET_API_URL = `${process.env.REACT_APP_API_BASE_URL}/asset-financing`;
-const ROTATION_INTERVAL_SEC = 8; // Slightly faster for better UX
+const ROTATION_INTERVAL_SEC = 8; 
 
 const BRAND = {
   gold: '#EC9B14',
@@ -38,12 +39,12 @@ const PhotoPane = ({ children }) => (
   <Grid
     item
     xs={12}
-    md={7} // Adjusted to give more room for side-by-side feel
+    md={7} 
     sx={{
       p: 0,
       position: 'relative',
       height: { xs: '300px', md: '500px' },
-      overflow: 'hidden', // Clips the transitioning images
+      overflow: 'hidden',
     }}
   >
     {children}
@@ -68,8 +69,6 @@ const ContentPane = ({ children }) => (
   </Grid>
 );
 
-// --- MAIN COMPONENT ---
-
 const AssetFinancing = () => {
   const [assetData, setAssetData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -93,7 +92,6 @@ const AssetFinancing = () => {
       });
   }, []);
 
-  // Simplified Rotation Logic
   useEffect(() => {
     if (loading || error || assetData.length <= 1) return;
 
@@ -122,11 +120,19 @@ const AssetFinancing = () => {
     );
   }
 
+  if (error) {
+    return (
+      <CardContainer>
+        <Box sx={{ p: 8, textAlign: 'center' }}>
+          <Typography sx={{ color: '#EF5350', mb: 1 }}>{error}</Typography>
+        </Box>
+      </CardContainer>
+    );
+  }
+
   return (
     <CardContainer>
-      <Grid container direction="row"> {/* Ensures horizontal layout */}
-        
-        {/* --- LEFT: PHOTO PANE (Side 1) --- */}
+      <Grid container direction="row">
         <PhotoPane>
           {assetData.map((asset, index) => (
             <Zoom
@@ -149,7 +155,6 @@ const AssetFinancing = () => {
               />
             </Zoom>
           ))}
-          {/* Subtle gradient overlay to blend into the content pane */}
           <Box sx={{
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
             background: `linear-gradient(to right, transparent 70%, ${BRAND.dark} 100%)`,
@@ -157,7 +162,6 @@ const AssetFinancing = () => {
           }} />
         </PhotoPane>
 
-        {/* --- RIGHT: CONTENT PANE (Side 2) --- */}
         <ContentPane>
           <Typography 
             variant="h4" 
@@ -165,8 +169,7 @@ const AssetFinancing = () => {
               color: BRAND.gold, 
               fontWeight: 800, 
               mb: 3, 
-              textTransform: 'uppercase',
-              letterSpacing: 1
+              textTransform: 'uppercase'
             }}
           >
             Asset Financing
@@ -193,7 +196,6 @@ const AssetFinancing = () => {
             Apply Now <ArrowForward />
           </Link>
         </ContentPane>
-
       </Grid>
     </CardContainer>
   );
