@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
 from datetime import datetime
-from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Posts, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket, PostsCategory, NewsletterSubscription, SaccoVideo
+from models.models import db, User, Career, CoreValue, FAQ, HolidayMessage, Feedback, MobileBankingInfo, OperationTimeline, Partnership, Posts, Product, SaccoBranch, SaccoProfile, Service, SaccoClient, SaccoStatistics, HomepageSlider, Membership, BOD, Management, Resources, GalleryPhoto, LoanProduct, SupportTicket, PostsCategory, NewsletterSubscription, SaccoVideo,AssetFinancing 
 import cloudinary.uploader
 import re
 import traceback
@@ -2167,3 +2167,39 @@ def view_videos():
     except Exception as e:
         traceback.print_exc()
         return jsonify({'message': '❌ Failed to fetch videos.', 'error': str(e)}), 500
+
+#routes for fetching asset-financing 
+
+@routes.route('/asset-financing', methods=['GET'])
+def get_asset_financing():
+   
+    try:
+        # Querying the model based on your verified SSMS schema
+        assets = AssetFinancing.query.order_by(AssetFinancing.CreatedAt.desc()).all()
+        
+        if not assets:
+            return jsonify({"message": "No assets found", "data": []}), 200
+
+        # Building the response list
+        results = [
+            {
+                "id": asset.AssetID,
+                "financer": asset.AssetFinancee, 
+                "image_url": asset.AssetUrl,
+                "date_added": asset.CreatedAt.strftime('%Y-%m-%d') if asset.CreatedAt else None
+            } for asset in assets
+        ]
+
+        return jsonify({
+            "success": True,
+            "count": len(results),
+            "assets": results
+        }), 200
+
+    except Exception as e:
+        # Standard error response for ICT operational reports
+        return jsonify({
+            "success": False,
+            "error": "Internal Server Error",
+            "details": str(e)
+        }), 500
