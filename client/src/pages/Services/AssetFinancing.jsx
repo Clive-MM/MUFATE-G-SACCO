@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import {
-  Box, Typography, Zoom, Skeleton, CircularProgress,
+  Box, Typography, CircularProgress,
   Card, CardContent, CardMedia, IconButton
 } from '@mui/material';
 import {
@@ -11,6 +11,7 @@ import {
   SkipNext as SkipNextIcon
 } from '@mui/icons-material';
 
+// --- CONFIGURATION ---
 const ASSET_API_URL = `${process.env.REACT_APP_API_BASE_URL}/asset-financing`;
 const ROTATION_INTERVAL_SEC = 8;
 
@@ -29,10 +30,12 @@ const AssetFinancing = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [preloadedImages, setPreloadedImages] = useState({});
 
-  // 1. Fetch Data
+  // 1. Optimized Data Fetching
   useEffect(() => {
+    const source = axios.CancelToken.source();
     setLoading(true);
-    axios.get(ASSET_API_URL)
+
+    axios.get(ASSET_API_URL, { cancelToken: source.token })
       .then((res) => {
         if (res.data.success && res.data.assets?.length > 0) {
           setAssetData(res.data.assets);
@@ -41,13 +44,17 @@ const AssetFinancing = () => {
         }
         setLoading(false);
       })
-      .catch(() => {
-        setError('Network error: Unable to load asset images.');
-        setLoading(false);
+      .catch((err) => {
+        if (!axios.isCancel(err)) {
+          setError('Network error: Unable to load asset images.');
+          setLoading(false);
+        }
       });
+
+    return () => source.cancel();
   }, []);
 
-  // 2. Performance: Preload Next Image
+  // 2. Performance: Pre-fetch Next Image in Cache
   useEffect(() => {
     if (assetData.length > 0) {
       const nextIndex = (currentIndex + 1) % assetData.length;
@@ -62,12 +69,8 @@ const AssetFinancing = () => {
   }, [currentIndex, assetData, preloadedImages]);
 
   const handleNext = useCallback(() => {
-    setAssetData((prevData) => {
-      if (prevData.length === 0) return prevData;
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % prevData.length);
-      return prevData;
-    });
-  }, []);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % assetData.length);
+  }, [assetData.length]);
 
   const handlePrevious = () => {
     if (assetData.length === 0) return;
@@ -82,8 +85,8 @@ const AssetFinancing = () => {
 
   if (loading) {
     return (
-      <Card sx={{ display: 'flex', bgcolor: BRAND.dark, borderRadius: '20px', minHeight: '500px' }}>
-        <Box sx={{ flex: 1, p: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Card sx={{ display: 'flex', bgcolor: BRAND.dark, borderRadius: '24px', minHeight: '500px' }}>
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <CircularProgress sx={{ color: BRAND.gold }} />
         </Box>
       </Card>
@@ -97,25 +100,21 @@ const AssetFinancing = () => {
         flexDirection: { xs: 'column', md: 'row' },
         bgcolor: BRAND.dark,
         color: BRAND.light,
-        borderRadius: '24px', // Softer rounded corners
+        borderRadius: '24px',
         overflow: 'hidden',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
-        border: '1px solid rgba(236, 155, 20, 0.1)', // Subtle gold border
+        border: '1px solid rgba(255, 255, 255, 0.05)',
         mb: 6,
       }}
     >
-      {/* LEFT SIDE: PHOTO PANE */}
+      {/* LEFT SIDE: PHOTO CANVAS */}
       <Box
         sx={{
           position: 'relative',
           width: { xs: '100%', md: '65%' },
-          height: { xs: '350px', md: '600px' }, // Increased height to prevent cropping
+          height: { xs: '350px', md: '600px' }, // Fixed height removes white gaps
           bgcolor: '#000',
           overflow: 'hidden',
-          // Performance: smoother transitions
-          '& img': {
-             transition: 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease-in-out',
-          }
         }}
       >
         {assetData.map((asset, index) => (
@@ -123,11 +122,9 @@ const AssetFinancing = () => {
             key={asset.id || index}
             sx={{
               position: 'absolute',
-              width: '100%',
-              height: '100%',
+              inset: 0,
               opacity: index === currentIndex ? 1 : 0,
               zIndex: index === currentIndex ? 1 : 0,
-              visibility: index === currentIndex ? 'visible' : 'hidden',
               transition: 'opacity 0.8s ease-in-out',
             }}
           >
@@ -137,27 +134,32 @@ const AssetFinancing = () => {
               sx={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
+                objectFit: 'cover', // Ensures image fills container perfectly
                 objectPosition: 'center',
-                transform: index === currentIndex ? 'scale(1.05)' : 'scale(1.15)',
+                // Modern Stylistic Animation: Ken Burns Zoom
+                transition: 'transform 8s linear',
+                transform: index === currentIndex ? 'scale(1.15)' : 'scale(1)',
               }}
             />
-            {/* Dark Overlay for depth */}
+            {/* Cinematic Overlay to blend with text side */}
             <Box sx={{
-              position: 'absolute', bottom: 0, left: 0, width: '100%', height: '40%',
-              background: 'linear-gradient(to top, rgba(2,21,15,0.8), transparent)',
-              zIndex: 2
+              position: 'absolute', 
+              inset: 0, 
+              background: 'linear-gradient(to right, transparent 80%, rgba(2,21,15,1) 100%)',
+              zIndex: 2,
+              display: { xs: 'none', md: 'block' }
             }} />
           </Box>
         ))}
       </Box>
 
-      {/* RIGHT SIDE: CONTENT PANE */}
+      {/* RIGHT SIDE: CONTENT & CONTROLS */}
       <Box sx={{ 
         display: 'flex', 
         flexDirection: 'column', 
         width: { xs: '100%', md: '35%' },
-        borderLeft: { md: '1px solid rgba(255,255,255,0.05)' } 
+        bgcolor: BRAND.dark,
+        zIndex: 3
       }}>
         <CardContent sx={{ 
           flex: '1 0 auto', 
@@ -179,7 +181,8 @@ const AssetFinancing = () => {
               fontWeight: 900, 
               mb: 3, 
               fontSize: { md: '2.5rem', xs: '1.8rem' },
-              lineHeight: 1.1
+              lineHeight: 1.1,
+              letterSpacing: '-0.02em'
             }}
           >
             ASSET <span style={{ color: BRAND.gold }}>FINANCING</span>
@@ -192,20 +195,13 @@ const AssetFinancing = () => {
               fontSize: '1.05rem' 
             }}
           >
-            Empowering your growth. Acquire equipment, machinery, or tools today. 
+            Empower your growth. Acquire the equipment or machinery you need today. 
             Repay in affordable installments while your asset works for you.
           </Typography>
         </CardContent>
 
-        {/* CONTROLS - Positioned at bottom right for ergonomic feel */}
-        <Box sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          px: 4, 
-          pb: 4, 
-          justifyContent: 'flex-start',
-          gap: 2
-        }}>
+        {/* ERGONOMIC CONTROLS */}
+        <Box sx={{ display: 'flex', alignItems: 'center', px: 4, pb: 4, gap: 2 }}>
           <IconButton 
             onClick={handlePrevious} 
             sx={{ 
