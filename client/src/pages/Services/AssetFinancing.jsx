@@ -148,13 +148,14 @@ const AssetFinancing = () => {
             Asset Financing
           </Typography>
           <Typography sx={{ color: BRAND.light, mb: 4, lineHeight: 1.8, opacity: 0.9 }}>
-            Acquire the equipment, machinery, or tools you need today through our
-            flexible asset financing. Repay in affordable installments while using the asset as security.
+           Acquire the equipment, machinery, or tools you need today through our flexible asset financing.
+           We fund your purchase and use the asset as security while you repay in affordable installments — 
+           giving you full ownership once the loan is cleared.
           </Typography>
           
           {/* Re-enabled Link and ArrowForward */}
           <Link 
-            href="/products/asset-financing" 
+            href="/products/bosa" 
             sx={{ 
               color: BRAND.gold, 
               fontWeight: 700, 
