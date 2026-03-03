@@ -2,17 +2,17 @@ import React, { useState, useEffect, useCallback } from 'react'; // Added useCal
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import {
-  Box, Typography, Link, Zoom, Skeleton, CircularProgress, 
+  Box, Typography, Link, Zoom, Skeleton, CircularProgress,
   Card, CardContent, CardMedia, IconButton
 } from '@mui/material';
-import { 
-  ArrowForward, SkipPrevious as SkipPreviousIcon, 
-  PlayArrow as PlayArrowIcon, SkipNext as SkipNextIcon 
+import {
+  ArrowForward, SkipPrevious as SkipPreviousIcon,
+  PlayArrow as PlayArrowIcon, SkipNext as SkipNextIcon
 } from '@mui/icons-material';
 
 // --- CONFIGURATION ---
 const ASSET_API_URL = `${process.env.REACT_APP_API_BASE_URL}/asset-financing`;
-const ROTATION_INTERVAL_SEC = 8; 
+const ROTATION_INTERVAL_SEC = 8;
 
 const BRAND = {
   gold: '#EC9B14',
@@ -86,11 +86,11 @@ const AssetFinancing = () => {
   }
 
   return (
-    <Card 
-      sx={{ 
-        display: 'flex', 
+    <Card
+      sx={{
+        display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
-        bgcolor: BRAND.dark, 
+        bgcolor: BRAND.dark,
         color: BRAND.light,
         borderRadius: '16px',
         overflow: 'hidden',
@@ -101,14 +101,37 @@ const AssetFinancing = () => {
       }}
     >
       {/* LEFT SIDE: PHOTO PANE (Side by side) */}
-      <Box sx={{ position: 'relative', width: { xs: '100%', md: '60%' }, height: { xs: '300px', md: 'auto' } }}>
+      {/* LEFT SIDE: PHOTO PANE */}
+      <Box
+        sx={{
+          position: 'relative',
+          width: { xs: '100%', md: '60%' },
+          // Fix: Use a consistent height instead of 'auto' to eliminate white space
+          height: { xs: '300px', md: '550px' },
+          bgcolor: '#000', // Keeps background dark if an image takes a micro-second to load
+          overflow: 'hidden'
+        }}
+      >
         {assetData.map((asset, index) => (
-          <Zoom key={asset.id || index} in={index === currentIndex} timeout={1000} mountOnEnter unmountOnExit>
+          <Zoom
+            key={asset.id || index}
+            in={index === currentIndex}
+            timeout={1000}
+            mountOnEnter
+            unmountOnExit
+          >
             <CardMedia
               component="img"
               image={asset.image_url}
               alt="Financing"
-              sx={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover' }}
+              sx={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+
+                objectFit: 'cover',
+                objectPosition: 'center'
+              }}
             />
           </Zoom>
         ))}
@@ -121,7 +144,7 @@ const AssetFinancing = () => {
             Asset Financing
           </Typography>
           <Typography sx={{ color: BRAND.light, mb: 4, lineHeight: 1.8, opacity: 0.9 }}>
-            Acquire the equipment, machinery, or tools you need today through our 
+            Acquire the equipment, machinery, or tools you need today through our
             flexible asset financing. Repay in affordable installments while using the asset as security.
           </Typography>
           {/* <Link href="/products/asset-financing" sx={{ color: BRAND.gold, fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 1.5, mb: 4 }}>
