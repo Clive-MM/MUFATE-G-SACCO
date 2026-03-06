@@ -1,122 +1,102 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
+import { Box, Typography, CircularProgress, Card, IconButton, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import {
-  Box, Typography, CircularProgress,
-  Card, CardContent, CardMedia, IconButton
-} from '@mui/material';
-import {
-  SkipPrevious as SkipPreviousIcon,
-  PlayArrow as PlayArrowIcon,
-  SkipNext as SkipNextIcon
-} from '@mui/icons-material';
+import { SkipPrevious, SkipNext } from '@mui/icons-material';
+import { useSwipeable } from 'react-swipeable';
 
 // --- CONFIGURATION ---
 const ASSET_API_URL = `${process.env.REACT_APP_API_BASE_URL}/asset-financing`;
-const ROTATION_INTERVAL_SEC = 8;
+const ROTATION_INTERVAL_MS = 6000; // 6 seconds for better engagement
 
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
+  darkElevated: 'rgba(2, 21, 15, 0.85)',
   light: '#F4F4F4',
 };
 
 const AssetFinancing = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
   const [assetData, setAssetData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [preloadedImages, setPreloadedImages] = useState({});
+  const [progress, setProgress] = useState(0);
 
-  // 1. Optimized Data Fetching
+  // 1. Data Fetching
   useEffect(() => {
     const source = axios.CancelToken.source();
-    setLoading(true);
-
     axios.get(ASSET_API_URL, { cancelToken: source.token })
       .then((res) => {
-        if (res.data.success && res.data.assets?.length > 0) {
-          setAssetData(res.data.assets);
-        } else {
-          setError(res.data.message || 'No records found.');
-        }
+        if (res.data.success) setAssetData(res.data.assets);
         setLoading(false);
       })
-      .catch((err) => {
-        if (!axios.isCancel(err)) {
-          setError('Network error: Unable to load asset images.');
-          setLoading(false);
-        }
-      });
-
+      .catch(() => setLoading(false));
     return () => source.cancel();
   }, []);
 
-  // 2. Performance: Pre-fetch Next Image in Cache
-  useEffect(() => {
-    if (assetData.length > 0) {
-      const nextIndex = (currentIndex + 1) % assetData.length;
-      const imgUrl = assetData[nextIndex].image_url;
-      
-      if (!preloadedImages[imgUrl]) {
-        const img = new Image();
-        img.src = imgUrl;
-        img.onload = () => setPreloadedImages(prev => ({ ...prev, [imgUrl]: true }));
-      }
-    }
-  }, [currentIndex, assetData, preloadedImages]);
-
   const handleNext = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % assetData.length);
+    setCurrentIndex((prev) => (prev + 1) % assetData.length);
+    setProgress(0);
   }, [assetData.length]);
 
-  const handlePrevious = () => {
-    if (assetData.length === 0) return;
+  const handlePrev = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? assetData.length - 1 : prev - 1));
-  };
+    setProgress(0);
+  }, [assetData.length]);
+
+  // 2. Progress Bar Logic (The "Visual Timer")
+  useEffect(() => {
+    if (loading || assetData.length <= 1) return;
+    
+    const step = 100 / (ROTATION_INTERVAL_MS / 100);
+    const timer = setInterval(() => {
+      setProgress((oldProgress) => {
+        if (oldProgress >= 100) return 0;
+        return oldProgress + step;
+      });
+    }, 100);
+
+    return () => clearInterval(timer);
+  }, [currentIndex, loading, assetData.length]);
 
   useEffect(() => {
-    if (loading || error || assetData.length <= 1 || !isPlaying) return;
-    const timer = setInterval(handleNext, ROTATION_INTERVAL_SEC * 1000);
-    return () => clearInterval(timer);
-  }, [loading, error, assetData.length, isPlaying, handleNext]);
+    if (progress >= 100) handleNext();
+  }, [progress, handleNext]);
 
-  if (loading) {
-    return (
-      <Card sx={{ display: 'flex', bgcolor: BRAND.dark, borderRadius: '24px', minHeight: '500px' }}>
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <CircularProgress sx={{ color: BRAND.gold }} />
-        </Box>
-      </Card>
-    );
-  }
+  // 3. Swipe Gestures for Mobile
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleNext(),
+    onSwipedRight: () => handlePrev(),
+    preventScrollOnSwipe: true,
+    trackMouse: true
+  });
+
+  if (loading) return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
+      <CircularProgress sx={{ color: BRAND.gold }} />
+    </Box>
+  );
 
   return (
     <Card
+      {...handlers}
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
         bgcolor: BRAND.dark,
-        color: BRAND.light,
-        borderRadius: '24px',
+        borderRadius: { xs: '16px', md: '32px' },
         overflow: 'hidden',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
-        border: '1px solid rgba(255, 255, 255, 0.05)',
-        mb: 6,
+        position: 'relative',
+        minHeight: { md: '550px' },
+        boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
+        border: '1px solid rgba(255,255,255,0.05)',
       }}
     >
-      {/* LEFT SIDE: PHOTO CANVAS */}
-      <Box
-        sx={{
-          position: 'relative',
-          width: { xs: '100%', md: '65%' },
-          height: { xs: '350px', md: '600px' }, // Fixed height removes white gaps
-          bgcolor: '#000',
-          overflow: 'hidden',
-        }}
-      >
+      {/* LEFT: IMAGE CANVAS WITH CLIP-PATH TRANSITION */}
+      <Box sx={{ position: 'relative', width: { xs: '100%', md: '60%' }, height: { xs: '400px', md: 'auto' }, overflow: 'hidden' }}>
         {assetData.map((asset, index) => (
           <Box
             key={asset.id || index}
@@ -124,116 +104,120 @@ const AssetFinancing = () => {
               position: 'absolute',
               inset: 0,
               opacity: index === currentIndex ? 1 : 0,
+              transition: 'opacity 1s ease-in-out, transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: index === currentIndex ? 'scale(1.05)' : 'scale(1.2)',
               zIndex: index === currentIndex ? 1 : 0,
-              transition: 'opacity 0.8s ease-in-out',
             }}
           >
-            <CardMedia
+            <Box
               component="img"
-              image={asset.image_url}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover', // Ensures image fills container perfectly
-                objectPosition: 'center',
-                // Modern Stylistic Animation: Ken Burns Zoom
-                transition: 'transform 8s linear',
-                transform: index === currentIndex ? 'scale(1.15)' : 'scale(1)',
-              }}
+              src={asset.image_url}
+              sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
-            {/* Cinematic Overlay to blend with text side */}
+            {/* Mobile Gradient Overlay */}
             <Box sx={{
-              position: 'absolute', 
-              inset: 0, 
-              background: 'linear-gradient(to right, transparent 80%, rgba(2,21,15,1) 100%)',
-              zIndex: 2,
-              display: { xs: 'none', md: 'block' }
+              display: { xs: 'block', md: 'none' },
+              position: 'absolute',
+              bottom: 0,
+              width: '100%',
+              height: '60%',
+              background: 'linear-gradient(to top, #02150F 10%, transparent 100%)',
             }} />
           </Box>
         ))}
       </Box>
 
-      {/* RIGHT SIDE: CONTENT & CONTROLS */}
+      {/* RIGHT: PREMIUM TYPOGRAPHY & GLASSMOPRHISM */}
       <Box sx={{ 
+        width: { xs: '100%', md: '40%' }, 
+        p: { xs: 4, md: 6 }, 
         display: 'flex', 
         flexDirection: 'column', 
-        width: { xs: '100%', md: '35%' },
-        bgcolor: BRAND.dark,
-        zIndex: 3
+        justifyContent: 'center',
+        position: 'relative',
+        zIndex: 10,
+        mt: { xs: -10, md: 0 } // Pulls text up over the image on mobile
       }}>
-        <CardContent sx={{ 
-          flex: '1 0 auto', 
-          p: { xs: 4, md: 6 }, 
-          display: 'flex', 
-          flexDirection: 'column', 
-          justifyContent: 'center' 
+        
+        {/* Animated Progress Bar */}
+        <Box sx={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '4px', 
+          bgcolor: 'rgba(255,255,255,0.1)' 
         }}>
-          
-          <Typography 
-            variant="h3" 
-            sx={{ 
-              color: BRAND.light, 
-              fontWeight: 900, 
-              mb: 3, 
-              fontSize: { md: '2.5rem', xs: '1.8rem' },
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em'
-            }}
-          >
-            ASSET <span style={{ color: BRAND.gold }}>FINANCING</span>
-          </Typography>
-          <Typography 
-            sx={{ 
-              color: 'rgba(244, 244, 244, 0.7)', 
-              mb: 4, 
-              lineHeight: 1.8, 
-              fontSize: '1.05rem' 
-            }}
-          >
-            Acquire the equipment or machinery you need today through our flexible asset financing. 
-            We fund your purchase and use the asset as security while you repay in affordable installments 
-            — giving you full ownership once the loan is cleared.
-          </Typography>
-        </CardContent>
+          <Box sx={{ 
+            width: `${progress}%`, 
+            height: '100%', 
+            bgcolor: BRAND.gold, 
+            transition: 'width 0.1s linear',
+            boxShadow: `0 0 10px ${BRAND.gold}`
+          }} />
+        </Box>
 
-        {/* ERGONOMIC CONTROLS */}
-        <Box sx={{ display: 'flex', alignItems: 'center', px: 4, pb: 4, gap: 2 }}>
-          <IconButton 
-            onClick={handlePrevious} 
-            sx={{ 
-              color: BRAND.light, 
-              border: '1px solid rgba(255,255,255,0.1)',
-              '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } 
-            }}
-          >
-            {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
-          </IconButton>
-          
-          <IconButton 
-            onClick={() => setIsPlaying(!isPlaying)} 
-            sx={{ 
-              bgcolor: BRAND.gold, 
-              color: BRAND.dark,
-              width: 50,
-              height: 50,
-              '&:hover': { bgcolor: BRAND.light } 
-            }}
-          >
-            <PlayArrowIcon sx={{ 
-              transform: isPlaying ? 'rotate(90deg)' : 'none', 
-              transition: '0.3s' 
-            }} />
-          </IconButton>
+        <Typography 
+          variant="overline" 
+          sx={{ color: BRAND.gold, fontWeight: 700, letterSpacing: '0.3em', mb: 1, display: 'block' }}
+        >
+          GROW WITH US
+        </Typography>
 
+        <Typography 
+          variant="h2" 
+          sx={{ 
+            color: BRAND.light, 
+            fontWeight: 800, 
+            fontSize: { xs: '2.2rem', md: '3rem' },
+            lineHeight: 1,
+            mb: 3,
+            textShadow: '2px 4px 10px rgba(0,0,0,0.3)'
+          }}
+        >
+          ASSET <br />
+          <span style={{ color: BRAND.gold, filter: 'drop-shadow(0 0 8px rgba(236, 155, 20, 0.3))' }}>
+            FINANCING
+          </span>
+        </Typography>
+
+        <Typography sx={{ 
+          color: 'rgba(244, 244, 244, 0.8)', 
+          fontSize: '1.1rem', 
+          lineHeight: 1.7, 
+          mb: 5,
+          fontWeight: 300
+        }}>
+          <strong>Empower your growth</strong> with hassle-free asset financing. 
+          From commercial vehicles to industrial machinery—we bridge the gap 
+          between your <strong>ambition and ownership.</strong>
+        </Typography>
+
+        {/* NAVIGATION CONTROLS - Glassmorphism style */}
+        <Box sx={{ display: 'flex', gap: 2 }}>
           <IconButton 
-            onClick={handleNext} 
+            onClick={handlePrev}
             sx={{ 
-              color: BRAND.light, 
+              bgcolor: 'rgba(255,255,255,0.05)', 
+              color: BRAND.light,
+              backdropFilter: 'blur(10px)',
               border: '1px solid rgba(255,255,255,0.1)',
-              '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark } 
+              '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
             }}
           >
-            {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
+            <SkipPrevious />
+          </IconButton>
+          <IconButton 
+             onClick={handleNext}
+             sx={{ 
+               bgcolor: 'rgba(255,255,255,0.05)', 
+               color: BRAND.light,
+               backdropFilter: 'blur(10px)',
+               border: '1px solid rgba(255,255,255,0.1)',
+               '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
+             }}
+          >
+            <SkipNext />
           </IconButton>
         </Box>
       </Box>
