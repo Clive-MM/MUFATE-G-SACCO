@@ -190,8 +190,9 @@ const AssetFinancing = () => {
               fontSize: '1.05rem' 
             }}
           >
-            Empower your growth. Acquire the equipment or machinery you need today. 
-            Repay in affordable installments while your asset works for you.
+            Acquire the equipment or machinery you need today through our flexible asset financing. 
+            We fund your purchase and use the asset as security while you repay in affordable installments 
+            — giving you full ownership once the loan is cleared.
           </Typography>
         </CardContent>
 
