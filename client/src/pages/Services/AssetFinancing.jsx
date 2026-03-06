@@ -168,12 +168,7 @@ const AssetFinancing = () => {
           flexDirection: 'column', 
           justifyContent: 'center' 
         }}>
-          <Typography 
-            variant="overline" 
-            sx={{ color: BRAND.gold, fontWeight: 700, letterSpacing: 2, mb: 1 }}
-          >
-            Golden Generation Sacco
-          </Typography>
+          
           <Typography 
             variant="h3" 
             sx={{ 
