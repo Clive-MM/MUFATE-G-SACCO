@@ -7,13 +7,15 @@ import AssetFinancing from './AssetFinancing';
 
 const Services = () => {
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', bgcolor: BRAND.dark }}>
+        <>
+           
             <HeroBanner />
             <MobileBanking/>
             <SalaryProcessing/>
             <AssetFinancing/>
             <StrategicPartners/>
-        </Box>
+            
+        </>
     );
 };
 
