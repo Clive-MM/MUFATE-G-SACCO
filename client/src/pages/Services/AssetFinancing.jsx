@@ -20,7 +20,6 @@ const AssetFinancing = () => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
-  // 1. Data Fetching
   useEffect(() => {
     const source = axios.CancelToken.source();
     axios.get(ASSET_API_URL, { cancelToken: source.token })
@@ -44,10 +43,8 @@ const AssetFinancing = () => {
     setProgress(0);
   }, [assetData.length]);
 
-  // 2. Progress Bar Logic
   useEffect(() => {
     if (loading || assetData.length <= 1) return;
-    
     const step = 100 / (ROTATION_INTERVAL_MS / 100);
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
@@ -55,7 +52,6 @@ const AssetFinancing = () => {
         return oldProgress + step;
       });
     }, 100);
-
     return () => clearInterval(timer);
   }, [currentIndex, loading, assetData.length]);
 
@@ -63,7 +59,6 @@ const AssetFinancing = () => {
     if (progress >= 100) handleNext();
   }, [progress, handleNext]);
 
-  // 3. Swipe Gestures
   const handlers = useSwipeable({
     onSwipedLeft: () => handleNext(),
     onSwipedRight: () => handlePrev(),
@@ -72,7 +67,7 @@ const AssetFinancing = () => {
   });
 
   if (loading) return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', py: 10, bgcolor: BRAND.dark }}>
       <CircularProgress sx={{ color: BRAND.gold }} />
     </Box>
   );
@@ -80,17 +75,18 @@ const AssetFinancing = () => {
   return (
     <Card
       {...handlers}
+      elevation={0} // Removes shadow that can cause a faint line
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
         bgcolor: BRAND.dark,
-        borderRadius: { xs: '16px', md: '32px' },
+        borderRadius: 0, // REMOVED ROUNDED CORNERS
         overflow: 'hidden',
         position: 'relative',
         minHeight: { md: '550px' },
-        boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
-        border: '1px solid rgba(255,255,255,0.05)',
-        mb: 6,
+        border: 'none', // REMOVED BORDER
+        margin: 0,      // REMOVED EXTERNAL MARGINS
+        width: '100%',
       }}
     >
       {/* LEFT: IMAGE CANVAS */}
@@ -136,14 +132,7 @@ const AssetFinancing = () => {
         mt: { xs: -10, md: 0 }
       }}>
         
-        <Box sx={{ 
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          width: '100%', 
-          height: '4px', 
-          bgcolor: 'rgba(255,255,255,0.1)' 
-        }}>
+        <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', bgcolor: 'rgba(255,255,255,0.1)' }}>
           <Box sx={{ 
             width: `${progress}%`, 
             height: '100%', 
@@ -153,65 +142,35 @@ const AssetFinancing = () => {
           }} />
         </Box>
 
-        <Typography 
-          variant="overline" 
-          sx={{ color: BRAND.gold, fontWeight: 700, letterSpacing: '0.3em', mb: 1, display: 'block' }}
-        >
+        <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 700, letterSpacing: '0.3em', mb: 1, display: 'block' }}>
           GROW WITH US
         </Typography>
 
-        <Typography 
-          variant="h2" 
-          sx={{ 
-            color: BRAND.light, 
-            fontWeight: 800, 
-            fontSize: { xs: '2.2rem', md: '3rem' },
-            lineHeight: 1.1,
-            mb: 3,
-            textShadow: '2px 4px 10px rgba(0,0,0,0.3)'
-          }}
-        >
+        <Typography variant="h2" sx={{ 
+          color: BRAND.light, fontWeight: 800, fontSize: { xs: '2.2rem', md: '3rem' }, lineHeight: 1.1, mb: 3,
+          textShadow: '2px 4px 10px rgba(0,0,0,0.3)'
+        }}>
           ASSET <br />
-          <span style={{ color: BRAND.gold, filter: 'drop-shadow(0 0 8px rgba(236, 155, 20, 0.3))' }}>
-            FINANCING
-          </span>
+          <span style={{ color: BRAND.gold, filter: 'drop-shadow(0 0 8px rgba(236, 155, 20, 0.3))' }}>FINANCING</span>
         </Typography>
 
-        <Typography sx={{ 
-          color: 'rgba(244, 244, 244, 0.8)', 
-          fontSize: '1.1rem', 
-          lineHeight: 1.7, 
-          mb: 5,
-          fontWeight: 300
-        }}>
+        <Typography sx={{ color: 'rgba(244, 244, 244, 0.8)', fontSize: '1.1rem', lineHeight: 1.7, mb: 5, fontWeight: 300 }}>
           <strong>Empower your growth</strong> with hassle-free asset financing. 
           From commercial vehicles to industrial machinery—we bridge the gap 
           between your <strong>ambition and ownership.</strong>
         </Typography>
 
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <IconButton 
-            onClick={handlePrev}
-            sx={{ 
-              bgcolor: 'rgba(255,255,255,0.05)', 
-              color: BRAND.light,
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255,255,255,0.1)',
+          <IconButton onClick={handlePrev} sx={{ 
+              bgcolor: 'rgba(255,255,255,0.05)', color: BRAND.light, backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)',
               '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
-            }}
-          >
+            }}>
             <SkipPrevious />
           </IconButton>
-          <IconButton 
-             onClick={handleNext}
-             sx={{ 
-               bgcolor: 'rgba(255,255,255,0.05)', 
-               color: BRAND.light,
-               backdropFilter: 'blur(10px)',
-               border: '1px solid rgba(255,255,255,0.1)',
+          <IconButton onClick={handleNext} sx={{ 
+               bgcolor: 'rgba(255,255,255,0.05)', color: BRAND.light, backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)',
                '&:hover': { bgcolor: BRAND.gold, color: BRAND.dark }
-             }}
-          >
+             }}>
             <SkipNext />
           </IconButton>
         </Box>
