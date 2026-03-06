@@ -1,25 +1,20 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { Box, Typography, CircularProgress, Card, IconButton, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Box, Typography, CircularProgress, Card, IconButton } from '@mui/material';
 import { SkipPrevious, SkipNext } from '@mui/icons-material';
 import { useSwipeable } from 'react-swipeable';
 
 // --- CONFIGURATION ---
 const ASSET_API_URL = `${process.env.REACT_APP_API_BASE_URL}/asset-financing`;
-const ROTATION_INTERVAL_MS = 6000; // 6 seconds for better engagement
+const ROTATION_INTERVAL_MS = 6000; 
 
 const BRAND = {
   gold: '#EC9B14',
   dark: '#02150F',
-  darkElevated: 'rgba(2, 21, 15, 0.85)',
   light: '#F4F4F4',
 };
 
 const AssetFinancing = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
   const [assetData, setAssetData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -38,16 +33,18 @@ const AssetFinancing = () => {
   }, []);
 
   const handleNext = useCallback(() => {
+    if (assetData.length === 0) return;
     setCurrentIndex((prev) => (prev + 1) % assetData.length);
     setProgress(0);
   }, [assetData.length]);
 
   const handlePrev = useCallback(() => {
+    if (assetData.length === 0) return;
     setCurrentIndex((prev) => (prev === 0 ? assetData.length - 1 : prev - 1));
     setProgress(0);
   }, [assetData.length]);
 
-  // 2. Progress Bar Logic (The "Visual Timer")
+  // 2. Progress Bar Logic
   useEffect(() => {
     if (loading || assetData.length <= 1) return;
     
@@ -66,7 +63,7 @@ const AssetFinancing = () => {
     if (progress >= 100) handleNext();
   }, [progress, handleNext]);
 
-  // 3. Swipe Gestures for Mobile
+  // 3. Swipe Gestures
   const handlers = useSwipeable({
     onSwipedLeft: () => handleNext(),
     onSwipedRight: () => handlePrev(),
@@ -93,9 +90,10 @@ const AssetFinancing = () => {
         minHeight: { md: '550px' },
         boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
         border: '1px solid rgba(255,255,255,0.05)',
+        mb: 6,
       }}
     >
-      {/* LEFT: IMAGE CANVAS WITH CLIP-PATH TRANSITION */}
+      {/* LEFT: IMAGE CANVAS */}
       <Box sx={{ position: 'relative', width: { xs: '100%', md: '60%' }, height: { xs: '400px', md: 'auto' }, overflow: 'hidden' }}>
         {assetData.map((asset, index) => (
           <Box
@@ -114,7 +112,6 @@ const AssetFinancing = () => {
               src={asset.image_url}
               sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
-            {/* Mobile Gradient Overlay */}
             <Box sx={{
               display: { xs: 'block', md: 'none' },
               position: 'absolute',
@@ -127,7 +124,7 @@ const AssetFinancing = () => {
         ))}
       </Box>
 
-      {/* RIGHT: PREMIUM TYPOGRAPHY & GLASSMOPRHISM */}
+      {/* RIGHT: CONTENT */}
       <Box sx={{ 
         width: { xs: '100%', md: '40%' }, 
         p: { xs: 4, md: 6 }, 
@@ -136,10 +133,9 @@ const AssetFinancing = () => {
         justifyContent: 'center',
         position: 'relative',
         zIndex: 10,
-        mt: { xs: -10, md: 0 } // Pulls text up over the image on mobile
+        mt: { xs: -10, md: 0 }
       }}>
         
-        {/* Animated Progress Bar */}
         <Box sx={{ 
           position: 'absolute', 
           top: 0, 
@@ -170,7 +166,7 @@ const AssetFinancing = () => {
             color: BRAND.light, 
             fontWeight: 800, 
             fontSize: { xs: '2.2rem', md: '3rem' },
-            lineHeight: 1,
+            lineHeight: 1.1,
             mb: 3,
             textShadow: '2px 4px 10px rgba(0,0,0,0.3)'
           }}
@@ -193,7 +189,6 @@ const AssetFinancing = () => {
           between your <strong>ambition and ownership.</strong>
         </Typography>
 
-        {/* NAVIGATION CONTROLS - Glassmorphism style */}
         <Box sx={{ display: 'flex', gap: 2 }}>
           <IconButton 
             onClick={handlePrev}
