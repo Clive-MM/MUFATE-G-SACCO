@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-// Removed CircularProgress to fix 'no-unused-vars' error
+import { Link } from 'react-router-dom'; // Added for navigation
 import { Box, Typography, Card, IconButton, Button, Skeleton } from '@mui/material';
 import { SkipPrevious, SkipNext, ArrowForward } from '@mui/icons-material';
 import { useSwipeable } from 'react-swipeable';
@@ -65,13 +65,13 @@ const AssetFinancing = () => {
   });
 
   if (loading) return (
-    <Box sx={{ width: '100%', height: { xs: '600px', md: '550px' }, bgcolor: BRAND.dark, display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+    <Box sx={{ width: '100%', height: { xs: '650px', md: '550px' }, bgcolor: BRAND.dark, display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
       <Skeleton variant="rectangular" sx={{ width: { xs: '100%', md: '60%' }, height: '100%', bgcolor: 'rgba(255,255,255,0.05)' }} />
       <Box sx={{ p: { xs: 4, md: 6 }, width: { xs: '100%', md: '40%' }, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Skeleton width="30%" sx={{ bgcolor: 'rgba(255,255,255,0.1)', mb: 2 }} />
         <Skeleton variant="text" height={80} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
         <Skeleton variant="text" height={100} width="90%" sx={{ bgcolor: 'rgba(255,255,255,0.05)', mb: 4 }} />
-        <Skeleton variant="rectangular" height={50} width={180} sx={{ bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 1 }} />
+        <Skeleton variant="rectangular" height={56} width={180} sx={{ bgcolor: 'rgba(255,255,255,0.1)', borderRadius: '2px' }} />
       </Box>
     </Box>
   );
@@ -107,30 +107,28 @@ const AssetFinancing = () => {
               position: 'absolute',
               inset: 0,
               opacity: index === currentIndex ? 1 : 0,
-              // Performance tweak: Desktop gets a tiny zoom for "luxury" feel, Mobile stays static
               transform: { 
                 xs: 'none', 
-                md: index === currentIndex ? 'scale(1.02)' : 'scale(1)' 
+                md: index === currentIndex ? 'scale(1.03)' : 'scale(1)' 
               },
-              transition: 'opacity 0.8s ease-in-out, transform 4s ease-out',
+              transition: 'opacity 1s ease-in-out, transform 6s ease-out',
               zIndex: index === currentIndex ? 1 : 0,
             }}
           >
             <Box
               component="img"
               src={asset.image_url}
-              alt={asset.title || "Commercial Asset"}
+              alt={asset.title || "Asset Financing"}
               loading={index === 0 ? "eager" : "lazy"}
               sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
-            {/* Mobile Gradient for better text readability */}
             <Box sx={{
               display: { xs: 'block', md: 'none' },
               position: 'absolute',
               bottom: 0,
               width: '100%',
-              height: '60%',
-              background: 'linear-gradient(to top, #02150F 30%, transparent 100%)',
+              height: '70%',
+              background: 'linear-gradient(to top, #02150F 40%, transparent 100%)',
             }} />
           </Box>
         ))}
@@ -139,17 +137,17 @@ const AssetFinancing = () => {
       {/* CONTENT SECTION */}
       <Box sx={{ 
         width: { xs: '100%', md: '40%' }, 
-        p: { xs: 4, md: 6 }, 
+        p: { xs: 4, md: 8 }, 
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'center',
         position: 'relative',
-        mt: { xs: -10, md: 0 }, // Pulls content over the mobile gradient
+        mt: { xs: -12, md: 0 },
         zIndex: 10,
       }}>
         
         {/* Progress Tracker */}
-        <Box sx={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '4px', bgcolor: 'rgba(255,255,255,0.03)' }}>
+        <Box sx={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '4px', bgcolor: 'rgba(255,255,255,0.02)' }}>
           <Box sx={{ 
             width: `${progress}%`, 
             height: '100%', 
@@ -158,62 +156,61 @@ const AssetFinancing = () => {
           }} />
         </Box>
 
-        <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 800, letterSpacing: '0.25em', mb: 1.5 }}>
+        <Typography variant="overline" sx={{ color: BRAND.gold, fontWeight: 800, letterSpacing: '0.3em', mb: 1.5, display: 'block' }}>
           GROW WITH US
         </Typography>
 
         <Typography variant="h2" sx={{ 
-          color: BRAND.light, fontWeight: 900, fontSize: { xs: '2.2rem', md: '3.2rem' }, lineHeight: 1, mb: 2,
+          color: BRAND.light, fontWeight: 900, fontSize: { xs: '2.4rem', md: '3.4rem' }, lineHeight: 1, mb: 2.5,
           textTransform: 'uppercase'
         }}>
           ASSET <br />
           <span style={{ color: BRAND.gold }}>FINANCING</span>
         </Typography>
 
-        <Typography sx={{ color: 'rgba(244, 244, 244, 0.75)', fontSize: { xs: '1rem', md: '1.15rem' }, lineHeight: 1.6, mb: 5, fontWeight: 300 }}>
+        <Typography sx={{ color: 'rgba(244, 244, 244, 0.7)', fontSize: { xs: '1.05rem', md: '1.15rem' }, lineHeight: 1.7, mb: 6, fontWeight: 300 }}>
           Empower your growth with <strong>hassle-free</strong> asset financing. 
-          From commercial vehicles to industrial machinery—we bridge the gap 
-          between your <strong>ambition and ownership.</strong>
+          Bridge the gap between your <strong>ambition and ownership</strong> today.
         </Typography>
 
         {/* ACTIONS */}
-        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 3, alignItems: { xs: 'stretch', sm: 'center' }, justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 4, alignItems: { xs: 'stretch', sm: 'center' }, justifyContent: 'space-between' }}>
           
           <Button 
+            component={Link}
+            to="/products/bosa"
             variant="contained" 
             disableElevation
             endIcon={<ArrowForward />}
             sx={{ 
               bgcolor: BRAND.gold, 
               color: BRAND.dark, 
-              fontWeight: 800, 
-              px: 4, py: 1.8,
-              fontSize: '0.9rem',
-              borderRadius: '2px', // Sharper, professional edges
-              '&:hover': { bgcolor: BRAND.light, transform: 'translateY(-2px)' },
-              transition: 'all 0.3s'
+              fontWeight: 900, 
+              px: 5, py: 2,
+              fontSize: '0.95rem',
+              borderRadius: '2px',
+              '&:hover': { bgcolor: BRAND.light, color: BRAND.dark, transform: 'translateX(5px)' },
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             APPLY NOW
           </Button>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, alignSelf: { xs: 'center', sm: 'auto' } }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, alignSelf: { xs: 'center', sm: 'auto' } }}>
             <IconButton 
                onClick={handlePrev} 
-               size="medium" 
-               sx={{ border: '1px solid rgba(255,255,255,0.1)', color: BRAND.light, '&:hover': { borderColor: BRAND.gold } }}
+               sx={{ border: '1px solid rgba(255,255,255,0.15)', color: BRAND.light, '&:hover': { borderColor: BRAND.gold, bgcolor: 'rgba(236, 155, 20, 0.1)' } }}
             >
               <SkipPrevious fontSize="small" />
             </IconButton>
             
-            <Typography sx={{ color: BRAND.gold, fontWeight: 900, fontSize: '0.85rem', width: '40px', textAlign: 'center' }}>
-              {currentIndex + 1} / {assetData.length}
+            <Typography sx={{ color: BRAND.gold, fontWeight: 800, fontSize: '0.9rem', minWidth: '45px', textAlign: 'center', letterSpacing: '1px' }}>
+              {String(currentIndex + 1).padStart(2, '0')} / {String(assetData.length).padStart(2, '0')}
             </Typography>
 
             <IconButton 
                onClick={handleNext} 
-               size="medium" 
-               sx={{ border: '1px solid rgba(255,255,255,0.1)', color: BRAND.light, '&:hover': { borderColor: BRAND.gold } }}
+               sx={{ border: '1px solid rgba(255,255,255,0.15)', color: BRAND.light, '&:hover': { borderColor: BRAND.gold, bgcolor: 'rgba(236, 155, 20, 0.1)' } }}
             >
               <SkipNext fontSize="small" />
             </IconButton>
