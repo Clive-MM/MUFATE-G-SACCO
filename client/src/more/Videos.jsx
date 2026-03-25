@@ -14,9 +14,9 @@ const BRAND = {
 };
 
 const VIDEO_DATA = [
-  { id: 1, title: 'Annual Special Delegate Meeting 2026', category: 'OFFICIAL EVENT', views: '1.2K views', time: '2 days ago', duration: '12:00' },
-  { id: 2, title: 'Member Success Stories: The Journey to Financial Freedom', category: 'TESTIMONIALS', views: '850 views', time: '1 week ago', duration: '05:45' },
-  { id: 3, title: 'New Digital Banking Features & Security Updates', category: 'PRODUCT LAUNCH', views: '3.4K views', time: '3 hours ago', duration: '08:20' },
+  { id: 1, title: 'Annual Special Delegate Meeting 2026', category: 'OFFICIAL EVENT', views: '1.2K views'  },
+  { id: 2, title: 'Member Success Stories: The Journey to Financial Freedom', category: 'TESTIMONIALS', views: '850 views' },
+  { id: 3, title: 'New Digital Banking Features & Security Updates', category: 'PRODUCT LAUNCH', views: '3.4K views', time: '3 hours ago' },
 ];
 
 // Animation Variants
@@ -42,7 +42,7 @@ const Videos = () => {
     <Box sx={{ 
       bgcolor: BRAND.dark, 
       minHeight: '100vh',
-      pt: { xs: 8, md: 15 }, 
+      pt: { xs: 12, md: 15 }, 
       pb: 8,
       overflow: 'hidden' 
     }}>
