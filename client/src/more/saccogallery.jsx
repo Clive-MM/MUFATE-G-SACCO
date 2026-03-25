@@ -16,11 +16,11 @@ import "lightgallery/css/lg-thumbnail.css";
 // Material UI
 import {
   Container, Typography, Grid, CardMedia, CircularProgress,
-  Box, Stack, useTheme, useMediaQuery, IconButton // Added IconButton
+  Box, Stack, useTheme, useMediaQuery, IconButton, Button
 } from "@mui/material";
 import { 
   AutoAwesome as SparkleIcon, 
-  ExpandLess as ExpandLessIcon // Added ExpandLessIcon
+  ExpandLess as ExpandLessIcon 
 } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 
@@ -43,13 +43,8 @@ const GlassCard = styled(motion.div)(({ theme }) => ({
   "&:hover": {
     borderColor: BRAND.gold,
     boxShadow: `0 0 25px ${BRAND.gold}33`,
-    "& .card-overlay": { 
-      opacity: 1, 
-      transform: "translateY(0)" 
-    },
-    "& img": { 
-      transform: "scale(1.1)" 
-    }
+    "& .card-overlay": { opacity: 1, transform: "translateY(0)" },
+    "& img": { transform: "scale(1.1)" }
   },
   [theme.breakpoints.down('sm')]: {
     "& .card-overlay": { 
@@ -63,20 +58,48 @@ const GlassCard = styled(motion.div)(({ theme }) => ({
 const SaccoGallery = () => {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasNext, setHasNext] = useState(false);
+  
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  // Improved Fetch Logic
+  const fetchPhotos = async (targetPage, isInitial = false) => {
+    if (isInitial) setLoading(true);
+    else setLoadingMore(true);
+
+    try {
+      // Corrected Axios syntax and template literal
+      const response = await axios.get(`https://mufate-g-sacco.onrender.com/gallery?page=${targetPage}&per_page=10`);
+      
+      if (response.data.success) {
+        const fetchedPhotos = response.data.gallery || [];
+        
+        // Logic to either replace (initial) or append (pagination)
+        setPhotos(prev => (isInitial ? fetchedPhotos : [...prev, ...fetchedPhotos]));
+        setHasNext(response.data.meta.has_next);
+      }
+    } catch (error) {
+      console.error("Gallery Error:", error);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  // Initial Load
   useEffect(() => {
-    axios.get("https://mufate-g-sacco.onrender.com/gallery")
-      .then((res) => {
-        const activePhotos = (res.data.gallery || []).filter(p => p.IsActive !== false);
-        setPhotos(activePhotos);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    fetchPhotos(1, true);
   }, []);
 
-  // --- Scroll Logic ---
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchPhotos(nextPage);
+  };
+
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -134,13 +157,13 @@ const SaccoGallery = () => {
           <Grid container spacing={isMobile ? 2 : 3}>
             <AnimatePresence mode="popLayout">
               {photos.map((photo, idx) => (
-                <Grid item xs={12} sm={6} md={4} key={photo.PhotoID}>
+                <Grid item xs={12} sm={6} md={4} key={`${photo.PhotoID}-${idx}`}>
                   <GlassCard
                     layout
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.4, delay: idx * 0.03 }}
+                    transition={{ duration: 0.4 }}
                   >
                     <a
                       href={photo.ImageURL}
@@ -184,15 +207,41 @@ const SaccoGallery = () => {
           </Grid>
         </LightGallery>
 
-        {/* --- Back to Top Footer --- */}
+        {/* Load More Button Section */}
+        {hasNext && (
+          <Box sx={{ mt: 8, display: 'flex', justifyContent: 'center' }}>
+            <Button
+              onClick={handleLoadMore}
+              disabled={loadingMore}
+              variant="outlined"
+              sx={{
+                borderColor: BRAND.gold,
+                color: BRAND.gold,
+                borderRadius: '50px',
+                px: 5,
+                py: 1.5,
+                fontWeight: 900,
+                letterSpacing: 1,
+                borderWidth: '2px',
+                '&:hover': {
+                  borderColor: BRAND.gold,
+                  backgroundColor: 'rgba(236, 155, 20, 0.1)',
+                  borderWidth: '2px',
+                },
+                '&:disabled': {
+                  borderColor: 'rgba(255,255,255,0.1)',
+                  color: 'rgba(255,255,255,0.3)',
+                }
+              }}
+            >
+              {loadingMore ? <CircularProgress size={24} color="inherit" /> : "LOAD MORE MOMENTS"}
+            </Button>
+          </Box>
+        )}
+
+        {/* Back to Top Footer */}
         <Box sx={{ py: 6, position: "relative", mt: 4 }}>
-          <Box sx={{ 
-            display: "flex", 
-            alignItems: "center", 
-            justifyContent: "center", 
-            position: "relative",
-            px: { xs: 1, md: 2 } 
-          }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", position: "relative", px: { xs: 1, md: 2 } }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography
                 sx={{
@@ -205,24 +254,13 @@ const SaccoGallery = () => {
               >
                 GOLDEN GENERATION DT SACCO © {new Date().getFullYear()}
               </Typography>
-              <Typography sx={{
-                color: BRAND.gold,
-                opacity: 0.7,
-                fontSize: { xs: '0.55rem', md: '0.75rem' },
-                fontWeight: 600,
-                mt: 0.5,
-                textTransform: 'uppercase',
-                letterSpacing: '1px'
-              }}>
+              <Typography sx={{ color: BRAND.gold, opacity: 0.7, fontSize: { xs: '0.55rem', md: '0.75rem' }, fontWeight: 600, mt: 0.5, textTransform: 'uppercase', letterSpacing: '1px' }}>
                 All Rights Reserved
               </Typography>
             </Box>
 
             <IconButton
               onClick={handleScrollToTop}
-              component={motion.button}
-              whileHover={{ y: -5 }}
-              whileTap={{ scale: 0.9 }}
               sx={{
                 position: 'absolute',
                 right: 0,
@@ -230,10 +268,7 @@ const SaccoGallery = () => {
                 border: `1.5px solid ${BRAND.gold}`,
                 p: { xs: 0.5, md: 1 },
                 transition: 'all 0.3s ease',
-                '&:hover': {
-                  backgroundColor: 'rgba(236, 155, 20, 0.1)',
-                  boxShadow: `0 0 15px ${BRAND.gold}66`,
-                },
+                '&:hover': { backgroundColor: 'rgba(236, 155, 20, 0.1)', boxShadow: `0 0 15px ${BRAND.gold}66` }
               }}
             >
               <ExpandLessIcon sx={{ fontSize: { xs: '1.5rem', md: '2rem' } }} />
