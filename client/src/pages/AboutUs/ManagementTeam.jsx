@@ -13,7 +13,7 @@ const ManagementTeam = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Performance: Fetching with loading state
+    // Standard fetch with loading state for UX
     setLoading(true);
     axios
       .get('https://mufate-g-sacco.onrender.com/management/view')
@@ -45,7 +45,7 @@ const ManagementTeam = () => {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        pt: { xs: 10, md: 18 }, 
+        pt: { xs: 12, md: 18 }, // Mobile-first padding
         pb: 5,
       }}
     >
@@ -55,25 +55,36 @@ const ManagementTeam = () => {
           align="center"
           sx={{
             fontWeight: 900,
-            mb: { xs: 4, md: 8 },
+            mb: { xs: 5, md: 8 },
             letterSpacing: '3px',
             color: COLORS.gold,
             textTransform: 'uppercase',
-            fontSize: { xs: '1.3rem', md: '2.2rem' },
+            fontSize: { xs: '1.4rem', md: '2.2rem' },
             textShadow: `0 0 15px ${COLORS.gold}33`,
           }}
         >
           MANAGEMENT TEAM
         </Typography>
 
-        <Grid container spacing={{ xs: 2, md: 4 }} justifyContent="center">
+        {/* --- THE FIX --- */}
+        {/* We REMOVE 'justifyContent="center"' here to prevent single centering */}
+        <Grid 
+          container 
+          spacing={{ xs: 2, md: 4 }} 
+          sx={{ flexGrow: 1 }}
+        >
           {loading ? (
             // SKELETON LOADING STATE (Mobile-First 2-column)
+            // Shows 6 shimmering placeholders immediately
             Array.from(new Array(6)).map((_, index) => (
               <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
                 <Skeleton 
                   variant="rectangular" 
-                  sx={{ bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 3, height: { xs: 200, md: 380 } }} 
+                  sx={{ 
+                    bgcolor: 'rgba(255,255,255,0.05)', 
+                    borderRadius: 3, 
+                    height: { xs: 180, md: 380 } 
+                  }} 
                 />
                 <Skeleton sx={{ bgcolor: 'rgba(255,255,255,0.05)', mt: 1 }} width="80%" />
                 <Skeleton sx={{ bgcolor: 'rgba(255,255,255,0.05)' }} width="60%" />
@@ -83,12 +94,13 @@ const ManagementTeam = () => {
             managementList.map(member => (
               <Grid 
                 item 
-                xs={6} // Two cards per row on mobile
-                sm={6} 
-                md={4} // Three cards on tablets/small laptops
-                lg={3} // Four cards on large screens
+                xs={6}    // Strictly 2 cards per row on mobile
+                sm={6}    
+                md={4}    // Stays 3 cards for laptop view (your original design)
+                lg={3}    // 4 cards on larger screens
                 key={member.MGTID} 
                 data-aos="zoom-in"
+                sx={{ display: 'flex' }} // Important for vertical alignment
               >
                 <Card
                   sx={{
@@ -98,9 +110,12 @@ const ManagementTeam = () => {
                     border: `1px solid rgba(255,255,255,0.1)`,
                     backdropFilter: "blur(8px)",
                     transition: 'all 0.4s ease',
-                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%', // Fills the 50% grid item
                     "&:hover": {
-                      transform: { md: 'translateY(-10px)' }, // Disable hover lift on mobile to avoid UX jumps
+                      // Original hover effect preserved for Desktop ONLY
+                      transform: { md: 'translateY(-10px)' }, 
                       boxShadow: `0 20px 50px rgba(0,0,0,0.7), 0 0 20px ${COLORS.gold}33`,
                       borderColor: COLORS.gold,
                     },
@@ -110,51 +125,71 @@ const ManagementTeam = () => {
                     component="img"
                     image={member.ImageURL}
                     alt={member.MGTName}
+                    // --- PERFORMANCE OPTIMIZATION FOR MOBILE ---
+                    loading="lazy" 
                     sx={{ 
-                      height: { xs: 180, sm: 250, md: 380 }, // Scaled height for mobile
+                      // Reduced height for 2-column mobile view
+                      height: { xs: 160, sm: 220, md: 380 }, 
                       objectFit: 'cover',
                       objectPosition: "top",
                       filter: "brightness(0.9)",
                     }}
                   />
 
-                  <CardContent sx={{ textAlign: 'center', p: { xs: 1.5, md: 3 } }}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 900,
-                        fontSize: { xs: '0.85rem', md: '1.1rem' }, // Scaled text for 2-column mobile
-                        color: COLORS.gold,
-                        textTransform: 'uppercase',
-                        mb: { xs: 1, md: 1.5 },
-                        letterSpacing: 0.5,
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        minHeight: { xs: '2.4em', md: 'auto' } // Keeps grid aligned
-                      }}
-                    >
-                      {member.MGTName}
-                    </Typography>
+                  <CardContent 
+                    sx={{ 
+                      textAlign: 'center', 
+                      p: { xs: 1.5, md: 3 }, 
+                      flexGrow: 1, // Pushes content down
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      justifyContent: 'space-between' // Aligns text & badge
+                    }}
+                  >
+                    <div>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 900,
+                          // Shrink font slightly for mobile 2-column fit
+                          fontSize: { xs: '0.8rem', md: '1.1rem' }, 
+                          color: COLORS.gold,
+                          textTransform: 'uppercase',
+                          mb: { xs: 1, md: 1.5 },
+                          letterSpacing: 0.5,
+                          // --- UX OPTIMIZATION ---
+                          // Forces long names to only use 2 lines to keep grid aligned
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          minHeight: { xs: '2.4em', md: 'auto' } 
+                        }}
+                      >
+                        {member.MGTName}
+                      </Typography>
+                    </div>
 
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        display: 'inline-block',
-                        px: { xs: 1, md: 2 },
-                        py: { xs: 0.4, md: 0.8 },
-                        borderRadius: '4px',
-                        background: COLORS.gold,
-                        color: COLORS.dark, 
-                        fontWeight: 800,
-                        fontSize: { xs: '0.6rem', md: '0.75rem' }, // Very small badge for mobile fit
-                        letterSpacing: '0.5px',
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      {member.Designation}
-                    </Typography>
+                    <div>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          display: 'inline-block',
+                          px: { xs: 1, md: 2 },
+                          py: { xs: 0.4, md: 0.8 },
+                          borderRadius: '4px',
+                          background: COLORS.gold,
+                          color: COLORS.dark, 
+                          fontWeight: 800,
+                          // Scaled badge for mobile fit
+                          fontSize: { xs: '0.6rem', md: '0.75rem' }, 
+                          letterSpacing: '0.5px',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {member.Designation}
+                      </Typography>
+                    </div>
                   </CardContent>
                 </Card>
               </Grid>
