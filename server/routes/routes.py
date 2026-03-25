@@ -1662,8 +1662,17 @@ def submit_feedback():
 @routes.route('/gallery', methods=['GET'])
 def get_gallery_photos():
     try:
-        photos = GalleryPhoto.query.filter_by(IsActive=True).order_by(
-            GalleryPhoto.UploadedAt.desc()).all()
+        # 1. Get pagination parameters from the URL (defaults: page 1, 12 items)
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
+
+        # 2. Use SQLAlchemy's .paginate() method
+        # error_out=False ensures it doesn't 404 if the page is out of range
+        pagination = GalleryPhoto.query.filter_by(IsActive=True)\
+            .order_by(GalleryPhoto.UploadedAt.desc())\
+            .paginate(page=page, per_page=per_page, error_out=False)
+
+        photos = pagination.items
 
         gallery_list = []
         for photo in photos:
@@ -1675,12 +1684,24 @@ def get_gallery_photos():
                 'UploadedAt': photo.UploadedAt.strftime('%Y-%m-%d %H:%M:%S')
             })
 
-        return jsonify({'gallery': gallery_list}), 200
+        # 3. Return the data PLUS pagination metadata
+        return jsonify({
+            'success': True,
+            'gallery': gallery_list,
+            'meta': {
+                'current_page': pagination.page,
+                'total_pages': pagination.pages,
+                'total_photos': pagination.total,
+                'has_next': pagination.has_next,
+                'has_prev': pagination.has_prev,
+                'next_page': pagination.next_num,
+                'prev_page': pagination.prev_num
+            }
+        }), 200
 
     except Exception as e:
-        import traceback
         traceback.print_exc()
-        return jsonify({'message': '❌ Failed to fetch gallery photos.', 'error': str(e)}), 500
+        return jsonify({'message': '❌ Failed to fetch gallery photos.', 'error': str(e)}), 5000
 
 # =========================
 # LOAN PRODUCTS & SCHEDULE
