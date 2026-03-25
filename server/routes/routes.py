@@ -2141,16 +2141,25 @@ Golden Generation DT SACCO
             'error': str(e)
         }), 500
 
+
 # ✅ Public Route to View All Active SaccoVideos
 @routes.route('/videos', methods=['GET'])
 def view_videos():
     try:
-        # Fetch only active videos (IsActiveID = 1) ordered by newest first
-        videos = SaccoVideo.query.filter_by(IsActiveID=1).order_by(SaccoVideo.CreatedAt.desc()).all()
+       
+        videos = SaccoVideo.query.filter_by(IsActiveID=1)\
+            .order_by(SaccoVideo.CreatedAt.desc())\
+            .all()
         
+        # 2. Handle empty results gracefully
         if not videos:
-            return jsonify({'message': 'ℹ️ No active videos found.', 'videos': []}), 200
+            return jsonify({
+                'success': True, 
+                'message': 'ℹ️ No active videos found.', 
+                'videos': []
+            }), 200
 
+        # 3. Format the data for JSON response
         video_list = []
         for video in videos:
             video_list.append({
@@ -2159,15 +2168,25 @@ def view_videos():
                 'VideoURL': video.VideoURL,
                 'ThumbnailURL': video.ThumbnailURL,
                 'Description': video.Description,
-                'CreatedAt': video.CreatedAt.strftime('%Y-%m-%d %H:%M:%S')
+              
+                'CreatedAt': video.CreatedAt.strftime('%Y-%m-%d %H:%M:%S') if video.CreatedAt else None
             })
 
-        return jsonify({'success': True, 'videos': video_list}), 200
+        # 4. Return successful response
+        return jsonify({
+            'success': True, 
+            'count': len(video_list),
+            'videos': video_list
+        }), 200
 
     except Exception as e:
+        # Logs the full error stack to your terminal for debugging
         traceback.print_exc()
-        return jsonify({'message': '❌ Failed to fetch videos.', 'error': str(e)}), 500
-
+        return jsonify({
+            'success': False, 
+            'message': '❌ Failed to fetch videos.', 
+            'error': str(e)
+        }), 500
 #routes for fetching asset-financing 
 
 @routes.route('/asset-financing', methods=['GET'])

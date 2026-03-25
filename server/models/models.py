@@ -411,7 +411,7 @@ class NewsletterSubscription(db.Model):
     SubscribedAt = db.Column(db.DateTime, default=datetime.utcnow)
 
 class SaccoVideo(db.Model):
-    __tablename__ = 'Sacco_Videos'
+    __tablename__ = 'SaccoVideo'
 
     VideoID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Title = db.Column(db.String(255), nullable=False)
