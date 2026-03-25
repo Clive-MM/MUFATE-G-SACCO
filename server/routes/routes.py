@@ -1662,12 +1662,12 @@ def submit_feedback():
 @routes.route('/gallery', methods=['GET'])
 def get_gallery_photos():
     try:
-        # 1. Get pagination parameters from the URL (defaults: page 1, 12 items)
+        # 1. Get pagination parameters from the URL 
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 10, type=int)
 
         # 2. Use SQLAlchemy's .paginate() method
-        # error_out=False ensures it doesn't 404 if the page is out of range
+        
         pagination = GalleryPhoto.query.filter_by(IsActive=True)\
             .order_by(GalleryPhoto.UploadedAt.desc())\
             .paginate(page=page, per_page=per_page, error_out=False)
