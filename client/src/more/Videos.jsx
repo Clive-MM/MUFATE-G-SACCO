@@ -1,9 +1,10 @@
-import React from 'react';
-import { Box, Typography, Grid, Paper, Container, IconButton, Avatar } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, Grid, Paper, Container, IconButton, Avatar, Skeleton } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import axios from 'axios';
 
 const BRAND = {
   gold: '#EC9B14',
@@ -12,12 +13,6 @@ const BRAND = {
   cardBg: 'rgba(255, 255, 255, 0.05)',
   textMuted: 'rgba(244, 244, 244, 0.7)',
 };
-
-const VIDEO_DATA = [
-  { id: 1, title: 'Annual Special Delegate Meeting 2026', category: 'OFFICIAL EVENT', views: '1.2K views'  },
-  { id: 2, title: 'Member Success Stories: The Journey to Financial Freedom', category: 'TESTIMONIALS', views: '850 views' },
-  { id: 3, title: 'New Digital Banking Features & Security Updates', category: 'PRODUCT LAUNCH', views: '3.4K views', time: '3 hours ago' },
-];
 
 // Animation Variants
 const containerVariants = {
@@ -34,6 +29,26 @@ const itemVariants = {
 };
 
 const Videos = () => {
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // FETCH FUNCTIONALITY ADDED HERE
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await axios.get('https://mufate-g-sacco.onrender.com/videos');
+        if (response.data.success) {
+          setVideos(response.data.videos);
+        }
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchVideos();
+  }, []);
+
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -97,122 +112,134 @@ const Videos = () => {
         >
           <Grid container spacing={{ xs: 3, md: 4 }}>
             <AnimatePresence>
-              {VIDEO_DATA.map((video) => (
-                <Grid item xs={12} sm={6} lg={4} key={video.id}>
-                  <motion.div
-                    variants={itemVariants}
-                    whileHover={{ y: -10 }}
-                    whileTap={{ scale: 0.98 }} // Mobile physical feedback
-                  >
-                    {/* Thumbnail Card */}
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        position: 'relative',
-                        width: '100%',
-                        aspectRatio: '16 / 9',
-                        borderRadius: { xs: '12px', md: '20px' }, // Smoother mobile corners
-                        overflow: 'hidden',
-                        bgcolor: '#000',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        border: '1px solid rgba(236, 155, 20, 0.08)',
-                        transition: '0.3s ease-in-out',
-                        '&:hover': {
-                          borderColor: BRAND.gold,
-                          boxShadow: `0 15px 40px rgba(0,0,0,0.7), 0 0 20px ${BRAND.gold}20`,
-                          '& .play-btn': { opacity: 1, transform: 'scale(1.1) rotate(10deg)' },
-                          '& .thumb-img': { transform: 'scale(1.05)' }
-                        }
-                      }}
-                    >
-                      {/* Placeholder for Video Image */}
-                      <Box 
-                        className="thumb-img"
-                        sx={{ 
-                          position: 'absolute', inset: 0, 
-                          bgcolor: 'rgba(255,255,255,0.03)', 
-                          transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' 
-                        }} 
-                      />
-
-                      <Box sx={{ 
-                        position: 'absolute', bottom: 10, right: 10, 
-                        bgcolor: 'rgba(0,0,0,0.85)', color: '#fff', 
-                        px: 1, py: 0.2, borderRadius: '4px', fontSize: '0.7rem', fontWeight: 800, zIndex: 3
-                      }}>
-                        {video.duration}
+              {loading ? (
+                // Loading Skeletons
+                Array.from(new Array(3)).map((_, index) => (
+                  <Grid item xs={12} sm={6} lg={4} key={index}>
+                    <Skeleton variant="rectangular" height={250} sx={{ bgcolor: 'rgba(255,255,255,0.05)', borderRadius: '12px' }} />
+                    <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+                      <Skeleton variant="circular" width={40} height={40} sx={{ bgcolor: 'rgba(255,255,255,0.05)' }} />
+                      <Box sx={{ flex: 1 }}>
+                        <Skeleton width="80%" sx={{ bgcolor: 'rgba(255,255,255,0.05)' }} />
+                        <Skeleton width="40%" sx={{ bgcolor: 'rgba(255,255,255,0.05)' }} />
                       </Box>
-
-                      <PlayCircleFilledWhiteIcon 
-                        className="play-btn"
-                        sx={{ 
-                          fontSize: { xs: '3.5rem', md: '5rem' }, 
-                          color: BRAND.gold, 
-                          zIndex: 2, 
-                          opacity: 0.8, 
-                          transition: 'all 0.4s ease' 
-                        }} 
-                      />
-                    </Paper>
-
-                    {/* Metadata Area */}
-                    <Box sx={{ mt: { xs: 1.5, md: 2.5 }, display: 'flex', gap: { xs: 1.5, md: 2 }, px: { xs: 1, md: 0 } }}>
-                      <Avatar 
-                        sx={{ 
-                          bgcolor: BRAND.gold, 
-                          width: { xs: 36, md: 44 }, 
-                          height: { xs: 36, md: 44 }, 
-                          fontWeight: 800, 
-                          fontSize: '0.8rem',
-                          color: BRAND.dark,
-                          boxShadow: `0 4px 10px rgba(0,0,0,0.3)`
+                    </Box>
+                  </Grid>
+                ))
+              ) : (
+                videos.map((video) => (
+                  <Grid item xs={12} sm={6} lg={4} key={video.VideoID}>
+                    <motion.div
+                      variants={itemVariants}
+                      whileHover={{ y: -10 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {/* Thumbnail Card */}
+                      <Paper
+                        elevation={0}
+                        onClick={() => window.open(video.VideoURL, '_blank')}
+                        sx={{
+                          position: 'relative',
+                          width: '100%',
+                          aspectRatio: '16 / 9',
+                          borderRadius: { xs: '12px', md: '20px' },
+                          overflow: 'hidden',
+                          bgcolor: '#000',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: '1px solid rgba(236, 155, 20, 0.08)',
+                          transition: '0.3s ease-in-out',
+                          '&:hover': {
+                            borderColor: BRAND.gold,
+                            boxShadow: `0 15px 40px rgba(0,0,0,0.7), 0 0 20px ${BRAND.gold}20`,
+                            '& .play-btn': { opacity: 1, transform: 'scale(1.1) rotate(10deg)' },
+                            '& .thumb-img': { transform: 'scale(1.05)' }
+                          }
                         }}
                       >
-                        GG
-                      </Avatar>
-                      
-                      <Box sx={{ flex: 1 }}>
-                        <Typography 
-                          variant="h6" 
+                        <Box 
+                          className="thumb-img"
+                          component="img"
+                          src={video.ThumbnailURL}
                           sx={{ 
-                            color: '#FFF', 
-                            fontWeight: 700, 
-                            lineHeight: 1.3, 
-                            fontSize: { xs: '1rem', md: '1.15rem' },
-                            mb: 0.5,
-                            display: '-webkit-box', 
-                            WebkitLineClamp: 2, 
-                            WebkitBoxOrient: 'vertical', 
-                            overflow: 'hidden' 
+                            position: 'absolute', inset: 0, 
+                            width: '100%', height: '100%',
+                            objectFit: 'cover',
+                            bgcolor: 'rgba(255,255,255,0.03)', 
+                            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' 
+                          }} 
+                        />
+
+                        <PlayCircleFilledWhiteIcon 
+                          className="play-btn"
+                          sx={{ 
+                            fontSize: { xs: '3.5rem', md: '5rem' }, 
+                            color: BRAND.gold, 
+                            zIndex: 2, 
+                            opacity: 0.8, 
+                            transition: 'all 0.4s ease' 
+                          }} 
+                        />
+                      </Paper>
+
+                      {/* Metadata Area */}
+                      <Box sx={{ mt: { xs: 1.5, md: 2.5 }, display: 'flex', gap: { xs: 1.5, md: 2 }, px: { xs: 1, md: 0 } }}>
+                        <Avatar 
+                          sx={{ 
+                            bgcolor: BRAND.gold, 
+                            width: { xs: 36, md: 44 }, 
+                            height: { xs: 36, md: 44 }, 
+                            fontWeight: 800, 
+                            fontSize: '0.8rem',
+                            color: BRAND.dark,
+                            boxShadow: `0 4px 10px rgba(0,0,0,0.3)`
                           }}
                         >
-                          {video.title}
-                        </Typography>
+                          GG
+                        </Avatar>
                         
-                        <Typography variant="body2" sx={{ color: BRAND.textMuted, fontWeight: 500, fontSize: { xs: '0.75rem', md: '0.85rem' } }}>
-                          Golden Generation • {video.category}
-                        </Typography>
-                        
-                        <Typography variant="body2" sx={{ color: BRAND.textMuted, opacity: 0.6, fontSize: { xs: '0.75rem', md: '0.8rem' } }}>
-                          {video.views} • {video.time}
-                        </Typography>
-                      </Box>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography 
+                            variant="h6" 
+                            sx={{ 
+                              color: '#FFF', 
+                              fontWeight: 700, 
+                              lineHeight: 1.3, 
+                              fontSize: { xs: '1rem', md: '1.15rem' },
+                              mb: 0.5,
+                              display: '-webkit-box', 
+                              WebkitLineClamp: 2, 
+                              WebkitBoxOrient: 'vertical', 
+                              overflow: 'hidden' 
+                            }}
+                          >
+                            {video.Title}
+                          </Typography>
+                          
+                          <Typography variant="body2" sx={{ color: BRAND.textMuted, fontWeight: 500, fontSize: { xs: '0.75rem', md: '0.85rem' } }}>
+                            Golden Generation • Official
+                          </Typography>
+                          
+                          <Typography variant="body2" sx={{ color: BRAND.textMuted, opacity: 0.6, fontSize: { xs: '0.75rem', md: '0.8rem' } }}>
+                            Added {video.CreatedAt.split(' ')[0]}
+                          </Typography>
+                        </Box>
 
-                      <IconButton size="small" sx={{ color: BRAND.textMuted, alignSelf: 'flex-start', mt: -0.5 }}>
-                        <MoreVertIcon fontSize="small" />
-                      </IconButton>
-                    </Box>
-                  </motion.div>
-                </Grid>
-              ))}
+                        <IconButton size="small" sx={{ color: BRAND.textMuted, alignSelf: 'flex-start', mt: -0.5 }}>
+                          <MoreVertIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </motion.div>
+                  </Grid>
+                ))
+              )}
             </AnimatePresence>
           </Grid>
         </motion.div>
 
-        {/* Footer */}
+        {/* Footer remains exactly the same */}
         <Box sx={{ py: 6, mt: { xs: 6, md: 12 }, borderTop: `1px solid rgba(236, 155, 20, 0.1)` }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
             <Box sx={{ textAlign: 'center' }}>
