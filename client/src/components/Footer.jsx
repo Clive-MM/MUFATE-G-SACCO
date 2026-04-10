@@ -107,7 +107,7 @@ const Footer = () => {
               </Typography>
 
               <Stack direction="row" spacing={1.5}>
-                <IconButton component="a" href="https://x.com/GMufate" target="_blank" sx={socialIconStyle}>
+                <IconButton component="a" href="https://x.com/ggdtsacco" target="_blank" sx={socialIconStyle}>
                   <XIcon fontSize="small" />
                 </IconButton>
                 <IconButton component="a" href="https://www.facebook.com/share/1CLhxfKxb2/" target="_blank" sx={socialIconStyle}>
