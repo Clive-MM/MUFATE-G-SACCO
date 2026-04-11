@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
-  Facebook, X as XIcon, Apple, Android, LinkedIn, Instagram, Youtube
+  Facebook, X as XIcon, Apple, Android, LinkedIn, Instagram, YouTube
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { FaWhatsapp, FaTiktok } from 'react-icons/fa';
@@ -108,34 +108,35 @@ const Footer = () => {
 
               <Stack direction="row" spacing={1.5}>
                 <IconButton component="a" href="https://x.com/ggdtsacco" target="_blank" sx={socialIconStyle}>
-                  <XIcon fontSize="small" />
-                </IconButton>
-                <IconButton component="a" href="https://www.linkedin.com/company/ggdtsacco" target="_blank" sx={socialIconStyle}>
-                  <LinkedIn fontSize="small" />
-                </IconButton>
+    <XIcon fontSize="small" />
+  </IconButton>
+  
+  <IconButton component="a" href="https://www.linkedin.com/company/ggdtsacco" target="_blank" sx={socialIconStyle}>
+    <LinkedIn fontSize="small" />
+  </IconButton>
 
-                <IconButton component="a" href="https://www.tiktok.com/@ggdtsacco" target="_blank" sx={socialIconStyle}>
-                  <FaTiktok size={16} />
-                </IconButton>
+  <IconButton component="a" href="https://www.tiktok.com/@ggdtsacco" target="_blank" sx={socialIconStyle}>
+    <FaTiktok size={16} />
+  </IconButton>
 
-                {/* New: Instagram */}
-                <IconButton component="a" href="https://www.instagram.com/ggdtsacco" target="_blank" sx={socialIconStyle}>
-                  <Instagram fontSize="small" />
-                </IconButton>
+  <IconButton component="a" href="https://www.instagram.com/ggdtsacco" target="_blank" sx={socialIconStyle}>
+    <Instagram fontSize="small" />
+  </IconButton>
 
-                <IconButton component="a" href="https://www.youtube.com/@ggdtsacco" target="_blank" sx={socialIconStyle}>
-                  <YouTube fontSize="small" />
-                </IconButton>
+  <IconButton component="a" href="https://www.youtube.com/@ggdtsacco" target="_blank" sx={socialIconStyle}>
+    <YouTube fontSize="small" />
+  </IconButton>
 
-                <IconButton component="a" href="https://www.facebook.com/profile.php?id=61572342663004" target="_blank" sx={socialIconStyle}>
-                  <Facebook fontSize="small" />
-                </IconButton>
-                <IconButton
-                  component="a" href="https://wa.me/254791331932" target="_blank"
-                  sx={{ ...socialIconStyle, '&:hover': { background: BRAND.success, color: '#FFF' } }}
-                >
-                  <FaWhatsapp size={18} />
-                </IconButton>
+  <IconButton component="a" href="https://www.facebook.com/profile.php?id=61572342663004" target="_blank" sx={socialIconStyle}>
+    <Facebook fontSize="small" />
+  </IconButton>
+
+  <IconButton
+    component="a" href="https://wa.me/254791331932" target="_blank"
+    sx={{ ...socialIconStyle, '&:hover': { background: BRAND.success, color: '#FFF' } }}
+  >
+    <FaWhatsapp size={18} />
+  </IconButton>
               </Stack>
             </Box>
           </Grid>
