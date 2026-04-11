@@ -4,10 +4,10 @@ import {
 } from '@mui/material';
 import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
-  Facebook, X as XIcon, Apple, Android
+  Facebook, X as XIcon, Apple, Android, LinkedIn, Instagram, Youtube
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaTiktok } from 'react-icons/fa';
 
 const BRAND = {
   gold: '#EC9B14',
@@ -58,10 +58,10 @@ const Footer = () => {
     transition: '0.3s',
     background: 'rgba(255,255,255,0.03)',
     mb: 1.5,
-    '&:hover': { 
-        borderColor: BRAND.gold, 
-        background: 'rgba(236, 155, 20, 0.1)',
-        transform: 'translateY(-3px)' 
+    '&:hover': {
+      borderColor: BRAND.gold,
+      background: 'rgba(236, 155, 20, 0.1)',
+      transform: 'translateY(-3px)'
     }
   };
 
@@ -110,6 +110,23 @@ const Footer = () => {
                 <IconButton component="a" href="https://x.com/ggdtsacco" target="_blank" sx={socialIconStyle}>
                   <XIcon fontSize="small" />
                 </IconButton>
+                <IconButton component="a" href="https://www.linkedin.com/company/ggdtsacco" target="_blank" sx={socialIconStyle}>
+                  <LinkedIn fontSize="small" />
+                </IconButton>
+
+                <IconButton component="a" href="https://www.tiktok.com/@ggdtsacco" target="_blank" sx={socialIconStyle}>
+                  <FaTiktok size={16} />
+                </IconButton>
+
+                {/* New: Instagram */}
+                <IconButton component="a" href="https://www.instagram.com/ggdtsacco" target="_blank" sx={socialIconStyle}>
+                  <Instagram fontSize="small" />
+                </IconButton>
+
+                <IconButton component="a" href="https://www.youtube.com/@ggdtsacco" target="_blank" sx={socialIconStyle}>
+                  <YouTube fontSize="small" />
+                </IconButton>
+
                 <IconButton component="a" href="https://www.facebook.com/profile.php?id=61572342663004" target="_blank" sx={socialIconStyle}>
                   <Facebook fontSize="small" />
                 </IconButton>
@@ -129,25 +146,25 @@ const Footer = () => {
               Mobile Apps
             </Typography>
             <Box>
-                <Tooltip title="Download for Android" arrow>
-                    <Link href="#" sx={appButtonStyle}>
-                        <Android sx={{ color: BRAND.gold }} />
-                        <Box>
-                            <Typography sx={{ fontSize: '0.6rem', opacity: 0.6, mb: -0.5 }}>Get it on</Typography>
-                            <Typography sx={{ fontSize: '0.85rem', fontWeight: 700 }}>Google Play</Typography>
-                        </Box>
-                    </Link>
-                </Tooltip>
+              <Tooltip title="Download for Android" arrow>
+                <Link href="#" sx={appButtonStyle}>
+                  <Android sx={{ color: BRAND.gold }} />
+                  <Box>
+                    <Typography sx={{ fontSize: '0.6rem', opacity: 0.6, mb: -0.5 }}>Get it on</Typography>
+                    <Typography sx={{ fontSize: '0.85rem', fontWeight: 700 }}>Google Play</Typography>
+                  </Box>
+                </Link>
+              </Tooltip>
 
-                <Tooltip title="Download for iOS" arrow>
-                    <Link href="#" sx={appButtonStyle}>
-                        <Apple sx={{ color: BRAND.gold }} />
-                        <Box>
-                            <Typography sx={{ fontSize: '0.6rem', opacity: 0.6, mb: -0.5 }}>Download on</Typography>
-                            <Typography sx={{ fontSize: '0.85rem', fontWeight: 700 }}>App Store</Typography>
-                        </Box>
-                    </Link>
-                </Tooltip>
+              <Tooltip title="Download for iOS" arrow>
+                <Link href="#" sx={appButtonStyle}>
+                  <Apple sx={{ color: BRAND.gold }} />
+                  <Box>
+                    <Typography sx={{ fontSize: '0.6rem', opacity: 0.6, mb: -0.5 }}>Download on</Typography>
+                    <Typography sx={{ fontSize: '0.85rem', fontWeight: 700 }}>App Store</Typography>
+                  </Box>
+                </Link>
+              </Tooltip>
             </Box>
           </Grid>
 
