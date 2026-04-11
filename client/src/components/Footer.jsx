@@ -110,7 +110,7 @@ const Footer = () => {
                 <IconButton component="a" href="https://x.com/ggdtsacco" target="_blank" sx={socialIconStyle}>
                   <XIcon fontSize="small" />
                 </IconButton>
-                <IconButton component="a" href="https://www.facebook.com/share/1CLhxfKxb2/" target="_blank" sx={socialIconStyle}>
+                <IconButton component="a" href="https://www.facebook.com/profile.php?id=61572342663004" target="_blank" sx={socialIconStyle}>
                   <Facebook fontSize="small" />
                 </IconButton>
                 <IconButton
