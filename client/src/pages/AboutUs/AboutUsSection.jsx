@@ -33,7 +33,7 @@ const AboutUsSection = () => {
     {
       icon: <InfoIcon sx={iconStyle} />,
       title: "Who We Are",
-      content: "Golden Generation DT Sacco, formerly Mufate ‘G’ Sacco, is a progressive and member-driven financial cooperative founded in 1987. Our transformation reflects our commitment to modernize and empower more members."
+      content: "Golden Generation DT Sacco, formerly Mufate ‘G’ Sacco, is a progressive and member-driven financial cooperative founded in 1987. We have rebranded from MUFATE G Sacco to expand, modernize and serve more members."
     },
     {
       icon: <FlagIcon sx={iconStyle} />,
