@@ -123,20 +123,20 @@ const Footer = () => {
                   <Instagram fontSize="small" />
                 </IconButton>
 
-               
+
 
                 <IconButton component="a" href="https://www.facebook.com/profile.php?id=61572342663004" target="_blank" sx={socialIconStyle}>
                   <Facebook fontSize="small" />
                 </IconButton>
 
-                <IconButton 
-    component="a" 
-    href="https://www.youtube.com/channel/UCmq0xiJ-igCZEDa4N26rsdg" 
-    target="_blank" 
-    sx={socialIconStyle}
-  >
-    <FaYoutube size={18} />
-  </IconButton>
+                <IconButton
+                  component="a"
+                  href="https://www.youtube.com/channel/UCmq0xiJ-igCZEDa4N26rsdg"
+                  target="_blank"
+                  sx={socialIconStyle}
+                >
+                  <FaYoutube size={18} />
+                </IconButton>
 
                 <IconButton
                   component="a" href="https://wa.me/254791331932" target="_blank"

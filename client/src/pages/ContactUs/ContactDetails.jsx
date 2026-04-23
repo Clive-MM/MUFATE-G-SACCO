@@ -13,6 +13,7 @@ import {
   VerifiedUser as ShieldIcon,
   Twitter as TwitterIcon,
   WhatsApp as WhatsAppIcon,
+  YouTube as YouTubeIcon,
   MarkEmailRead as MailIcon,
 
 } from '@mui/icons-material';
@@ -175,6 +176,17 @@ const ContactDetails = () => {
                             <TwitterIcon />
                           </IconButton>
                         </Tooltip>
+
+                        <Tooltip title="Watch us on YouTube">
+      <IconButton 
+        component="a" 
+        href="https://www.youtube.com/channel/UCmq0xiJ-igCZEDa4N26rsdg" 
+        target="_blank" 
+        sx={socialIconStyle}
+      >
+        <YouTubeIcon />
+      </IconButton>
+    </Tooltip>
 
                         <Tooltip title="Chat with us on WhatsApp">
                           <IconButton
