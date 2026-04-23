@@ -15,6 +15,7 @@ import {
   WhatsApp as WhatsAppIcon,
   YouTube as YouTubeIcon,
   MarkEmailRead as MailIcon,
+  Facebook as FacebookIcon,
 
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
@@ -178,15 +179,26 @@ const ContactDetails = () => {
                         </Tooltip>
 
                         <Tooltip title="Watch us on YouTube">
-      <IconButton 
-        component="a" 
-        href="https://www.youtube.com/channel/UCmq0xiJ-igCZEDa4N26rsdg" 
-        target="_blank" 
-        sx={socialIconStyle}
-      >
-        <YouTubeIcon />
-      </IconButton>
-    </Tooltip>
+                          <IconButton
+                            component="a"
+                            href="https://www.youtube.com/channel/UCmq0xiJ-igCZEDa4N26rsdg"
+                            target="_blank"
+                            sx={socialIconStyle}
+                          >
+                            <YouTubeIcon />
+                          </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Follow us on Facebook">
+                          <IconButton
+                            component="a"
+                            href="https://www.facebook.com/profile.php?id=61572342663004"
+                            target="_blank"
+                            sx={socialIconStyle}
+                          >
+                            <FacebookIcon />
+                          </IconButton>
+                        </Tooltip>
 
                         <Tooltip title="Chat with us on WhatsApp">
                           <IconButton
