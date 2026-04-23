@@ -38,12 +38,12 @@ const AboutUsSection = () => {
     {
       icon: <FlagIcon sx={iconStyle} />,
       title: "Our Mission",
-      content: "To economically empower our members by mobilizing resources and providing innovative, diverse, and competitive financial solutions tailored to their changing needs."
+      content: "To empower our customers economically through mobilization of resources & provison of quality, diversified and competitive financial solutions."
     },
     {
       icon: <VisibilityIcon sx={iconStyle} />,
       title: "Our Vision",
-      content: "To become a nationally recognized and trusted financial institution that transforms the livelihoods of its members through innovation and integrity."
+      content: "To be a leading financial service provider nationally."
     }
   ];
 
