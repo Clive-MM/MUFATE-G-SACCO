@@ -115,7 +115,7 @@ const Footer = () => {
                   <LinkedIn fontSize="small" />
                 </IconButton>
 
-                <IconButton component="a" href="https://www.tiktok.com/@ggdtsacco" target="_blank" sx={socialIconStyle}>
+                <IconButton component="a" href="https://www.tiktok.com/@goldengenerationdtsacco" target="_blank" sx={socialIconStyle}>
                   <FaTiktok size={16} />
                 </IconButton>
 
