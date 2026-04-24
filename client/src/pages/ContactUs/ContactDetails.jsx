@@ -16,6 +16,7 @@ import {
   YouTube as YouTubeIcon,
   MarkEmailRead as MailIcon,
   Facebook as FacebookIcon,
+  Instagram as InstagramIcon,
 
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
@@ -186,6 +187,17 @@ const ContactDetails = () => {
                             sx={socialIconStyle}
                           >
                             <YouTubeIcon />
+                          </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Follow us on Instagram">
+                          <IconButton
+                            component="a"
+                            href="https://www.instagram.com/ggdtsacco"
+                            target="_blank"
+                            sx={socialIconStyle}
+                          >
+                            <InstagramIcon />
                           </IconButton>
                         </Tooltip>
 
