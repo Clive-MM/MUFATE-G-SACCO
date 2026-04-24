@@ -111,7 +111,7 @@ const Footer = () => {
                   <XIcon fontSize="small" />
                 </IconButton>
 
-                <IconButton component="a" href="https://www.linkedin.com/company/ggdtsacco" target="_blank" sx={socialIconStyle}>
+                <IconButton component="a" href="www.linkedin.com/in/golden-generation-dt-sacco-undefined-221a58405" target="_blank" sx={socialIconStyle}>
                   <LinkedIn fontSize="small" />
                 </IconButton>
 
