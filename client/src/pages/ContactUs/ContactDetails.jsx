@@ -173,7 +173,7 @@ const ContactDetails = () => {
                       <Typography sx={infoLabel}>Connect With Us</Typography>
                       <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
                         <Tooltip title="Follow us on X (Twitter)">
-                          <IconButton component="a" href="https://x.com/GMufate" target="_blank" sx={socialIconStyle}>
+                          <IconButton component="a" href="https://x.com/ggdtsacco" target="_blank" sx={socialIconStyle}>
                             <TwitterIcon />
                           </IconButton>
                         </Tooltip>
