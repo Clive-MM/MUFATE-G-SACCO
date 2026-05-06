@@ -7,7 +7,7 @@ import {
   Facebook, X as XIcon, Apple, Android, LinkedIn, Instagram
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
-import { FaWhatsapp, FaTiktok, FaYoutube } from 'react-icons/fa';
+import { FaWhatsapp, FaTiktok } from 'react-icons/fa';
 
 const BRAND = {
   gold: '#EC9B14',
@@ -129,14 +129,14 @@ const Footer = () => {
                   <Facebook fontSize="small" />
                 </IconButton>
 
-                <IconButton
+                {/* <IconButton
                   component="a"
                   href="https://www.youtube.com/channel/UCmq0xiJ-igCZEDa4N26rsdg"
                   target="_blank"
                   sx={socialIconStyle}
                 >
                   <FaYoutube size={18} />
-                </IconButton>
+                </IconButton> */}
 
                 <IconButton
                   component="a" href="https://wa.me/254791331932" target="_blank"
