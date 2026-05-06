@@ -103,7 +103,7 @@ const Footer = () => {
                 Golden Generation DT Sacco,<br />
                 formerly Mufate G Sacco,<br />
                 has rebranded to expand<br />
-                ,modernize and serve more.
+                ,modernize and serve more members.
               </Typography>
 
               <Stack direction="row" spacing={1.5}>
