@@ -65,6 +65,16 @@ const ManagementTeam = () => {
         >
           MANAGEMENT TEAM
         </Typography>
+         <Typography
+              sx={{
+                color: COLORS.textMuted,
+                fontSize: { xs: '0.8rem', md: '1rem' },
+                mt: 1,
+                fontWeight: 500
+              }}
+            >
+              The Dedicated Professionals Driving Operational Excellence and Member Success
+            </Typography>
 
         <Grid container spacing={{ xs: 2, md: 4 }} justifyContent="center">
           {loading ? (
