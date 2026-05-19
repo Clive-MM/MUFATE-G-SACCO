@@ -19,7 +19,7 @@ import News from './more/News';
 import SaccoGallery from './more/saccogallery'; 
 import MemberRegistration from "./pages/MemberRegistration";
 import LoanCalculator from './pages/Products/LoanCalculator';
-
+import Footer from './components/Footer';
 import Videos from './more/Videos';
 
 function App({ toggleTheme, mode }) {
@@ -58,6 +58,7 @@ function App({ toggleTheme, mode }) {
           <Route path="/products/loanCalculator" element={<LoanCalculator />} />
      
         </Routes>
+        <Footer />
       </BrowserRouter>
     </Box>
   );

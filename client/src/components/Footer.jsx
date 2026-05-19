@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Box, Typography, IconButton, Link, Container, Stack, Divider, Grid, Tooltip
+  Box, Typography, IconButton, Link as MuiLink, Container, Stack, Divider, Grid, Tooltip
 } from '@mui/material';
 import {
   LocationOn, Email, AccessTime, Phone, ArrowUpward,
@@ -45,7 +45,6 @@ const Footer = () => {
     mt: 0.4
   };
 
-  // Style for the new Mobile App Buttons
   const appButtonStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -123,20 +122,9 @@ const Footer = () => {
                   <Instagram fontSize="small" />
                 </IconButton>
 
-
-
                 <IconButton component="a" href="https://www.facebook.com/profile.php?id=61572342663004" target="_blank" sx={socialIconStyle}>
                   <Facebook fontSize="small" />
                 </IconButton>
-
-                {/* <IconButton
-                  component="a"
-                  href="https://www.youtube.com/channel/UCmq0xiJ-igCZEDa4N26rsdg"
-                  target="_blank"
-                  sx={socialIconStyle}
-                >
-                  <FaYoutube size={18} />
-                </IconButton> */}
 
                 <IconButton
                   component="a" href="https://wa.me/254791331932" target="_blank"
@@ -155,28 +143,29 @@ const Footer = () => {
             </Typography>
             <Box>
               <Tooltip title="Download for Android" arrow>
-                <Link href="#" sx={appButtonStyle}>
+                {/* Fixed import aliasing to safely bypass event blockages */}
+                <MuiLink href="#" sx={appButtonStyle}>
                   <Android sx={{ color: BRAND.gold }} />
                   <Box>
                     <Typography sx={{ fontSize: '0.6rem', opacity: 0.6, mb: -0.5 }}>Get it on</Typography>
                     <Typography sx={{ fontSize: '0.85rem', fontWeight: 700 }}>Google Play</Typography>
                   </Box>
-                </Link>
+                </MuiLink>
               </Tooltip>
 
               <Tooltip title="Download for iOS" arrow>
-                <Link href="#" sx={appButtonStyle}>
+                <MuiLink href="#" sx={appButtonStyle}>
                   <Apple sx={{ color: BRAND.gold }} />
                   <Box>
                     <Typography sx={{ fontSize: '0.6rem', opacity: 0.6, mb: -0.5 }}>Download on</Typography>
                     <Typography sx={{ fontSize: '0.85rem', fontWeight: 700 }}>App Store</Typography>
                   </Box>
-                </Link>
+                </MuiLink>
               </Tooltip>
             </Box>
           </Grid>
 
-          {/* Column 3: Updated Quick Links */}
+          {/* Column 3: Quick Links */}
           <Grid item xs={12} sm={6} md={2}>
             <Typography sx={{ color: BRAND.gold, fontWeight: 900, mb: 4, textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
               Quick Links
@@ -191,20 +180,25 @@ const Footer = () => {
                 { name: 'Resources', path: '/resources' },
                 { name: 'FAQs', path: '/faqs' }
               ].map((link) => (
-                <Link
+                /* FIXED: Rendered RouterLink directly with identical MUI CSS parameters to ensure routing works instantly */
+                <RouterLink
                   key={link.name}
-                  component={RouterLink}
                   to={link.path}
-                  sx={{
-                    color: BRAND.textMuted,
-                    textDecoration: 'none',
-                    fontSize: '0.88rem',
-                    transition: '0.2s',
-                    '&:hover': { color: BRAND.gold, transform: 'translateX(5px)' }
-                  }}
+                  style={{ textDecoration: 'none' }} 
                 >
-                  {link.name}
-                </Link>
+                  <Typography
+                    sx={{
+                      color: BRAND.textMuted,
+                      fontSize: '0.88rem',
+                      transition: '0.2s',
+                      fontWeight: 400,
+                      '&:hover': { color: BRAND.gold, transform: 'translateX(5px)' },
+                      display: 'inline-block'
+                    }}
+                  >
+                    {link.name}
+                  </Typography>
+                </RouterLink>
               ))}
             </Stack>
           </Grid>
