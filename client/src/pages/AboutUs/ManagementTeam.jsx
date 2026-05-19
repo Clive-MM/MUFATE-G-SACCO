@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { 
-  Box, Typography, Card, CardMedia, CardContent, 
-  Grid, Skeleton, Container 
+import {
+  Box, Typography, Card, CardMedia, CardContent,
+  Grid, Skeleton, Container
 } from '@mui/material';
 import Footer from '../../components/Footer';
+import { motion } from 'framer-motion';
 
 const ManagementTeam = () => {
   const [managementList, setManagementList] = useState([]);
@@ -32,9 +33,9 @@ const ManagementTeam = () => {
   }, []);
 
   const COLORS = {
-    gold: '#EC9B14',      
-    dark: '#02150F',      
-    textMuted: 'rgba(244, 244, 244, 0.6)', 
+    gold: '#EC9B14',
+    dark: '#02150F',
+    textMuted: 'rgba(244, 244, 244, 0.6)',
     light: '#F4F4F4',
   };
 
@@ -45,45 +46,55 @@ const ManagementTeam = () => {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        pt: { xs: 10, md: 18 }, 
+        pt: { xs: 10, md: 18 },
         pb: 5,
       }}
     >
       <Container maxWidth="lg">
-        <Typography
-          variant="h4"
-          align="center"
-          sx={{
-            fontWeight: 900,
-            mb: { xs: 4, md: 8 },
-            letterSpacing: '3px',
-            color: COLORS.gold,
-            textTransform: 'uppercase',
-            fontSize: { xs: '1.3rem', md: '2.2rem' },
-            textShadow: `0 0 15px ${COLORS.gold}33`,
-          }}
-        >
-          MANAGEMENT TEAM
-        </Typography>
-         <Typography
+        <Box sx={{ mb: { xs: 5, md: 8 }, textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 900,
+                letterSpacing: { xs: '1px', md: '3px' },
+                color: COLORS.gold,
+                textTransform: 'uppercase',
+                fontSize: { xs: '1.4rem', md: '2.5rem' },
+                textShadow: `0 0 15px ${COLORS.gold}33`,
+              }}
+            >
+              Management Team
+            </Typography>
+
+            <Typography
               sx={{
                 color: COLORS.textMuted,
                 fontSize: { xs: '0.8rem', md: '1rem' },
                 mt: 1,
-                fontWeight: 500
+                fontWeight: 500,
+                maxWidth: '700px',
+                mx: 'auto',
+                lineHeight: 1.8,
               }}
             >
               The Dedicated Professionals Driving Operational Excellence and Member Success
             </Typography>
+          </motion.div>
+        </Box>
 
         <Grid container spacing={{ xs: 2, md: 4 }} justifyContent="center">
           {loading ? (
             // SKELETON LOADING STATE (Mobile-First 2-column)
             Array.from(new Array(6)).map((_, index) => (
               <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
-                <Skeleton 
-                  variant="rectangular" 
-                  sx={{ bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 3, height: { xs: 200, md: 380 } }} 
+                <Skeleton
+                  variant="rectangular"
+                  sx={{ bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 3, height: { xs: 200, md: 380 } }}
                 />
                 <Skeleton sx={{ bgcolor: 'rgba(255,255,255,0.05)', mt: 1 }} width="80%" />
                 <Skeleton sx={{ bgcolor: 'rgba(255,255,255,0.05)' }} width="60%" />
@@ -91,13 +102,13 @@ const ManagementTeam = () => {
             ))
           ) : (
             managementList.map(member => (
-              <Grid 
-                item 
+              <Grid
+                item
                 xs={6} // Two cards per row on mobile
-                sm={6} 
+                sm={6}
                 md={4} // Three cards on tablets/small laptops
                 lg={3} // Four cards on large screens
-                key={member.MGTID} 
+                key={member.MGTID}
                 data-aos="zoom-in"
               >
                 <Card
@@ -120,7 +131,7 @@ const ManagementTeam = () => {
                     component="img"
                     image={member.ImageURL}
                     alt={member.MGTName}
-                    sx={{ 
+                    sx={{
                       height: { xs: 180, sm: 250, md: 380 }, // Scaled height for mobile
                       objectFit: 'cover',
                       objectPosition: "top",
@@ -156,7 +167,7 @@ const ManagementTeam = () => {
                         py: { xs: 0.4, md: 0.8 },
                         borderRadius: '4px',
                         background: COLORS.gold,
-                        color: COLORS.dark, 
+                        color: COLORS.dark,
                         fontWeight: 800,
                         fontSize: { xs: '0.6rem', md: '0.75rem' }, // Very small badge for mobile fit
                         letterSpacing: '0.5px',
