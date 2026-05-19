@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'; // Removed useMemo
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -12,7 +12,7 @@ import {
   useTheme,
   useMediaQuery,
   CircularProgress
-} from '@mui/material'; // Removed Grid
+} from '@mui/material';
 import { motion } from 'framer-motion';
 import Footer from '../../components/Footer';
 
@@ -45,7 +45,6 @@ const StrategicPartners = () => {
       });
   }, []);
 
-  // Performance Optimization: Auto-scroll logic for mobile only
   useEffect(() => {
     if (!isMobile || loading || partners.length === 0) return;
 
@@ -118,17 +117,21 @@ const StrategicPartners = () => {
                 onScroll={handleScroll}
                 sx={{
                   width: '100%',
-                  // Layout Strategy: Grid for Laptop, Flex for Mobile Slider
                   display: isMobile ? 'flex' : 'grid',
                   flexDirection: isMobile ? 'row' : 'unset',
                   overflowX: isMobile ? 'auto' : 'visible',
                   scrollSnapType: isMobile ? 'x mandatory' : 'none',
+                  
+                  // CHANGED: Configured grid to scale up to 4 columns on medium/large viewports
                   gridTemplateColumns: {
                     sm: 'repeat(2, 1fr)',
-                    md: 'repeat(3, 1fr)'
+                    md: 'repeat(4, 1fr)' 
                   },
-                  gap: { xs: 2.5, md: 5 },
-                  maxWidth: '1200px',
+                  
+                  // CHANGED: Slightly optimized gap to give 4 cards comfortable breathing room
+                  gap: { xs: 2.5, md: 3 },
+                  maxWidth: '1400px', 
+                  
                   mx: 'auto',
                   '&::-webkit-scrollbar': { display: 'none' },
                   scrollbarWidth: 'none',
@@ -166,15 +169,16 @@ const StrategicPartners = () => {
                             image={partner.LogoImageURL}
                             alt={partner.PartnerName}
                             sx={{
-                              height: { xs: 160, md: 220 },
+                              // CHANGED: Reduced desktop image height slightly so cards don't look overly tall/skinny
+                              height: { xs: 160, md: 170 }, 
                               objectFit: 'contain',
                               backgroundColor: '#ffffff',
-                              p: 4,
+                              p: 3, // Slightly reduced padding for a better logo scale
                             }}
                           />
                         )}
 
-                        <CardContent sx={{ p: { xs: 3, md: 4 }, textAlign: 'center', flexGrow: 1 }}>
+                        <CardContent sx={{ p: { xs: 3, md: 3 }, textAlign: 'center', flexGrow: 1 }}>
                           <Typography
                             variant="h6"
                             sx={{
@@ -182,7 +186,8 @@ const StrategicPartners = () => {
                               color: BRAND.gold, 
                               mb: 1.5,
                               textTransform: 'uppercase',
-                              fontSize: { xs: '1.1rem', md: '1.25rem' }
+                              // CHANGED: Shrunk typography slightly so multi-word names don't wrap awkwardly
+                              fontSize: { xs: '1.1rem', md: '1.1rem' } 
                             }}
                           >
                             {partner.PartnerName}
@@ -192,8 +197,8 @@ const StrategicPartners = () => {
                             variant="body2"
                             sx={{
                               color: BRAND.textMuted, 
-                              lineHeight: 1.8,
-                              fontSize: { xs: '0.85rem', md: '0.95rem' },
+                              lineHeight: 1.7,
+                              fontSize: { xs: '0.85rem', md: '0.9rem' },
                               maxWidth: '280px',
                               mx: 'auto'
                             }}
@@ -207,7 +212,6 @@ const StrategicPartners = () => {
                 ))}
               </Box>
 
-              {/* Dot Indicators for Mobile Navigation */}
               {isMobile && partners.length > 0 && (
                 <Stack direction="row" spacing={1.5}>
                   {partners.map((_, i) => (
