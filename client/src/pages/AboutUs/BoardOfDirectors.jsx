@@ -11,7 +11,7 @@ import {
   CircularProgress 
 } from '@mui/material';
 import { motion } from 'framer-motion';
-import Footer from '../../components/Footer';
+// import Footer from '../../components/Footer';
 
 const BoardOfDirectors = () => {
   const [bodList, setBodList] = useState([]);
@@ -186,7 +186,7 @@ const BoardOfDirectors = () => {
       </Container>
 
       <Box sx={{ mt: 10 }}>
-        <Footer />
+        {/* <Footer /> */}
       </Box>
     </Box>
   );
