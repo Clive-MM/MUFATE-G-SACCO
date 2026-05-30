@@ -6,7 +6,7 @@ import SaccoIdentitySection from '../components/SaccoIdentitySection';
 import OurProductsSection from '../components/ProductSection';
 import TestimonialsSection from '../components/TestimonialsSection';
 import FeedbackBanner from '../components/FeedbackBanner';
-import Footer from '../components/Footer';
+// import Footer from '../components/Footer';
 import HolidayBanner from '../components/HolidayBanner';
 
 
@@ -21,7 +21,7 @@ const Home = () => {
        <OurProductsSection />
        <TestimonialsSection/>
        <FeedbackBanner/>
-       <Footer/>
+       {/* <Footer/> */}
      
     </>
   );
