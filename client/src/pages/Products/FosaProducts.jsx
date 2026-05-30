@@ -17,7 +17,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import Footer from '../../components/Footer';
+// import Footer from '../../components/Footer';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -252,7 +252,7 @@ const FosaProducts = () => {
           opacity: 0.3
         }}
       />
-      <Footer />
+      {/* <Footer /> */}
     </Box>
   );
 };

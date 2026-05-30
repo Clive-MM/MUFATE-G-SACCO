@@ -20,7 +20,7 @@ import SavingsIcon from '@mui/icons-material/Savings';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import Footer from '../../components/Footer';
+// import Footer from '../../components/Footer';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -159,7 +159,7 @@ const SavingsProducts = () => {
         }}
       />
 
-      <Footer />
+      {/* <Footer /> */}
     </Box>
   );
 };
