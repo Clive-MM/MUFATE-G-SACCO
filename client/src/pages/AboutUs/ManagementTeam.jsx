@@ -6,7 +6,7 @@ import {
   Box, Typography, Card, CardMedia, CardContent,
   Grid, Skeleton, Container
 } from '@mui/material';
-// import Footer from '../../components/Footer';
+import Footer from '../../components/Footer';
 import { motion } from 'framer-motion';
 
 const ManagementTeam = () => {
@@ -185,7 +185,7 @@ const ManagementTeam = () => {
       </Container>
 
       <Box sx={{ mt: 'auto' }}>
-        {/* <Footer /> */}
+        <Footer />
       </Box>
     </Box>
   );

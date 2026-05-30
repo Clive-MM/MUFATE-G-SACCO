@@ -3,7 +3,7 @@ import axios from 'axios';
 import AboutHero from './AboutHero';
 import AboutUsSection from './AboutUsSection';
 import BranchesSection from './BranchesSection';
-// import Footer from '../../components/Footer';
+import Footer from '../../components/Footer';
 
 const AboutUs = () => {
   const [branches, setBranches] = useState([]);
@@ -28,7 +28,7 @@ const AboutUs = () => {
       <AboutHero />
       <AboutUsSection /> 
       <BranchesSection branches={branches} coreValues={coreValues} />
-      {/* <Footer /> */}
+      <Footer />
     </main>
   );
 };
