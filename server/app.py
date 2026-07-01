@@ -23,6 +23,9 @@ app = Flask(__name__)
 # CORS: allow Vercel frontend and main site to call this backend
 # 1. Define your allowed origins clearly
 ALLOWED_ORIGINS = [
+    "https://goldengenerationsacco.co.ke",
+    "https://www.goldengenerationsacco.co.ke",
+    "https://admin.goldengenerationsacco.co.ke",
     "https://mufate-g-sacco.vercel.app",
     "http://localhost:3000"
 ]
