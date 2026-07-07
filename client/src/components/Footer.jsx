@@ -229,7 +229,7 @@ const Footer = () => {
             <Box sx={contactItemStyle}>
               <Email sx={iconWrapperStyle} />
               <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>
-                info@mudetesacco.co.ke
+                info@goldengenerationsacco.co.ke
               </Typography>
             </Box>
 
