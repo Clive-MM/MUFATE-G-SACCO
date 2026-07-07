@@ -166,7 +166,7 @@ const ContactDetails = () => {
                       <EmailIcon sx={iconStyle} />
                       <Box>
                         <Typography sx={infoLabel}>Email Support</Typography>
-                        <Typography component="a" href="mailto:info@mudetesacco.co.ke" sx={linkHover}>info@mudetesacco.co.ke</Typography>
+                        <Typography component="a" href="mailto:info@goldengenerationsacco.co.ke" sx={linkHover}>info@goldengenerationsacco.co.ke</Typography>
                       </Box>
                     </Box>
 
