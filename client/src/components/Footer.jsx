@@ -219,7 +219,7 @@ const Footer = () => {
             <Box sx={contactItemStyle}>
               <LocationOn sx={iconWrapperStyle} />
               <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>
-                Khayega - Kakamega
+                Khayega - Kakamega , 
               </Typography>
               <Typography sx={{ color: BRAND.textMuted, fontSize: '0.88rem' }}>
                 Mudete - Vihiga
