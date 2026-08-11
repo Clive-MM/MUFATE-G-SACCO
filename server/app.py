@@ -30,25 +30,17 @@ ALLOWED_ORIGINS = [
     "http://localhost:3000"
 ]
 
-# 2. Perfected CORS Configuration
 CORS(
     app,
     resources={
         r"/*": {
-            "origins": ALLOWED_ORIGINS,
-            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            "allow_headers": [
-                "Content-Type", 
-                "Authorization", 
-                "Access-Control-Allow-Origin"
-            ],
-            "expose_headers": ["Content-Type", "Authorization"],
-            "supports_credentials": True,
-            "max_age": 3600 # Cache pre-flight response for 1 hour to improve performance
+            "origins": ALLOWED_ORIGINS
         }
-    }
+    },
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    expose_headers=["Content-Type", "Authorization"]
 )
-
 # -----------------------------
 # Core config
 # -----------------------------
