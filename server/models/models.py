@@ -206,14 +206,15 @@ class FeedbackStatus(db.Model):
 class Feedback(db.Model):
     __tablename__ = 'Feedback'
 
-    FeedbackID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Email = db.Column(db.String(100))
-    PhoneNumber = db.Column(db.String(20))   # ✅ NEW
-    Subject = db.Column(db.String(200))
-    Message = db.Column(db.Text)
-    StatusID = db.Column(db.Integer, db.ForeignKey('Feedback_Status.StatusID'))
-    status = db.relationship('FeedbackStatus', backref='feedbacks')
-    SubmittedAt = db.Column(db.DateTime, default=datetime.utcnow)
+    FeedbackID = db.Column( db.Integer,primary_key=True, autoincrement=True)
+    ReferenceNumber = db.Column(db.String(30),unique=True,nullable=False)
+    Email = db.Column(db.String(100),nullable=True)
+    PhoneNumber = db.Column(db.String(20),nullable=True)
+    Subject = db.Column(db.String(200),nullable=False)
+    Message = db.Column(db.Text,nullable=False)
+    StatusID = db.Column(db.Integer,db.ForeignKey('Feedback_Status.StatusID'),nullable=False)
+    status = db.relationship('FeedbackStatus',backref='feedbacks')
+    SubmittedAt = db.Column(db.DateTime,default=datetime.utcnow,nullable=False)
 
 
 class FAQ(db.Model):

@@ -12,6 +12,7 @@ from datetime import date, timedelta
 from calendar import monthrange
 from sqlalchemy.exc import IntegrityError
 import traceback
+from zoneinfo import ZoneInfo
 
 
 
@@ -1582,80 +1583,221 @@ def get_holiday_message():
     else:
         return jsonify({'message': None}), 200
 
-#  ✅ Public route to submit feedback
-
+# ✅ Public route to submit feedback
 
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
-        # 1️⃣ Get and validate data
+        # 1️⃣ Get and validate JSON data
         data = request.get_json(silent=True)
+
         if not data:
-            return jsonify({'message': '❌ Invalid JSON payload.'}), 400
+            return jsonify({
+                'success': False,
+                'message': 'Invalid JSON payload.'
+            }), 400
 
         email = data.get('Email')
         phone = data.get('PhoneNumber')
         subject = data.get('Subject')
         message = data.get('Message')
 
-        if not email or not subject or not message:
+        # Clean input
+        email = email.strip() if email else None
+        phone = phone.strip().replace(' ', '') if phone else None
+        subject = subject.strip() if subject else None
+        message = message.strip() if message else None
+
+        # Email and phone are OPTIONAL.
+        # Subject and message are REQUIRED.
+        if not subject or not message:
             return jsonify({
-                'message': '❌ Email, Subject, and Message are required!'
+                'success': False,
+                'message': 'Subject and Message are required.'
             }), 400
 
-        # 2️⃣ Save feedback to database
+        # 2️⃣ Create feedback record
+        # StatusID = 1 → Unread
         feedback = Feedback(
             Email=email,
-            PhoneNumber=phone.strip().replace(' ', '') if phone else None,
+            PhoneNumber=phone,
             Subject=subject,
             Message=message,
-            StatusID=1  # Unread
+            StatusID=1
         )
+
         db.session.add(feedback)
-        db.session.commit() # Database record is now permanent
 
-        # 3️⃣ Prepare Emails (Logic remains the same)
+        # 3️⃣ Flush the record
+        # This allows SQL Server to generate FeedbackID
+        # before the final commit.
+        db.session.flush()
+
+        # 4️⃣ Generate unique Reference Number
+        #
+        # Format:
+        # FB-YYYYMMDD-XXXXXX
+        #
+        # Example:
+        # FB-20260824-000125
+
+        kenya_time = datetime.now(
+            ZoneInfo("Africa/Nairobi")
+        )
+
+        reference_number = (
+            f"FB-{kenya_time.strftime('%Y%m%d')}-"
+            f"{feedback.FeedbackID:06d}"
+        )
+
+        feedback.ReferenceNumber = reference_number
+
+        # 5️⃣ Commit feedback to database
+        #
+        # At this point the feedback is permanently saved.
+        db.session.commit()
+
+        print(
+            f"✅ Feedback committed successfully: "
+            f"{reference_number}"
+        )
+
+        # 6️⃣ Prepare ADMIN notification email
+
         admin_msg = Message(
-            subject=f"📥 New Website Feedback: {subject}",
+            subject=f"📥 New Website Feedback - {reference_number}",
             sender=current_app.config['MAIL_USERNAME'],
-            recipients=["maderumoyia@mudetesacco.co.ke"],
-            body=f"New feedback received.\n\nFrom: {email}\nPhone: {phone or 'N/A'}\nSubject: {subject}\n\nMessage:\n{message}"
+            recipients=[
+                "maderumoyia@goldengenerationsacco.co.ke"
+            ],
+            body=f"""
+NEW WEBSITE FEEDBACK RECEIVED
+
+Reference Number: {reference_number}
+
+Subject:
+{subject}
+
+Email:
+{email or 'Not provided'}
+
+Phone Number:
+{phone or 'Not provided'}
+
+Message:
+{message}
+
+Status:
+Unread
+
+Submitted:
+{kenya_time.strftime('%d %B %Y, %I:%M %p')}
+
+Please log in to the Golden Generation DT SACCO
+admin system to review the feedback.
+
+Regards,
+Golden Generation DT SACCO Website
+"""
         )
 
-        user_msg = Message(
-            subject="✅ Thank you for contacting Golden Generation DT SACCO",
-            sender=current_app.config['MAIL_USERNAME'],
-            recipients=[email],
-            body=f"Dear Member,\n\nWe have successfully received your message regarding: \"{subject}\".\n\nWarm regards,\nGolden Generation DT SACCO"
-        )
+        # 7️⃣ Send ADMIN notification
+        #
+        # If email fails, the database record remains saved.
 
-        # 4️⃣ SAFE SEND LOGIC
-        # We wrap this in a separate try-except so a slow mail server 
-        # doesn't trigger a 502 Bad Gateway for the user.
         if mail:
             try:
                 mail.send(admin_msg)
-                mail.send(user_msg)
-            except Exception as email_err:
-                # Log the error to Render console so you can debug Safaricom SMTP
-                print(f"📧 SMTP Error (Non-critical): {email_err}")
-                # We do NOT return an error here; the DB save was already successful.
 
-        # 5️⃣ Return success response
+                print(
+                    f"📧 Admin notification sent successfully "
+                    f"for {reference_number}"
+                )
+
+            except Exception as email_err:
+                print(
+                    f"⚠️ Admin email notification failed "
+                    f"for {reference_number}: {email_err}"
+                )
+
+        # 8️⃣ Send acknowledgement email to USER
+        #
+        # Only if the visitor provided an email address.
+
+        if email and mail:
+
+            user_msg = Message(
+                subject=f"✅ Feedback Received - {reference_number}",
+                sender=current_app.config['MAIL_USERNAME'],
+                recipients=[email],
+                body=f"""
+Dear Member,
+
+Thank you for contacting Golden Generation DT SACCO.
+
+We have successfully received your feedback.
+
+Reference Number:
+{reference_number}
+
+Subject:
+{subject}
+
+Your feedback has been recorded and will be reviewed
+by the SACCO.
+
+Please keep the above reference number for future
+communication regarding your feedback.
+
+Warm regards,
+
+Golden Generation DT SACCO
+"""
+            )
+
+            try:
+                mail.send(user_msg)
+
+                print(
+                    f"📧 User acknowledgement sent successfully "
+                    f"to {email} for {reference_number}"
+                )
+
+            except Exception as email_err:
+                print(
+                    f"⚠️ User acknowledgement email failed "
+                    f"for {reference_number}: {email_err}"
+                )
+
+        # 9️⃣ Return success response to React
+        #
+        # This response is returned only after the
+        # database commit has succeeded.
+
         return jsonify({
-            'message': '😊 Thank you! Your feedback has been received.',
+            'success': True,
+            'message': (
+                'Thank you! Your feedback has been '
+                'received successfully.'
+            ),
+            'referenceNumber': reference_number,
             'feedback_id': feedback.FeedbackID
         }), 201
 
     except Exception as e:
-        # This block now only catches Database or Validation errors
-        db.session.rollback()
-        traceback.print_exc()
-        return jsonify({
-            'message': '❌ Failed to submit feedback.',
-            'error': str(e)
-        }), 500
 
+        # 🔴 Database/application error
+        db.session.rollback()
+
+        traceback.print_exc()
+
+        return jsonify({
+            'success': False,
+            'message': (
+                'We were unable to submit your feedback. '
+                'Please try again.'
+            )
+        }), 500
 
 
 # ✅Route to fetch active gallery photos
