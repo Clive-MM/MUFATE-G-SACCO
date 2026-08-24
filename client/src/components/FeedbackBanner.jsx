@@ -31,7 +31,7 @@ const FeedbackBanner = () => {
   // 1. Updated State to include PhoneNumber (Aligned with Backend Model)
   const [formData, setFormData] = useState({
     Email: '',
-    PhoneNumber: '', 
+    PhoneNumber: '',
     Subject: '',
     Message: ''
   });
@@ -41,30 +41,62 @@ const FeedbackBanner = () => {
   };
 
   const handleSubmit = async () => {
-    // Basic validation
-    if (!formData.Email || !formData.PhoneNumber || !formData.Message) {
-      enqueueSnackbar('❌ Please fill in all required fields.', { variant: 'warning' });
+    // Email and Phone Number are optional.
+    // Subject and Message are required.
+    if (!formData.Subject.trim() || !formData.Message.trim()) {
+      enqueueSnackbar(
+        '❌ Please enter a subject and your feedback message.',
+        { variant: 'warning' }
+      );
       return;
     }
 
     setLoading(true);
+
     try {
       const res = await axios.post(
         'https://mufate-g-sacco.onrender.com/feedback',
-        formData
+        {
+          Email: formData.Email.trim() || null,
+          PhoneNumber: formData.PhoneNumber.trim() || null,
+          Subject: formData.Subject.trim(),
+          Message: formData.Message.trim()
+        }
       );
-      
-      enqueueSnackbar(res.data.message || "✅ Feedback submitted successfully!", {
-        variant: 'success'
-      });
-      
+
+      const referenceNumber = res.data.referenceNumber;
+
+      enqueueSnackbar(
+        `✅ Feedback submitted successfully. Reference: ${referenceNumber}`,
+        {
+          variant: 'success',
+          autoHideDuration: 7000
+        }
+      );
+
+      // Close the form after successful submission
       setOpen(false);
-      // Reset form including PhoneNumber
-      setFormData({ Email: '', PhoneNumber: '', Subject: '', Message: '' });
+
+      // Reset form
+      setFormData({
+        Email: '',
+        PhoneNumber: '',
+        Subject: '',
+        Message: ''
+      });
+
     } catch (err) {
-      console.error("Submission Error:", err);
-      const serverMsg = err.response?.data?.message || '❌ Failed to submit feedback.';
-      enqueueSnackbar(serverMsg, { variant: 'error' });
+      console.error('Submission Error:', err);
+
+      const serverMsg =
+        err.response?.data?.message ||
+        '❌ Failed to submit feedback. Please try again.';
+
+      enqueueSnackbar(serverMsg, {
+        variant: 'error',
+        autoHideDuration: 6000
+      });
+
     } finally {
       setLoading(false);
     }
@@ -96,7 +128,7 @@ const FeedbackBanner = () => {
             suggestions, or experiences with GOLDEN GENERATION DT Sacco.
           </Typography>
 
-          <Button 
+          <Button
             variant="contained"
             onClick={() => setOpen(true)}
             sx={{
@@ -154,48 +186,53 @@ const FeedbackBanner = () => {
                 We’d Love to Hear from You
               </Typography>
               <Typography sx={{ opacity: 0.7, lineHeight: 1.6 }}>
-                Your feedback helps us improve our services. All responses are confidential and highly appreciated.
+                Your feedback helps us improve our services. You may submit your feedback anonymously, or provide your email or phone number if you would like us to contact you.
               </Typography>
             </Box>
 
             <Box sx={{ flex: 1.2, display: 'flex', flexDirection: 'column' }}>
               <TextField
-                label="Email"
+                label="Email (Optional)"
                 name="Email"
                 type="email"
                 value={formData.Email}
                 onChange={handleChange}
                 fullWidth
                 sx={textFieldStyles}
+                helperText="Provide your email if you would like us to respond."
               />
-              
-            
+
+
               <TextField
-                label="Phone Number"
+                label="Phone Number (Optional)"
                 name="PhoneNumber"
                 value={formData.PhoneNumber}
                 onChange={handleChange}
                 fullWidth
                 placeholder="e.g. 0712345678"
                 sx={textFieldStyles}
+                helperText="Optional. Provide your number if you would like us to contact you."
               />
 
               <TextField
-                label="Subject"
+                label="Subject *"
                 name="Subject"
                 value={formData.Subject}
                 onChange={handleChange}
                 fullWidth
+                required
                 sx={textFieldStyles}
               />
               <TextField
-                label="Message"
+                label="Message *"
                 name="Message"
                 value={formData.Message}
                 onChange={handleChange}
                 multiline
                 rows={4}
                 fullWidth
+                required
+                placeholder="Tell us about your feedback, suggestion, complaint or experience..."
                 sx={textFieldStyles}
               />
 
