@@ -1627,7 +1627,7 @@ def submit_feedback():
         # Required because ReferenceNumber is NOT NULL
         # while SQL Server generates FeedbackID.
 
-        temporary_reference = f"TEMP-{uuid4().hex}"
+        temporary_reference = f"TEMP-{uuid4().hex[:20]}"
 
         # 4️⃣ Create feedback record
         # StatusID = 1 → Unread
