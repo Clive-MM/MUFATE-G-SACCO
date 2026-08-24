@@ -102,18 +102,49 @@ const FeedbackBanner = () => {
     }
   };
 
-  const textFieldStyles = {
-    mb: 2,
-    '& label': { color: 'rgba(255,255,255,0.6)' },
-    '& label.Mui-focused': { color: BRAND.gold },
-    '& .MuiOutlinedInput-root': {
-      color: BRAND.light,
-      '& fieldset': { borderColor: 'rgba(255,255,255,0.2)', borderRadius: '12px' },
-      '&:hover fieldset': { borderColor: BRAND.gold },
-      '&.Mui-focused fieldset': { borderColor: BRAND.gold },
-      bgcolor: 'rgba(255,255,255,0.03)',
+const textFieldStyles = {
+  mb: 2,
+
+  '& label': {
+    color: 'rgba(255,255,255,0.6)',
+  },
+
+  '& label.Mui-focused': {
+    color: BRAND.gold,
+  },
+
+  '& .MuiOutlinedInput-root': {
+    color: BRAND.light,
+
+    '& fieldset': {
+      borderColor: 'rgba(255,255,255,0.2)',
+      borderRadius: '12px',
     },
-  };
+
+    '&:hover fieldset': {
+      borderColor: BRAND.gold,
+    },
+
+    '&.Mui-focused fieldset': {
+      borderColor: BRAND.gold,
+    },
+
+    bgcolor: 'rgba(255,255,255,0.03)',
+  },
+
+  // ✅ Golden helper text
+  '& .MuiFormHelperText-root': {
+    color: BRAND.gold,
+    fontWeight: 500,
+    marginLeft: '4px',
+    marginTop: '5px',
+  },
+
+  // ✅ Keep helper text golden even when focused
+  '& .MuiFormHelperText-root.Mui-focused': {
+    color: BRAND.gold,
+  },
+};
 
   return (
     <Box sx={{ bgcolor: BRAND.dark, py: { xs: 8, md: 10 }, borderTop: `1px solid rgba(255,255,255,0.05)` }}>
