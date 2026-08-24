@@ -13,6 +13,7 @@ from calendar import monthrange
 from sqlalchemy.exc import IntegrityError
 import traceback
 from zoneinfo import ZoneInfo
+from uuid import uuid4
 
 
 
@@ -1585,6 +1586,7 @@ def get_holiday_message():
 
 # ✅ Public route to submit feedback
 
+
 @routes.route('/feedback', methods=['POST'])
 def submit_feedback():
     try:
@@ -1616,9 +1618,22 @@ def submit_feedback():
                 'message': 'Subject and Message are required.'
             }), 400
 
-        # 2️⃣ Create feedback record
+        # 2️⃣ Generate Kenya date/time
+        kenya_time = datetime.now(
+            ZoneInfo("Africa/Nairobi")
+        )
+
+        # 3️⃣ Generate temporary unique reference
+        # Required because ReferenceNumber is NOT NULL
+        # while SQL Server generates FeedbackID.
+
+        temporary_reference = f"TEMP-{uuid4().hex}"
+
+        # 4️⃣ Create feedback record
         # StatusID = 1 → Unread
+
         feedback = Feedback(
+            ReferenceNumber=temporary_reference,
             Email=email,
             PhoneNumber=phone,
             Subject=subject,
@@ -1628,12 +1643,12 @@ def submit_feedback():
 
         db.session.add(feedback)
 
-        # 3️⃣ Flush the record
-        # This allows SQL Server to generate FeedbackID
-        # before the final commit.
+        # 5️⃣ Flush the record
+        # SQL Server now generates FeedbackID.
+
         db.session.flush()
 
-        # 4️⃣ Generate unique Reference Number
+        # 6️⃣ Generate final public Reference Number
         #
         # Format:
         # FB-YYYYMMDD-XXXXXX
@@ -1641,20 +1656,18 @@ def submit_feedback():
         # Example:
         # FB-20260824-000125
 
-        kenya_time = datetime.now(
-            ZoneInfo("Africa/Nairobi")
-        )
-
         reference_number = (
             f"FB-{kenya_time.strftime('%Y%m%d')}-"
             f"{feedback.FeedbackID:06d}"
         )
 
+        # 7️⃣ Replace temporary reference
+        # with the final public reference number.
+
         feedback.ReferenceNumber = reference_number
 
-        # 5️⃣ Commit feedback to database
-        #
-        # At this point the feedback is permanently saved.
+        # 8️⃣ Permanently commit feedback to database
+
         db.session.commit()
 
         print(
@@ -1662,7 +1675,7 @@ def submit_feedback():
             f"{reference_number}"
         )
 
-        # 6️⃣ Prepare ADMIN notification email
+        # 9️⃣ Prepare ADMIN notification email
 
         admin_msg = Message(
             subject=f"📥 New Website Feedback - {reference_number}",
@@ -1673,7 +1686,8 @@ def submit_feedback():
             body=f"""
 NEW WEBSITE FEEDBACK RECEIVED
 
-Reference Number: {reference_number}
+Reference Number:
+{reference_number}
 
 Subject:
 {subject}
@@ -1701,7 +1715,7 @@ Golden Generation DT SACCO Website
 """
         )
 
-        # 7️⃣ Send ADMIN notification
+        # 🔟 Send ADMIN notification
         #
         # If email fails, the database record remains saved.
 
@@ -1716,11 +1730,11 @@ Golden Generation DT SACCO Website
 
             except Exception as email_err:
                 print(
-                    f"⚠️ Admin email notification failed "
+                    f"⚠️ Admin notification email failed "
                     f"for {reference_number}: {email_err}"
                 )
 
-        # 8️⃣ Send acknowledgement email to USER
+        # 1️⃣1️⃣ Send acknowledgement email to USER
         #
         # Only if the visitor provided an email address.
 
@@ -1769,7 +1783,7 @@ Golden Generation DT SACCO
                     f"for {reference_number}: {email_err}"
                 )
 
-        # 9️⃣ Return success response to React
+        # 1️⃣2️⃣ Return success response to React
         #
         # This response is returned only after the
         # database commit has succeeded.
@@ -1789,6 +1803,7 @@ Golden Generation DT SACCO
         # 🔴 Database/application error
         db.session.rollback()
 
+        print("❌ FEEDBACK SUBMISSION ERROR:")
         traceback.print_exc()
 
         return jsonify({
