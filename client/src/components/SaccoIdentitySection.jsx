@@ -96,21 +96,14 @@ const SaccoIdentitySection = () => {
 
   return (
     <Box
-      sx={{
-        width: '100%',
-        position: 'relative',
-        overflow: 'hidden',
-        background: `
-          radial-gradient(
-            ellipse at 50% 40%,
-            #073B27 0%,
-            #032419 45%,
-            #02150F 100%
-          )
-        `,
-        py: { xs: 7, md: 9 }
-      }}
-    >
+  sx={{
+    width: '100%',
+    position: 'relative',
+    overflow: 'hidden',
+    backgroundColor: BRAND.dark,
+    py: { xs: 7, md: 9 }
+  }}
+>
 
       {/* BACKGROUND DECORATIVE GLOW */}
       <Box
