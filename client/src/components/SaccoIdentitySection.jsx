@@ -1,27 +1,52 @@
-import React, { useEffect, useState, useRef } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
   CircularProgress,
-  Card,
-  CardContent,
-  CardActionArea,
   Container,
-  useTheme,
-  useMediaQuery,
-  Stack 
+  Stack
 } from '@mui/material';
+
 import { motion } from 'framer-motion';
-import FlagIcon from '@mui/icons-material/Flag';
-import StarIcon from '@mui/icons-material/Star';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import axios from 'axios';
 
+// Core value icons
+import GroupsIcon from '@mui/icons-material/Groups';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import BoltIcon from '@mui/icons-material/Bolt';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import BalanceIcon from '@mui/icons-material/Balance';
+
 const BRAND = {
-  gold: "#EC9B14",
-  lightGold: "#FFC25F",
-  dark: "#02150F",
-  light: "#F4F4F4",
+  gold: '#EC9B14',
+  lightGold: '#FFC25F',
+  green: '#1F4F2E',
+  dark: '#02150F',
+  white: '#F4F4F4'
+};
+
+// Cloudinary financial growth illustration
+const GROWTH_IMAGE =
+  'https://res.cloudinary.com/djydkcx01/image/upload/v1795697284/Investment_Growth_Orb_lxfcts.png';
+
+// Match icons to core value names
+const getValueIcon = (value) => {
+  const name = value.toLowerCase();
+
+  if (name.includes('teamwork')) return GroupsIcon;
+  if (name.includes('integrity')) return VerifiedUserIcon;
+  if (name.includes('competitiveness')) return EmojiEventsIcon;
+  if (name.includes('accountability')) return FactCheckIcon;
+  if (name.includes('service')) return WorkspacePremiumIcon;
+  if (name.includes('efficiency')) return BoltIcon;
+  if (name.includes('social')) return VolunteerActivismIcon;
+  if (name.includes('fairness')) return BalanceIcon;
+
+  return VerifiedUserIcon;
 };
 
 const SaccoIdentitySection = () => {
@@ -29,196 +54,506 @@ const SaccoIdentitySection = () => {
   const [vision, setVision] = useState('');
   const [coreValues, setCoreValues] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCard, setSelectedCard] = useState(0);
-  
-  const scrollRef = useRef(null);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    const fetchProfile = axios.get('https://mufate-g-sacco.onrender.com/sacco-profile');
-    const fetchCoreValues = axios.get('https://mufate-g-sacco.onrender.com/corevalues');
+    const fetchIdentity = async () => {
+      try {
+        const [profileRes, valuesRes] = await Promise.all([
+          axios.get(
+            'https://mufate-g-sacco.onrender.com/sacco-profile'
+          ),
+          axios.get(
+            'https://mufate-g-sacco.onrender.com/corevalues'
+          )
+        ]);
 
-    Promise.all([fetchProfile, fetchCoreValues])
-      .then(([profileRes, valuesRes]) => {
-        setMission(profileRes.data.MissionStatement || "");
-        setVision(profileRes.data.VisionStatement || "");
-        setCoreValues(valuesRes.data.core_values?.map((v) => v.CoreValueName) || []);
+        setMission(
+          profileRes.data.MissionStatement || ''
+        );
+
+        setVision(
+          profileRes.data.VisionStatement || ''
+        );
+
+        setCoreValues(
+          valuesRes.data.core_values?.map(
+            value => value.CoreValueName
+          ) || []
+        );
+
+      } catch (error) {
+        console.error(
+          'Error fetching SACCO identity:',
+          error
+        );
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching identity data:', err);
-        setLoading(false);
-      });
+      }
+    };
+
+    fetchIdentity();
   }, []);
 
-  // Sync scroll position with dot indicators
-  const handleScroll = () => {
-    if (scrollRef.current && isMobile) {
-      const scrollPosition = scrollRef.current.scrollLeft;
-      const cardWidth = scrollRef.current.offsetWidth * 0.88;
-      const index = Math.round(scrollPosition / cardWidth);
-      if (index !== selectedCard) setSelectedCard(index);
-    }
-  };
-
-  const identityCards = [
-    { id: 0, title: 'Our Mission', icon: <FlagIcon sx={{ fontSize: { xs: 38, md: 50 } }} />, content: mission },
-    {
-      id: 1,
-      title: 'Our Values',
-      icon: <StarIcon sx={{ fontSize: { xs: 38, md: 50 } }} />,
-      content: (
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(2, 1fr)', 
-          gap: 1, 
-          width: '100%',
-          textAlign: 'left' 
-        }}>
-          {coreValues.map((v, i) => (
-            <Typography key={i} sx={{ color: BRAND.lightGold, fontWeight: 600, fontSize: { xs: '0.7rem', md: '0.9rem' } }}>
-              • {v}
-            </Typography>
-          ))}
-        </Box>
-      ),
-    },
-    { id: 2, title: 'Our Vision', icon: <VisibilityIcon sx={{ fontSize: { xs: 38, md: 50 } }} />, content: vision },
-  ];
-
   return (
-    <Box sx={{ bgcolor: BRAND.dark, py: { xs: 8, md: 15 }, width: '100%' }}>
+    <Box
+      sx={{
+        width: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        background: `
+          radial-gradient(
+            ellipse at 50% 40%,
+            #073B27 0%,
+            #032419 45%,
+            #02150F 100%
+          )
+        `,
+        py: { xs: 7, md: 9 }
+      }}
+    >
+
+      {/* BACKGROUND DECORATIVE GLOW */}
+      <Box
+        sx={{
+          position: 'absolute',
+          width: 450,
+          height: 450,
+          borderRadius: '50%',
+          background: 'rgba(16,120,65,0.13)',
+          filter: 'blur(100px)',
+          top: -200,
+          right: '-5%',
+          pointerEvents: 'none'
+        }}
+      />
+
+      <Box
+        sx={{
+          position: 'absolute',
+          width: 400,
+          height: 400,
+          borderRadius: '50%',
+          background: 'rgba(236,155,20,0.07)',
+          filter: 'blur(100px)',
+          bottom: -200,
+          left: '-5%',
+          pointerEvents: 'none'
+        }}
+      />
+
       <Container maxWidth="xl">
-        <Typography 
-          variant="h2" 
-          textAlign="center" 
-          sx={{ 
-            color: BRAND.gold, 
-            fontWeight: 900, 
-            mb: { xs: 6, md: 10 }, 
-            textTransform: 'uppercase',
-            fontSize: { xs: '2rem', md: '3.5rem' },
-            letterSpacing: '0.1rem'
-          }}
-        >
-          Our Identity
-        </Typography>
 
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
-            <CircularProgress sx={{ color: BRAND.gold }} />
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              py: 12
+            }}
+          >
+            <CircularProgress
+              sx={{ color: BRAND.gold }}
+            />
           </Box>
         ) : (
-          <Stack spacing={4} alignItems="center">
+
+          <Stack spacing={{ xs: 5, md: 3 }}>
+
+            {/* MISSION - IMAGE - VISION */}
             <Box
-              ref={scrollRef}
-              onScroll={handleScroll}
               sx={{
-                width: '100%',
-                display: isMobile ? 'flex' : 'grid',
-                flexDirection: isMobile ? 'row' : 'unset',
-                overflowX: isMobile ? 'auto' : 'visible',
-                scrollSnapType: isMobile ? 'x mandatory' : 'none',
+                display: 'grid',
                 gridTemplateColumns: {
-                  sm: 'repeat(2, 1fr)',
-                  md: 'repeat(3, 1fr)'
+                  xs: '1fr',
+                  md: '1fr 1.2fr 1fr'
                 },
-                gap: { xs: 2.5, md: 4 },
-                maxWidth: '1200px',
-                mx: 'auto',
-                '&::-webkit-scrollbar': { display: 'none' },
-                scrollbarWidth: 'none',
+                alignItems: 'center',
+                gap: { xs: 4, md: 2 },
+                minHeight: { md: 390 }
               }}
             >
-              {identityCards.map((card, index) => (
-                <Box 
-                  key={card.id} 
-                  sx={{ 
-                    minWidth: isMobile ? '88%' : 'auto', 
-                    scrollSnapAlign: 'center',
-                    flexShrink: 0,
-                    display: 'flex'
+
+              {/* MISSION */}
+              <Box
+                component={motion.div}
+                initial={{ opacity: 0, x: -35 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                sx={{
+                  textAlign: { xs: 'center', md: 'left' },
+                  px: { xs: 2, md: 1 }
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: BRAND.white,
+                    fontWeight: 900,
+                    fontSize: {
+                      xs: '2.5rem',
+                      md: '3.3rem'
+                    },
+                    lineHeight: 1.05
                   }}
                 >
-                  <Card 
-                    component={motion.div}
-                    // RE-ADDED MOTION: Restores the laptop hover effect and fixes lint error
-                    whileHover={!isMobile ? { y: -10 } : {}}
-                    sx={{ 
-                      bgcolor: 'rgba(255, 255, 255, 0.03)', 
-                      border: selectedCard === index ? `2px solid ${BRAND.gold}` : '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '32px',
-                      color: BRAND.light,
-                      width: '100%',
-                      minHeight: { xs: '380px', md: '450px' }, 
-                      display: 'flex',
-                      transition: 'border 0.4s ease, background 0.4s ease'
+                  Our
+                  <Box
+                    component="span"
+                    sx={{
+                      display: 'block',
+                      color: BRAND.gold
                     }}
                   >
-                    <CardActionArea sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                      <CardContent sx={{ 
-                        width: '100%',
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        alignItems: 'center', 
-                        textAlign: 'center',
-                        p: { xs: 3, md: 5 }
-                      }}>
-                        <Box sx={{ color: BRAND.gold, mb: 3 }}>
-                          {card.icon}
-                        </Box>
-                        <Typography 
-                          variant="h5" 
-                          sx={{ 
-                            color: BRAND.gold, 
-                            fontWeight: 900, 
-                            mb: 2, 
-                            textTransform: 'uppercase', 
-                            fontSize: { xs: '1.2rem', md: '1.6rem' }
-                          }}
-                        >
-                          {card.title}
-                        </Typography>
-                        
-                        {/* THE FIX: MaxWidth forces long statements to wrap into short chunks */}
-                        <Typography sx={{ 
-                          opacity: 0.9, 
-                          lineHeight: 1.6, 
-                          fontSize: { xs: '0.88rem', md: '1.05rem' },
-                          fontWeight: 500,
-                          maxWidth: { xs: '260px', md: '100%' }, 
-                          mx: 'auto',
-                          wordBreak: 'break-word'
-                        }}>
-                          {card.content}
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Box>
-              ))}
+                    Mission
+                  </Box>
+                </Typography>
+
+                <Box
+                  sx={{
+                    width: 65,
+                    height: 5,
+                    bgcolor: BRAND.gold,
+                    borderRadius: 5,
+                    my: 2,
+                    mx: {
+                      xs: 'auto',
+                      md: 0
+                    }
+                  }}
+                />
+
+                <Typography
+                  sx={{
+                    color: 'rgba(255,255,255,0.9)',
+                    fontSize: {
+                      xs: '0.95rem',
+                      md: '1.08rem'
+                    },
+                    lineHeight: 1.65,
+                    fontWeight: 500,
+                    maxWidth: 430,
+                    mx: {
+                      xs: 'auto',
+                      md: 0
+                    }
+                  }}
+                >
+                  {mission}
+                </Typography>
+              </Box>
+
+
+              {/* CENTRAL FINANCIAL GROWTH IMAGE */}
+              <Box
+                component={motion.div}
+                initial={{ opacity: 0, scale: 0.85 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9 }}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'relative',
+                  minHeight: {
+                    xs: 300,
+                    md: 390
+                  }
+                }}
+              >
+
+                {/* Decorative glowing circle */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    width: {
+                      xs: 260,
+                      md: 380
+                    },
+                    height: {
+                      xs: 260,
+                      md: 380
+                    },
+                    borderRadius: '50%',
+                    border: '1px solid rgba(236,155,20,0.35)',
+                    boxShadow: `
+                      0 0 35px rgba(16,185,90,0.15),
+                      inset 0 0 35px rgba(236,155,20,0.08)
+                    `
+                  }}
+                />
+
+                <Box
+                  component="img"
+                  src={GROWTH_IMAGE}
+                  alt="Financial growth represented by a growing plant and savings"
+                  loading="lazy"
+                  sx={{
+                    width: '100%',
+                    maxWidth: {
+                      xs: 340,
+                      md: 470
+                    },
+                    height: 'auto',
+                    objectFit: 'contain',
+                    position: 'relative',
+                    zIndex: 1,
+                    filter: `
+                      drop-shadow(0 0 25px rgba(16,185,90,0.18))
+                    `
+                  }}
+                />
+
+              </Box>
+
+
+              {/* VISION */}
+              <Box
+                component={motion.div}
+                initial={{ opacity: 0, x: 35 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                sx={{
+                  textAlign: { xs: 'center', md: 'left' },
+                  px: { xs: 2, md: 1 }
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: BRAND.white,
+                    fontWeight: 900,
+                    fontSize: {
+                      xs: '2.5rem',
+                      md: '3.3rem'
+                    },
+                    lineHeight: 1.05
+                  }}
+                >
+                  Our
+                  <Box
+                    component="span"
+                    sx={{
+                      display: 'block',
+                      color: BRAND.gold
+                    }}
+                  >
+                    Vision
+                  </Box>
+                </Typography>
+
+                <Box
+                  sx={{
+                    width: 65,
+                    height: 5,
+                    bgcolor: BRAND.gold,
+                    borderRadius: 5,
+                    my: 2,
+                    mx: {
+                      xs: 'auto',
+                      md: 0
+                    }
+                  }}
+                />
+
+                <Typography
+                  sx={{
+                    color: 'rgba(255,255,255,0.9)',
+                    fontSize: {
+                      xs: '0.95rem',
+                      md: '1.08rem'
+                    },
+                    lineHeight: 1.65,
+                    fontWeight: 500,
+                    maxWidth: 380,
+                    mx: {
+                      xs: 'auto',
+                      md: 0
+                    }
+                  }}
+                >
+                  {vision}
+                </Typography>
+              </Box>
+
             </Box>
 
-            {/* DOT INDICATORS */}
-            {isMobile && (
-              <Stack direction="row" spacing={1.5} sx={{ mt: 1 }}>
-                {identityCards.map((_, i) => (
+
+            {/* CORE VALUES SECTION */}
+            <Box
+              component={motion.div}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              sx={{
+                pt: { xs: 2, md: 1 },
+                pb: 2
+              }}
+            >
+
+              {/* HEADING */}
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                spacing={{ xs: 1.5, md: 3 }}
+                sx={{ mb: 3.5 }}
+              >
+
+                <Box
+                  sx={{
+                    flex: 1,
+                    maxWidth: 150,
+                    height: 2,
+                    background: `
+                      linear-gradient(
+                        90deg,
+                        transparent,
+                        ${BRAND.gold}
+                      )
+                    `
+                  }}
+                />
+
+                <Typography
+                  sx={{
+                    color: BRAND.white,
+                    fontSize: {
+                      xs: '1.8rem',
+                      md: '2.7rem'
+                    },
+                    fontWeight: 900,
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  Our{' '}
                   <Box
-                    key={i}
-                    sx={{
-                      width: selectedCard === i ? 24 : 8,
-                      height: 8,
-                      borderRadius: 4,
-                      bgcolor: selectedCard === i ? BRAND.gold : 'rgba(255, 255, 255, 0.2)',
-                      transition: '0.4s all ease',
-                    }}
-                  />
-                ))}
+                    component="span"
+                    sx={{ color: BRAND.gold }}
+                  >
+                    Core Values
+                  </Box>
+                </Typography>
+
+                <Box
+                  sx={{
+                    flex: 1,
+                    maxWidth: 150,
+                    height: 2,
+                    background: `
+                      linear-gradient(
+                        90deg,
+                        ${BRAND.gold},
+                        transparent
+                      )
+                    `
+                  }}
+                />
+
               </Stack>
-            )}
+
+
+              {/* VALUE TILES */}
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: 'repeat(2, minmax(0, 1fr))',
+                    sm: 'repeat(2, minmax(0, 1fr))',
+                    md: 'repeat(4, minmax(0, 1fr))'
+                  },
+                  gap: {
+                    xs: 1.5,
+                    md: 2
+                  },
+                  maxWidth: 1250,
+                  mx: 'auto'
+                }}
+              >
+
+                {coreValues.map((value, index) => {
+                  const ValueIcon = getValueIcon(value);
+
+                  return (
+                    <Box
+                      key={`${value}-${index}`}
+                      component={motion.div}
+                      whileHover={{
+                        y: -5,
+                        borderColor: BRAND.gold,
+                        backgroundColor: 'rgba(14,75,43,0.75)'
+                      }}
+                      transition={{ duration: 0.25 }}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: {
+                          xs: 1,
+                          md: 1.5
+                        },
+                        minHeight: {
+                          xs: 70,
+                          md: 82
+                        },
+                        px: {
+                          xs: 1.2,
+                          md: 2
+                        },
+                        py: 1.2,
+                        borderRadius: '22px',
+                        background: `
+                          linear-gradient(
+                            135deg,
+                            rgba(10,76,43,0.65),
+                            rgba(2,34,23,0.85)
+                          )
+                        `,
+                        border: '1px solid rgba(22,180,99,0.55)',
+                        boxShadow: `
+                          0 0 15px rgba(0,180,90,0.08),
+                          inset 0 0 12px rgba(0,180,90,0.05)
+                        `,
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+
+                      <ValueIcon
+                        sx={{
+                          color: BRAND.gold,
+                          fontSize: {
+                            xs: 27,
+                            md: 40
+                          },
+                          flexShrink: 0
+                        }}
+                      />
+
+                      <Typography
+                        sx={{
+                          color: BRAND.white,
+                          fontWeight: 700,
+                          fontSize: {
+                            xs: '0.75rem',
+                            sm: '0.88rem',
+                            md: '1rem'
+                          },
+                          lineHeight: 1.35
+                        }}
+                      >
+                        {value}
+                      </Typography>
+
+                    </Box>
+                  );
+                })}
+
+              </Box>
+            </Box>
+
           </Stack>
         )}
+
       </Container>
     </Box>
   );
