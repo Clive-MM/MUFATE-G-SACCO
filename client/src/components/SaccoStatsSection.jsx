@@ -81,54 +81,10 @@ const SaccoStatsSection = () => {
         width: '100%',
         position: 'relative',
         overflow: 'hidden',
-        background: `
-          radial-gradient(
-            ellipse at 50% 45%,
-            rgba(13, 76, 42, 0.22),
-            transparent 65%
-          ),
-          linear-gradient(
-            135deg,
-            #02150F 0%,
-            #031B12 55%,
-            #02150F 100%
-          )
-        `,
+        backgroundColor: BRAND.dark,
         py: { xs: 7, md: 12 },
       }}
     >
-
-      {/* BACKGROUND DECORATIVE GLOWS */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '-10%',
-          left: '-8%',
-          width: { xs: 200, md: 400 },
-          height: { xs: 200, md: 400 },
-          borderRadius: '50%',
-          background: BRAND.green,
-          filter: 'blur(120px)',
-          opacity: 0.18,
-          pointerEvents: 'none',
-        }}
-      />
-
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: '-15%',
-          right: '-8%',
-          width: { xs: 200, md: 450 },
-          height: { xs: 200, md: 450 },
-          borderRadius: '50%',
-          background: BRAND.gold,
-          filter: 'blur(140px)',
-          opacity: 0.07,
-          pointerEvents: 'none',
-        }}
-      />
-
       <Container
         maxWidth="xl"
         sx={{
@@ -144,7 +100,6 @@ const SaccoStatsSection = () => {
             mb: { xs: 6, md: 10 },
           }}
         >
-
           {/* TOP DECORATIVE EMBLEM */}
           <motion.div
             initial={{ opacity: 0, y: -15 }}
@@ -179,7 +134,7 @@ const SaccoStatsSection = () => {
                 sx={{
                   fontSize: { xs: 34, md: 58 },
                   color: BRAND.gold,
-                  filter: 'drop-shadow(0 0 12px rgba(236,155,20,0.4))',
+                  filter: 'drop-shadow(0 0 12px rgba(236,155,20,0.3))',
                 }}
               />
 
@@ -226,9 +181,7 @@ const SaccoStatsSection = () => {
               Our Impact In{' '}
               <Box
                 component="span"
-                sx={{
-                  color: BRAND.gold,
-                }}
+                sx={{ color: BRAND.gold }}
               >
                 Numbers
               </Box>
@@ -253,12 +206,10 @@ const SaccoStatsSection = () => {
               `,
               mx: 'auto',
               mt: 2,
-              boxShadow: '0 0 12px rgba(236,155,20,0.3)',
+              boxShadow: '0 0 10px rgba(236,155,20,0.2)',
             }}
           />
-
         </Box>
-
 
         {/* STATISTICS */}
         {loading ? (
@@ -317,7 +268,6 @@ const SaccoStatsSection = () => {
                       },
                     }}
                   >
-
                     {/* STAT CARD */}
                     <Box
                       sx={{
@@ -348,36 +298,35 @@ const SaccoStatsSection = () => {
                           md: '32px',
                         },
 
+                        // Use only established brand greens and gold
                         background: isFeatured
                           ? `
                             linear-gradient(
                               145deg,
-                              rgba(236,155,20,0.25),
-                              rgba(17,49,26,0.98) 48%,
-                              rgba(3,25,16,1)
+                              rgba(31,79,46,0.95),
+                              ${BRAND.dark} 75%
                             )
                           `
                           : `
                             linear-gradient(
                               145deg,
-                              rgba(20,95,53,0.65),
-                              rgba(3,37,23,0.94) 55%,
-                              rgba(2,21,15,0.98)
+                              rgba(31,79,46,0.55),
+                              ${BRAND.dark} 85%
                             )
                           `,
 
                         border: isFeatured
                           ? `2px solid ${BRAND.gold}`
-                          : '1.5px solid rgba(22, 150, 79, 0.55)',
+                          : '1.5px solid rgba(31,79,46,0.9)',
 
                         boxShadow: isFeatured
                           ? `
-                            0 0 25px rgba(236,155,20,0.12),
-                            inset 0 0 35px rgba(236,155,20,0.06)
+                            0 0 22px rgba(236,155,20,0.10),
+                            inset 0 0 30px rgba(236,155,20,0.04)
                           `
                           : `
                             0 12px 30px rgba(0,0,0,0.16),
-                            inset 0 0 25px rgba(22,150,79,0.04)
+                            inset 0 0 25px rgba(31,79,46,0.08)
                           `,
 
                         transition: 'all 0.35s ease',
@@ -386,13 +335,12 @@ const SaccoStatsSection = () => {
                           borderColor: BRAND.gold,
                           boxShadow: `
                             0 15px 35px rgba(0,0,0,0.25),
-                            0 0 25px rgba(236,155,20,0.12)
+                            0 0 22px rgba(236,155,20,0.10)
                           `,
                         },
                       }}
                     >
-
-                      {/* TOP INNER GLOW */}
+                      {/* SUBTLE CARD HIGHLIGHT */}
                       <Box
                         sx={{
                           position: 'absolute',
@@ -401,8 +349,8 @@ const SaccoStatsSection = () => {
                           width: '70%',
                           height: '45%',
                           background: isFeatured
-                            ? 'rgba(236,155,20,0.10)'
-                            : 'rgba(22,150,79,0.10)',
+                            ? 'rgba(236,155,20,0.07)'
+                            : 'rgba(31,79,46,0.2)',
                           filter: 'blur(55px)',
                           borderRadius: '50%',
                           pointerEvents: 'none',
@@ -439,14 +387,14 @@ const SaccoStatsSection = () => {
                           background: `
                             radial-gradient(
                               circle,
-                              rgba(236,155,20,0.16),
-                              rgba(2,21,15,0.9)
+                              rgba(236,155,20,0.12),
+                              ${BRAND.dark}
                             )
                           `,
 
                           boxShadow: `
-                            0 0 18px rgba(236,155,20,0.13),
-                            inset 0 0 12px rgba(236,155,20,0.08)
+                            0 0 16px rgba(236,155,20,0.10),
+                            inset 0 0 12px rgba(236,155,20,0.06)
                           `,
 
                           mb: { xs: 2, md: 2.5 },
@@ -460,11 +408,10 @@ const SaccoStatsSection = () => {
                               sm: 35,
                               md: 48,
                             },
-                            filter: 'drop-shadow(0 0 8px rgba(236,155,20,0.35))',
+                            filter: 'drop-shadow(0 0 8px rgba(236,155,20,0.3))',
                           }}
                         />
                       </Box>
-
 
                       {/* ANIMATED FIGURE */}
                       <Typography
@@ -483,11 +430,10 @@ const SaccoStatsSection = () => {
                           lineHeight: 1.2,
                           letterSpacing: '-0.025em',
                           whiteSpace: 'nowrap',
-
                           mb: 1,
 
                           textShadow: `
-                            0 0 15px rgba(236,155,20,0.15)
+                            0 0 15px rgba(236,155,20,0.12)
                           `,
                         }}
                       >
@@ -498,7 +444,6 @@ const SaccoStatsSection = () => {
                           suffix="+"
                         />
                       </Typography>
-
 
                       {/* STATISTIC LABEL */}
                       <Typography
@@ -520,19 +465,17 @@ const SaccoStatsSection = () => {
                         {item.label}
                       </Typography>
 
-
-                      {/* SMALL GREEN ACCENT */}
+                      {/* GREEN ACCENT */}
                       <Box
                         sx={{
                           width: { xs: 38, md: 55 },
                           height: 4,
                           borderRadius: 5,
-                          bgcolor: '#159447',
+                          bgcolor: BRAND.green,
                           mt: { xs: 1.5, md: 2 },
-                          boxShadow: '0 0 10px rgba(21,148,71,0.35)',
+                          boxShadow: '0 0 10px rgba(31,79,46,0.4)',
                         }}
                       />
-
 
                       {/* CURVED GOLD BOTTOM CORNER */}
                       <Box
@@ -569,7 +512,6 @@ const SaccoStatsSection = () => {
                           zIndex: -1,
                         }}
                       />
-
                     </Box>
                   </Box>
                 </Grid>
@@ -577,11 +519,9 @@ const SaccoStatsSection = () => {
             })}
           </Grid>
         )}
-
       </Container>
 
-
-      {/* BOTTOM DECORATIVE GREEN AND GOLD WAVES */}
+      {/* BOTTOM GREEN AND GOLD DECORATIVE WAVES */}
       <Box
         sx={{
           position: 'absolute',
@@ -591,7 +531,7 @@ const SaccoStatsSection = () => {
           height: { xs: 55, md: 95 },
           overflow: 'hidden',
           pointerEvents: 'none',
-          opacity: 0.8,
+          opacity: 0.55,
         }}
       >
         <svg
@@ -602,27 +542,26 @@ const SaccoStatsSection = () => {
         >
           <path
             d="M0,45 C260,110 420,120 690,75 C960,30 1160,0 1440,30 L1440,120 L0,120 Z"
-            fill="#0B542D"
-            opacity="0.45"
+            fill={BRAND.green}
+            opacity="0.35"
           />
 
           <path
             d="M0,45 C260,110 420,120 690,75 C960,30 1160,0 1440,30"
             fill="none"
-            stroke="#159447"
+            stroke={BRAND.green}
             strokeWidth="2"
           />
 
           <path
             d="M0,37 C260,102 420,112 690,67 C960,22 1160,-8 1440,22"
             fill="none"
-            stroke="#EC9B14"
+            stroke={BRAND.gold}
             strokeWidth="2"
             opacity="0.85"
           />
         </svg>
       </Box>
-
     </Box>
   );
 };
