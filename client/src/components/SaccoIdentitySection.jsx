@@ -29,7 +29,6 @@ const BRAND = {
   white: '#F4F4F4'
 };
 
-// Cloudinary financial growth illustration
 const GROWTH_IMAGE =
   'https://res.cloudinary.com/djydkcx01/image/upload/v1795697284/Investment_Growth_Orb_lxfcts.png';
 
@@ -96,44 +95,14 @@ const SaccoIdentitySection = () => {
 
   return (
     <Box
-  sx={{
-    width: '100%',
-    position: 'relative',
-    overflow: 'hidden',
-    backgroundColor: BRAND.dark,
-    py: { xs: 7, md: 9 }
-  }}
->
-
-      {/* BACKGROUND DECORATIVE GLOW */}
-      <Box
-        sx={{
-          position: 'absolute',
-          width: 450,
-          height: 450,
-          borderRadius: '50%',
-          background: 'rgba(16,120,65,0.13)',
-          filter: 'blur(100px)',
-          top: -200,
-          right: '-5%',
-          pointerEvents: 'none'
-        }}
-      />
-
-      <Box
-        sx={{
-          position: 'absolute',
-          width: 400,
-          height: 400,
-          borderRadius: '50%',
-          background: 'rgba(236,155,20,0.07)',
-          filter: 'blur(100px)',
-          bottom: -200,
-          left: '-5%',
-          pointerEvents: 'none'
-        }}
-      />
-
+      sx={{
+        width: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        backgroundColor: BRAND.dark,
+        py: { xs: 7, md: 9 }
+      }}
+    >
       <Container maxWidth="xl">
 
         {loading ? (
