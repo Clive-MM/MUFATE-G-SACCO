@@ -329,7 +329,7 @@ const ProductsSection = () => {
                 <Box
                   key={product.id}
                   sx={{
-                    minWidth: isMobile ? '88%' : 'auto',
+                    minWidth: isMobile ? '78%' : 'auto',
                     flexShrink: 0,
                     display: 'flex',
                     scrollSnapAlign: 'center',
