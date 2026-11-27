@@ -151,7 +151,7 @@ const TestimonialsSection = () => {
       direction="row"
       spacing={0.3}
       justifyContent="center"
-      sx={{ mb: 2.5 }}
+      sx={{ mb: { xs: 1.8, md: 2.5 } }}
     >
       {[1, 2, 3, 4, 5].map((star) => (
         <StarIcon
@@ -159,7 +159,7 @@ const TestimonialsSection = () => {
           sx={{
             color: BRAND.gold,
             fontSize: {
-              xs: 23,
+              xs: 21,
               md: 28,
             },
           }}
@@ -179,9 +179,9 @@ const TestimonialsSection = () => {
       <Box
         sx={{
           width: "100%",
-          height: "100%",
+          height: { xs: "auto", sm: "100%" },
           position: "relative",
-          pb: 4, // Extra space at bottom for the sharp tail
+          pb: { xs: 3.5, md: 4 }, // Extra space at bottom for the sharp tail
         }}
       >
         <Box
@@ -197,7 +197,7 @@ const TestimonialsSection = () => {
           sx={{
             width: "100%",
             minHeight: {
-              xs: 310,
+              xs: "auto",
               sm: 330,
               md: 350,
             },
@@ -207,12 +207,13 @@ const TestimonialsSection = () => {
             justifyContent: "center",
             alignItems: "center",
             px: {
-              xs: 3.5,
+              xs: 2.5,
               sm: 4,
               md: 4,
             },
             py: {
-              xs: 4,
+              xs: 3,
+              sm: 4,
               md: 4.5,
             },
             textAlign: "center",
@@ -238,7 +239,10 @@ const TestimonialsSection = () => {
               top: 0,
               left: 0,
               width: "100%",
-              height: "calc(100% + 34px)", // Extends downward to include the tail
+              height: {
+                xs: "calc(100% + 26px)",
+                md: "calc(100% + 34px)",
+              }, // Extends downward to include the tail
               pointerEvents: "none",
               zIndex: 0,
             }}
@@ -275,7 +279,7 @@ const TestimonialsSection = () => {
                 width: "100%",
                 maxWidth: 390,
                 mx: "auto",
-                mb: 2.5,
+                mb: { xs: 2, md: 2.5 },
               }}
             >
               {/* OPENING QUOTATION MARK */}
@@ -284,7 +288,7 @@ const TestimonialsSection = () => {
                 sx={{
                   color: BRAND.gold,
                   fontSize: {
-                    xs: "2.3rem",
+                    xs: "2rem",
                     md: "2.8rem",
                   },
                   fontWeight: 900,
@@ -303,11 +307,11 @@ const TestimonialsSection = () => {
                   fontStyle: "italic",
                   fontWeight: 500,
                   fontSize: {
-                    xs: "0.95rem",
+                    xs: "0.9rem",
                     sm: "1rem",
                     md: "1.08rem",
                   },
-                  lineHeight: 1.8,
+                  lineHeight: { xs: 1.65, md: 1.8 },
                   overflowWrap: "break-word",
                 }}
               >
@@ -320,7 +324,7 @@ const TestimonialsSection = () => {
                 sx={{
                   color: BRAND.gold,
                   fontSize: {
-                    xs: "2.3rem",
+                    xs: "2rem",
                     md: "2.8rem",
                   },
                   fontWeight: 900,
@@ -345,7 +349,7 @@ const TestimonialsSection = () => {
                   md: "0.07em",
                 },
                 fontSize: {
-                  xs: "0.78rem",
+                  xs: "0.75rem",
                   sm: "0.85rem",
                   md: "0.92rem",
                 },
@@ -489,18 +493,6 @@ const TestimonialsSection = () => {
                 WHAT OUR MEMBERS SAY
               </Typography>
             </motion.div>
-
-            {/* SHORT GOLD ACCENT */}
-            <Box
-              sx={{
-                width: 55,
-                height: 3,
-                bgcolor: BRAND.gold,
-                mx: "auto",
-                mt: 2.5,
-                borderRadius: 2,
-              }}
-            />
           </Box>
 
           {/* ERROR MESSAGE */}
@@ -533,7 +525,7 @@ const TestimonialsSection = () => {
                 md: "repeat(3, minmax(0, 1fr))",
               },
               gap: {
-                xs: 2.5,
+                xs: 2,
                 md: 3,
               },
               overflowX: isMobile ? "auto" : "visible",
@@ -541,7 +533,7 @@ const TestimonialsSection = () => {
                 ? "x mandatory"
                 : "none",
               scrollBehavior: "smooth",
-              alignItems: "center",
+              alignItems: isMobile ? "stretch" : "center",
               px: {
                 xs: 1,
                 md: 0,
@@ -560,14 +552,15 @@ const TestimonialsSection = () => {
                   <Box
                     key={index}
                     sx={{
-                      minWidth: isMobile ? "88%" : "auto",
+                      minWidth: isMobile ? "84%" : "auto",
+                      maxWidth: isMobile ? "84%" : "none",
                       scrollSnapAlign: "center",
                       pb: 4,
                     }}
                   >
                     <Box
                       sx={{
-                        minHeight: 350,
+                        minHeight: { xs: 240, sm: 350 },
                         border: "1px solid rgba(236,155,20,0.4)",
                         borderRadius: "24px",
                         bgcolor: BRAND.dark,
@@ -575,7 +568,7 @@ const TestimonialsSection = () => {
                         flexDirection: "column",
                         alignItems: "center",
                         justifyContent: "center",
-                        p: 4,
+                        p: { xs: 3, sm: 4 },
                       }}
                     >
                       <Skeleton
@@ -631,9 +624,11 @@ const TestimonialsSection = () => {
                   <Box
                     key={client.ClientID ?? index}
                     sx={{
-                      minWidth: isMobile ? "88%" : "auto",
+                      minWidth: isMobile ? "84%" : "auto",
+                      maxWidth: isMobile ? "84%" : "none",
                       flexShrink: 0,
                       display: "flex",
+                      alignItems: "center",
                       scrollSnapAlign: "center",
                     }}
                   >
