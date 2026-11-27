@@ -78,6 +78,29 @@ const AboutSection = () => {
     },
   ];
 
+  // HORIZONTAL SCROLL TO A SERVICE CARD
+  // This prevents the whole page from scrolling vertically.
+  const scrollToServiceCard = (index) => {
+    const container = scrollRef.current;
+    const card = container?.children[index];
+
+    if (!container || !card) return;
+
+    const cardPosition =
+      card.getBoundingClientRect().left -
+      container.getBoundingClientRect().left +
+      container.scrollLeft;
+
+    const left =
+      cardPosition -
+      (container.clientWidth - card.clientWidth) / 2;
+
+    container.scrollTo({
+      left,
+      behavior: 'smooth',
+    });
+  };
+
   // AUTOMATIC SCROLL LOGIC FOR MOBILE
   useEffect(() => {
     if (!isMobile) return;
@@ -86,17 +109,7 @@ const AboutSection = () => {
       setSelectedCard((prev) => {
         const next = (prev + 1) % services.length;
 
-        if (scrollRef.current) {
-          const card = scrollRef.current.children[next];
-
-          if (card) {
-            card.scrollIntoView({
-              behavior: 'smooth',
-              block: 'nearest',
-              inline: 'center',
-            });
-          }
-        }
+        scrollToServiceCard(next);
 
         return next;
       });
@@ -616,14 +629,7 @@ const AboutSection = () => {
                   key={index}
                   onClick={() => {
                     setSelectedCard(index);
-
-                    const card = scrollRef.current?.children[index];
-
-                    card?.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'nearest',
-                      inline: 'center',
-                    });
+                    scrollToServiceCard(index);
                   }}
                   sx={{
                     width: selectedCard === index ? 24 : 7,
