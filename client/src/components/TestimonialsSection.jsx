@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 
 import {
@@ -169,9 +168,12 @@ const TestimonialsSection = () => {
     </Stack>
   );
 
-  // SPEECH BUBBLE DESIGN
+  // SPEECH BUBBLE DESIGN (RECTANGULAR CHAT BOX WITH LEFT TAIL)
   const SpeechBubble = ({ client, index }) => {
     const isActive = activeStep === index;
+    const strokeColor = isActive
+      ? BRAND.gold
+      : "rgba(236,155,20,0.65)";
 
     return (
       <Box
@@ -179,7 +181,7 @@ const TestimonialsSection = () => {
           width: "100%",
           height: "100%",
           position: "relative",
-          pb: 2.5,
+          pb: 4, // Extra space at bottom for the sharp tail
         }}
       >
         <Box
@@ -195,173 +197,165 @@ const TestimonialsSection = () => {
           sx={{
             width: "100%",
             minHeight: {
-              xs: 350,
-              sm: 360,
-              md: 390,
+              xs: 310,
+              sm: 330,
+              md: 350,
             },
-
             position: "relative",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-
             px: {
-              xs: 3,
-              sm: 3.5,
-              md: 3,
+              xs: 3.5,
+              sm: 4,
+              md: 4,
             },
-
             py: {
               xs: 4,
               md: 4.5,
             },
-
             textAlign: "center",
-
-            bgcolor: BRAND.dark,
-
-            border: `2px solid ${
-              isActive
-                ? BRAND.gold
-                : "rgba(236,155,20,0.65)"
-            }`,
-
-            borderRadius: "48% 48% 48% 48% / 40% 40% 40% 40%",
-
-            boxShadow: isActive
-              ? "0 0 24px rgba(236,155,20,0.22), inset 0 0 22px rgba(236,155,20,0.035)"
-              : "0 8px 25px rgba(0,0,0,0.16)",
-
+            filter: isActive
+              ? "drop-shadow(0 0 14px rgba(236,155,20,0.22))"
+              : "drop-shadow(0 8px 20px rgba(0,0,0,0.2))",
             transition: "all 0.4s ease",
-
             "&:hover": {
-              borderColor: BRAND.lightGold,
-              boxShadow:
-                "0 0 24px rgba(236,155,20,0.18)",
-            },
-
-            // SPEECH BUBBLE TAIL
-            "&::after": {
-              content: '""',
-              position: "absolute",
-              bottom: -17,
-              left: "16%",
-
-              width: 30,
-              height: 30,
-
-              bgcolor: BRAND.dark,
-
-              borderLeft: `2px solid ${
-                isActive
-                  ? BRAND.gold
-                  : "rgba(236,155,20,0.65)"
-              }`,
-
-              borderBottom: `2px solid ${
-                isActive
-                  ? BRAND.gold
-                  : "rgba(236,155,20,0.65)"
-              }`,
-
-              transform: "rotate(-45deg)",
-              zIndex: 2,
+              filter: "drop-shadow(0 0 16px rgba(236,155,20,0.25))",
+              "& .bubble-path": {
+                stroke: BRAND.lightGold,
+              },
             },
           }}
         >
-
-          {/* FIVE-STAR RATING */}
-          <StarRating />
-
-          {/* TESTIMONIAL TEXT */}
+          {/* SVG COMMENT BOX FRAME */}
           <Box
+            component="svg"
+            viewBox="0 0 400 340"
+            preserveAspectRatio="none"
             sx={{
-              position: "relative",
+              position: "absolute",
+              top: 0,
+              left: 0,
               width: "100%",
-              maxWidth: 390,
-              mb: 2.5,
+              height: "calc(100% + 34px)", // Extends downward to include the tail
+              pointerEvents: "none",
+              zIndex: 0,
             }}
           >
+            <path
+              className="bubble-path"
+              d="M 24 2 
+                 H 376 
+                 A 22 22 0 0 1 398 24 
+                 V 276 
+                 A 22 22 0 0 1 376 298 
+                 H 58 
+                 L 2 336 
+                 V 24 
+                 A 22 22 0 0 1 24 2 Z"
+              fill={BRAND.dark}
+              stroke={strokeColor}
+              strokeWidth="2.5"
+              vectorEffect="non-scaling-stroke"
+              strokeLinejoin="round"
+              style={{ transition: "stroke 0.4s ease" }}
+            />
+          </Box>
 
-            {/* OPENING QUOTATION MARK */}
-            <Typography
-              component="span"
+          {/* CARD CONTENT */}
+          <Box sx={{ position: "relative", zIndex: 1, width: "100%" }}>
+            {/* FIVE-STAR RATING */}
+            <StarRating />
+
+            {/* TESTIMONIAL TEXT */}
+            <Box
               sx={{
-                color: BRAND.gold,
-                fontSize: {
-                  xs: "2.3rem",
-                  md: "2.8rem",
-                },
-                fontWeight: 900,
-                lineHeight: 0,
-                mr: 0.5,
-                verticalAlign: "-0.2em",
+                position: "relative",
+                width: "100%",
+                maxWidth: 390,
+                mx: "auto",
+                mb: 2.5,
               }}
             >
-              “
-            </Typography>
+              {/* OPENING QUOTATION MARK */}
+              <Typography
+                component="span"
+                sx={{
+                  color: BRAND.gold,
+                  fontSize: {
+                    xs: "2.3rem",
+                    md: "2.8rem",
+                  },
+                  fontWeight: 900,
+                  lineHeight: 0,
+                  mr: 0.5,
+                  verticalAlign: "-0.2em",
+                }}
+              >
+                “
+              </Typography>
 
+              <Typography
+                component="span"
+                sx={{
+                  color: BRAND.white,
+                  fontStyle: "italic",
+                  fontWeight: 500,
+                  fontSize: {
+                    xs: "0.95rem",
+                    sm: "1rem",
+                    md: "1.08rem",
+                  },
+                  lineHeight: 1.8,
+                  overflowWrap: "break-word",
+                }}
+              >
+                {client.ClientStatistic}
+              </Typography>
+
+              {/* CLOSING QUOTATION MARK */}
+              <Typography
+                component="span"
+                sx={{
+                  color: BRAND.gold,
+                  fontSize: {
+                    xs: "2.3rem",
+                    md: "2.8rem",
+                  },
+                  fontWeight: 900,
+                  lineHeight: 0,
+                  ml: 0.3,
+                  verticalAlign: "-0.2em",
+                }}
+              >
+                ”
+              </Typography>
+            </Box>
+
+            {/* MEMBER NAME */}
             <Typography
-              component="span"
+              component="h3"
               sx={{
-                color: BRAND.white,
-                fontStyle: "italic",
-                fontWeight: 500,
-                fontSize: {
-                  xs: "0.95rem",
-                  sm: "1rem",
-                  md: "1.08rem",
+                color: BRAND.gold,
+                fontWeight: 900,
+                textTransform: "uppercase",
+                letterSpacing: {
+                  xs: "0.04em",
+                  md: "0.07em",
                 },
-                lineHeight: 1.8,
+                fontSize: {
+                  xs: "0.78rem",
+                  sm: "0.85rem",
+                  md: "0.92rem",
+                },
+                lineHeight: 1.5,
                 overflowWrap: "break-word",
               }}
             >
-              {client.ClientStatistic}
-            </Typography>
-
-            {/* CLOSING QUOTATION MARK */}
-            <Typography
-              component="span"
-              sx={{
-                color: BRAND.gold,
-                fontSize: {
-                  xs: "2.3rem",
-                  md: "2.8rem",
-                },
-                fontWeight: 900,
-                lineHeight: 0,
-                ml: 0.3,
-                verticalAlign: "-0.2em",
-              }}
-            >
-              ”
+              — {client.ClientName}
             </Typography>
           </Box>
-
-          {/* MEMBER NAME */}
-          <Typography
-            component="h3"
-            sx={{
-              color: BRAND.gold,
-              fontWeight: 900,
-              textTransform: "uppercase",
-              letterSpacing: {
-                xs: "0.04em",
-                md: "0.07em",
-              },
-              fontSize: {
-                xs: "0.78rem",
-                sm: "0.85rem",
-                md: "0.92rem",
-              },
-              lineHeight: 1.5,
-              overflowWrap: "break-word",
-            }}
-          >
-            — {client.ClientName}
-          </Typography>
-
         </Box>
       </Box>
     );
@@ -380,7 +374,6 @@ const TestimonialsSection = () => {
         },
       }}
     >
-
       {/* SUBTLE GOLD BACKGROUND GLOW */}
       <Box
         sx={{
@@ -410,7 +403,6 @@ const TestimonialsSection = () => {
           zIndex: 1,
         }}
       >
-
         <Stack
           spacing={{
             xs: 5,
@@ -418,7 +410,6 @@ const TestimonialsSection = () => {
           }}
           alignItems="center"
         >
-
           {/* SECTION HEADING */}
           <Box
             sx={{
@@ -426,7 +417,6 @@ const TestimonialsSection = () => {
               textAlign: "center",
             }}
           >
-
             {/* CHAT ICON */}
             <motion.div
               initial={{ opacity: 0, y: -15 }}
@@ -513,7 +503,6 @@ const TestimonialsSection = () => {
             />
           </Box>
 
-
           {/* ERROR MESSAGE */}
           {error && (
             <Container maxWidth="sm">
@@ -529,7 +518,6 @@ const TestimonialsSection = () => {
             </Container>
           )}
 
-
           {/* TESTIMONIALS */}
           <Box
             ref={scrollRef}
@@ -538,47 +526,34 @@ const TestimonialsSection = () => {
               width: "100%",
               maxWidth: 1450,
               mx: "auto",
-
               display: isMobile ? "flex" : "grid",
-
               flexDirection: isMobile ? "row" : "unset",
-
               gridTemplateColumns: {
                 sm: "repeat(2, minmax(0, 1fr))",
                 md: "repeat(3, minmax(0, 1fr))",
               },
-
               gap: {
                 xs: 2.5,
                 md: 3,
               },
-
               overflowX: isMobile ? "auto" : "visible",
-
               scrollSnapType: isMobile
                 ? "x mandatory"
                 : "none",
-
               scrollBehavior: "smooth",
-
               alignItems: "center",
-
               px: {
                 xs: 1,
                 md: 0,
               },
-
               pt: 1,
               pb: 4,
-
               "&::-webkit-scrollbar": {
                 display: "none",
               },
-
               scrollbarWidth: "none",
             }}
           >
-
             {/* LOADING SKELETONS */}
             {loading
               ? Array.from({ length: 3 }).map((_, index) => (
@@ -587,14 +562,14 @@ const TestimonialsSection = () => {
                     sx={{
                       minWidth: isMobile ? "88%" : "auto",
                       scrollSnapAlign: "center",
-                      pb: 2.5,
+                      pb: 4,
                     }}
                   >
                     <Box
                       sx={{
-                        minHeight: 390,
+                        minHeight: 350,
                         border: "1px solid rgba(236,155,20,0.4)",
-                        borderRadius: "48%",
+                        borderRadius: "24px",
                         bgcolor: BRAND.dark,
                         display: "flex",
                         flexDirection: "column",
@@ -652,7 +627,6 @@ const TestimonialsSection = () => {
                     </Box>
                   </Box>
                 ))
-
               : testimonials.map((client, index) => (
                   <Box
                     key={client.ClientID ?? index}
@@ -669,9 +643,7 @@ const TestimonialsSection = () => {
                     />
                   </Box>
                 ))}
-
           </Box>
-
 
           {/* MOBILE SLIDER INDICATORS */}
           {isMobile &&
@@ -694,12 +666,10 @@ const TestimonialsSection = () => {
                         activeStep === index ? 26 : 8,
                       height: 8,
                       borderRadius: 5,
-
                       bgcolor:
                         activeStep === index
                           ? BRAND.gold
                           : "rgba(236,155,20,0.3)",
-
                       cursor: "pointer",
                       transition: "all 0.35s ease",
                     }}
@@ -707,7 +677,6 @@ const TestimonialsSection = () => {
                 ))}
               </Stack>
             )}
-
         </Stack>
       </Container>
     </Box>
